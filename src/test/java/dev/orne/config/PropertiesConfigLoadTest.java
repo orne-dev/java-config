@@ -4,10 +4,12 @@
 package dev.orne.config;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Properties;
@@ -161,6 +163,37 @@ class PropertiesConfigLoadTest {
 		assertTrue(config.containsParameter(TEST_URL_KEY));
 		assertNotNull(config.getStringParameter(TEST_URL_KEY));
 		assertEquals(TEST_URL_TYPE, config.getStringParameter(TEST_URL_KEY));
+	}
+
+	/**
+	 * Test method for {@link PropertiesConfig#PropertiesConfig(Object...)} with
+	 * URL that raises an IOException.
+	 * 
+	 * @throws IOException Should be captured
+	 */
+	@Test
+	public void testLoadURLError()
+	throws IOException {
+		final URL faillingURL = new URL("http://should.fail.test/");
+		
+		final PropertiesConfig config = new PropertiesConfig(faillingURL);
+		assertNotNull(config.getProperties());
+		assertTrue(config.getProperties().isEmpty());
+	}
+
+	/**
+	 * Test method for {@link PropertiesConfig#PropertiesConfig(Object...)} with
+	 * an unsupported type.
+	 */
+	@Test
+	public void testLoadUnsupported() {
+		final InputStream is = mock(InputStream.class);
+
+		final PropertiesConfig config = new PropertiesConfig(is);
+		assertNotNull(config.getProperties());
+		assertTrue(config.getProperties().isEmpty());
+
+		then(is).shouldHaveZeroInteractions();
 	}
 
 	/**

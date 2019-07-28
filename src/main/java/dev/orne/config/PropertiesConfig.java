@@ -7,10 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.net.URL;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Properties;
@@ -30,8 +27,7 @@ import org.slf4j.helpers.MessageFormatter;
  * @see Properties
  */
 public class PropertiesConfig
-extends AbstractStringConfig
-implements MutableConfig {
+extends AbstractMutableStringConfig {
 
     /** The class logger. */
     private static final Logger LOG =
@@ -74,9 +70,7 @@ implements MutableConfig {
      * @param sources The sources to load the configuration parameters from
      */
     protected final void load(final Object... sources) {
-		if (sources == null) {
-			throw new IllegalArgumentException("Parameter sources is required");
-		}
+    	Validate.notNull(sources, "Parameter sources is required");
         for (final Object source : sources) {
             loadSource(source);
         }
@@ -90,9 +84,7 @@ implements MutableConfig {
      * @param source The source to load the configuration parameters from
      */
     protected final void loadSource(final Object source) {
-		if (source == null) {
-			throw new IllegalArgumentException("Parameter source is required");
-		}
+    	Validate.notNull(source, "Parameter source is required");
         if (source instanceof String) {
             loadFromResource((String) source);
         } else if (source instanceof File) {
@@ -204,34 +196,17 @@ implements MutableConfig {
      * {@inheritDoc}
      */
 	@Override
-	protected String getStringParameter(final String key) {
+	protected String getRawValue(String key) {
 		Validate.notNull(key, "Parameter key is required");
-		String result = this.config.getProperty(key);
-		if (NULL.equals(result)) {
-			result = null;
-		}
-		return result;
+		return this.config.getProperty(key);
 	}
 
     /**
      * {@inheritDoc}
      */
 	@Override
-	public void set(final String key, final Object value) {
-		Validate.notNull(key, "Parameter key is required");
-		if (value == null) {
-			this.config.setProperty(key, NULL);
-		} else if (value instanceof Float) {
-			this.config.setProperty(key, BigDecimal.valueOf((Float) value).toString());
-		} else if (value instanceof Double) {
-			this.config.setProperty(key, BigDecimal.valueOf((Double) value).toString());
-		} else if (value instanceof Date) {
-			this.config.setProperty(key, ((Date) value).toInstant().toString());
-		} else if (value instanceof Calendar) {
-			this.config.setProperty(key, ((Calendar) value).toInstant().toString());
-		} else {
-			this.config.setProperty(key, value.toString());
-		}
+	protected void setRawValue(final String key, final String value) {
+		this.config.setProperty(key, value);
 	}
 
     /**
