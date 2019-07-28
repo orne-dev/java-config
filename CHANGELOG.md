@@ -5,3 +5,4 @@
 01. Added dev.orne.config.HierarchicalConfig
 01. Added dev.orne.config.AbstractStringConfig
 01. Added dev.orne.config.SystemConfig
+01. Added dev.orne.config.PropertiesConfig
