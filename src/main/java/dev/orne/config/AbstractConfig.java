@@ -4,15 +4,22 @@
 package dev.orne.config;
 
 import java.net.URI;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Period;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.lang3.LocaleUtils;
 
 /**
  * Basic abstract implementation of {@code Config}. Provides basic
@@ -82,14 +89,28 @@ implements Config {
     		result = type.cast(getBooleanParameter(key));
     	} else if (Number.class.isAssignableFrom(type)) {
     		result = type.cast(ConvertUtils.convert(getNumberParameter(key), type));
+    	} else if (type.isEnum()) {
+    		result = type.cast(getEnum(type, getStringParameter(key)));
+    	} else if (Locale.class.equals(type)) {
+    		result = type.cast(LocaleUtils.toLocale(getStringParameter(key)));
     	} else if (Instant.class.equals(type)) {
     		result = type.cast(getInstantParameter(key));
+    	} else if (Year.class.equals(type)) {
+    		result = type.cast(Year.parse(getStringParameter(key)));
+    	} else if (YearMonth.class.equals(type)) {
+    		result = type.cast(YearMonth.parse(getStringParameter(key)));
     	} else if (LocalDate.class.equals(type)) {
     		result = type.cast(LocalDate.parse(getStringParameter(key), DateTimeFormatter.ISO_DATE));
     	} else if (LocalTime.class.equals(type)) {
     		result = type.cast(LocalTime.parse(getStringParameter(key), DateTimeFormatter.ISO_TIME));
     	} else if (LocalDateTime.class.equals(type)) {
     		result = type.cast(LocalDateTime.parse(getStringParameter(key), DateTimeFormatter.ISO_DATE_TIME));
+    	} else if (ZoneOffset.class.equals(type)) {
+    		result = type.cast(ZoneOffset.of(getStringParameter(key)));
+    	} else if (Duration.class.equals(type)) {
+    		result = type.cast(Duration.parse(getStringParameter(key)));
+    	} else if (Period.class.equals(type)) {
+    		result = type.cast(Period.parse(getStringParameter(key)));
     	} else if (Date.class.equals(type)) {
     		result = type.cast(Date.from(getInstantParameter(key)));
     	} else if (Calendar.class.equals(type)) {
@@ -102,6 +123,20 @@ implements Config {
     		result = type.cast(ConvertUtils.convert(getStringParameter(key), type));
     	}
     	return result;
+	}
+
+	/**
+	 * Returns the constant of the enumeration type for the name passed as
+	 * argument.
+	 * 
+	 * @param type The enumeration type. Must be a subcass of {¢ode Enum}.
+	 * @param name The name of the requested constant
+	 * @return The constant with the requested name
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private Enum<?> getEnum(final Class<?> type, final String name) {
+		final Class<? extends Enum> enumType = (Class<? extends Enum>) type;
+		return Enum.valueOf(enumType, name);
 	}
 
 	/**

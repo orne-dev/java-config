@@ -10,12 +10,19 @@ import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Period;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.ZoneOffset;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -70,6 +77,36 @@ class PropertiesConfigMutableTest {
 		assertTrue(config.containsParameter(TEST_KEY));
 		assertNotNull(config.getStringParameter(TEST_KEY));
 		assertEquals(expectedValue, config.getStringParameter(TEST_KEY));
+	}
+
+	/**
+	 * Test method for {@link PropertiesConfig#set(String, Object)} with
+	 * {@code Locale} value.
+	 */
+	@Test
+	public void testSetLocale() {
+		final Locale expectedValue = Locale.ENGLISH;
+		final PropertiesConfig config = new PropertiesConfig();
+		config.set(TEST_KEY, expectedValue);
+		assertTrue(config.containsParameter(TEST_KEY));
+		assertNotNull(config.getStringParameter(TEST_KEY));
+		assertEquals(expectedValue.toString(), config.getStringParameter(TEST_KEY));
+		assertEquals(expectedValue, config.getParameter(TEST_KEY, Locale.class));
+	}
+
+	/**
+	 * Test method for {@link PropertiesConfig#set(String, Object)} with
+	 * {@code Enum} value.
+	 */
+	@Test
+	public void testSetEnum() {
+		final DayOfWeek expectedValue = DayOfWeek.SATURDAY;
+		final PropertiesConfig config = new PropertiesConfig();
+		config.set(TEST_KEY, expectedValue);
+		assertTrue(config.containsParameter(TEST_KEY));
+		assertNotNull(config.getStringParameter(TEST_KEY));
+		assertEquals(expectedValue.toString(), config.getStringParameter(TEST_KEY));
+		assertEquals(expectedValue, config.getParameter(TEST_KEY, DayOfWeek.class));
 	}
 
 	/**
@@ -236,6 +273,36 @@ class PropertiesConfigMutableTest {
 
 	/**
 	 * Test method for {@link PropertiesConfig#set(String, Object)} with
+	 * {@code Year} value.
+	 */
+	@Test
+	public void testSetYear() {
+		final Year expectedValue = Year.now();
+		final PropertiesConfig config = new PropertiesConfig();
+		config.set(TEST_KEY, expectedValue);
+		assertTrue(config.containsParameter(TEST_KEY));
+		assertNotNull(config.getStringParameter(TEST_KEY));
+		assertEquals(expectedValue.toString(), config.getStringParameter(TEST_KEY));
+		assertEquals(expectedValue, config.getParameter(TEST_KEY, Year.class));
+	}
+
+	/**
+	 * Test method for {@link PropertiesConfig#set(String, Object)} with
+	 * {@code YearMonth} value.
+	 */
+	@Test
+	public void testSetYearMonth() {
+		final YearMonth expectedValue = YearMonth.now();
+		final PropertiesConfig config = new PropertiesConfig();
+		config.set(TEST_KEY, expectedValue);
+		assertTrue(config.containsParameter(TEST_KEY));
+		assertNotNull(config.getStringParameter(TEST_KEY));
+		assertEquals(expectedValue.toString(), config.getStringParameter(TEST_KEY));
+		assertEquals(expectedValue, config.getParameter(TEST_KEY, YearMonth.class));
+	}
+
+	/**
+	 * Test method for {@link PropertiesConfig#set(String, Object)} with
 	 * {@code LocalDate} value.
 	 */
 	@Test
@@ -277,6 +344,51 @@ class PropertiesConfigMutableTest {
 		assertNotNull(config.getStringParameter(TEST_KEY));
 		assertEquals(expectedValue.toString(), config.getStringParameter(TEST_KEY));
 		assertEquals(expectedValue, config.getParameter(TEST_KEY, LocalDateTime.class));
+	}
+
+	/**
+	 * Test method for {@link PropertiesConfig#set(String, Object)} with
+	 * {@code ZoneOffset} value.
+	 */
+	@Test
+	public void testSetZoneOffset() {
+		final ZoneOffset expectedValue = ZoneOffset.ofHours(2);
+		final PropertiesConfig config = new PropertiesConfig();
+		config.set(TEST_KEY, expectedValue);
+		assertTrue(config.containsParameter(TEST_KEY));
+		assertNotNull(config.getStringParameter(TEST_KEY));
+		assertEquals(expectedValue.toString(), config.getStringParameter(TEST_KEY));
+		assertEquals(expectedValue, config.getParameter(TEST_KEY, ZoneOffset.class));
+	}
+
+	/**
+	 * Test method for {@link PropertiesConfig#set(String, Object)} with
+	 * {@code Duration} value.
+	 */
+	@Test
+	public void testSetDuration() {
+		final Duration expectedValue = Duration.ofDays(2).plusHours(4);
+		final PropertiesConfig config = new PropertiesConfig();
+		config.set(TEST_KEY, expectedValue);
+		assertTrue(config.containsParameter(TEST_KEY));
+		assertNotNull(config.getStringParameter(TEST_KEY));
+		assertEquals(expectedValue.toString(), config.getStringParameter(TEST_KEY));
+		assertEquals(expectedValue, config.getParameter(TEST_KEY, Duration.class));
+	}
+
+	/**
+	 * Test method for {@link PropertiesConfig#set(String, Object)} with
+	 * {@code Period} value.
+	 */
+	@Test
+	public void testSetPeriod() {
+		final Period expectedValue = Period.of(1, 2, 3);
+		final PropertiesConfig config = new PropertiesConfig();
+		config.set(TEST_KEY, expectedValue);
+		assertTrue(config.containsParameter(TEST_KEY));
+		assertNotNull(config.getStringParameter(TEST_KEY));
+		assertEquals(expectedValue.toString(), config.getStringParameter(TEST_KEY));
+		assertEquals(expectedValue, config.getParameter(TEST_KEY, Period.class));
 	}
 
 	/**

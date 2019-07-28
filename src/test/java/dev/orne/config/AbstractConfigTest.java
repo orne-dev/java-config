@@ -12,13 +12,20 @@ import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Period;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -68,6 +75,44 @@ class AbstractConfigTest {
 		
 		assertNotNull(result);
 		assertEquals(strValue, result);
+		
+		then(config).should(times(1)).getStringParameter(TEST_KEY);
+	}
+
+	/**
+	 * Test method for {@link AbstractConfig#getParameter(String, Class)} with
+	 * {@code Locale} target type.
+	 */
+	@Test
+	public void testGetLocale() {
+		final Locale expectedValue = Locale.ENGLISH;
+		final String strValue = expectedValue.toString();
+		final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
+		given(config.getStringParameter(TEST_KEY)).willReturn(strValue);
+		
+		final Locale result = config.getParameter(TEST_KEY, Locale.class);
+		
+		assertNotNull(result);
+		assertEquals(expectedValue, result);
+		
+		then(config).should(times(1)).getStringParameter(TEST_KEY);
+	}
+
+	/**
+	 * Test method for {@link AbstractConfig#getParameter(String, Class)} with
+	 * {@code Enum} target type.
+	 */
+	@Test
+	public void testGetEnum() {
+		final DayOfWeek expectedValue = DayOfWeek.SATURDAY;
+		final String strValue = expectedValue.toString();
+		final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
+		given(config.getStringParameter(TEST_KEY)).willReturn(strValue);
+		
+		final DayOfWeek result = config.getParameter(TEST_KEY, DayOfWeek.class);
+		
+		assertNotNull(result);
+		assertSame(expectedValue, result);
 		
 		then(config).should(times(1)).getStringParameter(TEST_KEY);
 	}
@@ -303,6 +348,44 @@ class AbstractConfigTest {
 
 	/**
 	 * Test method for {@link AbstractConfig#getParameter(String, Class)} with
+	 * {@code Year} target type.
+	 */
+	@Test
+	public void testGetYear() {
+		final Year expectedValue = Year.now();
+		final String strValue = expectedValue.toString();
+		final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
+		given(config.getStringParameter(TEST_KEY)).willReturn(strValue);
+		
+		final Year result = config.getParameter(TEST_KEY, Year.class);
+		
+		assertNotNull(result);
+		assertEquals(expectedValue, result);
+		
+		then(config).should(times(1)).getStringParameter(TEST_KEY);
+	}
+
+	/**
+	 * Test method for {@link AbstractConfig#getParameter(String, Class)} with
+	 * {@code YearMonth} target type.
+	 */
+	@Test
+	public void testGetYearMonth() {
+		final YearMonth expectedValue = YearMonth.now();
+		final String strValue = expectedValue.toString();
+		final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
+		given(config.getStringParameter(TEST_KEY)).willReturn(strValue);
+		
+		final YearMonth result = config.getParameter(TEST_KEY, YearMonth.class);
+		
+		assertNotNull(result);
+		assertEquals(expectedValue, result);
+		
+		then(config).should(times(1)).getStringParameter(TEST_KEY);
+	}
+
+	/**
+	 * Test method for {@link AbstractConfig#getParameter(String, Class)} with
 	 * {@code LocalDate} target type.
 	 */
 	@Test
@@ -351,6 +434,63 @@ class AbstractConfigTest {
 		given(config.getStringParameter(TEST_KEY)).willReturn(strValue);
 		
 		final LocalDateTime result = config.getParameter(TEST_KEY, LocalDateTime.class);
+		
+		assertNotNull(result);
+		assertEquals(expectedValue, result);
+		
+		then(config).should(times(1)).getStringParameter(TEST_KEY);
+	}
+
+	/**
+	 * Test method for {@link AbstractConfig#getParameter(String, Class)} with
+	 * {@code ZoneOffset} target type.
+	 */
+	@Test
+	public void testGetZoneOffset() {
+		final ZoneOffset expectedValue = ZoneOffset.ofHours(3);
+		final String strValue = expectedValue.getId();
+		final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
+		given(config.getStringParameter(TEST_KEY)).willReturn(strValue);
+		
+		final ZoneOffset result = config.getParameter(TEST_KEY, ZoneOffset.class);
+		
+		assertNotNull(result);
+		assertEquals(expectedValue, result);
+		
+		then(config).should(times(1)).getStringParameter(TEST_KEY);
+	}
+
+	/**
+	 * Test method for {@link AbstractConfig#getParameter(String, Class)} with
+	 * {@code Period} target type.
+	 */
+	@Test
+	public void testGetPeriod() {
+		final Period expectedValue = Period.of(1, 2, 3);
+		final String strValue = expectedValue.toString();
+		final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
+		given(config.getStringParameter(TEST_KEY)).willReturn(strValue);
+		
+		final Period result = config.getParameter(TEST_KEY, Period.class);
+		
+		assertNotNull(result);
+		assertEquals(expectedValue, result);
+		
+		then(config).should(times(1)).getStringParameter(TEST_KEY);
+	}
+
+	/**
+	 * Test method for {@link AbstractConfig#getParameter(String, Class)} with
+	 * {@code Duration} target type.
+	 */
+	@Test
+	public void testGetDuration() {
+		final Duration expectedValue = Duration.ofDays(3).plusHours(10);
+		final String strValue = expectedValue.toString();
+		final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
+		given(config.getStringParameter(TEST_KEY)).willReturn(strValue);
+		
+		final Duration result = config.getParameter(TEST_KEY, Duration.class);
 		
 		assertNotNull(result);
 		assertEquals(expectedValue, result);
