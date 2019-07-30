@@ -11,3 +11,6 @@
 01. Added dev.orne.config.Configurable
 01. Added dev.orne.config.ConfigurableProperty
 01. Added dev.orne.config.ConfigurationOptions
+01. Added dev.orne.config.Configurer
+01. Added dev.orne.config.ConfigProvider
+01. Added dev.orne.config.DefaultConfigurer
