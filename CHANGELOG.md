@@ -8,3 +8,6 @@
 01. Added dev.orne.config.MutableConfig
 01. Added dev.orne.config.AbstractMutableStringConfig
 01. Added dev.orne.config.PropertiesConfig
+01. Added dev.orne.config.Configurable
+01. Added dev.orne.config.ConfigurableProperty
+01. Added dev.orne.config.ConfigurationOptions
