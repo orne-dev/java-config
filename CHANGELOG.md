@@ -14,3 +14,4 @@
 01. Added dev.orne.config.Configurer
 01. Added dev.orne.config.ConfigProvider
 01. Added dev.orne.config.DefaultConfigurer
+01. Added dev.orne.config.DefaultConfigProvider
