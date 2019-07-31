@@ -16,10 +16,10 @@
     </encoder>
   </appender>
 
-  <root level="info">
+  <root level="off">
     <appender-ref ref="STDOUT" />
   </root>
 
-  <logger name="dev.orne.config" level="debug" />
+  <logger name="dev.orne.config" level="off" />
 
 </configuration>

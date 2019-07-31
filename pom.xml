@@ -133,9 +133,6 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <groups>ut</groups>
-          <systemPropertyVariables>
-            <java.io.tmpdir>${project.build.directory}/tmp</java.io.tmpdir>
-          </systemPropertyVariables>
         </configuration>
       </plugin>
       <plugin>
@@ -143,9 +140,6 @@
         <artifactId>maven-failsafe-plugin</artifactId>
         <configuration>
           <groups>it</groups>
-          <systemPropertyVariables>
-            <java.io.tmpdir>${project.build.directory}/tmp</java.io.tmpdir>
-          </systemPropertyVariables>
         </configuration>
       </plugin>
       <plugin>
