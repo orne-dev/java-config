@@ -44,9 +44,6 @@ extends AbstractMutableStringConfig {
     private static final String PROP_FILE_ERR =
             "Could not read configuration file ({}).";
 
-    /** String representation of {@code null} values. */
-    public static final String NULL = "\0";
-
     /** Current configuration parameters. */
     private final Properties config = new Properties();
 
