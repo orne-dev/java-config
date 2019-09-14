@@ -46,7 +46,7 @@
     <license.licenseName>apache_v2</license.licenseName>
 
     <commons.lang.version>3.9</commons.lang.version>
-    <commons.beanutils.version>1.9.3</commons.beanutils.version>
+    <commons.beanutils.version>1.9.4</commons.beanutils.version>
   </properties>
 
   <dependencies>
