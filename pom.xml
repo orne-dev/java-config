@@ -14,23 +14,24 @@
   <packaging>jar</packaging>
 
   <name>Orne Config</name>
-  <url>http://projects.orne.dev/cli-utils/</url>
+  <description>Orne configuration utilities</description>
+  <inceptionYear>2019</inceptionYear>
+  <url>http://projects.orne.dev/orne-config/</url>
   <developers>
     <developer>
       <id>wamphiry</id>
       <name>(w) Iker Hernaez</name>
-      <email>i.hernaez@hif-soft.net</email>
+      <email>i.hernaez@orne.dev</email>
     </developer>
   </developers>
   <scm>
-    <url>http://github.com/ihernaez/orne-root-poms/tree/master</url>
-    <connection>scm:git:git://github.com:ihernaez/orne-root-poms.git</connection>
-    <developerConnection>scm:git:ssh://git@repo.orne.dev:9000/wamphiry/dev/orne-root-poms.git</developerConnection>
+    <url>http://github.com/ihernaez/orne-config/tree/master</url>
+    <connection>scm:git:git://github.com:ihernaez/orne-config.git</connection>
+    <developerConnection>scm:git:ssh://git@repo.orne.dev:9000/wamphiry/dev/orne-config.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>1.8</java.version>
     <target.java.version>1.8</target.java.version>
 
