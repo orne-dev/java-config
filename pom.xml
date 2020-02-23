@@ -47,6 +47,9 @@
 
     <commons.lang.version>3.9</commons.lang.version>
     <commons.beanutils.version>1.9.4</commons.beanutils.version>
+
+    <javax.validation.version>2.0.1.Final</javax.validation.version>
+    <jsr305.version>3.0.2</jsr305.version>
   </properties>
 
   <dependencies>
@@ -74,6 +77,19 @@
           <artifactId>commons-logging</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+      <version>${javax.validation.version}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
+      <version>${jsr305.version}</version>
+      <optional>true</optional>
     </dependency>
 
     <dependency>
