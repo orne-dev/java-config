@@ -20,6 +20,9 @@ package dev.orne.config;
  * #L%
  */
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotBlank;
+
 /**
  * Interface for classes containing configuration values mutable at runtime.
  * 
@@ -37,12 +40,18 @@ extends Config {
 	 * @param key The key of the configuration parameter
 	 * @param value The value to set
      */
-    void set(String key, Object value);
+    void set(
+    		@NotBlank
+    		String key,
+    		@Nullable
+    		Object value);
 
     /**
      * Removes the value of the configuration parameter.
 	 * 
 	 * @param key The key of the configuration parameter
      */
-    void remove(String key);
+    void remove(
+    		@NotBlank
+    		String key);
 }

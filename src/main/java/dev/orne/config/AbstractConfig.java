@@ -35,6 +35,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang3.LocaleUtils;
 
@@ -53,7 +57,9 @@ implements Config {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean contains(final String key) {
+	public boolean contains(
+    		@NotBlank
+			final String key) {
 		boolean found = containsParameter(key);
 		if (!found && this instanceof HierarchicalConfig) {
 			final Config parent = ((HierarchicalConfig) this).getParent();
@@ -71,13 +77,20 @@ implements Config {
 	 * @param key The key of the configuration parameter
 	 * @return Returns {@code true} if the parameter has been configured
 	 */
-	protected abstract boolean containsParameter(String key);
+	protected abstract boolean containsParameter(
+    		@NotBlank
+			String key);
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <T> T get(final String key, final Class<T> type) {
+	@Nullable
+	public <T> T get(
+    		@NotBlank
+			final String key,
+    		@NotNull
+			final Class<T> type) {
 		T value = null;
 		if (containsParameter(key)) {
 			value = getParameter(key, type);
@@ -98,7 +111,12 @@ implements Config {
 	 * @param type The target type of the parameter
 	 * @return The configuration parameter value converted to the target type
 	 */
-	protected <T> T getParameter(final String key, final Class<T> type) {
+	@Nullable
+	protected <T> T getParameter(
+    		@NotBlank
+			final String key,
+    		@NotNull
+			final Class<T> type) {
 		final T result;
     	if (String.class.equals(type)) {
     		result = type.cast(getStringParameter(key));
@@ -151,7 +169,12 @@ implements Config {
 	 * @return The constant with the requested name
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private Enum<?> getEnum(final Class<?> type, final String name) {
+	@Nullable
+	private Enum<?> getEnum(
+    		@NotBlank
+			final Class<?> type,
+			@Nullable
+			final String name) {
 		final Class<? extends Enum> enumType = (Class<? extends Enum>) type;
 		return Enum.valueOf(enumType, name);
 	}
@@ -160,7 +183,10 @@ implements Config {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Boolean getBoolean(final String key) {
+	@Nullable
+	public Boolean getBoolean(
+    		@NotBlank
+			final String key) {
 		Boolean value = null;
 		if (containsParameter(key)) {
 			value = getBooleanParameter(key);
@@ -180,13 +206,19 @@ implements Config {
 	 * @param key The key of the configuration parameter
 	 * @return The configuration parameter value as {@code Boolean}
 	 */
-	protected abstract Boolean getBooleanParameter(String key);
+	@Nullable
+	protected abstract Boolean getBooleanParameter(
+    		@NotBlank
+			String key);
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String getString(final String key) {
+	@Nullable
+	public String getString(
+    		@NotBlank
+			final String key) {
 		String value = null;
 		if (containsParameter(key)) {
 			value = getStringParameter(key);
@@ -206,13 +238,19 @@ implements Config {
 	 * @param key The key of the configuration parameter
 	 * @return The configuration parameter value as {@code String}
 	 */
-	protected abstract String getStringParameter(String key);
+	@Nullable
+	protected abstract String getStringParameter(
+    		@NotBlank
+			String key);
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Number getNumber(final String key) {
+	@Nullable
+	public Number getNumber(
+    		@NotBlank
+			final String key) {
 		Number value = null;
 		if (containsParameter(key)) {
 			value = getNumberParameter(key);
@@ -232,13 +270,18 @@ implements Config {
 	 * @param key The key of the configuration parameter
 	 * @return The configuration parameter value as {@code Number}
 	 */
-	protected abstract Number getNumberParameter(String key);
+	protected abstract Number getNumberParameter(
+    		@NotBlank
+			String key);
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Instant getInstant(final String key) {
+	@Nullable
+	public Instant getInstant(
+    		@NotBlank
+			final String key) {
 		Instant value = null;
 		if (containsParameter(key)) {
 			value = getInstantParameter(key);
@@ -258,5 +301,8 @@ implements Config {
 	 * @param key The key of the configuration parameter
 	 * @return The configuration parameter value as {@code Instant}
 	 */
-	protected abstract Instant getInstantParameter(String key);
+	@Nullable
+	protected abstract Instant getInstantParameter(
+    		@NotBlank
+			String key);
 }

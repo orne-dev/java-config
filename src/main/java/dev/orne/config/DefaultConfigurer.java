@@ -26,6 +26,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
+
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.Validate;
@@ -56,6 +59,7 @@ implements Configurer {
 	 * @param configProvider The configuration provider
 	 */
 	public DefaultConfigurer(
+			@NotNull
 			final ConfigProvider configProvider) {
 		Validate.notNull(configProvider, "A valid configuration provider is required.");
 		this.configProvider = configProvider;
@@ -65,7 +69,9 @@ implements Configurer {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void configure(final Configurable bean) {
+	public void configure(
+			@NotNull
+			final Configurable bean) {
 		Validate.notNull(bean, "A not null bean is required.");
 		final Class<?> componentClass = bean.getClass();
 		final ConfigurationOptions metadata = componentClass.getAnnotation(
@@ -96,7 +102,9 @@ implements Configurer {
 	 * @param config The configuration to use
 	 */
 	protected void configureProperties(
+			@NotNull
 			final Configurable bean,
+			@NotNull
 			final Config config) {
 		final Collection<Field> fields = scanConfigurableProperties(bean.getClass());
 		for (final Field field : fields) {
@@ -111,7 +119,9 @@ implements Configurer {
 	 * @param targetClass The bean class to scan for configurable fields
 	 * @return The configurable fields detected
 	 */
+	@NotNull
 	protected Collection<Field> scanConfigurableProperties(
+			@Nullable
 			final Class<?> targetClass) {
 		final Set<Field> configurableFields = new HashSet<>();
 		Class<?> currentClass = targetClass;
@@ -135,8 +145,11 @@ implements Configurer {
 	 * @param config The configuration to use
 	 */
 	protected void configureProperty(
+			@NotNull
 			final Object bean,
+			@NotNull
 			final Field field,
+			@NotNull
 			final Config config) {
 		final ConfigurableProperty metadata = field.getAnnotation(ConfigurableProperty.class);
 		final String key = metadata.value();
@@ -179,7 +192,9 @@ implements Configurer {
 	 * @param config The configuration to use
 	 */
 	protected void configureNestedBeans(
+			@NotNull
 			final Configurable bean,
+			@NotNull
 			final Config config) {
 		final Collection<Configurable> nestedBeans = scanNestedComponents(bean);
 		for (final Configurable nestedBean : nestedBeans) {
@@ -196,7 +211,9 @@ implements Configurer {
 	 * @param bean The bean to scan for unconfigured nested beans
 	 * @return The nested beans detected
 	 */
+	@NotNull
 	protected Collection<Configurable> scanNestedComponents(
+			@NotNull
 			final Object bean) {
 		final Set<Configurable> nestedComponents = new HashSet<>();
 		Class<?> currentClass = bean.getClass();

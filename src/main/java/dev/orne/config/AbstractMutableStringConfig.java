@@ -24,6 +24,10 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -46,7 +50,10 @@ implements MutableConfig {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected String getStringParameter(final String key) {
+	@Nullable
+	protected String getStringParameter(
+    		@NotBlank
+			final String key) {
 		String result = getRawValue(key);
 		if (NULL.equals(result)) {
 			result = null;
@@ -61,13 +68,20 @@ implements MutableConfig {
 	 * @param key The key of the configuration parameter
 	 * @return The configuration parameter raw value as {@code String}
 	 */
-	protected abstract String getRawValue(String key);
+	@Nullable
+	protected abstract String getRawValue(
+    		@NotBlank
+			String key);
 
 	/**
      * {@inheritDoc}
      */
 	@Override
-	public void set(final String key, final Object value) {
+	public void set(
+    		@NotBlank
+			final String key,
+			@Nullable
+			final Object value) {
 		Validate.notNull(key, "Parameter key is required");
 		if (value == null) {
 			setRawValue(key, NULL);
@@ -91,5 +105,9 @@ implements MutableConfig {
 	 * @param key The key of the configuration parameter
 	 * @param value The configuration parameter raw value as {@code String}
 	 */
-	protected abstract void setRawValue(String key, String value);
+	protected abstract void setRawValue(
+    		@NotBlank
+			String key,
+			@NotNull
+			String value);
 }

@@ -23,6 +23,9 @@ package dev.orne.config;
 import java.math.BigDecimal;
 import java.time.Instant;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotBlank;
+
 /**
  * <p>Partial implementation of {@code Config} for implementations with
  * configuration values stored as {@code String}.</p>
@@ -39,7 +42,10 @@ extends AbstractConfig {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected Boolean getBooleanParameter(final String key) {
+	@Nullable
+	protected Boolean getBooleanParameter(
+    		@NotBlank
+			final String key) {
 		final String strValue = getStringParameter(key);
 		return strValue == null ? null : Boolean.valueOf(strValue);
 	}
@@ -48,7 +54,10 @@ extends AbstractConfig {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected Number getNumberParameter(final String key) {
+	@Nullable
+	protected Number getNumberParameter(
+    		@NotBlank
+			final String key) {
 		final String strValue = getStringParameter(key);
 		return strValue == null ? null : new BigDecimal(strValue);
 	}
@@ -57,7 +66,10 @@ extends AbstractConfig {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected Instant getInstantParameter(final String key) {
+	@Nullable
+	protected Instant getInstantParameter(
+    		@NotBlank
+			final String key) {
 		final String strValue = getStringParameter(key);
 		return strValue == null ? null : Instant.parse(strValue);
 	}

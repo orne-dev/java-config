@@ -20,6 +20,8 @@ package dev.orne.config;
  * #L%
  */
 
+import javax.validation.constraints.NotBlank;
+
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -38,7 +40,9 @@ extends AbstractStringConfig {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected boolean containsParameter(final String key) {
+	protected boolean containsParameter(
+    		@NotBlank
+			final String key) {
 		Validate.notNull(key, "Parameter key is required");
 		return System.getProperty(key) != null;
 	}
@@ -47,7 +51,9 @@ extends AbstractStringConfig {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected String getStringParameter(String key) {
+	protected String getStringParameter(
+    		@NotBlank
+			final String key) {
 		Validate.notNull(key, "Parameter key is required");
 		return System.getProperty(key);
 	}

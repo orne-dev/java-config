@@ -22,6 +22,10 @@ package dev.orne.config;
 
 import java.time.Instant;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 /**
  * Interface for classes containing configuration values.
  * 
@@ -38,7 +42,9 @@ public interface Config {
 	 * @param key The key of the configuration parameter
 	 * @return Returns {@code true} if the parameter has been configured
 	 */
-	boolean contains(String key);
+	boolean contains(
+    		@NotBlank
+			String key);
 
 	/**
 	 * Returns the value of the configuration parameter.
@@ -47,7 +53,12 @@ public interface Config {
 	 * @param type The target type of the parameter
 	 * @return The configuration parameter value converted to the target type
 	 */
-	<T> T get(String key, Class<T> type);
+	@Nullable
+	<T> T get(
+    		@NotBlank
+			String key,
+    		@NotNull
+			Class<T> type);
 
 	/**
 	 * Returns the value of the configuration parameter as {@code Boolean}.
@@ -55,7 +66,10 @@ public interface Config {
 	 * @param key The key of the configuration parameter
 	 * @return The configuration parameter value as {@code Boolean}
 	 */
-	Boolean getBoolean(String key);
+	@Nullable
+	Boolean getBoolean(
+    		@NotBlank
+			String key);
 
 	/**
 	 * Returns the value of the configuration parameter as {@code String}.
@@ -63,7 +77,10 @@ public interface Config {
 	 * @param key The key of the configuration parameter
 	 * @return The configuration parameter value as {@code String}
 	 */
-	String getString(String key);
+	@Nullable
+	String getString(
+    		@NotBlank
+			String key);
 
 	/**
 	 * Returns the value of the configuration parameter as {@code Number}.
@@ -71,7 +88,10 @@ public interface Config {
 	 * @param key The key of the configuration parameter
 	 * @return The configuration parameter value as {@code Number}
 	 */
-	Number getNumber(String key);
+	@Nullable
+	Number getNumber(
+    		@NotBlank
+			String key);
 
 	/**
 	 * Returns the value of the configuration parameter as {@code Instant}.
@@ -79,5 +99,8 @@ public interface Config {
 	 * @param key The key of the configuration parameter
 	 * @return The configuration parameter value as {@code Instant}
 	 */
-	Instant getInstant(String key);
+	@Nullable
+	Instant getInstant(
+    		@NotBlank
+			String key);
 }

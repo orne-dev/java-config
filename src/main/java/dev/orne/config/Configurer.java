@@ -20,6 +20,8 @@ package dev.orne.config;
  * #L%
  */
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Generic interface for the bean configurator.
  * 
@@ -34,5 +36,7 @@ public interface Configurer {
 	 * 
 	 * @param bean The bean to configure
 	 */
-	void configure(Configurable bean);
+	void configure(
+			@NotNull
+			Configurable bean);
 }

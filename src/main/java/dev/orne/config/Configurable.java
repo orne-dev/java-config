@@ -20,6 +20,8 @@ package dev.orne.config;
  * #L%
  */
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Interface for classes suitable for configuration.
  * Allows to be configured by an instance of {@code Config} at runtime.
@@ -36,7 +38,9 @@ public interface Configurable {
      * 
      * @param config The config to apply
      */
-    void configure(Config config);
+    void configure(
+    		@NotNull
+    		Config config);
 
     /**
      * Returns {@code true} if this instance is already configured.
