@@ -1,4 +1,4 @@
-# :package: 1.0.0
+# :package: 0.1.0
 
 01. :gift: Added dev.orne.config.Config
 01. :gift: Added dev.orne.config.AbstractConfig
