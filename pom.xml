@@ -127,6 +127,14 @@
             <groups>it</groups>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>com.amashchenko.maven.plugin</groupId>
+          <artifactId>gitflow-maven-plugin</artifactId>
+          <configuration>
+            <postReleaseGoals>clean verify deploy -Prelease,major-release</postReleaseGoals>
+            <postHotfixGoals>clean verify deploy -Prelease,major-release</postHotfixGoals>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>
