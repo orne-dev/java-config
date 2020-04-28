@@ -6,9 +6,11 @@
   <parent>
     <groupId>dev.orne</groupId>
     <artifactId>java-root-pom</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.1.0</version>
+    <relativePath />
   </parent>
 
+  <groupId>dev.orne</groupId>
   <artifactId>config</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
@@ -16,12 +18,12 @@
   <name>Orne Config</name>
   <description>Orne configuration utilities</description>
   <inceptionYear>2019</inceptionYear>
-  <url>http://projects.orne.dev/orne-config/</url>
+  <url>http://projects.orne.dev/java/orne-config/</url>
 
   <licenses>
     <license>
-      <name>Apache License, Version 2.0</name>
-      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <name>GNU General Public License (GPL) version 3.0</name>
+      <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
@@ -34,9 +36,9 @@
   </developers>
 
   <scm>
-    <url>http://github.com/ihernaez/orne-config/tree/master</url>
-    <connection>scm:git:git://github.com:ihernaez/orne-config.git</connection>
-    <developerConnection>scm:git:ssh://git@repo.orne.dev:9000/wamphiry/dev/orne-config.git</developerConnection>
+    <url>http://github.com/orne-dev/java-config/tree/master</url>
+    <connection>scm:git:git://github.com/orne-dev/java-config.git</connection>
+    <developerConnection>scm:git:ssh://github.com:orne-dev/java-config.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
@@ -60,7 +62,6 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>jcl-over-slf4j</artifactId>
-      <version>${slf4j.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -110,46 +111,24 @@
   </dependencies>
 
   <build>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>license-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <groups>ut</groups>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-failsafe-plugin</artifactId>
-        <configuration>
-          <groups>it</groups>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-      </plugin>
-    </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <configuration>
+            <groups>ut</groups>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <configuration>
+            <groups>it</groups>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
 
 </project>
