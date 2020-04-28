@@ -6,17 +6,19 @@ package dev.orne.config;
  * %%
  * Copyright (C) 2019 Orne Developments
  * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  * 
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
 
@@ -41,8 +43,8 @@ import org.slf4j.helpers.MessageFormatter;
 /**
  * Implementation of {@code Config} based on {@code Properties} files.
  * 
+ * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
  * @version 1.0
- * @author (w) Iker Hernaez<i.hernaez@hif-soft.net>
  * @since 1.0, 2019-07
  * @see Config
  * @see Properties
@@ -78,8 +80,8 @@ extends AbstractMutableStringConfig {
      * @param sources The sources to load the configuration parameters from
      */
     public PropertiesConfig(
-			@NotNull
-    		final Object... sources) {
+            @NotNull
+            final Object... sources) {
         super();
         load(sources);
     }
@@ -90,9 +92,9 @@ extends AbstractMutableStringConfig {
      * @param sources The sources to load the configuration parameters from
      */
     protected final void load(
-			@NotNull
-    		final Object... sources) {
-    	Validate.notNull(sources, "Parameter sources is required");
+            @NotNull
+            final Object... sources) {
+        Validate.notNull(sources, "Parameter sources is required");
         for (final Object source : sources) {
             loadSource(source);
         }
@@ -106,9 +108,9 @@ extends AbstractMutableStringConfig {
      * @param source The source to load the configuration parameters from
      */
     protected final void loadSource(
-			@NotNull
-    		final Object source) {
-    	Validate.notNull(source, "Parameter source is required");
+            @NotNull
+            final Object source) {
+        Validate.notNull(source, "Parameter source is required");
         if (source instanceof String) {
             loadFromResource((String) source);
         } else if (source instanceof File) {
@@ -134,8 +136,8 @@ extends AbstractMutableStringConfig {
      * @param values The configuration parameters to load
      */
     protected final void loadFromValues(
-			@NotNull
-    		final Properties values) {
+            @NotNull
+            final Properties values) {
         this.config.putAll(values);
     }
 
@@ -146,8 +148,8 @@ extends AbstractMutableStringConfig {
      * @param path The path of the classpath resource to load
      */
     protected final void loadFromResource(
-			@NotNull
-    		final String path) {
+            @NotNull
+            final String path) {
         try {
             final Enumeration<URL> resources = 
                     Thread.currentThread()
@@ -169,8 +171,8 @@ extends AbstractMutableStringConfig {
      * @param file The file to load the parameters from
      */
     protected final void loadFromFile(
-			@NotNull
-    		final File file) {
+            @NotNull
+            final File file) {
         try {
             final InputStream fileIS = new FileInputStream(file);
             try {
@@ -191,8 +193,8 @@ extends AbstractMutableStringConfig {
      * @param url The URL to load the parameters from
      */
     protected final void loadFromURL(
-			@NotNull
-    		final URL url) {
+            @NotNull
+            final URL url) {
         try {
             final InputStream urlIS = url.openStream();
             try {
@@ -211,58 +213,58 @@ extends AbstractMutableStringConfig {
      * 
      * @return The configuration properties
      */
-	@NotNull
+    @NotNull
     protected Properties getProperties() {
         return this.config;
     }
 
-	/**
+    /**
      * {@inheritDoc}
      */
-	@Override
-	protected boolean containsParameter(
-			@NotBlank
-			final String key) {
-		Validate.notNull(key, "Parameter key is required");
+    @Override
+    protected boolean containsParameter(
+            @NotBlank
+            final String key) {
+        Validate.notNull(key, "Parameter key is required");
         return this.config.containsKey(key);
-	}
-
-	/**
-     * {@inheritDoc}
-     */
-	@Override
-	@Nullable
-	protected String getRawValue(
-			@NotBlank
-			final String key) {
-		Validate.notNull(key, "Parameter key is required");
-		return this.config.getProperty(key);
-	}
+    }
 
     /**
      * {@inheritDoc}
      */
-	@Override
-	protected void setRawValue(
-			@NotBlank
-			final String key,
-			@Nullable
-			final String value) {
-		if (value == null) {
-			remove(key);
-		} else {
-			this.config.setProperty(key, value);
-		}
-	}
+    @Override
+    @Nullable
+    protected String getRawValue(
+            @NotBlank
+            final String key) {
+        Validate.notNull(key, "Parameter key is required");
+        return this.config.getProperty(key);
+    }
 
     /**
      * {@inheritDoc}
      */
-	@Override
-	public void remove(
-			@NotBlank
-			final String key) {
-		Validate.notNull(key, "Parameter key is required");
-		this.config.remove(key);
-	}
+    @Override
+    protected void setRawValue(
+            @NotBlank
+            final String key,
+            @Nullable
+            final String value) {
+        if (value == null) {
+            remove(key);
+        } else {
+            this.config.setProperty(key, value);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void remove(
+            @NotBlank
+            final String key) {
+        Validate.notNull(key, "Parameter key is required");
+        this.config.remove(key);
+    }
 }

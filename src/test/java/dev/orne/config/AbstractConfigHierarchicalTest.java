@@ -9,17 +9,19 @@ package dev.orne.config;
  * %%
  * Copyright (C) 2019 Orne Developments
  * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  * 
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
 
@@ -37,612 +39,612 @@ import org.mockito.BDDMockito;
  * Unit tests for {@code AbstractConfig} for instances that implement
  * {@code HierarchicalConfig}.
  * 
+ * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
  * @version 1.0
- * @author (w) Iker Hernaez<i.hernaez@hif-soft.net>
  * @since 1.0, 2019-07
  */
 @Tag("ut")
 class AbstractConfigHierarchicalTest {
 
-	private static final String TEST_KEY = "test.key";
-	private static final Class<String> TEST_CLASS = String.class;
-	private static final String TEST_STRING_VALUE = "testValue";
-	private static final Number TEST_NUMBER_VALUE = BigInteger.valueOf(System.currentTimeMillis());
-	private static final Instant TEST_INSTANT_VALUE = Instant.now();
+    private static final String TEST_KEY = "test.key";
+    private static final Class<String> TEST_CLASS = String.class;
+    private static final String TEST_STRING_VALUE = "testValue";
+    private static final Number TEST_NUMBER_VALUE = BigInteger.valueOf(System.currentTimeMillis());
+    private static final Instant TEST_INSTANT_VALUE = Instant.now();
 
-	/**
-	 * Test method for {@link AbstractConfig#contains(String)} on
-	 * instances with no parent and parameter configured.
-	 */
-	@Test
-	public void testContainsConfigured() {
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(true);
-		
-		assertTrue(config.contains(TEST_KEY));
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(0)).getParent();
-	}
+    /**
+     * Test method for {@link AbstractConfig#contains(String)} on
+     * instances with no parent and parameter configured.
+     */
+    @Test
+    public void testContainsConfigured() {
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(true);
+        
+        assertTrue(config.contains(TEST_KEY));
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(0)).getParent();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#contains(String)} on
-	 * instances with no parent and parameter not configured.
-	 */
-	@Test
-	public void testContainsUnconfiguredNoParent() {
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(false);
-		given(config.getParent()).willReturn(null);
-		
-		assertFalse(config.contains(TEST_KEY));
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(1)).getParent();
-	}
+    /**
+     * Test method for {@link AbstractConfig#contains(String)} on
+     * instances with no parent and parameter not configured.
+     */
+    @Test
+    public void testContainsUnconfiguredNoParent() {
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(false);
+        given(config.getParent()).willReturn(null);
+        
+        assertFalse(config.contains(TEST_KEY));
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(1)).getParent();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#contains(String)} on
-	 * instances with parent and parameter configured on parent.
-	 */
-	@Test
-	public void testContainsUnconfiguredParent() {
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		final Config parent = BDDMockito.mock(Config.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(false);
-		given(config.getParent()).willReturn(parent);
-		given(parent.contains(TEST_KEY)).willReturn(true);
-		
-		assertTrue(config.contains(TEST_KEY));
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(1)).getParent();
-		then(parent).should(times(1)).contains(TEST_KEY);
-		then(parent).shouldHaveNoMoreInteractions();
-	}
+    /**
+     * Test method for {@link AbstractConfig#contains(String)} on
+     * instances with parent and parameter configured on parent.
+     */
+    @Test
+    public void testContainsUnconfiguredParent() {
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        final Config parent = BDDMockito.mock(Config.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(false);
+        given(config.getParent()).willReturn(parent);
+        given(parent.contains(TEST_KEY)).willReturn(true);
+        
+        assertTrue(config.contains(TEST_KEY));
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(1)).getParent();
+        then(parent).should(times(1)).contains(TEST_KEY);
+        then(parent).shouldHaveNoMoreInteractions();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#contains(String)} on
-	 * instances with parent and parameter not configured.
-	 */
-	@Test
-	public void testContainsUnconfiguredParentUnconfigured() {
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		final Config parent = BDDMockito.mock(Config.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(false);
-		given(config.getParent()).willReturn(parent);
-		given(parent.contains(TEST_KEY)).willReturn(false);
-		
-		assertFalse(config.contains(TEST_KEY));
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(1)).getParent();
-		then(parent).should(times(1)).contains(TEST_KEY);
-		then(parent).shouldHaveNoMoreInteractions();
-	}
+    /**
+     * Test method for {@link AbstractConfig#contains(String)} on
+     * instances with parent and parameter not configured.
+     */
+    @Test
+    public void testContainsUnconfiguredParentUnconfigured() {
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        final Config parent = BDDMockito.mock(Config.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(false);
+        given(config.getParent()).willReturn(parent);
+        given(parent.contains(TEST_KEY)).willReturn(false);
+        
+        assertFalse(config.contains(TEST_KEY));
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(1)).getParent();
+        then(parent).should(times(1)).contains(TEST_KEY);
+        then(parent).shouldHaveNoMoreInteractions();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#get(String, Class)} on
-	 * instances with no parent and parameter configured.
-	 */
-	@Test
-	public void testGetConfigured() {
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(true);
-		given(config.getParameter(TEST_KEY, TEST_CLASS)).willReturn(TEST_STRING_VALUE);
-		clearInvocations(config); // The previous call counts as invocation for some reason
-		
-		final String result = config.get(TEST_KEY, TEST_CLASS);
-		assertNotNull(result);
-		assertEquals(TEST_STRING_VALUE, result);
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(1)).getParameter(TEST_KEY, TEST_CLASS);
-		then(config).should(times(0)).getParent();
-	}
+    /**
+     * Test method for {@link AbstractConfig#get(String, Class)} on
+     * instances with no parent and parameter configured.
+     */
+    @Test
+    public void testGetConfigured() {
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(true);
+        given(config.getParameter(TEST_KEY, TEST_CLASS)).willReturn(TEST_STRING_VALUE);
+        clearInvocations(config); // The previous call counts as invocation for some reason
+        
+        final String result = config.get(TEST_KEY, TEST_CLASS);
+        assertNotNull(result);
+        assertEquals(TEST_STRING_VALUE, result);
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(1)).getParameter(TEST_KEY, TEST_CLASS);
+        then(config).should(times(0)).getParent();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#get(String, Class)} on
-	 * instances with no parent and parameter configured with null value.
-	 */
-	@Test
-	public void testGetConfiguredNull() {
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(true);
-		given(config.getParameter(TEST_KEY, TEST_CLASS)).willReturn(null);
-		clearInvocations(config); // The previous call counts as invocation for some reason
-		
-		final String result = config.get(TEST_KEY, TEST_CLASS);
-		assertNull(result);
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(1)).getParameter(TEST_KEY, TEST_CLASS);
-		then(config).should(times(0)).getParent();
-	}
+    /**
+     * Test method for {@link AbstractConfig#get(String, Class)} on
+     * instances with no parent and parameter configured with null value.
+     */
+    @Test
+    public void testGetConfiguredNull() {
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(true);
+        given(config.getParameter(TEST_KEY, TEST_CLASS)).willReturn(null);
+        clearInvocations(config); // The previous call counts as invocation for some reason
+        
+        final String result = config.get(TEST_KEY, TEST_CLASS);
+        assertNull(result);
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(1)).getParameter(TEST_KEY, TEST_CLASS);
+        then(config).should(times(0)).getParent();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#get(String, Class)} on
-	 * instances with no parent and parameter not configured.
-	 */
-	@Test
-	public void testGetUnconfiguredNoParent() {
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(false);
-		given(config.getParent()).willReturn(null);
-		
-		final String result = config.get(TEST_KEY, TEST_CLASS);
-		assertNull(result);
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(0)).getParameter(TEST_KEY, TEST_CLASS);
-		then(config).should(times(1)).getParent();
-	}
+    /**
+     * Test method for {@link AbstractConfig#get(String, Class)} on
+     * instances with no parent and parameter not configured.
+     */
+    @Test
+    public void testGetUnconfiguredNoParent() {
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(false);
+        given(config.getParent()).willReturn(null);
+        
+        final String result = config.get(TEST_KEY, TEST_CLASS);
+        assertNull(result);
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(0)).getParameter(TEST_KEY, TEST_CLASS);
+        then(config).should(times(1)).getParent();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#get(String, Class)} on
-	 * instances with parent and parameter not configured.
-	 */
-	@Test
-	public void testGetUnconfiguredParent() {
-		final Config parent = BDDMockito.mock(Config.class);
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(false);
-		given(config.getParent()).willReturn(parent);
-		given(parent.get(TEST_KEY, TEST_CLASS)).willReturn(TEST_STRING_VALUE);
-		
-		
-		final String result = config.get(TEST_KEY, TEST_CLASS);		assertNotNull(result);
-		assertEquals(TEST_STRING_VALUE, result);
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(0)).getParameter(TEST_KEY, TEST_CLASS);
-		then(config).should(times(1)).getParent();
-		then(parent).should(times(1)).get(TEST_KEY, TEST_CLASS);
-		then(parent).shouldHaveNoMoreInteractions();
-	}
+    /**
+     * Test method for {@link AbstractConfig#get(String, Class)} on
+     * instances with parent and parameter not configured.
+     */
+    @Test
+    public void testGetUnconfiguredParent() {
+        final Config parent = BDDMockito.mock(Config.class);
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(false);
+        given(config.getParent()).willReturn(parent);
+        given(parent.get(TEST_KEY, TEST_CLASS)).willReturn(TEST_STRING_VALUE);
+        
+        
+        final String result = config.get(TEST_KEY, TEST_CLASS);     assertNotNull(result);
+        assertEquals(TEST_STRING_VALUE, result);
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(0)).getParameter(TEST_KEY, TEST_CLASS);
+        then(config).should(times(1)).getParent();
+        then(parent).should(times(1)).get(TEST_KEY, TEST_CLASS);
+        then(parent).shouldHaveNoMoreInteractions();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#get(String, Class)} on
-	 * instances with parent and parameter not configured with null
-	 * value on parent.
-	 */
-	@Test
-	public void testGetUnconfiguredParentNull() {
-		final Config parent = BDDMockito.mock(Config.class);
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(false);
-		given(config.getParent()).willReturn(parent);
-		given(parent.get(TEST_KEY, TEST_CLASS)).willReturn(null);
-		
-		
-		final String result = config.get(TEST_KEY, TEST_CLASS);
-		assertNull(result);
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(0)).getParameter(TEST_KEY, TEST_CLASS);
-		then(config).should(times(1)).getParent();
-		then(parent).should(times(1)).get(TEST_KEY, TEST_CLASS);
-		then(parent).shouldHaveNoMoreInteractions();
-	}
+    /**
+     * Test method for {@link AbstractConfig#get(String, Class)} on
+     * instances with parent and parameter not configured with null
+     * value on parent.
+     */
+    @Test
+    public void testGetUnconfiguredParentNull() {
+        final Config parent = BDDMockito.mock(Config.class);
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(false);
+        given(config.getParent()).willReturn(parent);
+        given(parent.get(TEST_KEY, TEST_CLASS)).willReturn(null);
+        
+        
+        final String result = config.get(TEST_KEY, TEST_CLASS);
+        assertNull(result);
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(0)).getParameter(TEST_KEY, TEST_CLASS);
+        then(config).should(times(1)).getParent();
+        then(parent).should(times(1)).get(TEST_KEY, TEST_CLASS);
+        then(parent).shouldHaveNoMoreInteractions();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#getBoolean(String)} on
-	 * instances with no parent and parameter configured.
-	 */
-	@Test
-	public void testGetBooleanConfigured() {
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(true);
-		given(config.getBooleanParameter(TEST_KEY)).willReturn(true);
-		
-		final Boolean result = config.getBoolean(TEST_KEY);
-		assertNotNull(result);
-		assertTrue(result);
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(1)).getBooleanParameter(TEST_KEY);
-		then(config).should(times(0)).getParent();
-	}
+    /**
+     * Test method for {@link AbstractConfig#getBoolean(String)} on
+     * instances with no parent and parameter configured.
+     */
+    @Test
+    public void testGetBooleanConfigured() {
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(true);
+        given(config.getBooleanParameter(TEST_KEY)).willReturn(true);
+        
+        final Boolean result = config.getBoolean(TEST_KEY);
+        assertNotNull(result);
+        assertTrue(result);
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(1)).getBooleanParameter(TEST_KEY);
+        then(config).should(times(0)).getParent();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#getBoolean(String)} on
-	 * instances with no parent and parameter configured with null value.
-	 */
-	@Test
-	public void testGetBooleanConfiguredNull() {
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(true);
-		given(config.getBooleanParameter(TEST_KEY)).willReturn(null);
-		
-		final Boolean result = config.getBoolean(TEST_KEY);
-		assertNull(result);
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(1)).getBooleanParameter(TEST_KEY);
-		then(config).should(times(0)).getParent();
-	}
+    /**
+     * Test method for {@link AbstractConfig#getBoolean(String)} on
+     * instances with no parent and parameter configured with null value.
+     */
+    @Test
+    public void testGetBooleanConfiguredNull() {
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(true);
+        given(config.getBooleanParameter(TEST_KEY)).willReturn(null);
+        
+        final Boolean result = config.getBoolean(TEST_KEY);
+        assertNull(result);
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(1)).getBooleanParameter(TEST_KEY);
+        then(config).should(times(0)).getParent();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#getBoolean(String)} on
-	 * instances with no parent and parameter not configured.
-	 */
-	@Test
-	public void testGetBooleanUnconfiguredNoParent() {
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(false);
-		given(config.getParent()).willReturn(null);
-		
-		final Boolean result = config.getBoolean(TEST_KEY);
-		assertNull(result);
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(0)).getBooleanParameter(TEST_KEY);
-		then(config).should(times(1)).getParent();
-	}
+    /**
+     * Test method for {@link AbstractConfig#getBoolean(String)} on
+     * instances with no parent and parameter not configured.
+     */
+    @Test
+    public void testGetBooleanUnconfiguredNoParent() {
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(false);
+        given(config.getParent()).willReturn(null);
+        
+        final Boolean result = config.getBoolean(TEST_KEY);
+        assertNull(result);
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(0)).getBooleanParameter(TEST_KEY);
+        then(config).should(times(1)).getParent();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#getBoolean(String)} on
-	 * instances with parent and parameter not configured.
-	 */
-	@Test
-	public void testGetBooleanUnconfiguredParent() {
-		final Config parent = BDDMockito.mock(Config.class);
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(false);
-		given(config.getParent()).willReturn(parent);
-		given(parent.getBoolean(TEST_KEY)).willReturn(true);
-		
-		
-		final Boolean result = config.getBoolean(TEST_KEY);
-		assertNotNull(result);
-		assertTrue(result);
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(0)).getBooleanParameter(TEST_KEY);
-		then(config).should(times(1)).getParent();
-		then(parent).should(times(1)).getBoolean(TEST_KEY);
-		then(parent).shouldHaveNoMoreInteractions();
-	}
+    /**
+     * Test method for {@link AbstractConfig#getBoolean(String)} on
+     * instances with parent and parameter not configured.
+     */
+    @Test
+    public void testGetBooleanUnconfiguredParent() {
+        final Config parent = BDDMockito.mock(Config.class);
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(false);
+        given(config.getParent()).willReturn(parent);
+        given(parent.getBoolean(TEST_KEY)).willReturn(true);
+        
+        
+        final Boolean result = config.getBoolean(TEST_KEY);
+        assertNotNull(result);
+        assertTrue(result);
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(0)).getBooleanParameter(TEST_KEY);
+        then(config).should(times(1)).getParent();
+        then(parent).should(times(1)).getBoolean(TEST_KEY);
+        then(parent).shouldHaveNoMoreInteractions();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#getBoolean(String)} on
-	 * instances with parent and parameter not configured with null
-	 * value on parent.
-	 */
-	@Test
-	public void testGetBooleanUnconfiguredParentNull() {
-		final Config parent = BDDMockito.mock(Config.class);
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(false);
-		given(config.getParent()).willReturn(parent);
-		given(parent.getBoolean(TEST_KEY)).willReturn(null);
-		
-		
-		final Boolean result = config.getBoolean(TEST_KEY);
-		assertNull(result);
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(0)).getBooleanParameter(TEST_KEY);
-		then(config).should(times(1)).getParent();
-		then(parent).should(times(1)).getBoolean(TEST_KEY);
-		then(parent).shouldHaveNoMoreInteractions();
-	}
+    /**
+     * Test method for {@link AbstractConfig#getBoolean(String)} on
+     * instances with parent and parameter not configured with null
+     * value on parent.
+     */
+    @Test
+    public void testGetBooleanUnconfiguredParentNull() {
+        final Config parent = BDDMockito.mock(Config.class);
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(false);
+        given(config.getParent()).willReturn(parent);
+        given(parent.getBoolean(TEST_KEY)).willReturn(null);
+        
+        
+        final Boolean result = config.getBoolean(TEST_KEY);
+        assertNull(result);
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(0)).getBooleanParameter(TEST_KEY);
+        then(config).should(times(1)).getParent();
+        then(parent).should(times(1)).getBoolean(TEST_KEY);
+        then(parent).shouldHaveNoMoreInteractions();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#getString(String)} on
-	 * instances with no parent and parameter configured.
-	 */
-	@Test
-	public void testGetStringConfigured() {
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(true);
-		given(config.getStringParameter(TEST_KEY)).willReturn(TEST_STRING_VALUE);
-		
-		final String result = config.getString(TEST_KEY);
-		assertNotNull(result);
-		assertEquals(TEST_STRING_VALUE, result);
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(1)).getStringParameter(TEST_KEY);
-		then(config).should(times(0)).getParent();
-	}
+    /**
+     * Test method for {@link AbstractConfig#getString(String)} on
+     * instances with no parent and parameter configured.
+     */
+    @Test
+    public void testGetStringConfigured() {
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(true);
+        given(config.getStringParameter(TEST_KEY)).willReturn(TEST_STRING_VALUE);
+        
+        final String result = config.getString(TEST_KEY);
+        assertNotNull(result);
+        assertEquals(TEST_STRING_VALUE, result);
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(1)).getStringParameter(TEST_KEY);
+        then(config).should(times(0)).getParent();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#getString(String)} on
-	 * instances with no parent and parameter configured with null value.
-	 */
-	@Test
-	public void testGetStringConfiguredNull() {
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(true);
-		given(config.getStringParameter(TEST_KEY)).willReturn(null);
-		
-		final String result = config.getString(TEST_KEY);
-		assertNull(result);
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(1)).getStringParameter(TEST_KEY);
-		then(config).should(times(0)).getParent();
-	}
+    /**
+     * Test method for {@link AbstractConfig#getString(String)} on
+     * instances with no parent and parameter configured with null value.
+     */
+    @Test
+    public void testGetStringConfiguredNull() {
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(true);
+        given(config.getStringParameter(TEST_KEY)).willReturn(null);
+        
+        final String result = config.getString(TEST_KEY);
+        assertNull(result);
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(1)).getStringParameter(TEST_KEY);
+        then(config).should(times(0)).getParent();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#getString(String)} on
-	 * instances with no parent and parameter not configured.
-	 */
-	@Test
-	public void testGetStringUnconfiguredNoParent() {
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(false);
-		given(config.getParent()).willReturn(null);
-		
-		final String result = config.getString(TEST_KEY);
-		assertNull(result);
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(0)).getStringParameter(TEST_KEY);
-		then(config).should(times(1)).getParent();
-	}
+    /**
+     * Test method for {@link AbstractConfig#getString(String)} on
+     * instances with no parent and parameter not configured.
+     */
+    @Test
+    public void testGetStringUnconfiguredNoParent() {
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(false);
+        given(config.getParent()).willReturn(null);
+        
+        final String result = config.getString(TEST_KEY);
+        assertNull(result);
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(0)).getStringParameter(TEST_KEY);
+        then(config).should(times(1)).getParent();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#getString(String)} on
-	 * instances with parent and parameter not configured.
-	 */
-	@Test
-	public void testGetStringUnconfiguredParent() {
-		final Config parent = BDDMockito.mock(Config.class);
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(false);
-		given(config.getParent()).willReturn(parent);
-		given(parent.getString(TEST_KEY)).willReturn(TEST_STRING_VALUE);
-		
-		
-		final String result = config.getString(TEST_KEY);
-		assertNotNull(result);
-		assertEquals(TEST_STRING_VALUE, result);
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(0)).getStringParameter(TEST_KEY);
-		then(config).should(times(1)).getParent();
-		then(parent).should(times(1)).getString(TEST_KEY);
-		then(parent).shouldHaveNoMoreInteractions();
-	}
+    /**
+     * Test method for {@link AbstractConfig#getString(String)} on
+     * instances with parent and parameter not configured.
+     */
+    @Test
+    public void testGetStringUnconfiguredParent() {
+        final Config parent = BDDMockito.mock(Config.class);
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(false);
+        given(config.getParent()).willReturn(parent);
+        given(parent.getString(TEST_KEY)).willReturn(TEST_STRING_VALUE);
+        
+        
+        final String result = config.getString(TEST_KEY);
+        assertNotNull(result);
+        assertEquals(TEST_STRING_VALUE, result);
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(0)).getStringParameter(TEST_KEY);
+        then(config).should(times(1)).getParent();
+        then(parent).should(times(1)).getString(TEST_KEY);
+        then(parent).shouldHaveNoMoreInteractions();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#getString(String)} on
-	 * instances with parent and parameter not configured with null
-	 * value on parent.
-	 */
-	@Test
-	public void testGetStringUnconfiguredParentNull() {
-		final Config parent = BDDMockito.mock(Config.class);
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(false);
-		given(config.getParent()).willReturn(parent);
-		given(parent.getString(TEST_KEY)).willReturn(null);
-		
-		
-		final String result = config.getString(TEST_KEY);
-		assertNull(result);
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(0)).getStringParameter(TEST_KEY);
-		then(config).should(times(1)).getParent();
-		then(parent).should(times(1)).getString(TEST_KEY);
-		then(parent).shouldHaveNoMoreInteractions();
-	}
+    /**
+     * Test method for {@link AbstractConfig#getString(String)} on
+     * instances with parent and parameter not configured with null
+     * value on parent.
+     */
+    @Test
+    public void testGetStringUnconfiguredParentNull() {
+        final Config parent = BDDMockito.mock(Config.class);
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(false);
+        given(config.getParent()).willReturn(parent);
+        given(parent.getString(TEST_KEY)).willReturn(null);
+        
+        
+        final String result = config.getString(TEST_KEY);
+        assertNull(result);
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(0)).getStringParameter(TEST_KEY);
+        then(config).should(times(1)).getParent();
+        then(parent).should(times(1)).getString(TEST_KEY);
+        then(parent).shouldHaveNoMoreInteractions();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#getNumber(String)} on
-	 * instances with no parent and parameter configured.
-	 */
-	@Test
-	public void testGetNumberConfigured() {
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(true);
-		given(config.getNumberParameter(TEST_KEY)).willReturn(TEST_NUMBER_VALUE);
-		
-		final Number result = config.getNumber(TEST_KEY);
-		assertNotNull(result);
-		assertEquals(TEST_NUMBER_VALUE, result);
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(1)).getNumberParameter(TEST_KEY);
-		then(config).should(times(0)).getParent();
-	}
+    /**
+     * Test method for {@link AbstractConfig#getNumber(String)} on
+     * instances with no parent and parameter configured.
+     */
+    @Test
+    public void testGetNumberConfigured() {
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(true);
+        given(config.getNumberParameter(TEST_KEY)).willReturn(TEST_NUMBER_VALUE);
+        
+        final Number result = config.getNumber(TEST_KEY);
+        assertNotNull(result);
+        assertEquals(TEST_NUMBER_VALUE, result);
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(1)).getNumberParameter(TEST_KEY);
+        then(config).should(times(0)).getParent();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#getNumber(String)} on
-	 * instances with no parent and parameter configured with null value.
-	 */
-	@Test
-	public void testGetNumberConfiguredNull() {
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(true);
-		given(config.getNumberParameter(TEST_KEY)).willReturn(null);
-		
-		final Number result = config.getNumber(TEST_KEY);
-		assertNull(result);
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(1)).getNumberParameter(TEST_KEY);
-		then(config).should(times(0)).getParent();
-	}
+    /**
+     * Test method for {@link AbstractConfig#getNumber(String)} on
+     * instances with no parent and parameter configured with null value.
+     */
+    @Test
+    public void testGetNumberConfiguredNull() {
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(true);
+        given(config.getNumberParameter(TEST_KEY)).willReturn(null);
+        
+        final Number result = config.getNumber(TEST_KEY);
+        assertNull(result);
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(1)).getNumberParameter(TEST_KEY);
+        then(config).should(times(0)).getParent();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#getNumber(String)} on
-	 * instances with no parent and parameter not configured.
-	 */
-	@Test
-	public void testGetNumberUnconfiguredNoParent() {
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(false);
-		given(config.getParent()).willReturn(null);
-		
-		final Number result = config.getNumber(TEST_KEY);
-		assertNull(result);
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(0)).getStringParameter(TEST_KEY);
-		then(config).should(times(1)).getParent();
-	}
+    /**
+     * Test method for {@link AbstractConfig#getNumber(String)} on
+     * instances with no parent and parameter not configured.
+     */
+    @Test
+    public void testGetNumberUnconfiguredNoParent() {
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(false);
+        given(config.getParent()).willReturn(null);
+        
+        final Number result = config.getNumber(TEST_KEY);
+        assertNull(result);
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(0)).getStringParameter(TEST_KEY);
+        then(config).should(times(1)).getParent();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#getNumber(String)} on
-	 * instances with parent and parameter not configured.
-	 */
-	@Test
-	public void testGetNumberUnconfiguredParent() {
-		final Config parent = BDDMockito.mock(Config.class);
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(false);
-		given(config.getParent()).willReturn(parent);
-		given(parent.getNumber(TEST_KEY)).willReturn(TEST_NUMBER_VALUE);
-		
-		
-		final Number result = config.getNumber(TEST_KEY);
-		assertNotNull(result);
-		assertEquals(TEST_NUMBER_VALUE, result);
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(0)).getNumberParameter(TEST_KEY);
-		then(config).should(times(1)).getParent();
-		then(parent).should(times(1)).getNumber(TEST_KEY);
-		then(parent).shouldHaveNoMoreInteractions();
-	}
+    /**
+     * Test method for {@link AbstractConfig#getNumber(String)} on
+     * instances with parent and parameter not configured.
+     */
+    @Test
+    public void testGetNumberUnconfiguredParent() {
+        final Config parent = BDDMockito.mock(Config.class);
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(false);
+        given(config.getParent()).willReturn(parent);
+        given(parent.getNumber(TEST_KEY)).willReturn(TEST_NUMBER_VALUE);
+        
+        
+        final Number result = config.getNumber(TEST_KEY);
+        assertNotNull(result);
+        assertEquals(TEST_NUMBER_VALUE, result);
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(0)).getNumberParameter(TEST_KEY);
+        then(config).should(times(1)).getParent();
+        then(parent).should(times(1)).getNumber(TEST_KEY);
+        then(parent).shouldHaveNoMoreInteractions();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#getNumber(String)} on
-	 * instances with parent and parameter not configured with null
-	 * value on parent.
-	 */
-	@Test
-	public void testGetNumberUnconfiguredParentNull() {
-		final Config parent = BDDMockito.mock(Config.class);
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(false);
-		given(config.getParent()).willReturn(parent);
-		given(parent.getNumber(TEST_KEY)).willReturn(null);
-		
-		
-		final Number result = config.getNumber(TEST_KEY);
-		assertNull(result);
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(0)).getNumberParameter(TEST_KEY);
-		then(config).should(times(1)).getParent();
-		then(parent).should(times(1)).getNumber(TEST_KEY);
-		then(parent).shouldHaveNoMoreInteractions();
-	}
+    /**
+     * Test method for {@link AbstractConfig#getNumber(String)} on
+     * instances with parent and parameter not configured with null
+     * value on parent.
+     */
+    @Test
+    public void testGetNumberUnconfiguredParentNull() {
+        final Config parent = BDDMockito.mock(Config.class);
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(false);
+        given(config.getParent()).willReturn(parent);
+        given(parent.getNumber(TEST_KEY)).willReturn(null);
+        
+        
+        final Number result = config.getNumber(TEST_KEY);
+        assertNull(result);
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(0)).getNumberParameter(TEST_KEY);
+        then(config).should(times(1)).getParent();
+        then(parent).should(times(1)).getNumber(TEST_KEY);
+        then(parent).shouldHaveNoMoreInteractions();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#getInstant(String)} on
-	 * instances with no parent and parameter configured.
-	 */
-	@Test
-	public void testGetInstantConfigured() {
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(true);
-		given(config.getInstantParameter(TEST_KEY)).willReturn(TEST_INSTANT_VALUE);
-		
-		final Instant result = config.getInstant(TEST_KEY);
-		assertNotNull(result);
-		assertEquals(TEST_INSTANT_VALUE, result);
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(1)).getInstantParameter(TEST_KEY);
-		then(config).should(times(0)).getParent();
-	}
+    /**
+     * Test method for {@link AbstractConfig#getInstant(String)} on
+     * instances with no parent and parameter configured.
+     */
+    @Test
+    public void testGetInstantConfigured() {
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(true);
+        given(config.getInstantParameter(TEST_KEY)).willReturn(TEST_INSTANT_VALUE);
+        
+        final Instant result = config.getInstant(TEST_KEY);
+        assertNotNull(result);
+        assertEquals(TEST_INSTANT_VALUE, result);
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(1)).getInstantParameter(TEST_KEY);
+        then(config).should(times(0)).getParent();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#getInstant(String)} on
-	 * instances with no parent and parameter configured with null value.
-	 */
-	@Test
-	public void testGetInstantConfiguredNull() {
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(true);
-		given(config.getInstantParameter(TEST_KEY)).willReturn(null);
-		
-		final Instant result = config.getInstant(TEST_KEY);
-		assertNull(result);
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(1)).getInstantParameter(TEST_KEY);
-		then(config).should(times(0)).getParent();
-	}
+    /**
+     * Test method for {@link AbstractConfig#getInstant(String)} on
+     * instances with no parent and parameter configured with null value.
+     */
+    @Test
+    public void testGetInstantConfiguredNull() {
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(true);
+        given(config.getInstantParameter(TEST_KEY)).willReturn(null);
+        
+        final Instant result = config.getInstant(TEST_KEY);
+        assertNull(result);
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(1)).getInstantParameter(TEST_KEY);
+        then(config).should(times(0)).getParent();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#getInstant(String)} on
-	 * instances with no parent and parameter not configured.
-	 */
-	@Test
-	public void testGetInstantUnconfiguredNoParent() {
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(false);
-		given(config.getParent()).willReturn(null);
-		
-		final Instant result = config.getInstant(TEST_KEY);
-		assertNull(result);
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(0)).getInstantParameter(TEST_KEY);
-		then(config).should(times(1)).getParent();
-	}
+    /**
+     * Test method for {@link AbstractConfig#getInstant(String)} on
+     * instances with no parent and parameter not configured.
+     */
+    @Test
+    public void testGetInstantUnconfiguredNoParent() {
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(false);
+        given(config.getParent()).willReturn(null);
+        
+        final Instant result = config.getInstant(TEST_KEY);
+        assertNull(result);
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(0)).getInstantParameter(TEST_KEY);
+        then(config).should(times(1)).getParent();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#getInstant(String)} on
-	 * instances with parent and parameter not configured.
-	 */
-	@Test
-	public void testGetInstantUnconfiguredParent() {
-		final Config parent = BDDMockito.mock(Config.class);
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(false);
-		given(config.getParent()).willReturn(parent);
-		given(parent.getInstant(TEST_KEY)).willReturn(TEST_INSTANT_VALUE);
-		
-		
-		final Instant result = config.getInstant(TEST_KEY);
-		assertNotNull(result);
-		assertEquals(TEST_INSTANT_VALUE, result);
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(0)).getInstantParameter(TEST_KEY);
-		then(config).should(times(1)).getParent();
-		then(parent).should(times(1)).getInstant(TEST_KEY);
-		then(parent).shouldHaveNoMoreInteractions();
-	}
+    /**
+     * Test method for {@link AbstractConfig#getInstant(String)} on
+     * instances with parent and parameter not configured.
+     */
+    @Test
+    public void testGetInstantUnconfiguredParent() {
+        final Config parent = BDDMockito.mock(Config.class);
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(false);
+        given(config.getParent()).willReturn(parent);
+        given(parent.getInstant(TEST_KEY)).willReturn(TEST_INSTANT_VALUE);
+        
+        
+        final Instant result = config.getInstant(TEST_KEY);
+        assertNotNull(result);
+        assertEquals(TEST_INSTANT_VALUE, result);
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(0)).getInstantParameter(TEST_KEY);
+        then(config).should(times(1)).getParent();
+        then(parent).should(times(1)).getInstant(TEST_KEY);
+        then(parent).shouldHaveNoMoreInteractions();
+    }
 
-	/**
-	 * Test method for {@link AbstractConfig#getInstant(String)} on
-	 * instances with parent and parameter not configured with null
-	 * value on parent.
-	 */
-	@Test
-	public void testGetInstantUnconfiguredParentNull() {
-		final Config parent = BDDMockito.mock(Config.class);
-		final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-		given(config.containsParameter(TEST_KEY)).willReturn(false);
-		given(config.getParent()).willReturn(parent);
-		given(parent.getInstant(TEST_KEY)).willReturn(null);
-		
-		
-		final Instant result = config.getInstant(TEST_KEY);
-		assertNull(result);
-		
-		then(config).should(times(1)).containsParameter(TEST_KEY);
-		then(config).should(times(0)).getInstantParameter(TEST_KEY);
-		then(config).should(times(1)).getParent();
-		then(parent).should(times(1)).getInstant(TEST_KEY);
-		then(parent).shouldHaveNoMoreInteractions();
-	}
+    /**
+     * Test method for {@link AbstractConfig#getInstant(String)} on
+     * instances with parent and parameter not configured with null
+     * value on parent.
+     */
+    @Test
+    public void testGetInstantUnconfiguredParentNull() {
+        final Config parent = BDDMockito.mock(Config.class);
+        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
+        given(config.containsParameter(TEST_KEY)).willReturn(false);
+        given(config.getParent()).willReturn(parent);
+        given(parent.getInstant(TEST_KEY)).willReturn(null);
+        
+        
+        final Instant result = config.getInstant(TEST_KEY);
+        assertNull(result);
+        
+        then(config).should(times(1)).containsParameter(TEST_KEY);
+        then(config).should(times(0)).getInstantParameter(TEST_KEY);
+        then(config).should(times(1)).getParent();
+        then(parent).should(times(1)).getInstant(TEST_KEY);
+        then(parent).shouldHaveNoMoreInteractions();
+    }
 
-	/**
-	 * Test class.
-	 */
-	public static abstract class AbstractHierarchicalConfig
-	extends AbstractConfig
-	implements HierarchicalConfig {
-		// No extra methods
-	}
+    /**
+     * Test class.
+     */
+    public static abstract class AbstractHierarchicalConfig
+    extends AbstractConfig
+    implements HierarchicalConfig {
+        // No extra methods
+    }
 }

@@ -9,17 +9,19 @@ package dev.orne.config;
  * %%
  * Copyright (C) 2019 Orne Developments
  * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  * 
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
 
@@ -31,93 +33,93 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for {@code PropertiesConfig}.
  * 
+ * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
  * @version 1.0
- * @author (w) Iker Hernaez<i.hernaez@hif-soft.net>
  * @since 1.0, 2019-07
  */
 @Tag("ut")
 class PropertiesConfigTest {
 
-	private static final String TEST_KEY = "test.key";
+    private static final String TEST_KEY = "test.key";
 
-	/**
-	 * Test method for {@link PropertiesConfig#PropertiesConfig(Object...)} with
-	 * no sources.
-	 */
-	@Test
-	public void testEmptyConstructor() {
-		final PropertiesConfig config = new PropertiesConfig();
-		assertNotNull(config.getProperties());
-		assertTrue(config.getProperties().isEmpty());
-	}
+    /**
+     * Test method for {@link PropertiesConfig#PropertiesConfig(Object...)} with
+     * no sources.
+     */
+    @Test
+    public void testEmptyConstructor() {
+        final PropertiesConfig config = new PropertiesConfig();
+        assertNotNull(config.getProperties());
+        assertTrue(config.getProperties().isEmpty());
+    }
 
-	/**
-	 * Test method for {@link PropertiesConfig#containsParameter(String)} with
-	 * non existent property.
-	 */
-	@Test
-	public void testContainsParameterFalse() {
-		final PropertiesConfig config = new PropertiesConfig();
-		assertFalse(config.containsParameter(TEST_KEY));
-	}
+    /**
+     * Test method for {@link PropertiesConfig#containsParameter(String)} with
+     * non existent property.
+     */
+    @Test
+    public void testContainsParameterFalse() {
+        final PropertiesConfig config = new PropertiesConfig();
+        assertFalse(config.containsParameter(TEST_KEY));
+    }
 
-	/**
-	 * Test method for {@link PropertiesConfig#containsParameter(String)} with
-	 * existent property.
-	 */
-	@Test
-	public void testContainsParameterTrue() {
-		final PropertiesConfig config = new PropertiesConfig();
-		config.getProperties().setProperty(TEST_KEY, "somaValue");
-		assertTrue(config.containsParameter(TEST_KEY));
-	}
+    /**
+     * Test method for {@link PropertiesConfig#containsParameter(String)} with
+     * existent property.
+     */
+    @Test
+    public void testContainsParameterTrue() {
+        final PropertiesConfig config = new PropertiesConfig();
+        config.getProperties().setProperty(TEST_KEY, "somaValue");
+        assertTrue(config.containsParameter(TEST_KEY));
+    }
 
-	/**
-	 * Test method for {@link PropertiesConfig#containsParameter(String)} with
-	 * existent {@code null} property.
-	 */
-	@Test
-	public void testContainsParameterTrueNull() {
-		final PropertiesConfig config = new PropertiesConfig();
-		config.getProperties().setProperty(TEST_KEY, PropertiesConfig.NULL);
-		assertTrue(config.containsParameter(TEST_KEY));
-	}
+    /**
+     * Test method for {@link PropertiesConfig#containsParameter(String)} with
+     * existent {@code null} property.
+     */
+    @Test
+    public void testContainsParameterTrueNull() {
+        final PropertiesConfig config = new PropertiesConfig();
+        config.getProperties().setProperty(TEST_KEY, PropertiesConfig.NULL);
+        assertTrue(config.containsParameter(TEST_KEY));
+    }
 
-	/**
-	 * Test method for {@link PropertiesConfig#getStringParameter(String)} with
-	 * non existent property.
-	 */
-	@Test
-	public void testGetStringMissing() {
-		System.clearProperty(TEST_KEY);
-		final PropertiesConfig config = new PropertiesConfig();
-		final String result = config.getStringParameter(TEST_KEY);
-		assertNull(result);
-	}
+    /**
+     * Test method for {@link PropertiesConfig#getStringParameter(String)} with
+     * non existent property.
+     */
+    @Test
+    public void testGetStringMissing() {
+        System.clearProperty(TEST_KEY);
+        final PropertiesConfig config = new PropertiesConfig();
+        final String result = config.getStringParameter(TEST_KEY);
+        assertNull(result);
+    }
 
-	/**
-	 * Test method for {@link PropertiesConfig#getStringParameter(String)} with
-	 * existent {@code null} property.
-	 */
-	@Test
-	public void testGetStringNull() {
-		final PropertiesConfig config = new PropertiesConfig();
-		config.getProperties().setProperty(TEST_KEY, PropertiesConfig.NULL);
-		final String result = config.getStringParameter(TEST_KEY);
-		assertNull(result);
-	}
+    /**
+     * Test method for {@link PropertiesConfig#getStringParameter(String)} with
+     * existent {@code null} property.
+     */
+    @Test
+    public void testGetStringNull() {
+        final PropertiesConfig config = new PropertiesConfig();
+        config.getProperties().setProperty(TEST_KEY, PropertiesConfig.NULL);
+        final String result = config.getStringParameter(TEST_KEY);
+        assertNull(result);
+    }
 
-	/**
-	 * Test method for {@link PropertiesConfig#getStringParameter(String)} with
-	 * existent non {@code null} property.
-	 */
-	@Test
-	public void testGetString() {
-		final String expectedValue = "customValue";
-		final PropertiesConfig config = new PropertiesConfig();
-		config.getProperties().setProperty(TEST_KEY, expectedValue);
-		final String result = config.getStringParameter(TEST_KEY);
-		assertNotNull(result);
-		assertEquals(expectedValue, result);
-	}
+    /**
+     * Test method for {@link PropertiesConfig#getStringParameter(String)} with
+     * existent non {@code null} property.
+     */
+    @Test
+    public void testGetString() {
+        final String expectedValue = "customValue";
+        final PropertiesConfig config = new PropertiesConfig();
+        config.getProperties().setProperty(TEST_KEY, expectedValue);
+        final String result = config.getStringParameter(TEST_KEY);
+        assertNotNull(result);
+        assertEquals(expectedValue, result);
+    }
 }
