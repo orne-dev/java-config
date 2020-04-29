@@ -10,6 +10,7 @@
     01. :boom: Methods of `dev.orne.config.PropertiesConfig` throw `ConfigException`
     01. :boom: Methods of `dev.orne.config.SystemConfig` throw `ConfigException`
 01. :gift: Added `dev.orne.config.DelegatedConfig`
+01. :gift: Added `dev.orne.config.MutableDelegatedConfig`
 
 # :package: 0.1.0
 
