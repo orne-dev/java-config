@@ -33,8 +33,8 @@ import javax.validation.constraints.NotBlank;
  * configuration values stored as {@code String}.</p>
  * 
  * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
- * @version 1.0
- * @since 2019-07
+ * @version 2.0, 2020-04
+ * @since 0.1
  * @see Config
  */
 public abstract class AbstractStringConfig
@@ -47,7 +47,8 @@ extends AbstractConfig {
     @Nullable
     protected Boolean getBooleanParameter(
             @NotBlank
-            final String key) {
+            final String key)
+    throws ConfigException {
         final String strValue = getStringParameter(key);
         return strValue == null ? null : Boolean.valueOf(strValue);
     }
@@ -59,7 +60,8 @@ extends AbstractConfig {
     @Nullable
     protected Number getNumberParameter(
             @NotBlank
-            final String key) {
+            final String key)
+    throws ConfigException {
         final String strValue = getStringParameter(key);
         return strValue == null ? null : new BigDecimal(strValue);
     }
@@ -71,7 +73,8 @@ extends AbstractConfig {
     @Nullable
     protected Instant getInstantParameter(
             @NotBlank
-            final String key) {
+            final String key)
+    throws ConfigException {
         final String strValue = getStringParameter(key);
         return strValue == null ? null : Instant.parse(strValue);
     }

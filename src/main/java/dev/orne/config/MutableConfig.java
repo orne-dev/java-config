@@ -29,8 +29,8 @@ import javax.validation.constraints.NotBlank;
  * Interface for classes containing configuration values mutable at runtime.
  * 
  * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
- * @version 1.0
- * @since 1.0, 2019-07
+ * @version 2.0, 2020-04
+ * @since 0.1
  * @see Config
  */
 public interface MutableConfig
@@ -41,19 +41,25 @@ extends Config {
      * 
      * @param key The key of the configuration parameter
      * @param value The value to set
+     * @throws ConfigException If an error occurs setting the configuration
+     * property value
      */
     void set(
             @NotBlank
             String key,
             @Nullable
-            Object value);
+            Object value)
+    throws ConfigException;
 
     /**
      * Removes the value of the configuration parameter.
      * 
      * @param key The key of the configuration parameter
+     * @throws ConfigException If an error occurs removing the configuration
+     * property
      */
     void remove(
             @NotBlank
-            String key);
+            String key)
+    throws ConfigException;
 }

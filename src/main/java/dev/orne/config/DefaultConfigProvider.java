@@ -34,8 +34,8 @@ import org.apache.commons.lang3.Validate;
  * Default implementation of {@code ConfigProvider}.
  * 
  * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
- * @version 1.0
- * @since 1.0, 2019-07
+ * @version 2.0, 2020-04
+ * @since 0.1
  */
 public class DefaultConfigProvider
 implements ConfigProvider {
@@ -66,7 +66,7 @@ implements ConfigProvider {
         super();
         Validate.notNull(defaultConfig, NULL_DEFAULT_ERR);
         this.defaultConfig = defaultConfig;
-        this.mappings = new HashMap<Class<?>, Config>();
+        this.mappings = new HashMap<>();
         mapConfigType(defaultConfig.getClass(), defaultConfig);
     }
 
@@ -120,7 +120,7 @@ implements ConfigProvider {
      * {@inheritDoc}
      */
     @Override
-    @NotNull
+    @Nullable
     public Config selectConfig(
             @Nullable
             final ConfigurationOptions options,

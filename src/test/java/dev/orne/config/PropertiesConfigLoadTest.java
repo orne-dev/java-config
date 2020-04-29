@@ -46,7 +46,7 @@ import org.junit.jupiter.api.Test;
  * 
  * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
  * @version 1.0
- * @since 1.0, 2019-07
+ * @since 0.1
  */
 @Tag("ut")
 class PropertiesConfigLoadTest {
@@ -98,10 +98,12 @@ class PropertiesConfigLoadTest {
     /**
      * Test method for {@link PropertiesConfig#PropertiesConfig(Object...)} with
      * values source.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testLoadProperties() {
-        final PropertiesConfig config = new PropertiesConfig(TEST_PROPERTIES);
+    public void testLoadProperties()
+    throws ConfigException {
+        final PropertiesConfig config = new PropertiesConfig(new Object[] { TEST_PROPERTIES });
         assertNotNull(config.getProperties());
         assertFalse(config.getProperties().isEmpty());
         assertTrue(config.containsParameter(TEST_COMMON_KEY));
@@ -121,9 +123,11 @@ class PropertiesConfigLoadTest {
     /**
      * Test method for {@link PropertiesConfig#PropertiesConfig(Object...)} with
      * classpath resource source.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testLoadResource() {
+    public void testLoadResource()
+    throws ConfigException {
         final PropertiesConfig config = new PropertiesConfig(TEST_RESOURCE);
         assertNotNull(config.getProperties());
         assertFalse(config.getProperties().isEmpty());
@@ -143,10 +147,32 @@ class PropertiesConfigLoadTest {
 
     /**
      * Test method for {@link PropertiesConfig#PropertiesConfig(Object...)} with
-     * file source.
+     * classpath resource source that fails to load.
+     * @throws IOException Should be captured
      */
     @Test
-    public void testLoadFile() {
+    public void testLoadResourceFail()
+    throws IOException {
+        final Properties mockProperties = mock(Properties.class);
+        willThrow(new IOException())
+            .given(mockProperties)
+            .load(any(InputStream.class));
+        final PropertiesConfig config = new PropertiesConfig(
+                mockProperties, TEST_RESOURCE);
+        assertSame(mockProperties, config.getProperties());
+        then(mockProperties)
+            .should(times(1))
+            .load(any(InputStream.class));
+    }
+
+    /**
+     * Test method for {@link PropertiesConfig#PropertiesConfig(Object...)} with
+     * file source.
+     * @throws ConfigException Shouldn't happen
+     */
+    @Test
+    public void testLoadFile()
+    throws ConfigException {
         final PropertiesConfig config = new PropertiesConfig(TEST_FILE);
         assertNotNull(config.getProperties());
         assertFalse(config.getProperties().isEmpty());
@@ -166,10 +192,32 @@ class PropertiesConfigLoadTest {
 
     /**
      * Test method for {@link PropertiesConfig#PropertiesConfig(Object...)} with
-     * URL.
+     * file source that fails to load.
+     * @throws IOException Should be captured
      */
     @Test
-    public void testLoadURL() {
+    public void testLoadFileFail()
+    throws IOException {
+        final Properties mockProperties = mock(Properties.class);
+        willThrow(new IOException())
+            .given(mockProperties)
+            .load(any(InputStream.class));
+        final PropertiesConfig config = new PropertiesConfig(
+                mockProperties, TEST_FILE);
+        assertSame(mockProperties, config.getProperties());
+        then(mockProperties)
+            .should(times(1))
+            .load(any(InputStream.class));
+    }
+
+    /**
+     * Test method for {@link PropertiesConfig#PropertiesConfig(Object...)} with
+     * URL.
+     * @throws ConfigException Shouldn't happen
+     */
+    @Test
+    public void testLoadURL()
+    throws ConfigException {
         final PropertiesConfig config = new PropertiesConfig(TEST_URL);
         assertNotNull(config.getProperties());
         assertFalse(config.getProperties().isEmpty());
@@ -194,7 +242,7 @@ class PropertiesConfigLoadTest {
      * @throws IOException Should be captured
      */
     @Test
-    public void testLoadURLError()
+    public void testLoadURLFail()
     throws IOException {
         final URL faillingURL = new URL("http://should.fail.test/");
         
@@ -221,11 +269,13 @@ class PropertiesConfigLoadTest {
     /**
      * Test method for {@link PropertiesConfig#PropertiesConfig(Object...)} with
      * multiple sources.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testLoadMultiple() {
+    public void testLoadMultiple()
+    throws ConfigException {
         final PropertiesConfig config = new PropertiesConfig(
-                TEST_PROPERTIES, TEST_RESOURCE, TEST_FILE, TEST_URL);
+                new Object[] { TEST_PROPERTIES, TEST_RESOURCE, TEST_FILE, TEST_URL });
         assertNotNull(config.getProperties());
         assertFalse(config.getProperties().isEmpty());
         assertTrue(config.containsParameter(TEST_COMMON_KEY));
@@ -248,9 +298,11 @@ class PropertiesConfigLoadTest {
     /**
      * Test method for {@link PropertiesConfig#PropertiesConfig(Object...)} with
      * an instance of Iterable of all simple types.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testLoadIterable() {
+    public void testLoadIterable()
+    throws ConfigException {
         final PropertiesConfig config = new PropertiesConfig(
                 Arrays.asList(TEST_PROPERTIES, TEST_RESOURCE, TEST_FILE, TEST_URL));
         assertNotNull(config.getProperties());

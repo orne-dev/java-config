@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
  * 
  * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
  * @version 1.0
- * @since 1.0, 2019-07
+ * @since 0.1
  */
 @Tag("ut")
 class PropertiesConfigTest {
@@ -56,9 +56,11 @@ class PropertiesConfigTest {
     /**
      * Test method for {@link PropertiesConfig#containsParameter(String)} with
      * non existent property.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testContainsParameterFalse() {
+    public void testContainsParameterFalse()
+    throws ConfigException {
         final PropertiesConfig config = new PropertiesConfig();
         assertFalse(config.containsParameter(TEST_KEY));
     }
@@ -66,9 +68,11 @@ class PropertiesConfigTest {
     /**
      * Test method for {@link PropertiesConfig#containsParameter(String)} with
      * existent property.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testContainsParameterTrue() {
+    public void testContainsParameterTrue()
+    throws ConfigException {
         final PropertiesConfig config = new PropertiesConfig();
         config.getProperties().setProperty(TEST_KEY, "somaValue");
         assertTrue(config.containsParameter(TEST_KEY));
@@ -77,9 +81,11 @@ class PropertiesConfigTest {
     /**
      * Test method for {@link PropertiesConfig#containsParameter(String)} with
      * existent {@code null} property.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testContainsParameterTrueNull() {
+    public void testContainsParameterTrueNull()
+    throws ConfigException {
         final PropertiesConfig config = new PropertiesConfig();
         config.getProperties().setProperty(TEST_KEY, PropertiesConfig.NULL);
         assertTrue(config.containsParameter(TEST_KEY));
@@ -88,9 +94,11 @@ class PropertiesConfigTest {
     /**
      * Test method for {@link PropertiesConfig#getStringParameter(String)} with
      * non existent property.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetStringMissing() {
+    public void testGetStringMissing()
+    throws ConfigException {
         System.clearProperty(TEST_KEY);
         final PropertiesConfig config = new PropertiesConfig();
         final String result = config.getStringParameter(TEST_KEY);
@@ -100,9 +108,11 @@ class PropertiesConfigTest {
     /**
      * Test method for {@link PropertiesConfig#getStringParameter(String)} with
      * existent {@code null} property.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetStringNull() {
+    public void testGetStringNull()
+    throws ConfigException {
         final PropertiesConfig config = new PropertiesConfig();
         config.getProperties().setProperty(TEST_KEY, PropertiesConfig.NULL);
         final String result = config.getStringParameter(TEST_KEY);
@@ -112,9 +122,11 @@ class PropertiesConfigTest {
     /**
      * Test method for {@link PropertiesConfig#getStringParameter(String)} with
      * existent non {@code null} property.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetString() {
+    public void testGetString()
+    throws ConfigException {
         final String expectedValue = "customValue";
         final PropertiesConfig config = new PropertiesConfig();
         config.getProperties().setProperty(TEST_KEY, expectedValue);

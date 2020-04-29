@@ -49,8 +49,8 @@ import org.apache.commons.lang3.LocaleUtils;
  * types support to calls to {@link #get(String, Class)}.
  * 
  * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
- * @version 1.0
- * @since 1.0, 2019-07
+ * @version 2.0, 2020-04
+ * @since 0.1
  */
 public abstract class AbstractConfig
 implements Config {
@@ -61,7 +61,8 @@ implements Config {
     @Override
     public boolean contains(
             @NotBlank
-            final String key) {
+            final String key)
+    throws ConfigException {
         boolean found = containsParameter(key);
         if (!found && this instanceof HierarchicalConfig) {
             final Config parent = ((HierarchicalConfig) this).getParent();
@@ -78,10 +79,13 @@ implements Config {
      * 
      * @param key The key of the configuration parameter
      * @return Returns {@code true} if the parameter has been configured
+     * @throws ConfigException If an error occurs accessing the configuration
+     * property
      */
     protected abstract boolean containsParameter(
             @NotBlank
-            String key);
+            String key)
+    throws ConfigException;
 
     /**
      * {@inheritDoc}
@@ -92,7 +96,8 @@ implements Config {
             @NotBlank
             final String key,
             @NotNull
-            final Class<T> type) {
+            final Class<T> type)
+    throws ConfigException {
         T value = null;
         if (containsParameter(key)) {
             value = getParameter(key, type);
@@ -113,13 +118,16 @@ implements Config {
      * @param key The key of the configuration parameter
      * @param type The target type of the parameter
      * @return The configuration parameter value converted to the target type
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
      */
     @Nullable
     protected <T> T getParameter(
             @NotBlank
             final String key,
             @NotNull
-            final Class<T> type) {
+            final Class<T> type)
+    throws ConfigException {
         final T result;
         if (String.class.equals(type)) {
             result = type.cast(getStringParameter(key));
@@ -170,14 +178,17 @@ implements Config {
      * @param type The enumeration type. Must be a subcass of {¢ode Enum}.
      * @param name The name of the requested constant
      * @return The constant with the requested name
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Nullable
-    private Enum<?> getEnum(
+    protected Enum<?> getEnum(
             @NotBlank
             final Class<?> type,
             @Nullable
-            final String name) {
+            final String name)
+    throws ConfigException {
         final Class<? extends Enum> enumType = (Class<? extends Enum>) type;
         return Enum.valueOf(enumType, name);
     }
@@ -189,7 +200,8 @@ implements Config {
     @Nullable
     public Boolean getBoolean(
             @NotBlank
-            final String key) {
+            final String key)
+    throws ConfigException {
         Boolean value = null;
         if (containsParameter(key)) {
             value = getBooleanParameter(key);
@@ -208,11 +220,14 @@ implements Config {
      * 
      * @param key The key of the configuration parameter
      * @return The configuration parameter value as {@code Boolean}
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
      */
     @Nullable
     protected abstract Boolean getBooleanParameter(
             @NotBlank
-            String key);
+            String key)
+    throws ConfigException;
 
     /**
      * {@inheritDoc}
@@ -221,7 +236,8 @@ implements Config {
     @Nullable
     public String getString(
             @NotBlank
-            final String key) {
+            final String key)
+    throws ConfigException {
         String value = null;
         if (containsParameter(key)) {
             value = getStringParameter(key);
@@ -240,11 +256,14 @@ implements Config {
      * 
      * @param key The key of the configuration parameter
      * @return The configuration parameter value as {@code String}
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
      */
     @Nullable
     protected abstract String getStringParameter(
             @NotBlank
-            String key);
+            String key)
+    throws ConfigException;
 
     /**
      * {@inheritDoc}
@@ -253,7 +272,8 @@ implements Config {
     @Nullable
     public Number getNumber(
             @NotBlank
-            final String key) {
+            final String key)
+    throws ConfigException {
         Number value = null;
         if (containsParameter(key)) {
             value = getNumberParameter(key);
@@ -272,10 +292,13 @@ implements Config {
      * 
      * @param key The key of the configuration parameter
      * @return The configuration parameter value as {@code Number}
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
      */
     protected abstract Number getNumberParameter(
             @NotBlank
-            String key);
+            String key)
+    throws ConfigException;
 
     /**
      * {@inheritDoc}
@@ -284,7 +307,8 @@ implements Config {
     @Nullable
     public Instant getInstant(
             @NotBlank
-            final String key) {
+            final String key)
+    throws ConfigException {
         Instant value = null;
         if (containsParameter(key)) {
             value = getInstantParameter(key);
@@ -303,9 +327,12 @@ implements Config {
      * 
      * @param key The key of the configuration parameter
      * @return The configuration parameter value as {@code Instant}
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
      */
     @Nullable
     protected abstract Instant getInstantParameter(
             @NotBlank
-            String key);
+            String key)
+    throws ConfigException;
 }

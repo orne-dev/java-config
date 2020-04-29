@@ -26,6 +26,8 @@ package dev.orne.config;
  */
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.*;
+import static org.mockito.Mockito.times;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -54,7 +56,7 @@ import org.junit.jupiter.api.Test;
  * 
  * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
  * @version 1.0
- * @since 1.0, 2019-07
+ * @since 0.1
  */
 @Tag("ut")
 class PropertiesConfigMutableTest {
@@ -64,9 +66,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code null} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetNull() {
+    public void testSetNull()
+    throws ConfigException {
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, null);
         assertTrue(config.containsParameter(TEST_KEY));
@@ -76,9 +80,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code String} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetString() {
+    public void testSetString()
+    throws ConfigException {
         final String expectedValue = "some value";
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
@@ -90,9 +96,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * empty {@code String} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetStringEmpty() {
+    public void testSetStringEmpty()
+    throws ConfigException {
         final String expectedValue = "";
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
@@ -104,9 +112,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code Locale} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetLocale() {
+    public void testSetLocale()
+    throws ConfigException {
         final Locale expectedValue = Locale.ENGLISH;
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
@@ -119,9 +129,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code Enum} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetEnum() {
+    public void testSetEnum()
+    throws ConfigException {
         final DayOfWeek expectedValue = DayOfWeek.SATURDAY;
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
@@ -134,9 +146,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code String} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetBooleanTrue() {
+    public void testSetBooleanTrue()
+    throws ConfigException {
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, true);
         assertTrue(config.containsParameter(TEST_KEY));
@@ -147,9 +161,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code String} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetBooleanFalse() {
+    public void testSetBooleanFalse()
+    throws ConfigException {
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, false);
         assertTrue(config.containsParameter(TEST_KEY));
@@ -160,9 +176,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code Byte} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetByte() {
+    public void testSetByte()
+    throws ConfigException {
         final Byte expectedValue = Byte.MAX_VALUE;
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
@@ -175,9 +193,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code Short} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetShort() {
+    public void testSetShort()
+    throws ConfigException {
         final Short expectedValue = Short.MIN_VALUE;
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
@@ -190,9 +210,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code Integer} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetInteger() {
+    public void testSetInteger()
+    throws ConfigException {
         final Integer expectedValue = Integer.MAX_VALUE;
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
@@ -205,9 +227,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code Long} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetLong() {
+    public void testSetLong()
+    throws ConfigException {
         final Long expectedValue = Long.MIN_VALUE;
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
@@ -220,9 +244,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code String} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetFloat() {
+    public void testSetFloat()
+    throws ConfigException {
         final Float expectedValue = Float.MAX_VALUE;
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
@@ -235,9 +261,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code Double} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetDouble() {
+    public void testSetDouble()
+    throws ConfigException {
         final Double expectedValue = Double.MIN_VALUE;
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
@@ -250,9 +278,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code BigInteger} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetBigInteger() {
+    public void testSetBigInteger()
+    throws ConfigException {
         final BigInteger expectedValue = BigInteger.valueOf(Long.MAX_VALUE).pow(2);
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
@@ -265,9 +295,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code String} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetBigDecimal() {
+    public void testSetBigDecimal()
+    throws ConfigException {
         final BigDecimal expectedValue = BigDecimal.valueOf(Double.MIN_VALUE).pow(3);
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
@@ -280,9 +312,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code Instant} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetInstant() {
+    public void testSetInstant()
+    throws ConfigException {
         final Instant expectedValue = Instant.now();
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
@@ -296,9 +330,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code Year} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetYear() {
+    public void testSetYear()
+    throws ConfigException {
         final Year expectedValue = Year.now();
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
@@ -311,9 +347,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code YearMonth} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetYearMonth() {
+    public void testSetYearMonth()
+    throws ConfigException {
         final YearMonth expectedValue = YearMonth.now();
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
@@ -326,9 +364,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code LocalDate} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetLocalDate() {
+    public void testSetLocalDate()
+    throws ConfigException {
         final LocalDate expectedValue = LocalDate.now();
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
@@ -341,9 +381,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code LocalTime} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetLocalTime() {
+    public void testSetLocalTime()
+    throws ConfigException {
         final LocalTime expectedValue = LocalTime.now();
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
@@ -356,9 +398,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code LocalDateTime} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetLocalDateTime() {
+    public void testSetLocalDateTime()
+    throws ConfigException {
         final LocalDateTime expectedValue = LocalDateTime.now();
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
@@ -371,9 +415,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code ZoneOffset} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetZoneOffset() {
+    public void testSetZoneOffset()
+    throws ConfigException {
         final ZoneOffset expectedValue = ZoneOffset.ofHours(2);
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
@@ -386,9 +432,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code Duration} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetDuration() {
+    public void testSetDuration()
+    throws ConfigException {
         final Duration expectedValue = Duration.ofDays(2).plusHours(4);
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
@@ -401,9 +449,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code Period} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetPeriod() {
+    public void testSetPeriod()
+    throws ConfigException {
         final Period expectedValue = Period.of(1, 2, 3);
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
@@ -416,9 +466,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code Date} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetDate() {
+    public void testSetDate()
+    throws ConfigException {
         final Date expectedValue = new Date();
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
@@ -431,9 +483,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code Calendar} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetCalendar() {
+    public void testSetCalendar()
+    throws ConfigException {
         final Calendar expectedValue = Calendar.getInstance();
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
@@ -447,10 +501,11 @@ class PropertiesConfigMutableTest {
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code URL} value.
      * @throws MalformedURLException Not thrown
+     * @throws ConfigException Shouldn't happen
      */
     @Test
     public void testSetURL()
-    throws MalformedURLException {
+    throws MalformedURLException, ConfigException {
         final URL expectedValue = new URL("http://projects.orne.dev/some/path");
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
@@ -463,9 +518,11 @@ class PropertiesConfigMutableTest {
     /**
      * Test method for {@link PropertiesConfig#set(String, Object)} with
      * {@code URI} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetURI() {
+    public void testSetURI()
+    throws ConfigException {
         final URI expectedValue = URI.create("/some/path");
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
@@ -477,12 +534,32 @@ class PropertiesConfigMutableTest {
 
     /**
      * Test method for {@link PropertiesConfig#remove(String)}.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testRemove() {
+    public void testRemove()
+    throws ConfigException {
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, "to be deleted");
         config.remove(TEST_KEY);
+        assertFalse(config.containsParameter(TEST_KEY));
+        assertNull(config.getStringParameter(TEST_KEY));
+    }
+
+    /**
+     * Test method for {@link PropertiesConfig#setRawValue(String, String)}
+     * when value is null.
+     * @throws ConfigException Shouldn't happen
+     */
+    @Test
+    public void testSetRawValueNull()
+    throws ConfigException {
+        final PropertiesConfig realConfig = new PropertiesConfig();
+        final PropertiesConfig config = spy(realConfig);
+        config.set(TEST_KEY, "to be deleted");
+        config.setRawValue(TEST_KEY, null);
+        
+        then(config).should(times(1)).remove(TEST_KEY);
         assertFalse(config.containsParameter(TEST_KEY));
         assertNull(config.getStringParameter(TEST_KEY));
     }

@@ -58,7 +58,7 @@ import org.mockito.BDDMockito;
  * 
  * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
  * @version 1.0
- * @since 1.0, 2019-07
+ * @since 0.1
  */
 @Tag("ut")
 class AbstractConfigTest {
@@ -68,9 +68,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code Boolean} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetBoolean() {
+    public void testGetBoolean()
+    throws ConfigException {
         final Boolean boolValue = Boolean.TRUE;
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
         given(config.getBooleanParameter(TEST_KEY)).willReturn(boolValue);
@@ -86,9 +88,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code String} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetString() {
+    public void testGetString()
+    throws ConfigException {
         final String strValue = "test.value";
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
         given(config.getStringParameter(TEST_KEY)).willReturn(strValue);
@@ -104,9 +108,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code Locale} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetLocale() {
+    public void testGetLocale()
+    throws ConfigException {
         final Locale expectedValue = Locale.ENGLISH;
         final String strValue = expectedValue.toString();
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
@@ -123,9 +129,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code Enum} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetEnum() {
+    public void testGetEnum()
+    throws ConfigException {
         final DayOfWeek expectedValue = DayOfWeek.SATURDAY;
         final String strValue = expectedValue.toString();
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
@@ -144,10 +152,11 @@ class AbstractConfigTest {
      * {@code URL} target type.
      * 
      * @throws MalformedURLException Not thrown
+     * @throws ConfigException Shouldn't happen
      */
     @Test
     public void testGetURL()
-    throws MalformedURLException {
+    throws MalformedURLException, ConfigException {
         final String strValue = "http://projects.orne.dev/some/path";
         final URL expectedValue = new URL(strValue);
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
@@ -164,9 +173,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code URI} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetURI() {
+    public void testGetURI()
+    throws ConfigException {
         final String strValue = "/some/path";
         final URI expectedValue = URI.create(strValue);
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
@@ -183,9 +194,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code Character} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetChar() {
+    public void testGetChar()
+    throws ConfigException {
         final String strValue = "w";
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
         given(config.getStringParameter(TEST_KEY)).willReturn(strValue);
@@ -201,9 +214,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code Byte} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetByte() {
+    public void testGetByte()
+    throws ConfigException {
         final Byte expectedValue = 123;
         final BigDecimal numberValue = BigDecimal.valueOf(expectedValue);
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
@@ -220,9 +235,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code Short} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetShort() {
+    public void testGetShort()
+    throws ConfigException {
         final Short expectedValue = 123;
         final BigDecimal numberValue = BigDecimal.valueOf(expectedValue);
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
@@ -239,9 +256,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code Integer} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetInteger() {
+    public void testGetInteger()
+    throws ConfigException {
         final Integer expectedValue = 123;
         final BigDecimal numberValue = BigDecimal.valueOf(expectedValue);
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
@@ -258,9 +277,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code BigInteger} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetBigInteger() {
+    public void testGetBigInteger()
+    throws ConfigException {
         final BigInteger expectedValue = BigInteger.valueOf(2467894425678L);
         final BigDecimal numberValue = new BigDecimal(expectedValue);
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
@@ -277,9 +298,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code Long} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetLong() {
+    public void testGetLong()
+    throws ConfigException {
         final Long expectedValue = 123457L;
         final BigDecimal numberValue = BigDecimal.valueOf(expectedValue);
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
@@ -296,9 +319,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code Float} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetFloat() {
+    public void testGetFloat()
+    throws ConfigException {
         final Float expectedValue = 123.6f;
         final BigDecimal numberValue = BigDecimal.valueOf(expectedValue);
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
@@ -315,9 +340,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code Double} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetDouble() {
+    public void testGetDouble()
+    throws ConfigException {
         final Double expectedValue = 7534.33;
         final BigDecimal numberValue = BigDecimal.valueOf(expectedValue);
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
@@ -334,9 +361,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code BigDecimal} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetBigDecimal() {
+    public void testGetBigDecimal()
+    throws ConfigException {
         final BigDecimal expectedValue = BigDecimal.valueOf(2467894425678.34568854);
         final BigDecimal numberValue = expectedValue;
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
@@ -353,9 +382,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code Instant} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetInstant() {
+    public void testGetInstant()
+    throws ConfigException {
         final Instant expectedValue = Instant.now();
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
         given(config.getInstantParameter(TEST_KEY)).willReturn(expectedValue);
@@ -371,9 +402,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code Year} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetYear() {
+    public void testGetYear()
+    throws ConfigException {
         final Year expectedValue = Year.now();
         final String strValue = expectedValue.toString();
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
@@ -390,9 +423,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code YearMonth} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetYearMonth() {
+    public void testGetYearMonth()
+    throws ConfigException {
         final YearMonth expectedValue = YearMonth.now();
         final String strValue = expectedValue.toString();
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
@@ -409,9 +444,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code LocalDate} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetLocalDate() {
+    public void testGetLocalDate()
+    throws ConfigException {
         final LocalDate expectedValue = LocalDate.now();
         final String strValue = expectedValue.format(DateTimeFormatter.ISO_DATE);
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
@@ -428,9 +465,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code LocalTime} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetLocalTime() {
+    public void testGetLocalTime()
+    throws ConfigException {
         final LocalTime expectedValue = LocalTime.now();
         final String strValue = expectedValue.format(DateTimeFormatter.ISO_TIME);
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
@@ -447,9 +486,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code LocalDateTime} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetLocalDateTime() {
+    public void testGetLocalDateTime()
+    throws ConfigException {
         final LocalDateTime expectedValue = LocalDateTime.now();
         final String strValue = expectedValue.format(DateTimeFormatter.ISO_DATE_TIME);
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
@@ -466,9 +507,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code ZoneOffset} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetZoneOffset() {
+    public void testGetZoneOffset()
+    throws ConfigException {
         final ZoneOffset expectedValue = ZoneOffset.ofHours(3);
         final String strValue = expectedValue.getId();
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
@@ -485,9 +528,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code Period} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetPeriod() {
+    public void testGetPeriod()
+    throws ConfigException {
         final Period expectedValue = Period.of(1, 2, 3);
         final String strValue = expectedValue.toString();
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
@@ -504,9 +549,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code Duration} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetDuration() {
+    public void testGetDuration()
+    throws ConfigException {
         final Duration expectedValue = Duration.ofDays(3).plusHours(10);
         final String strValue = expectedValue.toString();
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
@@ -523,9 +570,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code Date} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetDate() {
+    public void testGetDate()
+    throws ConfigException {
         final Instant instantValue = Instant.now();
         final Date expectedValue = Date.from(instantValue);
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
@@ -542,9 +591,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code Calendar} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetCalendar() {
+    public void testGetCalendar()
+    throws ConfigException {
         final Instant instantValue = Instant.now();
         final Calendar expectedValue = Calendar.getInstance();
         expectedValue.setTimeInMillis(instantValue.toEpochMilli());
@@ -562,9 +613,11 @@ class AbstractConfigTest {
     /**
      * Test method for {@link AbstractConfig#getParameter(String, Class)} with
      * {@code File} target type.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetFile() {
+    public void testGetFile()
+    throws ConfigException {
         final String strValue = "/some/file/path";
         final File expectedValue = new File(strValue);
         final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);

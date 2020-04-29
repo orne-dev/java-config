@@ -38,7 +38,7 @@ import org.mockito.BDDMockito;
  * 
  * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
  * @version 1.0
- * @since 1.0, 2019-07
+ * @since 0.1
  */
 @Tag("ut")
 class DefaultConfigurerPrimitivePropertiesTest {
@@ -71,9 +71,11 @@ class DefaultConfigurerPrimitivePropertiesTest {
     /**
      * Test method for {@link DefaultConfigurer#configureProperties(Configurable, Config)} for
      * configured values for primitives.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testConfigurePrimitiveProperties() {
+    public void testConfigurePrimitiveProperties()
+    throws ConfigException {
         final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
         final Config config = BDDMockito.mock(Config.class);
         
@@ -127,9 +129,11 @@ class DefaultConfigurerPrimitivePropertiesTest {
     /**
      * Test method for {@link DefaultConfigurer#configureProperties(Configurable, Config)} for
      * configured {@code null} for primitives.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testConfigurePrimitivePropertiesNull() {
+    public void testConfigurePrimitivePropertiesNull()
+    throws ConfigException {
         final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
         final Config config = BDDMockito.mock(Config.class);
         
@@ -183,9 +187,11 @@ class DefaultConfigurerPrimitivePropertiesTest {
     /**
      * Test method for {@link DefaultConfigurer#configureProperties(Configurable, Config)} for
      * unconfigured values for primitives.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testConfigurePrimitivePropertiesUnconfigured() {
+    public void testConfigurePrimitivePropertiesUnconfigured()
+    throws ConfigException {
         final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
         final Config config = BDDMockito.mock(Config.class);
         
@@ -239,9 +245,11 @@ class DefaultConfigurerPrimitivePropertiesTest {
     /**
      * Test method for {@link DefaultConfigurer#configureProperties(Configurable, Config)} for
      * configured values for primitive wrappers.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testConfigureWrapperProperties() {
+    public void testConfigureWrapperProperties()
+    throws ConfigException {
         final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
         final Config config = BDDMockito.mock(Config.class);
         
@@ -295,9 +303,11 @@ class DefaultConfigurerPrimitivePropertiesTest {
     /**
      * Test method for {@link DefaultConfigurer#configureProperties(Configurable, Config)} for
      * configured {@code null} values for primitive wrappers.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testConfigureWrapperPropertiesNull() {
+    public void testConfigureWrapperPropertiesNull()
+    throws ConfigException {
         final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
         final Config config = BDDMockito.mock(Config.class);
         
@@ -351,9 +361,11 @@ class DefaultConfigurerPrimitivePropertiesTest {
     /**
      * Test method for {@link DefaultConfigurer#configureProperties(Configurable, Config)} for
      * unconfigured values for primitive wrappers.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testConfigureWrapperPropertiesUnconfigured() {
+    public void testConfigureWrapperPropertiesUnconfigured()
+    throws ConfigException {
         final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
         final Config config = BDDMockito.mock(Config.class);
         
@@ -407,9 +419,11 @@ class DefaultConfigurerPrimitivePropertiesTest {
     /**
      * Test method for {@link DefaultConfigurer#configureProperties(Configurable, Config)} for
      * configured values for properties with mixed permissions.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testConfigurePropertiesPermissions() {
+    public void testConfigurePropertiesPermissions()
+    throws ConfigException {
         final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
         final Config config = BDDMockito.mock(Config.class);
         
@@ -463,9 +477,11 @@ class DefaultConfigurerPrimitivePropertiesTest {
     /**
      * Test method for {@link DefaultConfigurer#configureProperties(Configurable, Config)} for
      * configured {@code null} values for properties with mixed permissions.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testConfigurePropertiesPermissionsNull() {
+    public void testConfigurePropertiesPermissionsNull()
+    throws ConfigException {
         final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
         final Config config = BDDMockito.mock(Config.class);
         
@@ -519,9 +535,11 @@ class DefaultConfigurerPrimitivePropertiesTest {
     /**
      * Test method for {@link DefaultConfigurer#configureProperties(Configurable, Config)} for
      * unconfigured values for properties with mixed permissions.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testConfigurePropertiesPermissionsUnconfigured() {
+    public void testConfigurePropertiesPermissionsUnconfigured()
+    throws ConfigException {
         final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
         final Config config = BDDMockito.mock(Config.class);
         

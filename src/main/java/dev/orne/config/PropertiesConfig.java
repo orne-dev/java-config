@@ -44,8 +44,8 @@ import org.slf4j.helpers.MessageFormatter;
  * Implementation of {@code Config} based on {@code Properties} files.
  * 
  * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
- * @version 1.0
- * @since 1.0, 2019-07
+ * @version 2.0, 2020-04
+ * @since 0.1
  * @see Config
  * @see Properties
  */
@@ -68,7 +68,7 @@ extends AbstractMutableStringConfig {
             "Could not read configuration file ({}).";
 
     /** Current configuration parameters. */
-    private final Properties config = new Properties();
+    private final Properties config;
 
     /**
      * Creates a new instance with the configuration parameters loaded from
@@ -82,7 +82,26 @@ extends AbstractMutableStringConfig {
     public PropertiesConfig(
             @NotNull
             final Object... sources) {
+        this(new Properties(), sources);
+    }
+
+    /**
+     * Creates a new instance with the configuration parameters loaded from
+     * the sources passed as argument.
+     * 
+     * Supports classpath resources, files, URL or {@code Iterable} objects
+     * of any of them.
+     * 
+     * @param config The {@code Properties} instance to use as inner container
+     * @param sources The sources to load the configuration parameters from
+     */
+    protected PropertiesConfig(
+            @NotNull
+            final Properties config,
+            @NotNull
+            final Object... sources) {
         super();
+        this.config = config;
         load(sources);
     }
 
@@ -151,7 +170,7 @@ extends AbstractMutableStringConfig {
             @NotNull
             final String path) {
         try {
-            final Enumeration<URL> resources = 
+            final Enumeration<URL> resources =
                     Thread.currentThread()
                             .getContextClassLoader()
                             .getResources(path);
@@ -224,8 +243,9 @@ extends AbstractMutableStringConfig {
     @Override
     protected boolean containsParameter(
             @NotBlank
-            final String key) {
-        Validate.notNull(key, "Parameter key is required");
+            final String key)
+    throws ConfigException {
+        Validate.notBlank(key, "Parameter key mus be a non blank string");
         return this.config.containsKey(key);
     }
 
@@ -236,8 +256,9 @@ extends AbstractMutableStringConfig {
     @Nullable
     protected String getRawValue(
             @NotBlank
-            final String key) {
-        Validate.notNull(key, "Parameter key is required");
+            final String key)
+    throws ConfigException {
+        Validate.notBlank(key, "Parameter key mus be a non blank string");
         return this.config.getProperty(key);
     }
 
@@ -249,7 +270,9 @@ extends AbstractMutableStringConfig {
             @NotBlank
             final String key,
             @Nullable
-            final String value) {
+            final String value)
+    throws ConfigException {
+        Validate.notBlank(key, "Parameter key mus be a non blank string");
         if (value == null) {
             remove(key);
         } else {
@@ -263,8 +286,9 @@ extends AbstractMutableStringConfig {
     @Override
     public void remove(
             @NotBlank
-            final String key) {
-        Validate.notNull(key, "Parameter key is required");
+            final String key)
+    throws ConfigException {
+        Validate.notBlank(key, "Parameter key mus be a non blank string");
         this.config.remove(key);
     }
 }

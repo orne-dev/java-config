@@ -42,7 +42,7 @@ import org.mockito.BDDMockito;
  * 
  * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
  * @version 1.0
- * @since 1.0, 2019-07
+ * @since 0.1
  */
 @Tag("ut")
 class AbstractStringConfigTest {
@@ -52,9 +52,11 @@ class AbstractStringConfigTest {
     /**
      * Test method for {@link AbstractStringConfig#getBooleanParameter(String)} for
      * {@code null} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetBooleanNull() {
+    public void testGetBooleanNull()
+    throws ConfigException {
         final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
         given(config.getStringParameter(TEST_KEY)).willReturn(null);
         
@@ -67,9 +69,11 @@ class AbstractStringConfigTest {
     /**
      * Test method for {@link AbstractStringConfig#getBooleanParameter(String)} for
      * value "true".
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetBooleanTrueLowerCase() {
+    public void testGetBooleanTrueLowerCase()
+    throws ConfigException {
         final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
         given(config.getStringParameter(TEST_KEY)).willReturn("true");
         
@@ -83,9 +87,11 @@ class AbstractStringConfigTest {
     /**
      * Test method for {@link AbstractStringConfig#getBooleanParameter(String)} for
      * value "TRUE".
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetBooleanTrueUpperCase() {
+    public void testGetBooleanTrueUpperCase()
+    throws ConfigException {
         final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
         given(config.getStringParameter(TEST_KEY)).willReturn("TRUE");
         
@@ -99,9 +105,11 @@ class AbstractStringConfigTest {
     /**
      * Test method for {@link AbstractStringConfig#getBooleanParameter(String)} for
      * value "TrUe".
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetBooleanTrueMixedCase() {
+    public void testGetBooleanTrueMixedCase()
+    throws ConfigException {
         final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
         given(config.getStringParameter(TEST_KEY)).willReturn("TrUe");
         
@@ -115,9 +123,11 @@ class AbstractStringConfigTest {
     /**
      * Test method for {@link AbstractStringConfig#getBooleanParameter(String)} for
      * value "true".
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetBooleanFalseLowerCase() {
+    public void testGetBooleanFalseLowerCase()
+    throws ConfigException {
         final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
         given(config.getStringParameter(TEST_KEY)).willReturn("false");
         
@@ -131,9 +141,11 @@ class AbstractStringConfigTest {
     /**
      * Test method for {@link AbstractStringConfig#getBooleanParameter(String)} for
      * value "TRUE".
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetBooleanFalseUpperCase() {
+    public void testGetBooleanFalseUpperCase()
+    throws ConfigException {
         final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
         given(config.getStringParameter(TEST_KEY)).willReturn("FALSE");
         
@@ -147,9 +159,11 @@ class AbstractStringConfigTest {
     /**
      * Test method for {@link AbstractStringConfig#getBooleanParameter(String)} for
      * value "fAlSe".
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetBooleanFalseMixedCase() {
+    public void testGetBooleanFalseMixedCase()
+    throws ConfigException {
         final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
         given(config.getStringParameter(TEST_KEY)).willReturn("fAlSe");
         
@@ -163,9 +177,11 @@ class AbstractStringConfigTest {
     /**
      * Test method for {@link AbstractStringConfig#getBooleanParameter(String)} for
      * value "fAlSe".
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetBooleanOther() {
+    public void testGetBooleanOther()
+    throws ConfigException {
         final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
         given(config.getStringParameter(TEST_KEY)).willReturn("anyOtherValue");
         
@@ -179,9 +195,11 @@ class AbstractStringConfigTest {
     /**
      * Test method for {@link AbstractStringConfig#getNumberParameter(String)} for
      * {@code null} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetNumberNull() {
+    public void testGetNumberNull()
+    throws ConfigException {
         final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
         given(config.getStringParameter(TEST_KEY)).willReturn(null);
         
@@ -194,9 +212,11 @@ class AbstractStringConfigTest {
     /**
      * Test method for {@link AbstractStringConfig#getNumberParameter(String)} for
      * {@code Integer.MIN_VALUE} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetNumberIntegerMin() {
+    public void testGetNumberIntegerMin()
+    throws ConfigException {
         final Integer expectedValue = Integer.MIN_VALUE;
         final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
         given(config.getStringParameter(TEST_KEY)).willReturn(String.valueOf(expectedValue));
@@ -211,9 +231,11 @@ class AbstractStringConfigTest {
     /**
      * Test method for {@link AbstractStringConfig#getNumberParameter(String)} for
      * {@code Integer.MAX_VALUE} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetNumberIntegerMax() {
+    public void testGetNumberIntegerMax()
+    throws ConfigException {
         final Integer expectedValue = Integer.MAX_VALUE;
         final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
         given(config.getStringParameter(TEST_KEY)).willReturn(String.valueOf(expectedValue));
@@ -228,9 +250,11 @@ class AbstractStringConfigTest {
     /**
      * Test method for {@link AbstractStringConfig#getNumberParameter(String)} for
      * {@code Long.MIN_VALUE} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetNumberLongMin() {
+    public void testGetNumberLongMin()
+    throws ConfigException {
         final Long expectedValue = Long.MIN_VALUE;
         final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
         given(config.getStringParameter(TEST_KEY)).willReturn(String.valueOf(expectedValue));
@@ -245,9 +269,11 @@ class AbstractStringConfigTest {
     /**
      * Test method for {@link AbstractStringConfig#getNumberParameter(String)} for
      * {@code Long.MAX_VALUE} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetNumberLongMax() {
+    public void testGetNumberLongMax()
+    throws ConfigException {
         final Long expectedValue = Long.MAX_VALUE;
         final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
         given(config.getStringParameter(TEST_KEY)).willReturn(String.valueOf(expectedValue));
@@ -262,9 +288,11 @@ class AbstractStringConfigTest {
     /**
      * Test method for {@link AbstractStringConfig#getNumberParameter(String)} for
      * {@code Float.MIN_VALUE} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetNumberFloatMin() {
+    public void testGetNumberFloatMin()
+    throws ConfigException {
         final Float expectedValue = Float.MIN_VALUE;
         final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
         given(config.getStringParameter(TEST_KEY)).willReturn(String.valueOf(expectedValue));
@@ -279,9 +307,11 @@ class AbstractStringConfigTest {
     /**
      * Test method for {@link AbstractStringConfig#getNumberParameter(String)} for
      * {@code Float.MAX_VALUE} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetNumberFloatMax() {
+    public void testGetNumberFloatMax()
+    throws ConfigException {
         final Float expectedValue = Float.MAX_VALUE;
         final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
         given(config.getStringParameter(TEST_KEY)).willReturn(String.valueOf(expectedValue));
@@ -296,9 +326,11 @@ class AbstractStringConfigTest {
     /**
      * Test method for {@link AbstractStringConfig#getNumberParameter(String)} for
      * {@code Double.MIN_VALUE} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetNumberDoubleMin() {
+    public void testGetNumberDoubleMin()
+    throws ConfigException {
         final Double expectedValue = Double.MIN_VALUE;
         final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
         given(config.getStringParameter(TEST_KEY)).willReturn(String.valueOf(expectedValue));
@@ -313,9 +345,11 @@ class AbstractStringConfigTest {
     /**
      * Test method for {@link AbstractStringConfig#getNumberParameter(String)} for
      * {@code Double.MAX_VALUE} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetNumberDoubleMax() {
+    public void testGetNumberDoubleMax()
+    throws ConfigException {
         final Double expectedValue = Double.MAX_VALUE;
         final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
         given(config.getStringParameter(TEST_KEY)).willReturn(String.valueOf(expectedValue));
@@ -330,9 +364,11 @@ class AbstractStringConfigTest {
     /**
      * Test method for {@link AbstractStringConfig#getNumberParameter(String)}
      * for {@code BigDecimal} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetNumberBigDecimal() {
+    public void testGetNumberBigDecimal()
+    throws ConfigException {
         final BigDecimal expectedValue = new BigDecimal(
                 "67349158364348316463214976392463847.348638463746238764873648736248E-3");
         final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
@@ -348,19 +384,21 @@ class AbstractStringConfigTest {
     /**
      * Test method for {@link AbstractStringConfig#getNumberParameter(String)}
      * for {@code BigDecimal} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetNumberInvalid() {
+    public void testGetNumberInvalid()
+    throws ConfigException {
         final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
         given(config.getStringParameter(TEST_KEY)).willReturn("this is not a number");
         
         assertThrows(NumberFormatException.class, new Executable() {
             @Override
-            public void execute() {
+            public void execute()
+            throws ConfigException {
                 config.getNumberParameter(TEST_KEY);
             }
         });
-        
         
         then(config).should(times(1)).getStringParameter(TEST_KEY);
     }
@@ -368,9 +406,11 @@ class AbstractStringConfigTest {
     /**
      * Test method for {@link AbstractStringConfig#getInstantParameter(String)}
      * for {@code null} value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetInstantNull() {
+    public void testGetInstantNull()
+    throws ConfigException {
         final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
         given(config.getStringParameter(TEST_KEY)).willReturn(null);
         
@@ -383,9 +423,11 @@ class AbstractStringConfigTest {
     /**
      * Test method for {@link AbstractStringConfig#getInstantParameter(String)}
      * for valid ISO-8601 instant value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetInstant() {
+    public void testGetInstant()
+    throws ConfigException {
         final Instant expectedValue = Instant.now();
         final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
         given(config.getStringParameter(TEST_KEY)).willReturn(expectedValue.toString());
@@ -400,15 +442,18 @@ class AbstractStringConfigTest {
     /**
      * Test method for {@link AbstractStringConfig#getInstantParameter(String)}
      * for invalid ISO-8601 instant value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetInstantInvalid() {
+    public void testGetInstantInvalid()
+    throws ConfigException {
         final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
         given(config.getStringParameter(TEST_KEY)).willReturn("Invalid instant");
         
         assertThrows(DateTimeParseException.class, new Executable() {
             @Override
-            public void execute() {
+            public void execute()
+            throws ConfigException {
                 config.getInstantParameter(TEST_KEY);
             }
         });

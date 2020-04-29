@@ -42,8 +42,8 @@ import org.slf4j.helpers.MessageFormatter;
  * Default implementation of {@code Configurer}.
  * 
  * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
- * @version 1.0
- * @since 1.0, 2019-07
+ * @version 2.0, 2020-04
+ * @since 0.1
  * @see Configurer
  */
 public class DefaultConfigurer
@@ -86,11 +86,11 @@ implements Configurer {
                     metadata, componentClass);
         }
         if (config != null) {
-            if (metadata == null ? true : metadata.configureProperties()) {
+            if (metadata == null || metadata.configureProperties()) {
                 configureProperties(bean, config);
             }
             bean.configure(config);
-            if (metadata == null ? true : metadata.configureNestedBeans()) {
+            if (metadata == null || metadata.configureNestedBeans()) {
                 configureNestedBeans(bean, config);
             }
         }
@@ -156,33 +156,50 @@ implements Configurer {
         final ConfigurableProperty metadata = field.getAnnotation(ConfigurableProperty.class);
         final String key = metadata.value();
         final Class<?> type = field.getType();
-        if (config.contains(key)) {
-            if (type.isPrimitive()) {
-                final Class<?> wrapperType = ClassUtils.primitiveToWrapper(type);
-                final Object wrapperValue = config.get(key, wrapperType);
-                if (wrapperValue == null) {
-                    LOG.warn("Null value in key '{}' for type {}", key, type);
-                } else {
-                    try {
-                        PropertyUtils.setProperty(bean, field.getName(), wrapperValue);
-                    } catch (final IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                        LOG.error(MessageFormatter.format(
-                                "Error setting property '{}' on bean of class {}",
-                                field.getName(),
-                                bean.getClass()).getMessage(), e);
+        try {
+            if (config.contains(key)) {
+                if (type.isPrimitive()) {
+                    final Class<?> wrapperType = ClassUtils.primitiveToWrapper(type);
+                    final Object wrapperValue = config.get(key, wrapperType);
+                    if (wrapperValue == null) {
+                        LOG.warn("Null value in key '{}' for type {}", key, type);
+                    } else {
+                        setPropertyValue(bean, field, wrapperValue);
                     }
-                }
-            } else {
-                final Object value = config.get(key, type);
-                try {
-                    PropertyUtils.setProperty(bean, field.getName(), value);
-                } catch (final IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                    LOG.error(MessageFormatter.format(
-                            "Error setting property '{}' on bean of class {}",
-                            field.getName(),
-                            bean.getClass()).getMessage(), e);
+                } else {
+                    final Object value = config.get(key, type);
+                    setPropertyValue(bean, field, value);
                 }
             }
+        } catch (final ConfigException ce) {
+            LOG.error(String.format("Error configuring property '%s' on bean of class %s",
+                    field.getName(),
+                    bean.getClass()), ce);
+        }
+    }
+
+    /**
+     * Sets the specified property of the specified bean with the specified
+     * value.
+     * 
+     * @param bean The instance of the bean
+     * @param field The property of the bean to set
+     * @param value The value to set
+     */
+    protected void setPropertyValue(
+            @NotNull
+            final Object bean,
+            @NotNull
+            final Field field,
+            @Nullable
+            final Object value) {
+        try {
+            PropertyUtils.setProperty(bean, field.getName(), value);
+        } catch (final IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            LOG.error(String.format(
+                    "Error setting property '%s' on bean of class %s",
+                    field.getName(),
+                    bean.getClass()), e);
         }
     }
 
@@ -223,7 +240,7 @@ implements Configurer {
             for (final Field field : currentClass.getDeclaredFields()) {
                 try {
                     final Object fieldValue = PropertyUtils.getProperty(bean, field.getName());
-                    if (fieldValue != null && fieldValue instanceof Configurable) {
+                    if (fieldValue instanceof Configurable) {
                         final Configurable nestedComponent = (Configurable) fieldValue;
                         nestedComponents.add(nestedComponent);
                     }

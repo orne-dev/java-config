@@ -32,8 +32,8 @@ import javax.validation.constraints.NotNull;
  * Interface for classes containing configuration values.
  * 
  * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
- * @version 1.0
- * @since 1.0, 2019-07
+ * @version 2.0, 2020-04
+ * @since 0.1
  */
 public interface Config {
 
@@ -43,10 +43,13 @@ public interface Config {
      * 
      * @param key The key of the configuration parameter
      * @return Returns {@code true} if the parameter has been configured
+     * @throws ConfigException If an error occurs accessing the configuration
+     * property
      */
     boolean contains(
             @NotBlank
-            String key);
+            String key)
+    throws ConfigException;
 
     /**
      * Returns the value of the configuration parameter.
@@ -55,55 +58,70 @@ public interface Config {
      * @param key The key of the configuration parameter
      * @param type The target type of the parameter
      * @return The configuration parameter value converted to the target type
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
      */
     @Nullable
     <T> T get(
             @NotBlank
             String key,
             @NotNull
-            Class<T> type);
+            Class<T> type)
+    throws ConfigException;
 
     /**
      * Returns the value of the configuration parameter as {@code Boolean}.
      * 
      * @param key The key of the configuration parameter
      * @return The configuration parameter value as {@code Boolean}
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
      */
     @Nullable
     Boolean getBoolean(
             @NotBlank
-            String key);
+            String key)
+    throws ConfigException;
 
     /**
      * Returns the value of the configuration parameter as {@code String}.
      * 
      * @param key The key of the configuration parameter
      * @return The configuration parameter value as {@code String}
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
      */
     @Nullable
     String getString(
             @NotBlank
-            String key);
+            String key)
+    throws ConfigException;
 
     /**
      * Returns the value of the configuration parameter as {@code Number}.
      * 
      * @param key The key of the configuration parameter
      * @return The configuration parameter value as {@code Number}
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
      */
     @Nullable
     Number getNumber(
             @NotBlank
-            String key);
+            String key)
+    throws ConfigException;
 
     /**
      * Returns the value of the configuration parameter as {@code Instant}.
      * 
      * @param key The key of the configuration parameter
      * @return The configuration parameter value as {@code Instant}
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
      */
     @Nullable
     Instant getInstant(
             @NotBlank
-            String key);
+            String key)
+    throws ConfigException;
 }

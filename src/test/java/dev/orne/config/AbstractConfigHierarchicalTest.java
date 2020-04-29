@@ -41,7 +41,7 @@ import org.mockito.BDDMockito;
  * 
  * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
  * @version 1.0
- * @since 1.0, 2019-07
+ * @since 0.1
  */
 @Tag("ut")
 class AbstractConfigHierarchicalTest {
@@ -55,9 +55,11 @@ class AbstractConfigHierarchicalTest {
     /**
      * Test method for {@link AbstractConfig#contains(String)} on
      * instances with no parent and parameter configured.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testContainsConfigured() {
+    public void testContainsConfigured()
+    throws ConfigException {
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(true);
         
@@ -70,9 +72,11 @@ class AbstractConfigHierarchicalTest {
     /**
      * Test method for {@link AbstractConfig#contains(String)} on
      * instances with no parent and parameter not configured.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testContainsUnconfiguredNoParent() {
+    public void testContainsUnconfiguredNoParent()
+    throws ConfigException {
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);
         given(config.getParent()).willReturn(null);
@@ -86,9 +90,11 @@ class AbstractConfigHierarchicalTest {
     /**
      * Test method for {@link AbstractConfig#contains(String)} on
      * instances with parent and parameter configured on parent.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testContainsUnconfiguredParent() {
+    public void testContainsUnconfiguredParent()
+    throws ConfigException {
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         final Config parent = BDDMockito.mock(Config.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);
@@ -106,9 +112,11 @@ class AbstractConfigHierarchicalTest {
     /**
      * Test method for {@link AbstractConfig#contains(String)} on
      * instances with parent and parameter not configured.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testContainsUnconfiguredParentUnconfigured() {
+    public void testContainsUnconfiguredParentUnconfigured()
+    throws ConfigException {
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         final Config parent = BDDMockito.mock(Config.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);
@@ -126,9 +134,11 @@ class AbstractConfigHierarchicalTest {
     /**
      * Test method for {@link AbstractConfig#get(String, Class)} on
      * instances with no parent and parameter configured.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetConfigured() {
+    public void testGetConfigured()
+    throws ConfigException {
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(true);
         given(config.getParameter(TEST_KEY, TEST_CLASS)).willReturn(TEST_STRING_VALUE);
@@ -146,9 +156,11 @@ class AbstractConfigHierarchicalTest {
     /**
      * Test method for {@link AbstractConfig#get(String, Class)} on
      * instances with no parent and parameter configured with null value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetConfiguredNull() {
+    public void testGetConfiguredNull()
+    throws ConfigException {
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(true);
         given(config.getParameter(TEST_KEY, TEST_CLASS)).willReturn(null);
@@ -165,9 +177,11 @@ class AbstractConfigHierarchicalTest {
     /**
      * Test method for {@link AbstractConfig#get(String, Class)} on
      * instances with no parent and parameter not configured.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetUnconfiguredNoParent() {
+    public void testGetUnconfiguredNoParent()
+    throws ConfigException {
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);
         given(config.getParent()).willReturn(null);
@@ -183,9 +197,11 @@ class AbstractConfigHierarchicalTest {
     /**
      * Test method for {@link AbstractConfig#get(String, Class)} on
      * instances with parent and parameter not configured.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetUnconfiguredParent() {
+    public void testGetUnconfiguredParent()
+    throws ConfigException {
         final Config parent = BDDMockito.mock(Config.class);
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);
@@ -207,9 +223,11 @@ class AbstractConfigHierarchicalTest {
      * Test method for {@link AbstractConfig#get(String, Class)} on
      * instances with parent and parameter not configured with null
      * value on parent.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetUnconfiguredParentNull() {
+    public void testGetUnconfiguredParentNull()
+    throws ConfigException {
         final Config parent = BDDMockito.mock(Config.class);
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);
@@ -230,9 +248,11 @@ class AbstractConfigHierarchicalTest {
     /**
      * Test method for {@link AbstractConfig#getBoolean(String)} on
      * instances with no parent and parameter configured.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetBooleanConfigured() {
+    public void testGetBooleanConfigured()
+    throws ConfigException {
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(true);
         given(config.getBooleanParameter(TEST_KEY)).willReturn(true);
@@ -249,9 +269,11 @@ class AbstractConfigHierarchicalTest {
     /**
      * Test method for {@link AbstractConfig#getBoolean(String)} on
      * instances with no parent and parameter configured with null value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetBooleanConfiguredNull() {
+    public void testGetBooleanConfiguredNull()
+    throws ConfigException {
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(true);
         given(config.getBooleanParameter(TEST_KEY)).willReturn(null);
@@ -267,9 +289,11 @@ class AbstractConfigHierarchicalTest {
     /**
      * Test method for {@link AbstractConfig#getBoolean(String)} on
      * instances with no parent and parameter not configured.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetBooleanUnconfiguredNoParent() {
+    public void testGetBooleanUnconfiguredNoParent()
+    throws ConfigException {
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);
         given(config.getParent()).willReturn(null);
@@ -285,9 +309,11 @@ class AbstractConfigHierarchicalTest {
     /**
      * Test method for {@link AbstractConfig#getBoolean(String)} on
      * instances with parent and parameter not configured.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetBooleanUnconfiguredParent() {
+    public void testGetBooleanUnconfiguredParent()
+    throws ConfigException {
         final Config parent = BDDMockito.mock(Config.class);
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);
@@ -310,9 +336,11 @@ class AbstractConfigHierarchicalTest {
      * Test method for {@link AbstractConfig#getBoolean(String)} on
      * instances with parent and parameter not configured with null
      * value on parent.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetBooleanUnconfiguredParentNull() {
+    public void testGetBooleanUnconfiguredParentNull()
+    throws ConfigException {
         final Config parent = BDDMockito.mock(Config.class);
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);
@@ -333,9 +361,11 @@ class AbstractConfigHierarchicalTest {
     /**
      * Test method for {@link AbstractConfig#getString(String)} on
      * instances with no parent and parameter configured.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetStringConfigured() {
+    public void testGetStringConfigured()
+    throws ConfigException {
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(true);
         given(config.getStringParameter(TEST_KEY)).willReturn(TEST_STRING_VALUE);
@@ -352,9 +382,11 @@ class AbstractConfigHierarchicalTest {
     /**
      * Test method for {@link AbstractConfig#getString(String)} on
      * instances with no parent and parameter configured with null value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetStringConfiguredNull() {
+    public void testGetStringConfiguredNull()
+    throws ConfigException {
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(true);
         given(config.getStringParameter(TEST_KEY)).willReturn(null);
@@ -370,9 +402,11 @@ class AbstractConfigHierarchicalTest {
     /**
      * Test method for {@link AbstractConfig#getString(String)} on
      * instances with no parent and parameter not configured.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetStringUnconfiguredNoParent() {
+    public void testGetStringUnconfiguredNoParent()
+    throws ConfigException {
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);
         given(config.getParent()).willReturn(null);
@@ -388,9 +422,11 @@ class AbstractConfigHierarchicalTest {
     /**
      * Test method for {@link AbstractConfig#getString(String)} on
      * instances with parent and parameter not configured.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetStringUnconfiguredParent() {
+    public void testGetStringUnconfiguredParent()
+    throws ConfigException {
         final Config parent = BDDMockito.mock(Config.class);
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);
@@ -413,9 +449,11 @@ class AbstractConfigHierarchicalTest {
      * Test method for {@link AbstractConfig#getString(String)} on
      * instances with parent and parameter not configured with null
      * value on parent.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetStringUnconfiguredParentNull() {
+    public void testGetStringUnconfiguredParentNull()
+    throws ConfigException {
         final Config parent = BDDMockito.mock(Config.class);
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);
@@ -436,9 +474,11 @@ class AbstractConfigHierarchicalTest {
     /**
      * Test method for {@link AbstractConfig#getNumber(String)} on
      * instances with no parent and parameter configured.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetNumberConfigured() {
+    public void testGetNumberConfigured()
+    throws ConfigException {
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(true);
         given(config.getNumberParameter(TEST_KEY)).willReturn(TEST_NUMBER_VALUE);
@@ -455,9 +495,11 @@ class AbstractConfigHierarchicalTest {
     /**
      * Test method for {@link AbstractConfig#getNumber(String)} on
      * instances with no parent and parameter configured with null value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetNumberConfiguredNull() {
+    public void testGetNumberConfiguredNull()
+    throws ConfigException {
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(true);
         given(config.getNumberParameter(TEST_KEY)).willReturn(null);
@@ -473,9 +515,11 @@ class AbstractConfigHierarchicalTest {
     /**
      * Test method for {@link AbstractConfig#getNumber(String)} on
      * instances with no parent and parameter not configured.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetNumberUnconfiguredNoParent() {
+    public void testGetNumberUnconfiguredNoParent()
+    throws ConfigException {
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);
         given(config.getParent()).willReturn(null);
@@ -491,9 +535,11 @@ class AbstractConfigHierarchicalTest {
     /**
      * Test method for {@link AbstractConfig#getNumber(String)} on
      * instances with parent and parameter not configured.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetNumberUnconfiguredParent() {
+    public void testGetNumberUnconfiguredParent()
+    throws ConfigException {
         final Config parent = BDDMockito.mock(Config.class);
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);
@@ -516,9 +562,11 @@ class AbstractConfigHierarchicalTest {
      * Test method for {@link AbstractConfig#getNumber(String)} on
      * instances with parent and parameter not configured with null
      * value on parent.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetNumberUnconfiguredParentNull() {
+    public void testGetNumberUnconfiguredParentNull()
+    throws ConfigException {
         final Config parent = BDDMockito.mock(Config.class);
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);
@@ -539,9 +587,11 @@ class AbstractConfigHierarchicalTest {
     /**
      * Test method for {@link AbstractConfig#getInstant(String)} on
      * instances with no parent and parameter configured.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetInstantConfigured() {
+    public void testGetInstantConfigured()
+    throws ConfigException {
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(true);
         given(config.getInstantParameter(TEST_KEY)).willReturn(TEST_INSTANT_VALUE);
@@ -558,9 +608,11 @@ class AbstractConfigHierarchicalTest {
     /**
      * Test method for {@link AbstractConfig#getInstant(String)} on
      * instances with no parent and parameter configured with null value.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetInstantConfiguredNull() {
+    public void testGetInstantConfiguredNull()
+    throws ConfigException {
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(true);
         given(config.getInstantParameter(TEST_KEY)).willReturn(null);
@@ -576,9 +628,11 @@ class AbstractConfigHierarchicalTest {
     /**
      * Test method for {@link AbstractConfig#getInstant(String)} on
      * instances with no parent and parameter not configured.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetInstantUnconfiguredNoParent() {
+    public void testGetInstantUnconfiguredNoParent()
+    throws ConfigException {
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);
         given(config.getParent()).willReturn(null);
@@ -594,9 +648,11 @@ class AbstractConfigHierarchicalTest {
     /**
      * Test method for {@link AbstractConfig#getInstant(String)} on
      * instances with parent and parameter not configured.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetInstantUnconfiguredParent() {
+    public void testGetInstantUnconfiguredParent()
+    throws ConfigException {
         final Config parent = BDDMockito.mock(Config.class);
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);
@@ -619,9 +675,11 @@ class AbstractConfigHierarchicalTest {
      * Test method for {@link AbstractConfig#getInstant(String)} on
      * instances with parent and parameter not configured with null
      * value on parent.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetInstantUnconfiguredParentNull() {
+    public void testGetInstantUnconfiguredParentNull()
+    throws ConfigException {
         final Config parent = BDDMockito.mock(Config.class);
         final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);

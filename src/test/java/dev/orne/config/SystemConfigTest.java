@@ -26,18 +26,20 @@ package dev.orne.config;
  */
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.*;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 /**
  * Unit tests for {@code SystemConfig}.
  * 
  * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
  * @version 1.0
- * @since 1.0, 2019-07
+ * @since 0.1
  */
 @Tag("ut")
 class SystemConfigTest {
@@ -70,9 +72,11 @@ class SystemConfigTest {
     /**
      * Test method for {@link SystemConfig#containsParameter(String)} with {@code null}
      * system property.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testContainsParameterFalse() {
+    public void testContainsParameterFalse()
+    throws ConfigException {
         System.clearProperty(TEST_KEY);
         final SystemConfig config = new SystemConfig();
         
@@ -82,9 +86,11 @@ class SystemConfigTest {
     /**
      * Test method for {@link SystemConfig#containsParameter(String)} with non
      * {@code null} system property.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testContainsParameterTrue() {
+    public void testContainsParameterTrue()
+    throws ConfigException {
         System.setProperty(TEST_KEY, "somaValue");
         final SystemConfig config = new SystemConfig();
         
@@ -92,11 +98,32 @@ class SystemConfigTest {
     }
 
     /**
-     * Test method for {@link SystemConfig#getStringParameter(String)} with
-     * {@code null} system property.
+     * Test method for {@link SystemConfig#containsParameter(String)} when
+     * {@code SecurityException} is thrown by {@code System.getProperty()}.
      */
     @Test
-    public void testGetStringNull() {
+    public void testtestContainsParameterSecurityException() {
+        final SecurityException se = new SecurityException("Mock exception");
+        final SystemConfig config = spy(SystemConfig.class);
+        given(config.getSystemProperty(TEST_KEY)).willThrow(se);
+        
+        assertThrows(ConfigException.class, new Executable() {
+            @Override
+            public void execute()
+            throws ConfigException {
+                config.containsParameter(TEST_KEY);
+            }
+        });
+    }
+
+    /**
+     * Test method for {@link SystemConfig#getStringParameter(String)} with
+     * {@code null} system property.
+     * @throws ConfigException Shouldn't happen
+     */
+    @Test
+    public void testGetStringNull()
+    throws ConfigException {
         System.clearProperty(TEST_KEY);
         final SystemConfig config = new SystemConfig();
         
@@ -107,9 +134,11 @@ class SystemConfigTest {
     /**
      * Test method for {@link SystemConfig#getStringParameter(String)} with non
      * {@code null} system property.
+     * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetString() {
+    public void testGetString()
+    throws ConfigException {
         final String expectedValue = "customValue";
         System.setProperty(TEST_KEY, expectedValue);
         final SystemConfig config = new SystemConfig();
@@ -117,5 +146,24 @@ class SystemConfigTest {
         final String result = config.getStringParameter(TEST_KEY);
         assertNotNull(result);
         assertEquals(expectedValue, result);
+    }
+
+    /**
+     * Test method for {@link SystemConfig#getStringParameter(String)} when
+     * {@code SecurityException} is thrown by {@code System.getProperty()}.
+     */
+    @Test
+    public void testGetStringSecurityException() {
+        final SecurityException se = new SecurityException("Mock exception");
+        final SystemConfig config = spy(SystemConfig.class);
+        given(config.getSystemProperty(TEST_KEY)).willThrow(se);
+        
+        assertThrows(ConfigException.class, new Executable() {
+            @Override
+            public void execute()
+            throws ConfigException {
+                config.getStringParameter(TEST_KEY);
+            }
+        });
     }
 }

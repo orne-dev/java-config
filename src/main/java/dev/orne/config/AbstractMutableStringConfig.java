@@ -37,8 +37,8 @@ import org.apache.commons.lang3.Validate;
  * configuration values stored as {@code String}.</p>
  * 
  * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
- * @version 1.0
- * @since 1.0, 2019-07
+ * @version 2.0, 2020-04
+ * @since 0.1
  * @see Config
  */
 public abstract class AbstractMutableStringConfig
@@ -55,7 +55,8 @@ implements MutableConfig {
     @Nullable
     protected String getStringParameter(
             @NotBlank
-            final String key) {
+            final String key)
+    throws ConfigException {
         String result = getRawValue(key);
         if (NULL.equals(result)) {
             result = null;
@@ -69,11 +70,14 @@ implements MutableConfig {
      * 
      * @param key The key of the configuration parameter
      * @return The configuration parameter raw value as {@code String}
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
      */
     @Nullable
     protected abstract String getRawValue(
             @NotBlank
-            String key);
+            String key)
+    throws ConfigException;
 
     /**
      * {@inheritDoc}
@@ -83,7 +87,8 @@ implements MutableConfig {
             @NotBlank
             final String key,
             @Nullable
-            final Object value) {
+            final Object value)
+    throws ConfigException {
         Validate.notNull(key, "Parameter key is required");
         if (value == null) {
             setRawValue(key, NULL);
@@ -106,10 +111,13 @@ implements MutableConfig {
      * 
      * @param key The key of the configuration parameter
      * @param value The configuration parameter raw value as {@code String}
+     * @throws ConfigException If an error occurs setting the configuration
+     * property value
      */
     protected abstract void setRawValue(
             @NotBlank
             String key,
             @NotNull
-            String value);
+            String value)
+    throws ConfigException;
 }

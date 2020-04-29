@@ -28,12 +28,14 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.Validate;
+
 /**
  * Implementation of {@code Config} based on Java {@code Preferences}.
  * 
  * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
- * @version 1.0
- * @since 1.0, 2020-02
+ * @version 2.0, 2020-04
+ * @since 0.1
  * @see Config
  * @see Preferences
  */
@@ -234,8 +236,14 @@ implements MutableConfig {
     @Override
     protected boolean containsParameter(
             @NotBlank
-            final String key) {
-        return this.preferences.get(key, null) != null;
+            final String key)
+    throws ConfigException {
+        Validate.notBlank(key, "Parameter key mus be a non blank string");
+        try {
+            return this.preferences.get(key, null) != null;
+        } catch (final IllegalStateException ise) {
+            throw new ConfigException("Error accessing configuration property", ise);
+        }
     }
 
     /**
@@ -244,8 +252,14 @@ implements MutableConfig {
     @Override
     protected String getRawValue(
             @NotBlank
-            final String key) {
-        return this.preferences.get(key, null);
+            final String key)
+    throws ConfigException {
+        Validate.notBlank(key, "Parameter key mus be a non blank string");
+        try {
+            return this.preferences.get(key, null);
+        } catch (final IllegalStateException ise) {
+            throw new ConfigException("Error retrieving configuration property value", ise);
+        }
     }
 
     /**
@@ -256,11 +270,17 @@ implements MutableConfig {
             @NotBlank
             final String key,
             @Nullable
-            final String value) {
+            final String value)
+    throws ConfigException {
         if (value == null) {
             remove(value);
         } else {
-            this.preferences.put(key, value);
+            Validate.notBlank(key, "Parameter key mus be a non blank string");
+            try {
+                this.preferences.put(key, value);
+            } catch (final IllegalStateException ise) {
+                throw new ConfigException("Error setting configuration property value", ise);
+            }
         }
     }
 
@@ -270,7 +290,13 @@ implements MutableConfig {
     @Override
     public void remove(
             @NotBlank
-            final String key) {
-        this.preferences.remove(key);
+            final String key)
+    throws ConfigException {
+        Validate.notBlank(key, "Parameter key mus be a non blank string");
+        try {
+            this.preferences.remove(key);
+        } catch (final IllegalStateException ise) {
+            throw new ConfigException("Error retrieving configuration property value", ise);
+        }
     }
 }

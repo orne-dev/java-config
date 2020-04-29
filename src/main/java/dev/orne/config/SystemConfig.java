@@ -30,8 +30,8 @@ import org.apache.commons.lang3.Validate;
  * Implementation of {@code Config} based on the system properties.
  * 
  * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
- * @version 1.0
- * @since 1.0, 2019-07
+ * @version 2.0, 2020-04
+ * @since 0.1
  * @see Config
  * @see System#getProperties()
  */
@@ -44,9 +44,13 @@ extends AbstractStringConfig {
     @Override
     protected boolean containsParameter(
             @NotBlank
-            final String key) {
-        Validate.notNull(key, "Parameter key is required");
-        return System.getProperty(key) != null;
+            final String key)
+    throws ConfigException {
+        try {
+            return getSystemProperty(key) != null;
+        } catch (final SecurityException se) {
+            throw new ConfigException("Error accessing configuration property", se);
+        }
     }
 
     /**
@@ -55,8 +59,27 @@ extends AbstractStringConfig {
     @Override
     protected String getStringParameter(
             @NotBlank
+            final String key)
+    throws ConfigException {
+        try {
+            return getSystemProperty(key);
+        } catch (final SecurityException se) {
+            throw new ConfigException("Error retrieving configuration property value", se);
+        }
+    }
+
+    /**
+     * Returns system property value.
+     * 
+     * @param key The key of the system property
+     * @return The value of the system property, or {@code null} if not set
+     * @throws SecurityException If a security manager exists and its
+     * {@code checkPropertyAccess} method doesn't allow access to the specified
+     * system property.
+     */
+    protected String getSystemProperty(
             final String key) {
-        Validate.notNull(key, "Parameter key is required");
+        Validate.notBlank(key, "Parameter key mus be a non blank string");
         return System.getProperty(key);
     }
 }
