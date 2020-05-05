@@ -22,8 +22,8 @@
 
   <licenses>
     <license>
-      <name>GNU General Public License (GPL) version 3.0</name>
-      <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+      <name>GNU Lesser General Public License (LGPL) version 3.0</name>
+      <url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
@@ -45,7 +45,7 @@
   <properties>
     <java.version>1.8</java.version>
     <target.java.version>1.8</target.java.version>
-    <license.licenseName>gpl_v3</license.licenseName>
+    <license.licenseName>lgpl_v3</license.licenseName>
 
     <commons.lang.version>3.9</commons.lang.version>
     <commons.beanutils.version>1.9.4</commons.beanutils.version>
