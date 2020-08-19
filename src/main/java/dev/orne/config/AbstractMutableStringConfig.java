@@ -22,14 +22,12 @@ package dev.orne.config;
  * #L%
  */
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
-
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.beanutils.ConvertUtilsBean;
+import org.apache.commons.beanutils.Converter;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -90,19 +88,47 @@ implements MutableConfig {
             final Object value)
     throws ConfigException {
         Validate.notNull(key, "Parameter key is required");
+        final String strValue;
         if (value == null) {
-            setRawValue(key, NULL);
-        } else if (value instanceof Float) {
-            setRawValue(key, BigDecimal.valueOf((Float) value).toString());
-        } else if (value instanceof Double) {
-            setRawValue(key, BigDecimal.valueOf((Double) value).toString());
-        } else if (value instanceof Date) {
-            setRawValue(key, ((Date) value).toInstant().toString());
-        } else if (value instanceof Calendar) {
-            setRawValue(key, ((Calendar) value).toInstant().toString());
+            strValue = AbstractMutableStringConfig.NULL;
         } else {
-            setRawValue(key, value.toString());
+            strValue = convertValueToString(value);
         }
+        setRawValue(key, strValue);
+    }
+
+    /**
+     * Converts specified value to {@code String} value.
+     * 
+     * @param value The value in any form
+     * @return The value in {@code String} form
+     * @throws ConfigException If an error occurs converting the value
+     */
+    @NotNull
+    protected String convertValueToString(
+            @NotNull
+            final Object value)
+    throws ConfigException {
+        String result;
+        if (value == null) {
+            result = null;
+        } else if (value instanceof String) {
+            result = value.toString();
+        } else {
+            final ConvertUtilsBean converters = getConverter();
+            Converter converter = null;
+            Class<?> type = value.getClass();
+            while (converter == null && type != null && type != Object.class) {
+                converter = converters.lookup(type);
+                type = type.getSuperclass();
+            }
+            if (converter == null) {
+                result = converters.convert(value);
+            } else {
+                result = converter.convert(String.class, value);
+            }
+        }
+        return result;
     }
 
     /**

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package dev.orne.config;
 
 /*-
@@ -29,12 +26,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.format.DateTimeParseException;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 import org.mockito.BDDMockito;
 
 /**
@@ -186,8 +180,7 @@ class AbstractStringConfigTest {
         given(config.getStringParameter(TEST_KEY)).willReturn("anyOtherValue");
         
         final Boolean result = config.getBooleanParameter(TEST_KEY);
-        assertNotNull(result);
-        assertFalse(result);
+        assertNull(result);
         
         then(config).should(times(1)).getStringParameter(TEST_KEY);
     }
@@ -392,71 +385,8 @@ class AbstractStringConfigTest {
         final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
         given(config.getStringParameter(TEST_KEY)).willReturn("this is not a number");
         
-        assertThrows(NumberFormatException.class, new Executable() {
-            @Override
-            public void execute()
-            throws ConfigException {
-                config.getNumberParameter(TEST_KEY);
-            }
-        });
-        
-        then(config).should(times(1)).getStringParameter(TEST_KEY);
-    }
-
-    /**
-     * Test method for {@link AbstractStringConfig#getInstantParameter(String)}
-     * for {@code null} value.
-     * @throws ConfigException Shouldn't happen
-     */
-    @Test
-    public void testGetInstantNull()
-    throws ConfigException {
-        final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
-        given(config.getStringParameter(TEST_KEY)).willReturn(null);
-        
-        final Instant result = config.getInstantParameter(TEST_KEY);
+        final Number result = config.getNumberParameter(TEST_KEY);
         assertNull(result);
-        
-        then(config).should(times(1)).getStringParameter(TEST_KEY);
-    }
-
-    /**
-     * Test method for {@link AbstractStringConfig#getInstantParameter(String)}
-     * for valid ISO-8601 instant value.
-     * @throws ConfigException Shouldn't happen
-     */
-    @Test
-    public void testGetInstant()
-    throws ConfigException {
-        final Instant expectedValue = Instant.now();
-        final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
-        given(config.getStringParameter(TEST_KEY)).willReturn(expectedValue.toString());
-        
-        final Instant result = config.getInstantParameter(TEST_KEY);
-        assertNotNull(result);
-        assertEquals(expectedValue, result);
-        
-        then(config).should(times(1)).getStringParameter(TEST_KEY);
-    }
-
-    /**
-     * Test method for {@link AbstractStringConfig#getInstantParameter(String)}
-     * for invalid ISO-8601 instant value.
-     * @throws ConfigException Shouldn't happen
-     */
-    @Test
-    public void testGetInstantInvalid()
-    throws ConfigException {
-        final AbstractStringConfig config = BDDMockito.spy(AbstractStringConfig.class);
-        given(config.getStringParameter(TEST_KEY)).willReturn("Invalid instant");
-        
-        assertThrows(DateTimeParseException.class, new Executable() {
-            @Override
-            public void execute()
-            throws ConfigException {
-                config.getInstantParameter(TEST_KEY);
-            }
-        });
         
         then(config).should(times(1)).getStringParameter(TEST_KEY);
     }

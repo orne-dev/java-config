@@ -1,6 +1,3 @@
-/**
- * 
- */
 package dev.orne.config;
 
 /*-
@@ -590,6 +587,88 @@ class DefaultConfigurerPrimitivePropertiesTest {
         then(config).should(times(0)).get(TEST_DOUBLE_KEY, Double.class);
     }
 
+    /**
+     * Test method for {@link DefaultConfigurer#configureProperties(Configurable, Config)} for
+     * configured values for properties with mixed permissions.
+     * @throws ConfigException Shouldn't happen
+     */
+    @Test
+    public void testConfigureWithBeanError()
+    throws ConfigException {
+        final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
+        final Config config = BDDMockito.mock(Config.class);
+        
+        given(config.contains(TEST_BOOL_KEY)).willReturn(true);
+        given(config.get(TEST_BOOL_KEY, Boolean.class)).willReturn(CONFIG_BOOL_VALUE);
+        
+        final DefaultConfigurer configurer = new DefaultConfigurer(configProvider);
+        final ConfigurableSetterErrorTestBean bean = new ConfigurableSetterErrorTestBean();
+        configurer.configureProperties(bean, config);
+        
+        assertNull(bean.isBoolProp());
+        
+        then(config).should(times(1)).contains(TEST_BOOL_KEY);
+        then(config).should(times(1)).get(TEST_BOOL_KEY, Boolean.class);
+    }
+
+    /**
+     * Test method for {@link DefaultConfigurer#configureProperties(Configurable, Config)} for
+     * configured values for properties with mixed permissions.
+     * @throws ConfigException Shouldn't happen
+     */
+    @Test
+    public void testConfigureWithConfigError()
+    throws ConfigException {
+        final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
+        final Config config = BDDMockito.mock(Config.class);
+        
+        given(config.contains(TEST_BOOL_KEY)).willReturn(true);
+        given(config.get(TEST_BOOL_KEY, Boolean.class)).willThrow(ConfigException.class);
+        given(config.contains(TEST_CHAR_KEY)).willReturn(true);
+        given(config.get(TEST_CHAR_KEY, Character.class)).willThrow(ConfigException.class);
+        given(config.contains(TEST_BYTE_KEY)).willReturn(true);
+        given(config.get(TEST_BYTE_KEY, Byte.class)).willThrow(ConfigException.class);
+        given(config.contains(TEST_SHORT_KEY)).willReturn(true);
+        given(config.get(TEST_SHORT_KEY, Short.class)).willThrow(ConfigException.class);
+        given(config.contains(TEST_INT_KEY)).willReturn(true);
+        given(config.get(TEST_INT_KEY, Integer.class)).willThrow(ConfigException.class);
+        given(config.contains(TEST_LONG_KEY)).willReturn(true);
+        given(config.get(TEST_LONG_KEY, Long.class)).willThrow(ConfigException.class);
+        given(config.contains(TEST_FLOAT_KEY)).willReturn(true);
+        given(config.get(TEST_FLOAT_KEY, Float.class)).willThrow(ConfigException.class);
+        given(config.contains(TEST_DOUBLE_KEY)).willReturn(true);
+        given(config.get(TEST_DOUBLE_KEY, Double.class)).willThrow(ConfigException.class);
+        
+        final DefaultConfigurer configurer = new DefaultConfigurer(configProvider);
+        final ConfigurableWrappersTestBean bean = new ConfigurableWrappersTestBean();
+        configurer.configureProperties(bean, config);
+        assertEquals(DEFAULT_BOOL_VALUE, bean.isBoolProp());
+        assertEquals(DEFAULT_CHAR_VALUE, bean.getCharProp());
+        assertEquals(DEFAULT_BYTE_VALUE, bean.getByteProp());
+        assertEquals(DEFAULT_SHORT_VALUE, bean.getShortProp());
+        assertEquals(DEFAULT_INT_VALUE, bean.getIntProp());
+        assertEquals(DEFAULT_LONG_VALUE, bean.getLongProp());
+        assertEquals(DEFAULT_FLOAT_VALUE, bean.getFloatProp());
+        assertEquals(DEFAULT_DOUBLE_VALUE, bean.getDoubleProp());
+        
+        then(config).should(times(1)).contains(TEST_BOOL_KEY);
+        then(config).should(times(1)).get(TEST_BOOL_KEY, Boolean.class);
+        then(config).should(times(1)).contains(TEST_CHAR_KEY);
+        then(config).should(times(1)).get(TEST_CHAR_KEY, Character.class);
+        then(config).should(times(1)).contains(TEST_BYTE_KEY);
+        then(config).should(times(1)).get(TEST_BYTE_KEY, Byte.class);
+        then(config).should(times(1)).contains(TEST_SHORT_KEY);
+        then(config).should(times(1)).get(TEST_SHORT_KEY, Short.class);
+        then(config).should(times(1)).contains(TEST_INT_KEY);
+        then(config).should(times(1)).get(TEST_INT_KEY, Integer.class);
+        then(config).should(times(1)).contains(TEST_LONG_KEY);
+        then(config).should(times(1)).get(TEST_LONG_KEY, Long.class);
+        then(config).should(times(1)).contains(TEST_FLOAT_KEY);
+        then(config).should(times(1)).get(TEST_FLOAT_KEY, Float.class);
+        then(config).should(times(1)).contains(TEST_DOUBLE_KEY);
+        then(config).should(times(1)).get(TEST_DOUBLE_KEY, Double.class);
+    }
+
     public static class ConfigurablePrimitivesTestBean
     implements Configurable {
         @ConfigurableProperty(TEST_BOOL_KEY)
@@ -822,6 +901,26 @@ class DefaultConfigurerPrimitivePropertiesTest {
         @SuppressWarnings("unused")
         private void setDoubleProp(double doubleProp) {
             this.doubleProp = doubleProp;
+        }
+    }
+    public static class ConfigurableSetterErrorTestBean
+    implements Configurable {
+        @ConfigurableProperty(TEST_BOOL_KEY)
+        private Boolean boolProp = null;
+        private boolean configured;
+        @Override
+        public void configure(Config config) {
+            this.configured = true;
+        }
+        @Override
+        public boolean isConfigured() {
+            return this.configured;
+        }
+        public Boolean isBoolProp() {
+            return boolProp;
+        }
+        public void setBoolProp(Boolean boolProp) {
+            throw new IllegalStateException();
         }
     }
 }

@@ -42,6 +42,8 @@
     <appender-ref ref="STDOUT" />
   </root>
 
+  <logger name="dev.orne.beans" level="off" />
   <logger name="dev.orne.config" level="off" />
+  <logger name="org.apache.commons.beanutils.converters" level="off" />
 
 </configuration>

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package dev.orne.config;
 
 /*-
@@ -30,7 +27,6 @@ import static org.mockito.BDDMockito.*;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 
 /**
  * Unit tests for {@code DefaultConfigProvider}.
@@ -48,11 +44,8 @@ class DefaultConfigProviderTest {
      */
     @Test
     public void testConstructorNull() {
-        assertThrows(NullPointerException.class, new Executable() {
-            @Override
-            public void execute() {
-                new DefaultConfigProvider(null);
-            }
+        assertThrows(NullPointerException.class, () -> {
+            new DefaultConfigProvider(null);
         });
     }
 

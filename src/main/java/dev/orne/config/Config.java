@@ -22,8 +22,6 @@ package dev.orne.config;
  * #L%
  */
 
-import java.time.Instant;
-
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -107,20 +105,6 @@ public interface Config {
      */
     @Nullable
     Number getNumber(
-            @NotBlank
-            String key)
-    throws ConfigException;
-
-    /**
-     * Returns the value of the configuration parameter as {@code Instant}.
-     * 
-     * @param key The key of the configuration parameter
-     * @return The configuration parameter value as {@code Instant}
-     * @throws ConfigException If an error occurs retrieving the configuration
-     * property value
-     */
-    @Nullable
-    Instant getInstant(
             @NotBlank
             String key)
     throws ConfigException;

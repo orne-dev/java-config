@@ -11,6 +11,16 @@
     01. :boom: Methods of `dev.orne.config.PreferencesConfig` throw `ConfigException`
     01. :boom: Methods of `dev.orne.config.PropertiesConfig` throw `ConfigException`
     01. :boom: Methods of `dev.orne.config.SystemConfig` throw `ConfigException`
+01. Simplified `dev.orne.config.Config`
+    01. :boom: Removed method `Instant getInstant(String)`
+01. Simplified `dev.orne.config.AbstractConfig`
+    01. :boom: Adapted to `dev.orne.config.Config` changes
+    01. :gift: Delegated value conversion in instance of Apache Commons BeanUtils `ConvertUtilsBean`
+01. Simplified `dev.orne.config.AbstractStringConfig`
+    01. :boom: Adapted to `dev.orne.config.AbstractConfig` changes
+01. Simplified `dev.orne.config.AbstractMutableStringConfig`
+    01. :boom: Adapted to `dev.orne.config.AbstractStringConfig` changes
+    01. :gift: Delegated value to String conversion in instance of Apache Commons BeanUtils `ConvertUtilsBean`
 01. :gift: Added `dev.orne.config.DelegatedConfig`
 01. :gift: Added `dev.orne.config.MutableDelegatedConfig`
 

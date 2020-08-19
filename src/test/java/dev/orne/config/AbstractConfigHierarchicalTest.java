@@ -1,6 +1,3 @@
-/**
- * 
- */
 package dev.orne.config;
 
 /*-
@@ -29,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import java.math.BigInteger;
-import java.time.Instant;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -50,7 +46,6 @@ class AbstractConfigHierarchicalTest {
     private static final Class<String> TEST_CLASS = String.class;
     private static final String TEST_STRING_VALUE = "testValue";
     private static final Number TEST_NUMBER_VALUE = BigInteger.valueOf(System.currentTimeMillis());
-    private static final Instant TEST_INSTANT_VALUE = Instant.now();
 
     /**
      * Test method for {@link AbstractConfig#contains(String)} on
@@ -581,119 +576,6 @@ class AbstractConfigHierarchicalTest {
         then(config).should(times(0)).getNumberParameter(TEST_KEY);
         then(config).should(times(1)).getParent();
         then(parent).should(times(1)).getNumber(TEST_KEY);
-        then(parent).shouldHaveNoMoreInteractions();
-    }
-
-    /**
-     * Test method for {@link AbstractConfig#getInstant(String)} on
-     * instances with no parent and parameter configured.
-     * @throws ConfigException Shouldn't happen
-     */
-    @Test
-    public void testGetInstantConfigured()
-    throws ConfigException {
-        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-        given(config.containsParameter(TEST_KEY)).willReturn(true);
-        given(config.getInstantParameter(TEST_KEY)).willReturn(TEST_INSTANT_VALUE);
-        
-        final Instant result = config.getInstant(TEST_KEY);
-        assertNotNull(result);
-        assertEquals(TEST_INSTANT_VALUE, result);
-        
-        then(config).should(times(1)).containsParameter(TEST_KEY);
-        then(config).should(times(1)).getInstantParameter(TEST_KEY);
-        then(config).should(times(0)).getParent();
-    }
-
-    /**
-     * Test method for {@link AbstractConfig#getInstant(String)} on
-     * instances with no parent and parameter configured with null value.
-     * @throws ConfigException Shouldn't happen
-     */
-    @Test
-    public void testGetInstantConfiguredNull()
-    throws ConfigException {
-        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-        given(config.containsParameter(TEST_KEY)).willReturn(true);
-        given(config.getInstantParameter(TEST_KEY)).willReturn(null);
-        
-        final Instant result = config.getInstant(TEST_KEY);
-        assertNull(result);
-        
-        then(config).should(times(1)).containsParameter(TEST_KEY);
-        then(config).should(times(1)).getInstantParameter(TEST_KEY);
-        then(config).should(times(0)).getParent();
-    }
-
-    /**
-     * Test method for {@link AbstractConfig#getInstant(String)} on
-     * instances with no parent and parameter not configured.
-     * @throws ConfigException Shouldn't happen
-     */
-    @Test
-    public void testGetInstantUnconfiguredNoParent()
-    throws ConfigException {
-        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-        given(config.containsParameter(TEST_KEY)).willReturn(false);
-        given(config.getParent()).willReturn(null);
-        
-        final Instant result = config.getInstant(TEST_KEY);
-        assertNull(result);
-        
-        then(config).should(times(1)).containsParameter(TEST_KEY);
-        then(config).should(times(0)).getInstantParameter(TEST_KEY);
-        then(config).should(times(1)).getParent();
-    }
-
-    /**
-     * Test method for {@link AbstractConfig#getInstant(String)} on
-     * instances with parent and parameter not configured.
-     * @throws ConfigException Shouldn't happen
-     */
-    @Test
-    public void testGetInstantUnconfiguredParent()
-    throws ConfigException {
-        final Config parent = BDDMockito.mock(Config.class);
-        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-        given(config.containsParameter(TEST_KEY)).willReturn(false);
-        given(config.getParent()).willReturn(parent);
-        given(parent.getInstant(TEST_KEY)).willReturn(TEST_INSTANT_VALUE);
-        
-        
-        final Instant result = config.getInstant(TEST_KEY);
-        assertNotNull(result);
-        assertEquals(TEST_INSTANT_VALUE, result);
-        
-        then(config).should(times(1)).containsParameter(TEST_KEY);
-        then(config).should(times(0)).getInstantParameter(TEST_KEY);
-        then(config).should(times(1)).getParent();
-        then(parent).should(times(1)).getInstant(TEST_KEY);
-        then(parent).shouldHaveNoMoreInteractions();
-    }
-
-    /**
-     * Test method for {@link AbstractConfig#getInstant(String)} on
-     * instances with parent and parameter not configured with null
-     * value on parent.
-     * @throws ConfigException Shouldn't happen
-     */
-    @Test
-    public void testGetInstantUnconfiguredParentNull()
-    throws ConfigException {
-        final Config parent = BDDMockito.mock(Config.class);
-        final AbstractHierarchicalConfig config = BDDMockito.spy(AbstractHierarchicalConfig.class);
-        given(config.containsParameter(TEST_KEY)).willReturn(false);
-        given(config.getParent()).willReturn(parent);
-        given(parent.getInstant(TEST_KEY)).willReturn(null);
-        
-        
-        final Instant result = config.getInstant(TEST_KEY);
-        assertNull(result);
-        
-        then(config).should(times(1)).containsParameter(TEST_KEY);
-        then(config).should(times(0)).getInstantParameter(TEST_KEY);
-        then(config).should(times(1)).getParent();
-        then(parent).should(times(1)).getInstant(TEST_KEY);
         then(parent).shouldHaveNoMoreInteractions();
     }
 

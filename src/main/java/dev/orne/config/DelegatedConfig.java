@@ -22,8 +22,6 @@ package dev.orne.config;
  * #L%
  */
 
-import java.time.Instant;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -104,16 +102,5 @@ extends AbstractConfig {
             final String key)
     throws ConfigException {
         return this.delegate.getNumber(key);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected Instant getInstantParameter(
-            @NotBlank
-            final String key)
-    throws ConfigException {
-        return this.delegate.getInstant(key);
     }
 }

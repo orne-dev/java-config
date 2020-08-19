@@ -1,6 +1,3 @@
-/**
- * 
- */
 package dev.orne.config;
 
 /*-
@@ -32,7 +29,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 
 /**
  * Unit tests for {@code SystemConfig}.
@@ -107,12 +103,8 @@ class SystemConfigTest {
         final SystemConfig config = spy(SystemConfig.class);
         given(config.getSystemProperty(TEST_KEY)).willThrow(se);
         
-        assertThrows(ConfigException.class, new Executable() {
-            @Override
-            public void execute()
-            throws ConfigException {
-                config.containsParameter(TEST_KEY);
-            }
+        assertThrows(ConfigException.class, () -> {
+            config.containsParameter(TEST_KEY);
         });
     }
 
@@ -158,12 +150,8 @@ class SystemConfigTest {
         final SystemConfig config = spy(SystemConfig.class);
         given(config.getSystemProperty(TEST_KEY)).willThrow(se);
         
-        assertThrows(ConfigException.class, new Executable() {
-            @Override
-            public void execute()
-            throws ConfigException {
-                config.getStringParameter(TEST_KEY);
-            }
+        assertThrows(ConfigException.class, () -> {
+            config.getStringParameter(TEST_KEY);
         });
     }
 }

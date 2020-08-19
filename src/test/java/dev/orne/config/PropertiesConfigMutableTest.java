@@ -1,6 +1,3 @@
-/**
- * 
- */
 package dev.orne.config;
 
 /*-
@@ -44,8 +41,11 @@ import java.time.Period;
 import java.time.Year;
 import java.time.YearMonth;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import org.junit.jupiter.api.Tag;
@@ -254,7 +254,7 @@ class PropertiesConfigMutableTest {
         config.set(TEST_KEY, expectedValue);
         assertTrue(config.containsParameter(TEST_KEY));
         assertNotNull(config.getStringParameter(TEST_KEY));
-        assertEquals(BigDecimal.valueOf(expectedValue).toString(), config.getStringParameter(TEST_KEY));
+        assertEquals(expectedValue.toString(), config.getStringParameter(TEST_KEY));
         assertEquals(expectedValue, config.getParameter(TEST_KEY, Float.class));
     }
 
@@ -323,7 +323,6 @@ class PropertiesConfigMutableTest {
         assertTrue(config.containsParameter(TEST_KEY));
         assertNotNull(config.getStringParameter(TEST_KEY));
         assertEquals(expectedValue.toString(), config.getStringParameter(TEST_KEY));
-        assertEquals(expectedValue, config.getInstantParameter(TEST_KEY));
         assertEquals(expectedValue, config.getParameter(TEST_KEY, Instant.class));
     }
 
@@ -387,11 +386,13 @@ class PropertiesConfigMutableTest {
     public void testSetLocalTime()
     throws ConfigException {
         final LocalTime expectedValue = LocalTime.now();
+        final String expectedStrValue = expectedValue.format(
+                DateTimeFormatter.ISO_LOCAL_TIME);
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
         assertTrue(config.containsParameter(TEST_KEY));
         assertNotNull(config.getStringParameter(TEST_KEY));
-        assertEquals(expectedValue.toString(), config.getStringParameter(TEST_KEY));
+        assertEquals(expectedStrValue, config.getStringParameter(TEST_KEY));
         assertEquals(expectedValue, config.getParameter(TEST_KEY, LocalTime.class));
     }
 
@@ -404,11 +405,13 @@ class PropertiesConfigMutableTest {
     public void testSetLocalDateTime()
     throws ConfigException {
         final LocalDateTime expectedValue = LocalDateTime.now();
+        final String expectedStrValue = expectedValue.format(
+                DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
         assertTrue(config.containsParameter(TEST_KEY));
         assertNotNull(config.getStringParameter(TEST_KEY));
-        assertEquals(expectedValue.toString(), config.getStringParameter(TEST_KEY));
+        assertEquals(expectedStrValue, config.getStringParameter(TEST_KEY));
         assertEquals(expectedValue, config.getParameter(TEST_KEY, LocalDateTime.class));
     }
 
@@ -472,11 +475,13 @@ class PropertiesConfigMutableTest {
     public void testSetDate()
     throws ConfigException {
         final Date expectedValue = new Date();
+        final String expectedStrValue = DateTimeFormatter.ISO_INSTANT.format(
+                expectedValue.toInstant());
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
         assertTrue(config.containsParameter(TEST_KEY));
         assertNotNull(config.getStringParameter(TEST_KEY));
-        assertEquals(expectedValue.toInstant().toString(), config.getStringParameter(TEST_KEY));
+        assertEquals(expectedStrValue, config.getStringParameter(TEST_KEY));
         assertEquals(expectedValue, config.getParameter(TEST_KEY, Date.class));
     }
 
@@ -488,12 +493,15 @@ class PropertiesConfigMutableTest {
     @Test
     public void testSetCalendar()
     throws ConfigException {
-        final Calendar expectedValue = Calendar.getInstance();
+        final ZonedDateTime zdt = ZonedDateTime.now();
+        final GregorianCalendar expectedValue = GregorianCalendar.from(zdt);
+        final String expectedStrValue = DateTimeFormatter.ISO_ZONED_DATE_TIME.format(
+                zdt);
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, expectedValue);
         assertTrue(config.containsParameter(TEST_KEY));
         assertNotNull(config.getStringParameter(TEST_KEY));
-        assertEquals(expectedValue.toInstant().toString(), config.getStringParameter(TEST_KEY));
+        assertEquals(expectedStrValue, config.getStringParameter(TEST_KEY));
         assertEquals(expectedValue, config.getParameter(TEST_KEY, Calendar.class));
     }
 

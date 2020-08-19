@@ -22,27 +22,14 @@ package dev.orne.config;
  * #L%
  */
 
-import java.net.URI;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Period;
-import java.time.Year;
-import java.time.YearMonth;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.beanutils.ConvertUtils;
-import org.apache.commons.lang3.LocaleUtils;
+import org.apache.commons.beanutils.ConvertUtilsBean;
+
+import dev.orne.beans.converters.OrneBeansConverters;
 
 /**
  * Basic abstract implementation of {@code Config}. Provides basic
@@ -54,6 +41,57 @@ import org.apache.commons.lang3.LocaleUtils;
  */
 public abstract class AbstractConfig
 implements Config {
+
+    /** The value converter. */
+    @Nonnull
+    private ConvertUtilsBean converter;
+
+    /**
+     * Creates a new instance. Sets {@code converter} to the result of
+     * {@link #createDefaultConverter()}.
+     */
+    public AbstractConfig() {
+        super();
+        this.converter = createDefaultConverter();
+    }
+
+    /**
+     * Returns the value converter.
+     * 
+     * @return The value converter
+     */
+    public ConvertUtilsBean getConverter() {
+        return this.converter;
+    }
+
+    /**
+     * Sets the value converter.
+     * 
+     * @param converter The value converter
+     */
+    public void setConverter(final ConvertUtilsBean converter) {
+        this.converter = converter;
+    }
+
+    /**
+     * <p>Creates a new value converter configured with the default settings.</p>
+     * 
+     * <p>This converter is configured to:</p>
+     * <ul>
+     * <li>Return {@code null} for {@code null} values.
+     * <li>Return {@code null} for values of incompatible types.
+     * <li>Return empty arrays for {@code null} values.
+     * <li>Return empty collections for {@code null} values.
+     * </ul>
+     * 
+     * @return A new value converter configured with the default settings
+     */
+    public static ConvertUtilsBean createDefaultConverter() {
+        final ConvertUtilsBean result = new ConvertUtilsBean();
+        result.register(false, true, 0);
+        OrneBeansConverters.register(result, true);
+        return result;
+    }
 
     /**
      * {@inheritDoc}
@@ -131,42 +169,10 @@ implements Config {
         final T result;
         if (String.class.equals(type)) {
             result = type.cast(getStringParameter(key));
-        } else if (Boolean.class.equals(type)) {
-            result = type.cast(getBooleanParameter(key));
-        } else if (Number.class.isAssignableFrom(type)) {
-            result = type.cast(ConvertUtils.convert(getNumberParameter(key), type));
         } else if (type.isEnum()) {
             result = type.cast(getEnum(type, getStringParameter(key)));
-        } else if (Locale.class.equals(type)) {
-            result = type.cast(LocaleUtils.toLocale(getStringParameter(key)));
-        } else if (Instant.class.equals(type)) {
-            result = type.cast(getInstantParameter(key));
-        } else if (Year.class.equals(type)) {
-            result = type.cast(Year.parse(getStringParameter(key)));
-        } else if (YearMonth.class.equals(type)) {
-            result = type.cast(YearMonth.parse(getStringParameter(key)));
-        } else if (LocalDate.class.equals(type)) {
-            result = type.cast(LocalDate.parse(getStringParameter(key), DateTimeFormatter.ISO_DATE));
-        } else if (LocalTime.class.equals(type)) {
-            result = type.cast(LocalTime.parse(getStringParameter(key), DateTimeFormatter.ISO_TIME));
-        } else if (LocalDateTime.class.equals(type)) {
-            result = type.cast(LocalDateTime.parse(getStringParameter(key), DateTimeFormatter.ISO_DATE_TIME));
-        } else if (ZoneOffset.class.equals(type)) {
-            result = type.cast(ZoneOffset.of(getStringParameter(key)));
-        } else if (Duration.class.equals(type)) {
-            result = type.cast(Duration.parse(getStringParameter(key)));
-        } else if (Period.class.equals(type)) {
-            result = type.cast(Period.parse(getStringParameter(key)));
-        } else if (Date.class.equals(type)) {
-            result = type.cast(Date.from(getInstantParameter(key)));
-        } else if (Calendar.class.equals(type)) {
-            final Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(getInstantParameter(key).toEpochMilli());
-            result = type.cast(calendar);
-        } else if (URI.class.equals(type)) {
-            result = type.cast(URI.create(getStringParameter(key)));
         } else {
-            result = type.cast(ConvertUtils.convert(getStringParameter(key), type));
+            result = type.cast(this.converter.convert(getStringParameter(key), type));
         }
         return result;
     }
@@ -296,42 +302,6 @@ implements Config {
      * property value
      */
     protected abstract Number getNumberParameter(
-            @NotBlank
-            String key)
-    throws ConfigException;
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Nullable
-    public Instant getInstant(
-            @NotBlank
-            final String key)
-    throws ConfigException {
-        Instant value = null;
-        if (containsParameter(key)) {
-            value = getInstantParameter(key);
-        } else if (this instanceof HierarchicalConfig) {
-            final Config parent = ((HierarchicalConfig) this).getParent();
-            if (parent != null) {
-                value = parent.getInstant(key);
-            }
-        }
-        return value;
-    }
-
-    /**
-     * Returns the value of the configuration parameter configured in this
-     * instance as {@code Instant}.
-     * 
-     * @param key The key of the configuration parameter
-     * @return The configuration parameter value as {@code Instant}
-     * @throws ConfigException If an error occurs retrieving the configuration
-     * property value
-     */
-    @Nullable
-    protected abstract Instant getInstantParameter(
             @NotBlank
             String key)
     throws ConfigException;
