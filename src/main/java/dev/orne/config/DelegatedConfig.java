@@ -25,6 +25,8 @@ package dev.orne.config;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.Validate;
+
 /**
  * Delegated {@code Config} implementation.
  * 
@@ -47,7 +49,7 @@ extends AbstractConfig {
             @NotNull
             final Config delegate) {
         super();
-        this.delegate = delegate;
+        this.delegate = Validate.notNull(delegate);
     }
 
     /**
@@ -69,6 +71,19 @@ extends AbstractConfig {
             final String key)
     throws ConfigException {
         return this.delegate.contains(key);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected <T> T getParameter(
+            @NotBlank
+            final String key,
+            @NotNull
+            final Class<T> type)
+    throws ConfigException {
+        return this.delegate.get(key, type);
     }
 
     /**
