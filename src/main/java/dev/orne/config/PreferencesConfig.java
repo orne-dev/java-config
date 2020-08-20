@@ -43,6 +43,9 @@ public class PreferencesConfig
 extends AbstractMutableStringConfig
 implements MutableConfig {
 
+    /** Error message for invalid keys. */
+    private static final String INVALID_KEY_ERROR = "Parameter key must be a non blank string";
+
     /** The preferences node to use as storage of configuration parameters. */
     private final Preferences preferences;
 
@@ -231,6 +234,17 @@ implements MutableConfig {
     }
 
     /**
+     * Returns the preferences node to use as storage of configuration
+     * parameters.
+     * 
+     * @return The preferences node.
+     */
+    @NotNull
+    protected Preferences getPreferences() {
+        return this.preferences;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -238,7 +252,7 @@ implements MutableConfig {
             @NotBlank
             final String key)
     throws ConfigException {
-        Validate.notBlank(key, "Parameter key mus be a non blank string");
+        Validate.notBlank(key, INVALID_KEY_ERROR);
         try {
             return this.preferences.get(key, null) != null;
         } catch (final IllegalStateException ise) {
@@ -254,7 +268,7 @@ implements MutableConfig {
             @NotBlank
             final String key)
     throws ConfigException {
-        Validate.notBlank(key, "Parameter key mus be a non blank string");
+        Validate.notBlank(key, INVALID_KEY_ERROR);
         try {
             return this.preferences.get(key, null);
         } catch (final IllegalStateException ise) {
@@ -273,9 +287,9 @@ implements MutableConfig {
             final String value)
     throws ConfigException {
         if (value == null) {
-            remove(value);
+            remove(key);
         } else {
-            Validate.notBlank(key, "Parameter key mus be a non blank string");
+            Validate.notBlank(key, INVALID_KEY_ERROR);
             try {
                 this.preferences.put(key, value);
             } catch (final IllegalStateException ise) {
@@ -292,7 +306,7 @@ implements MutableConfig {
             @NotBlank
             final String key)
     throws ConfigException {
-        Validate.notBlank(key, "Parameter key mus be a non blank string");
+        Validate.notBlank(key, INVALID_KEY_ERROR);
         try {
             this.preferences.remove(key);
         } catch (final IllegalStateException ise) {
