@@ -49,12 +49,24 @@ public class ExceptionsTest {
      * Test for {@link ConfigException}.
      */
     @Test
-    public void testUnrecognizedIdentityTokenException() {
+    public void testConfigException() {
         assertEmptyException(new ConfigException());
         assertMessageException(new ConfigException(TEST_MESSAGE));
         assertCauseException(new ConfigException(TEST_CAUSE));
         assertFullException(new ConfigException(TEST_MESSAGE, TEST_CAUSE));
         assertFullException(new ConfigException(TEST_MESSAGE, TEST_CAUSE, false, false));
+    }
+
+    /**
+     * Test for {@link ConfigCryptoProviderException}.
+     */
+    @Test
+    public void testConfigCryptoProviderException() {
+        assertEmptyException(new ConfigCryptoProviderException());
+        assertMessageException(new ConfigCryptoProviderException(TEST_MESSAGE));
+        assertCauseException(new ConfigCryptoProviderException(TEST_CAUSE));
+        assertFullException(new ConfigCryptoProviderException(TEST_MESSAGE, TEST_CAUSE));
+        assertFullException(new ConfigCryptoProviderException(TEST_MESSAGE, TEST_CAUSE, false, false));
     }
 
     /**
