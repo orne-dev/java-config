@@ -16,6 +16,7 @@
 01. Simplified class  `dev.orne.config.AbstractConfig`
     01. :boom: Adapted to `dev.orne.config.Config` changes
     01. :gift: Delegated value conversion in instance of Apache Commons BeanUtils `ConvertUtilsBean`
+    01. :gift: Added method `convertValue(Object, Class)`
 01. Simplified class `dev.orne.config.AbstractStringConfig`
     01. :boom: Adapted to `dev.orne.config.AbstractConfig` changes
 01. Simplified class `dev.orne.config.AbstractMutableStringConfig`

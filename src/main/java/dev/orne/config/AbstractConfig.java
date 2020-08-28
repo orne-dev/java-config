@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.beanutils.ConvertUtilsBean;
 
 import dev.orne.beans.converters.OrneBeansConverters;
@@ -166,13 +167,39 @@ implements Config {
             @NotNull
             final Class<T> type)
     throws ConfigException {
+        return convertValue(getStringParameter(key), type);
+    }
+
+    /**
+     * Converts the specified value to the target type.
+     * 
+     * @param <T> The target type of the parameter
+     * @param value The configuration parameter value
+     * @param type The target type of the parameter
+     * @return The configuration parameter value converted to the target type
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
+     */
+    @Nullable
+    protected <T> T convertValue(
+            @Nullable
+            final Object value,
+            @NotNull
+            final Class<T> type)
+    throws ConfigException {
         final T result;
-        if (String.class.equals(type)) {
-            result = type.cast(getStringParameter(key));
-        } else if (type.isEnum()) {
-            result = type.cast(getEnum(type, getStringParameter(key)));
+        if (value == null) {
+            result = null;
+        } else if (String.class.equals(type) && value instanceof String) {
+            result = type.cast(value);
+        } else if (type.isEnum() && value instanceof String) {
+            result = type.cast(getEnum(type, value.toString()));
         } else {
-            result = type.cast(this.converter.convert(getStringParameter(key), type));
+            try {
+                result = type.cast(this.converter.convert(value, type));
+            } catch (final ConversionException ce) {
+                throw new ConfigException("", ce);
+            }
         }
         return result;
     }

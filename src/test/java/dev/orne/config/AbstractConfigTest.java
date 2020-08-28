@@ -27,10 +27,10 @@ import static org.mockito.BDDMockito.*;
 
 import java.time.DayOfWeek;
 
+import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 
 /**
  * Unit tests for {@code AbstractConfig}.
@@ -53,7 +53,7 @@ class AbstractConfigTest {
     public void testGetBoolean()
     throws ConfigException {
         final Boolean boolValue = Boolean.TRUE;
-        final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
+        final AbstractConfig config = spy(AbstractConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(true);
         given(config.getBooleanParameter(TEST_KEY)).willReturn(boolValue);
         
@@ -74,7 +74,7 @@ class AbstractConfigTest {
     @Test
     public void testGetBooleanMissing()
     throws ConfigException {
-        final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
+        final AbstractConfig config = spy(AbstractConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);
         
         final Boolean result = config.getBoolean(TEST_KEY);
@@ -94,7 +94,7 @@ class AbstractConfigTest {
     public void testGetString()
     throws ConfigException {
         final String strValue = "test.value";
-        final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
+        final AbstractConfig config = spy(AbstractConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(true);
         given(config.getStringParameter(TEST_KEY)).willReturn(strValue);
         
@@ -115,7 +115,7 @@ class AbstractConfigTest {
     @Test
     public void testGetStringMissing()
     throws ConfigException {
-        final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
+        final AbstractConfig config = spy(AbstractConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);
         
         final String result = config.getString(TEST_KEY);
@@ -136,7 +136,7 @@ class AbstractConfigTest {
     throws ConfigException {
         final DayOfWeek expectedValue = DayOfWeek.SATURDAY;
         final String strValue = expectedValue.toString();
-        final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
+        final AbstractConfig config = spy(AbstractConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(true);
         given(config.getStringParameter(TEST_KEY)).willReturn(strValue);
         
@@ -157,7 +157,7 @@ class AbstractConfigTest {
     @Test
     public void testGetEnumMissing()
     throws ConfigException {
-        final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
+        final AbstractConfig config = spy(AbstractConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);
         
         final DayOfWeek result = config.get(TEST_KEY, DayOfWeek.class);
@@ -175,14 +175,170 @@ class AbstractConfigTest {
     public void testSetConverter()
     throws ConfigException {
         final ConvertUtilsBean converter = mock(ConvertUtilsBean.class);
-        final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
+        final AbstractConfig config = spy(AbstractConfig.class);
         config.setConverter(converter);
         
         assertSame(converter, config.getConverter());
     }
 
     /**
-     * Test method for {@link AbstractConfig#setConverter(ConvertUtilsBean)}.
+     * Test method for {@link AbstractConfig#convertValue(Object, Class)}.
+     */
+    @Test
+    public void testConvertValue()
+    throws ConfigException {
+        final Object rawValue = new Object();
+        final Class<?> targetClass = Object.class;
+        final Object expectedValue = new Object();
+        
+        final ConvertUtilsBean converter = mock(ConvertUtilsBean.class);
+        final AbstractConfig config = spy(AbstractConfig.class);
+        config.setConverter(converter);
+        given(converter.convert(rawValue, targetClass)).willReturn(expectedValue);
+        
+        final Object result = config.convertValue(rawValue, targetClass);
+        
+        assertNotNull(result);
+        assertSame(expectedValue, result);
+        
+        then(converter).should(times(1)).convert(rawValue, targetClass);
+    }
+
+    /**
+     * Test method for {@link AbstractConfig#convertValue(Object, Class)}.
+     */
+    @Test
+    public void testConvertValueNull()
+    throws ConfigException {
+        final Object rawValue = null;
+        final Class<?> targetClass = Object.class;
+        
+        final ConvertUtilsBean converter = mock(ConvertUtilsBean.class);
+        final AbstractConfig config = spy(AbstractConfig.class);
+        config.setConverter(converter);
+        
+        final Object result = config.convertValue(rawValue, targetClass);
+        
+        assertNull(result);
+        
+        then(converter).shouldHaveNoInteractions();
+    }
+
+    /**
+     * Test method for {@link AbstractConfig#convertValue(Object, Class)}.
+     */
+    @Test
+    public void testConvertValueString()
+    throws ConfigException {
+        final Object rawValue = "raw value";
+        final Class<?> targetClass = String.class;
+        final Object expectedValue = rawValue;
+        
+        final ConvertUtilsBean converter = mock(ConvertUtilsBean.class);
+        final AbstractConfig config = spy(AbstractConfig.class);
+        config.setConverter(converter);
+        
+        final Object result = config.convertValue(rawValue, targetClass);
+        
+        assertNotNull(result);
+        assertSame(expectedValue, result);
+        
+        then(converter).shouldHaveNoInteractions();
+    }
+
+    /**
+     * Test method for {@link AbstractConfig#convertValue(Object, Class)}.
+     */
+    @Test
+    public void testConvertValueObjectToString()
+    throws ConfigException {
+        final Object rawValue = new Object();
+        final Class<?> targetClass = String.class;
+        final Object expectedValue = "mock value";
+        
+        final ConvertUtilsBean converter = mock(ConvertUtilsBean.class);
+        final AbstractConfig config = spy(AbstractConfig.class);
+        config.setConverter(converter);
+        given(converter.convert(rawValue, targetClass)).willReturn(expectedValue);
+        
+        final Object result = config.convertValue(rawValue, targetClass);
+        
+        assertNotNull(result);
+        assertSame(expectedValue, result);
+        
+        then(converter).should(times(1)).convert(rawValue, targetClass);
+    }
+
+    /**
+     * Test method for {@link AbstractConfig#convertValue(Object, Class)}.
+     */
+    @Test
+    public void testConvertValueEnum()
+    throws ConfigException {
+        final Object rawValue = TestEnum.VALUEB.name();
+        final Class<?> targetClass = TestEnum.class;
+        final TestEnum expectedValue = TestEnum.VALUEB;
+        
+        final ConvertUtilsBean converter = mock(ConvertUtilsBean.class);
+        final AbstractConfig config = spy(AbstractConfig.class);
+        config.setConverter(converter);
+        given(converter.convert(expectedValue, targetClass)).willReturn(expectedValue);
+        
+        final Object result = config.convertValue(rawValue, targetClass);
+        
+        assertNotNull(result);
+        assertSame(expectedValue, result);
+        
+        then(converter).shouldHaveNoInteractions();
+    }
+
+    /**
+     * Test method for {@link AbstractConfig#convertValue(Object, Class)}.
+     */
+    @Test
+    public void testConvertValueObjectToEnum()
+    throws ConfigException {
+        final Object rawValue = new Object();
+        final Class<?> targetClass = TestEnum.class;
+        final Object expectedValue = TestEnum.VALUEB;
+        
+        final ConvertUtilsBean converter = mock(ConvertUtilsBean.class);
+        final AbstractConfig config = spy(AbstractConfig.class);
+        config.setConverter(converter);
+        given(converter.convert(rawValue, targetClass)).willReturn(expectedValue);
+        
+        final Object result = config.convertValue(rawValue, targetClass);
+        
+        assertNotNull(result);
+        assertSame(expectedValue, result);
+        
+        then(converter).should(times(1)).convert(rawValue, targetClass);
+    }
+
+    /**
+     * Test method for {@link AbstractConfig#convertValue(Object, Class)}.
+     */
+    @Test
+    public void testConvertValueException()
+    throws ConfigException {
+        final Object rawValue = new Object();
+        final Class<?> targetClass = Object.class;
+        final ConversionException convException = new ConversionException("mock exception");
+        
+        final ConvertUtilsBean converter = mock(ConvertUtilsBean.class);
+        final AbstractConfig config = spy(AbstractConfig.class);
+        config.setConverter(converter);
+        given(converter.convert(rawValue, targetClass)).willThrow(convException);
+        
+        assertThrows(ConfigException.class, () -> {
+            config.convertValue(rawValue, targetClass);
+        });
+        
+        then(converter).should(times(1)).convert(rawValue, targetClass);
+    }
+
+    /**
+     * Test method for {@link AbstractConfig#get(String, Class)}.
      */
     @Test
     public void testGet()
@@ -192,11 +348,11 @@ class AbstractConfigTest {
         final Object expectedValue = new Object();
         
         final ConvertUtilsBean converter = mock(ConvertUtilsBean.class);
-        final AbstractConfig config = BDDMockito.spy(AbstractConfig.class);
+        final AbstractConfig config = spy(AbstractConfig.class);
         config.setConverter(converter);
-        given(config.containsParameter(TEST_KEY)).willReturn(true);
-        given(config.getStringParameter(TEST_KEY)).willReturn(strValue);
-        given(converter.convert(strValue, targetClass)).willReturn(expectedValue);
+        willReturn(true).given(config).containsParameter(TEST_KEY);
+        willReturn(strValue).given(config).getStringParameter(TEST_KEY);
+        willReturn(expectedValue).given(converter).convert((Object) strValue, targetClass);
         
         final Object result = config.get(TEST_KEY, Object.class);
         
@@ -205,6 +361,12 @@ class AbstractConfigTest {
         
         then(config).should(times(1)).containsParameter(TEST_KEY);
         then(config).should(times(1)).getStringParameter(TEST_KEY);
-        then(converter).should(times(1)).convert(strValue, targetClass);
+        then(converter).should(times(1)).convert((Object) strValue, targetClass);
+    }
+
+    public static enum TestEnum {
+        VALUEA,
+        VALUEB,
+        VALUEC;
     }
 }
