@@ -19,9 +19,11 @@
     01. :gift: Added method `convertValue(Object, Class)`
 01. Simplified class `dev.orne.config.AbstractStringConfig`
     01. :boom: Adapted to `dev.orne.config.AbstractConfig` changes
+    01. :gift: Added support for null values placeholder
 01. Simplified class `dev.orne.config.AbstractMutableStringConfig`
     01. :boom: Adapted to `dev.orne.config.AbstractStringConfig` changes
     01. :gift: Delegated value to String conversion in instance of Apache Commons BeanUtils `ConvertUtilsBean`
+01. :boom: Adapted `dev.orne.config.SystemConfig` to `dev.orne.config.AbstractStringConfig` changes
 01. :gift: Added class `dev.orne.config.DelegatedConfig`
 01. :gift: Added class `dev.orne.config.MutableDelegatedConfig`
 01. :gift: Added interface `dev.orne.config.ConfigCryptoProvider`

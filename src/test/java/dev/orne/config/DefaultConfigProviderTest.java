@@ -244,7 +244,7 @@ class DefaultConfigProviderTest {
             return false;
         }
         @Override
-        protected String getStringParameter(String key) {
+        protected String getRawValue(String key) {
             return null;
         }
     }

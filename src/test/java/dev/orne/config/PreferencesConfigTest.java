@@ -386,11 +386,11 @@ public class PreferencesConfigTest {
     }
 
     /**
-     * Test method for {@link PreferencesConfig#getRawValue(String)}.
+     * Test method for {@link PreferencesConfig#getStringParameter(String)}.
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetRawValue()
+    public void testGetStringParameterValue()
     throws ConfigException {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfig config = new PreferencesConfig(preferences);
@@ -398,7 +398,7 @@ public class PreferencesConfigTest {
         final String value = "mock value";
         willReturn(value).given(preferences).get(TEST_KEY, null);
         
-        final String result = config.getRawValue(TEST_KEY);
+        final String result = config.getStringParameter(TEST_KEY);
         assertSame(value, result);
         
         then(preferences).should(times(1)).get(TEST_KEY, null);
@@ -406,55 +406,55 @@ public class PreferencesConfigTest {
     }
 
     /**
-     * Test method for {@link PreferencesConfig#getRawValue(String)}
+     * Test method for {@link PreferencesConfig#getStringParameter(String)}
      * with {@code null} key.
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetRawValueNullKey()
+    public void testGetStringParameterNullKey()
     throws ConfigException {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfig config = new PreferencesConfig(preferences);
         
         assertThrows(NullPointerException.class, () -> {
-            config.getRawValue(null);
+            config.getStringParameter(null);
         });
         
         then(preferences).shouldHaveNoInteractions();
     }
 
     /**
-     * Test method for {@link PreferencesConfig#getRawValue(String)}
+     * Test method for {@link PreferencesConfig#getStringParameter(String)}
      * with blank key.
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetRawValueBlankKey()
+    public void testGetStringParameterBlankKey()
     throws ConfigException {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfig config = new PreferencesConfig(preferences);
         
         assertThrows(IllegalArgumentException.class, () -> {
-            config.getRawValue("");
+            config.getStringParameter("");
         });
         
         then(preferences).shouldHaveNoInteractions();
     }
 
     /**
-     * Test method for {@link PreferencesConfig#getRawValue(String)}
+     * Test method for {@link PreferencesConfig#getStringParameter(String)}
      * with {@code null} value.
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetRawValueNullValue()
+    public void testGetStringParameterNullValue()
     throws ConfigException {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfig config = new PreferencesConfig(preferences);
         
         willReturn(null).given(preferences).get(TEST_KEY, null);
         
-        final String result = config.getRawValue(TEST_KEY);
+        final String result = config.getStringParameter(TEST_KEY);
         assertNull(result);
         
         then(preferences).should(times(1)).get(TEST_KEY, null);
@@ -462,12 +462,12 @@ public class PreferencesConfigTest {
     }
 
     /**
-     * Test method for {@link PreferencesConfig#getRawValue(String)}
+     * Test method for {@link PreferencesConfig#getStringParameter(String)}
      * when {@code Preferences} throws an error.
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetRawValueError()
+    public void testGetStringParameterError()
     throws ConfigException {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfig config = new PreferencesConfig(preferences);
@@ -475,7 +475,7 @@ public class PreferencesConfigTest {
         willThrow(IllegalStateException.class).given(preferences).get(TEST_KEY, null);
         
         assertThrows(ConfigException.class, () -> {
-            config.getRawValue(TEST_KEY);
+            config.getStringParameter(TEST_KEY);
         });
         
         then(preferences).should(times(1)).get(TEST_KEY, null);

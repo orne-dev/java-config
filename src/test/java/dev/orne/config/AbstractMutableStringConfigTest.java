@@ -25,6 +25,7 @@ package dev.orne.config;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
+import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.apache.commons.beanutils.Converter;
 import org.junit.jupiter.api.Tag;
@@ -157,6 +158,31 @@ class AbstractMutableStringConfigTest {
         final String result = config.convertValueToString(value);
         assertNotNull(result);
         assertSame(expectedValue, result);
+        
+        then(converters).should(atLeastOnce()).lookup(any());
+        then(converters).should(times(1)).convert(value);
+    }
+
+    /**
+     * Test method for {@link AbstractMutableStringConfig#convertValueToString(Object)} for
+     * {@code null} value.
+     * @throws ConfigException Shouldn't happen
+     */
+    @Test
+    public void testConvertToStringError()
+    throws ConfigException {
+        final ConvertUtilsBean converters = mock(ConvertUtilsBean.class);
+        final AbstractMutableStringConfig config = BDDMockito.spy(AbstractMutableStringConfig.class);
+        config.setConverter(converters);
+        
+        final TestType value = new TestType();
+        final ConversionException mockException = new ConversionException("Mock exception");
+        willReturn(null).given(converters).lookup(any());
+        willThrow(mockException).given(converters).convert(value);
+        
+        assertThrows(ConfigException.class, () -> {
+            config.convertValueToString(value);
+        });
         
         then(converters).should(atLeastOnce()).lookup(any());
         then(converters).should(times(1)).convert(value);

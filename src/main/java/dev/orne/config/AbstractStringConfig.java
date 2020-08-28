@@ -39,6 +39,63 @@ import javax.validation.constraints.NotBlank;
 public abstract class AbstractStringConfig
 extends AbstractConfig {
 
+    /** String representation of {@code null} values. */
+    public static final String NULL = "\0";
+
+    /** If {@link #NULL} values should be converted to {@code null}. */
+    private boolean nullPlaceholderEnabled;
+
+    /**
+     * Returns {@code true} if {@link #NULL} values should be converted to
+     * {@code null}.
+     * 
+     * @return If {@link #NULL} values should be converted to {@code null}
+     */
+    public boolean isNullPlaceholderEnabled() {
+        return this.nullPlaceholderEnabled;
+    }
+
+    /**
+     * Sets if {@link #NULL} values should be converted to {@code null}.
+     * 
+     * @param enabled If {@link #NULL} values should be converted to
+     * {@code null}
+     */
+    public void setNullPlaceholderEnabled(final boolean enabled) {
+        this.nullPlaceholderEnabled = enabled;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Nullable
+    protected String getStringParameter(
+            @NotBlank
+            final String key)
+    throws ConfigException {
+        String result = getRawValue(key);
+        if (this.nullPlaceholderEnabled && NULL.equals(result)) {
+            result = null;
+        }
+        return result;
+    }
+
+    /**
+     * Returns the raw stored value of the configuration parameter configured
+     * in this instance as {@code String}.
+     * 
+     * @param key The key of the configuration parameter
+     * @return The configuration parameter raw value as {@code String}
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
+     */
+    @Nullable
+    protected abstract String getRawValue(
+            @NotBlank
+            String key)
+    throws ConfigException;
+
     /**
      * {@inheritDoc}
      */

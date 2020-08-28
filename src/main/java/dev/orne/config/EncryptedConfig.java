@@ -79,7 +79,13 @@ extends DelegatedConfig {
     throws ConfigException {
         final String cryptValue = super.getStringParameter(key);
         final String strValue = this.cryptoProvider.decrypt(cryptValue);
-        return this.convertValue(strValue, type);
+        T result;
+        if (AbstractStringConfig.NULL.equals(strValue)) {
+            result = null;
+        } else {
+            result = this.convertValue(strValue, type);
+        }
+        return result;
     }
 
     /**
@@ -91,7 +97,11 @@ extends DelegatedConfig {
             final String key)
     throws ConfigException {
         final String cryptValue = super.getStringParameter(key);
-        return this.cryptoProvider.decrypt(cryptValue);
+        String result = this.cryptoProvider.decrypt(cryptValue);
+        if (AbstractStringConfig.NULL.equals(result)) {
+            result = null;
+        }
+        return result;
     }
 
     /**

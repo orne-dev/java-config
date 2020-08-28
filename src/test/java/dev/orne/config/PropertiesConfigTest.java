@@ -108,9 +108,25 @@ class PropertiesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetStringNull()
+    public void testGetStringNullPlaceholderDisabled()
     throws ConfigException {
         final PropertiesConfig config = new PropertiesConfig();
+        config.getProperties().setProperty(TEST_KEY, PropertiesConfig.NULL);
+        final String result = config.getStringParameter(TEST_KEY);
+        assertNotNull(result);
+        assertEquals(PropertiesConfig.NULL, result);
+    }
+
+    /**
+     * Test method for {@link PropertiesConfig#getStringParameter(String)} with
+     * existent {@code null} property.
+     * @throws ConfigException Shouldn't happen
+     */
+    @Test
+    public void testGetStringNullPlaceholderEnabled()
+    throws ConfigException {
+        final PropertiesConfig config = new PropertiesConfig();
+        config.setNullPlaceholderEnabled(true);
         config.getProperties().setProperty(TEST_KEY, PropertiesConfig.NULL);
         final String result = config.getStringParameter(TEST_KEY);
         assertNull(result);

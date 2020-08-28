@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.apache.commons.beanutils.Converter;
 import org.apache.commons.lang3.Validate;
@@ -43,40 +44,6 @@ public abstract class AbstractMutableStringConfig
 extends AbstractStringConfig
 implements MutableConfig {
 
-    /** String representation of {@code null} values. */
-    public static final String NULL = "\0";
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Nullable
-    protected String getStringParameter(
-            @NotBlank
-            final String key)
-    throws ConfigException {
-        String result = getRawValue(key);
-        if (NULL.equals(result)) {
-            result = null;
-        }
-        return result;
-    }
-
-    /**
-     * Returns the raw stored value of the configuration parameter configured in this
-     * instance as {@code String}.
-     * 
-     * @param key The key of the configuration parameter
-     * @return The configuration parameter raw value as {@code String}
-     * @throws ConfigException If an error occurs retrieving the configuration
-     * property value
-     */
-    @Nullable
-    protected abstract String getRawValue(
-            @NotBlank
-            String key)
-    throws ConfigException;
-
     /**
      * {@inheritDoc}
      */
@@ -88,12 +55,7 @@ implements MutableConfig {
             final Object value)
     throws ConfigException {
         Validate.notNull(key, "Parameter key is required");
-        final String strValue;
-        if (value == null) {
-            strValue = AbstractMutableStringConfig.NULL;
-        } else {
-            strValue = convertValueToString(value);
-        }
+        final String strValue = convertValueToString(value);
         setRawValue(key, strValue);
     }
 
@@ -104,9 +66,30 @@ implements MutableConfig {
      * @return The value in {@code String} form
      * @throws ConfigException If an error occurs converting the value
      */
-    @NotNull
+    @Nullable
     protected String convertValueToString(
+            @Nullable
+            final Object value)
+    throws ConfigException {
+        String strValue = convertValueToString(getConverter(), value);
+        if (value == null && isNullPlaceholderEnabled()) {
+            strValue = AbstractStringConfig.NULL;
+        }
+        return strValue;
+    }
+
+    /**
+     * Converts specified value to {@code String} value.
+     * 
+     * @param value The value in any form
+     * @return The value in {@code String} form
+     * @throws ConfigException If an error occurs converting the value
+     */
+    @Nullable
+    public static String convertValueToString(
             @NotNull
+            final ConvertUtilsBean converters,
+            @Nullable
             final Object value)
     throws ConfigException {
         String result;
@@ -115,17 +98,20 @@ implements MutableConfig {
         } else if (value instanceof String) {
             result = value.toString();
         } else {
-            final ConvertUtilsBean converters = getConverter();
-            Converter converter = null;
-            Class<?> type = value.getClass();
-            while (converter == null && type != null && type != Object.class) {
-                converter = converters.lookup(type);
-                type = type.getSuperclass();
-            }
-            if (converter == null) {
-                result = converters.convert(value);
-            } else {
-                result = converter.convert(String.class, value);
+            try {
+                Converter converter = null;
+                Class<?> type = value.getClass();
+                while (converter == null && type != null && type != Object.class) {
+                    converter = converters.lookup(type);
+                    type = type.getSuperclass();
+                }
+                if (converter == null) {
+                    result = converters.convert(value);
+                } else {
+                    result = converter.convert(String.class, value);
+                }
+            } catch (final ConversionException ce) {
+                throw new ConfigException("Error converting value to String", ce);
             }
         }
         return result;

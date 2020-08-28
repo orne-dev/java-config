@@ -115,6 +115,30 @@ class EncryptedConfigTest {
     }
 
     /**
+     * Test method for {@link EncryptedConfig#getParameter(String, Class)}.
+     * @throws ConfigException Shouldn't happen
+     */
+    @Test
+    void testGetParameterNullPlaceholder() throws ConfigException {
+        final Config delegate = mock(Config.class);
+        final ConfigCryptoProvider cryptoProvider = mock(ConfigCryptoProvider.class);
+        final EncryptedConfig config = spy(new EncryptedConfig(delegate, cryptoProvider));
+        
+        final String encryptedValue = "mock encrypted value";
+        final String rawValue = AbstractStringConfig.NULL;
+        final Class<?> targetClass = Object.class;
+        willReturn(encryptedValue).given(delegate).getString(TEST_KEY);
+        willReturn(rawValue).given(cryptoProvider).decrypt(encryptedValue);
+        
+        final Object result = config.getParameter(TEST_KEY, targetClass);
+        assertNull(result);
+        
+        then(delegate).should(times(1)).getString(TEST_KEY);
+        then(cryptoProvider).should(times(1)).decrypt(encryptedValue);
+        then(config).should(never()).convertValue(any(), any());
+    }
+
+    /**
      * Test method for {@link EncryptedConfig#getStringParameter(String)}.
      * @throws ConfigException Shouldn't happen
      */
@@ -132,6 +156,29 @@ class EncryptedConfigTest {
         
         final Object result = config.getStringParameter(TEST_KEY);
         assertSame(expectedValue, result);
+        
+        then(delegate).should(times(1)).getString(TEST_KEY);
+        then(cryptoProvider).should(times(1)).decrypt(encryptedValue);
+        then(config).should(never()).convertValue(any(), any());
+    }
+
+    /**
+     * Test method for {@link EncryptedConfig#getStringParameter(String)}.
+     * @throws ConfigException Shouldn't happen
+     */
+    @Test
+    void testGetStringParameterNullPlaceholder() throws ConfigException {
+        final Config delegate = mock(Config.class);
+        final ConfigCryptoProvider cryptoProvider = mock(ConfigCryptoProvider.class);
+        final EncryptedConfig config = spy(new EncryptedConfig(delegate, cryptoProvider));
+        
+        final String encryptedValue = "mock encrypted value";
+        final String rawValue = AbstractStringConfig.NULL;
+        willReturn(encryptedValue).given(delegate).getString(TEST_KEY);
+        willReturn(rawValue).given(cryptoProvider).decrypt(encryptedValue);
+        
+        final Object result = config.getStringParameter(TEST_KEY);
+        assertNull(result);
         
         then(delegate).should(times(1)).getString(TEST_KEY);
         then(cryptoProvider).should(times(1)).decrypt(encryptedValue);

@@ -57,7 +57,7 @@ extends AbstractStringConfig {
      * {@inheritDoc}
      */
     @Override
-    protected String getStringParameter(
+    protected String getRawValue(
             @NotBlank
             final String key)
     throws ConfigException {

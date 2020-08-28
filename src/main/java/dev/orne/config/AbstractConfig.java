@@ -198,7 +198,7 @@ implements Config {
             try {
                 result = type.cast(this.converter.convert(value, type));
             } catch (final ConversionException ce) {
-                throw new ConfigException("", ce);
+                throw new ConfigException("Error converting raw value to target type", ce);
             }
         }
         return result;

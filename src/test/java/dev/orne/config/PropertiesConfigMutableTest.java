@@ -73,6 +73,21 @@ class PropertiesConfigMutableTest {
     throws ConfigException {
         final PropertiesConfig config = new PropertiesConfig();
         config.set(TEST_KEY, null);
+        assertFalse(config.containsParameter(TEST_KEY));
+        assertNull(config.getStringParameter(TEST_KEY));
+    }
+
+    /**
+     * Test method for {@link PropertiesConfig#set(String, Object)} with
+     * {@code null} value.
+     * @throws ConfigException Shouldn't happen
+     */
+    @Test
+    public void testSetNullPlaceholder()
+    throws ConfigException {
+        final PropertiesConfig config = new PropertiesConfig();
+        config.setNullPlaceholderEnabled(true);
+        config.set(TEST_KEY, null);
         assertTrue(config.containsParameter(TEST_KEY));
         assertNull(config.getStringParameter(TEST_KEY));
     }
