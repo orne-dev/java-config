@@ -38,7 +38,7 @@ import org.junit.jupiter.api.Test;
  * @see ConfigException
  */
 @Tag("ut")
-public class ExceptionsTest {
+class ExceptionsTest {
 
     /** Message for exception testing. */
     private static final String TEST_MESSAGE = "Test message";
@@ -49,7 +49,7 @@ public class ExceptionsTest {
      * Test for {@link ConfigException}.
      */
     @Test
-    public void testConfigException() {
+    void testConfigException() {
         assertEmptyException(new ConfigException());
         assertMessageException(new ConfigException(TEST_MESSAGE));
         assertCauseException(new ConfigException(TEST_CAUSE));
@@ -61,12 +61,24 @@ public class ExceptionsTest {
      * Test for {@link ConfigCryptoProviderException}.
      */
     @Test
-    public void testConfigCryptoProviderException() {
+    void testConfigCryptoProviderException() {
         assertEmptyException(new ConfigCryptoProviderException());
         assertMessageException(new ConfigCryptoProviderException(TEST_MESSAGE));
         assertCauseException(new ConfigCryptoProviderException(TEST_CAUSE));
         assertFullException(new ConfigCryptoProviderException(TEST_MESSAGE, TEST_CAUSE));
         assertFullException(new ConfigCryptoProviderException(TEST_MESSAGE, TEST_CAUSE, false, false));
+    }
+
+    /**
+     * Test for {@link ConfigCryptoWrongKeyException}.
+     */
+    @Test
+    void testConfigCryptoWrongKeyException() {
+        assertEmptyException(new ConfigCryptoWrongKeyException());
+        assertMessageException(new ConfigCryptoWrongKeyException(TEST_MESSAGE));
+        assertCauseException(new ConfigCryptoWrongKeyException(TEST_CAUSE));
+        assertFullException(new ConfigCryptoWrongKeyException(TEST_MESSAGE, TEST_CAUSE));
+        assertFullException(new ConfigCryptoWrongKeyException(TEST_MESSAGE, TEST_CAUSE, false, false));
     }
 
     /**

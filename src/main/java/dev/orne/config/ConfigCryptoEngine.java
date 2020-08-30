@@ -1,5 +1,9 @@
 package dev.orne.config;
 
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.validation.constraints.NotBlank;
+
 /*-
  * #%L
  * Orne Config
@@ -25,18 +29,46 @@ package dev.orne.config;
 import javax.validation.constraints.NotNull;
 
 /**
- * Provider of cryptography transformations for configuration values.
+ * Engine of cryptography transformations for configuration values.
  * 
  * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
  * @version 1.0, 2020-04
  * @since 0.2
  */
-public interface ConfigCryptoProvider {
+public interface ConfigCryptoEngine {
+
+    /**
+     * Creates a new {@code SecretKey} for this engine for the
+     * specified password.
+     * 
+     * @param The password
+     * @return The newly created {@code SecretKey}
+     * @throws ConfigCryptoProviderException If an exception occurs creating
+     * the {@code SecretKey}
+     */
+    @NotNull
+    SecretKey createSecretKey(
+            @NotBlank
+            String password)
+    throws ConfigCryptoProviderException;
+
+    /**
+     * Creates a new {@code Cipher} for this engine.
+     * 
+     * @return The newly created {@code Cipher}
+     * @throws ConfigCryptoProviderException If an exception occurs creating
+     * the {@code Cipher}
+     */
+    @NotNull
+    Cipher createCipher()
+    throws ConfigCryptoProviderException;
 
     /**
      * Encrypts the specified plain configuration value.
      * 
      * @param value The plain configuration value
+     * @param key The {@code SecretKey} to use
+     * @param cipher The {@code Cipher} to use
      * @return The encrypted configuration value
      * @throws ConfigCryptoProviderException If an exception occurs during the
      * encryption process
@@ -44,13 +76,19 @@ public interface ConfigCryptoProvider {
     @NotNull
     String encrypt(
             @NotNull
-            String value)
+            String value,
+            @NotNull
+            SecretKey key,
+            @NotNull
+            Cipher cipher)
     throws ConfigCryptoProviderException;
 
     /**
      * Decrypts the specified encrypted configuration value.
      * 
      * @param value The encrypted configuration value
+     * @param key The {@code SecretKey} to use
+     * @param cipher The {@code Cipher} to use
      * @return The plain configuration value
      * @throws ConfigCryptoProviderException If an exception occurs during the
      * decryption process
@@ -58,6 +96,10 @@ public interface ConfigCryptoProvider {
     @NotNull
     String decrypt(
             @NotNull
-            String value)
+            String value,
+            @NotNull
+            SecretKey key,
+            @NotNull
+            Cipher cipher)
     throws ConfigCryptoProviderException;
 }

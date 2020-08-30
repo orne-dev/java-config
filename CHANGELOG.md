@@ -28,8 +28,12 @@
 01. :gift: Added class `dev.orne.config.MutableDelegatedConfig`
 01. :gift: Added interface `dev.orne.config.ConfigCryptoProvider`
     01. :gift: Added exception `dev.orne.config.ConfigCryptoProviderException`
+    01. :gift: Added exception `dev.orne.config.ConfigCryptoWrongKeyException`
 01. :gift: Added class `dev.orne.config.EncryptedConfig`
 01. :gift: Added class `dev.orne.config.MutableEncryptedConfig`
+01. :gift: Added interface `dev.orne.config.ConfigCryptoEngine`
+    01. :gift: Added class `dev.orne.config.AbstractConfigCryptoEngine`
+    01. :gift: Added class `dev.orne.config.ConfigCryptoAesGcmEngine`
 
 # :package: 0.1.0
 

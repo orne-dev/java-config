@@ -23,16 +23,16 @@ package dev.orne.config;
  */
 
 /**
- * Base exception thrown by providers of cryptography transformations for
- * configuration values.
+ * Exception exception thrown by providers of cryptography transformations for
+ * wrong secret key (password).
  * 
  * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
- * @version 1.0, 2020-04
+ * @version 1.0, 2020-08
  * @since 0.2
  * @see ConfigCryptoProvider
  */
-public class ConfigCryptoProviderException
-extends ConfigException {
+public class ConfigCryptoWrongKeyException
+extends ConfigCryptoProviderException {
 
     /** The serial version UID. */
     private static final long serialVersionUID = 9108417807892736896L;
@@ -42,7 +42,7 @@ extends ConfigException {
      * The cause is not initialized, and may subsequently be initialized by a
      * call to {@link #initCause}.
      */
-    public ConfigCryptoProviderException() {
+    public ConfigCryptoWrongKeyException() {
         super();
     }
 
@@ -54,7 +54,7 @@ extends ConfigException {
      * @param   message   the detail message. The detail message is saved for
      *          later retrieval by the {@link #getMessage()} method.
      */
-    public ConfigCryptoProviderException(
+    public ConfigCryptoWrongKeyException(
             final String message) {
         super(message);
     }
@@ -72,7 +72,7 @@ extends ConfigException {
      *         permitted, and indicates that the cause is nonexistent or
      *         unknown.)
      */
-    public ConfigCryptoProviderException(
+    public ConfigCryptoWrongKeyException(
             final Throwable cause) {
         super(cause);
     }
@@ -90,7 +90,7 @@ extends ConfigException {
      *         permitted, and indicates that the cause is nonexistent or
      *         unknown.)
      */
-    public ConfigCryptoProviderException(
+    public ConfigCryptoWrongKeyException(
             final String message,
             final Throwable cause) {
         super(message, cause);
@@ -109,7 +109,7 @@ extends ConfigException {
      * @param writableStackTrace whether or not the stack trace should
      *                           be writable
      */
-    public ConfigCryptoProviderException(
+    public ConfigCryptoWrongKeyException(
             final String message,
             final Throwable cause,
             final boolean enableSuppression,
