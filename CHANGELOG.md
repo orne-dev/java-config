@@ -34,6 +34,7 @@
 01. :gift: Added interface `dev.orne.config.ConfigCryptoEngine`
     01. :gift: Added class `dev.orne.config.AbstractConfigCryptoEngine`
     01. :gift: Added class `dev.orne.config.ConfigCryptoAesGcmEngine`
+01. :gift: Added class `dev.orne.config.DefaultConfigCryptoProvider`
 
 # :package: 0.1.0
 
