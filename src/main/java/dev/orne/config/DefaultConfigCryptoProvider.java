@@ -49,9 +49,10 @@ implements ConfigCryptoProvider {
     /**
      * Creates a new instance for the specified algorithm and secret key.
      * 
-     * @param algorithm The encryption algorithm to apply
-     * @param password The password to use during encryption and decryption
-     * @throws ConfigCryptoProviderException 
+     * @param engine The cryptographic engine
+     * @param password The password to use to build the secret key
+     * @throws ConfigCryptoProviderException If an error occurs creating the
+     * secret key
      */
     public DefaultConfigCryptoProvider(
             final ConfigCryptoEngine engine,
@@ -64,14 +65,12 @@ implements ConfigCryptoProvider {
     /**
      * Creates a new instance for the specified algorithm and secret key.
      * 
-     * @param algorithm The encryption algorithm to apply
+     * @param engine The cryptographic engine
      * @param secretKey The secret key to use during encryption and decryption
-     * @throws ConfigCryptoProviderException 
      */
     public DefaultConfigCryptoProvider(
             final ConfigCryptoEngine engine,
-            final SecretKey secretKey)
-    throws ConfigCryptoProviderException {
+            final SecretKey secretKey) {
         this.engine = engine;
         this.secretKey = secretKey;
     }

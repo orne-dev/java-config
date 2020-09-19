@@ -63,7 +63,7 @@ implements ConfigCryptoProvider {
      * reused between threads.
      * 
      * @param engine The cryptographic engine
-     * @param secretKey The secret key to use during encryption and decryption
+     * @param password The password to use to build the secret key
      * @throws ConfigCryptoProviderException If an error occurs creating the
      * secret key
      */

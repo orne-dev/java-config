@@ -41,7 +41,7 @@ public interface ConfigCryptoEngine {
      * Creates a new {@code SecretKey} for this engine for the
      * specified password.
      * 
-     * @param The password
+     * @param password The password
      * @return The newly created {@code SecretKey}
      * @throws ConfigCryptoProviderException If an exception occurs creating
      * the {@code SecretKey}

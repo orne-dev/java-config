@@ -81,6 +81,7 @@ implements MutableConfig {
     /**
      * Converts specified value to {@code String} value.
      * 
+     * @param converters The converters to use during conversion
      * @param value The value in any form
      * @return The value in {@code String} form
      * @throws ConfigException If an error occurs converting the value
