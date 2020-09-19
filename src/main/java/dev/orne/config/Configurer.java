@@ -39,6 +39,5 @@ public interface Configurer {
      * @param bean The bean to configure
      */
     void configure(
-            @NotNull
-            Configurable bean);
+            @NotNull Configurable bean);
 }

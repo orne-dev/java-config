@@ -41,7 +41,7 @@ public class EncryptedConfig
 extends DelegatedConfig {
 
     /** The cryptography transformations provider. */
-    private final ConfigCryptoProvider cryptoProvider;
+    private final @NotNull ConfigCryptoProvider cryptoProvider;
 
     /**
      * Creates a new instance.
@@ -50,10 +50,8 @@ extends DelegatedConfig {
      * @param cryptoProvider The provider of cryptography transformations
      */
     public EncryptedConfig(
-            @NotNull
-            final Config delegate,
-            @NotNull
-            final ConfigCryptoProvider cryptoProvider) {
+            final @NotNull Config delegate,
+            final @NotNull ConfigCryptoProvider cryptoProvider) {
         super(delegate);
         this.cryptoProvider = Validate.notNull(cryptoProvider);
     }
@@ -63,7 +61,7 @@ extends DelegatedConfig {
      * 
      * @return The cryptography transformations provider
      */
-    protected ConfigCryptoProvider getCryptoProvider() {
+    protected @NotNull ConfigCryptoProvider getCryptoProvider() {
         return this.cryptoProvider;
     }
 
@@ -72,10 +70,8 @@ extends DelegatedConfig {
      */
     @Override
     protected <T> T getParameter(
-            @NotBlank
-            final String key,
-            @NotNull
-            final Class<T> type)
+            final @NotBlank String key,
+            final @NotNull Class<T> type)
     throws ConfigException {
         final String cryptValue = super.getStringParameter(key);
         final String strValue = this.cryptoProvider.decrypt(cryptValue);
@@ -93,8 +89,7 @@ extends DelegatedConfig {
      */
     @Override
     protected String getStringParameter(
-            @NotBlank
-            final String key)
+            final @NotBlank String key)
     throws ConfigException {
         final String cryptValue = super.getStringParameter(key);
         String result = this.cryptoProvider.decrypt(cryptValue);
@@ -109,8 +104,7 @@ extends DelegatedConfig {
      */
     @Override
     protected Boolean getBooleanParameter(
-            @NotBlank
-            final String key)
+            final @NotBlank String key)
     throws ConfigException {
         return getParameter(key, Boolean.class);
     }
@@ -120,8 +114,7 @@ extends DelegatedConfig {
      */
     @Override
     protected Number getNumberParameter(
-            @NotBlank
-            final String key)
+            final @NotBlank String key)
     throws ConfigException {
         return getParameter(key, BigDecimal.class);
     }

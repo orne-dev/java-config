@@ -46,10 +46,8 @@ public interface ConfigCryptoEngine {
      * @throws ConfigCryptoProviderException If an exception occurs creating
      * the {@code SecretKey}
      */
-    @NotNull
-    SecretKey createSecretKey(
-            @NotBlank
-            String password)
+    @NotNull SecretKey createSecretKey(
+            @NotBlank String password)
     throws ConfigCryptoProviderException;
 
     /**
@@ -59,8 +57,7 @@ public interface ConfigCryptoEngine {
      * @throws ConfigCryptoProviderException If an exception occurs creating
      * the {@code Cipher}
      */
-    @NotNull
-    Cipher createCipher()
+    @NotNull Cipher createCipher()
     throws ConfigCryptoProviderException;
 
     /**
@@ -73,14 +70,10 @@ public interface ConfigCryptoEngine {
      * @throws ConfigCryptoProviderException If an exception occurs during the
      * encryption process
      */
-    @NotNull
-    String encrypt(
-            @NotNull
-            String value,
-            @NotNull
-            SecretKey key,
-            @NotNull
-            Cipher cipher)
+    @NotNull String encrypt(
+            @NotNull String value,
+            @NotNull SecretKey key,
+            @NotNull Cipher cipher)
     throws ConfigCryptoProviderException;
 
     /**
@@ -93,13 +86,9 @@ public interface ConfigCryptoEngine {
      * @throws ConfigCryptoProviderException If an exception occurs during the
      * decryption process
      */
-    @NotNull
-    String decrypt(
-            @NotNull
-            String value,
-            @NotNull
-            SecretKey key,
-            @NotNull
-            Cipher cipher)
+    @NotNull String decrypt(
+            @NotNull String value,
+            @NotNull SecretKey key,
+            @NotNull Cipher cipher)
     throws ConfigCryptoProviderException;
 }

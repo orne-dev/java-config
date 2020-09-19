@@ -22,7 +22,6 @@ package dev.orne.config;
  * #L%
  */
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -49,9 +48,7 @@ implements MutableConfig {
      */
     @Override
     public void set(
-            @NotBlank
-            final String key,
-            @Nullable
+            final @NotBlank String key,
             final Object value)
     throws ConfigException {
         Validate.notNull(key, "Parameter key is required");
@@ -66,9 +63,7 @@ implements MutableConfig {
      * @return The value in {@code String} form
      * @throws ConfigException If an error occurs converting the value
      */
-    @Nullable
     protected String convertValueToString(
-            @Nullable
             final Object value)
     throws ConfigException {
         String strValue = convertValueToString(getConverter(), value);
@@ -86,11 +81,8 @@ implements MutableConfig {
      * @return The value in {@code String} form
      * @throws ConfigException If an error occurs converting the value
      */
-    @Nullable
     public static String convertValueToString(
-            @NotNull
-            final ConvertUtilsBean converters,
-            @Nullable
+            final @NotNull ConvertUtilsBean converters,
             final Object value)
     throws ConfigException {
         String result;
@@ -128,9 +120,7 @@ implements MutableConfig {
      * property value
      */
     protected abstract void setRawValue(
-            @NotBlank
-            String key,
-            @NotNull
-            String value)
+            @NotBlank String key,
+            @NotNull String value)
     throws ConfigException;
 }

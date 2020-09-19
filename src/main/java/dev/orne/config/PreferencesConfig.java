@@ -24,7 +24,6 @@ package dev.orne.config;
 
 import java.util.prefs.Preferences;
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -47,7 +46,7 @@ implements MutableConfig {
     private static final String INVALID_KEY_ERROR = "Parameter key must be a non blank string";
 
     /** The preferences node to use as storage of configuration parameters. */
-    private final Preferences preferences;
+    private final @NotNull Preferences preferences;
 
     /**
      * Creates a new instance based on the user preferences tree root node.
@@ -71,7 +70,6 @@ implements MutableConfig {
      * @see #PreferencesConfig(boolean, Class, String)
      */
     public PreferencesConfig(
-            @Nullable
             final String path) {
         this(false, null, path);
     }
@@ -86,7 +84,6 @@ implements MutableConfig {
      * @see #PreferencesConfig(boolean, Class, String)
      */
     public PreferencesConfig(
-            @Nullable
             final Class<?> clazz) {
         this(false, clazz, null);
     }
@@ -104,9 +101,7 @@ implements MutableConfig {
      * @see #PreferencesConfig(boolean, Class, String)
      */
     public PreferencesConfig(
-            @Nullable
             final Class<?> clazz,
-            @Nullable
             final String path) {
         this(false, clazz, path);
     }
@@ -140,7 +135,6 @@ implements MutableConfig {
      */
     public PreferencesConfig(
             final boolean system,
-            @Nullable
             final String path) {
         this(system, null, path);
     }
@@ -158,7 +152,6 @@ implements MutableConfig {
      */
     public PreferencesConfig(
             final boolean system,
-            @Nullable
             final Class<?> clazz) {
         this(system, clazz, null);
     }
@@ -194,9 +187,7 @@ implements MutableConfig {
      */
     public PreferencesConfig(
             final boolean system,
-            @Nullable
             final Class<?> clazz,
-            @Nullable
             final String path) {
         super();
         Preferences node;
@@ -227,8 +218,7 @@ implements MutableConfig {
      * parameters
      */
     public PreferencesConfig(
-            @NotNull
-            final Preferences preferences) {
+            final @NotNull Preferences preferences) {
         super();
         this.preferences = preferences;
     }
@@ -239,8 +229,7 @@ implements MutableConfig {
      * 
      * @return The preferences node.
      */
-    @NotNull
-    protected Preferences getPreferences() {
+    protected @NotNull Preferences getPreferences() {
         return this.preferences;
     }
 
@@ -249,8 +238,7 @@ implements MutableConfig {
      */
     @Override
     protected boolean containsParameter(
-            @NotBlank
-            final String key)
+            final @NotBlank String key)
     throws ConfigException {
         Validate.notBlank(key, INVALID_KEY_ERROR);
         try {
@@ -265,8 +253,7 @@ implements MutableConfig {
      */
     @Override
     protected String getRawValue(
-            @NotBlank
-            final String key)
+            final @NotBlank String key)
     throws ConfigException {
         Validate.notBlank(key, INVALID_KEY_ERROR);
         try {
@@ -281,9 +268,7 @@ implements MutableConfig {
      */
     @Override
     protected void setRawValue(
-            @NotBlank
-            final String key,
-            @Nullable
+            final @NotBlank String key,
             final String value)
     throws ConfigException {
         if (value == null) {
@@ -303,8 +288,7 @@ implements MutableConfig {
      */
     @Override
     public void remove(
-            @NotBlank
-            final String key)
+            final @NotBlank String key)
     throws ConfigException {
         Validate.notBlank(key, INVALID_KEY_ERROR);
         try {

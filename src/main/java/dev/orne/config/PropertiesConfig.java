@@ -31,7 +31,6 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Properties;
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -68,7 +67,7 @@ extends AbstractMutableStringConfig {
             "Could not read configuration file ({}).";
 
     /** Current configuration parameters. */
-    private final Properties config;
+    private final @NotNull Properties config;
 
     /**
      * Creates a new instance with the configuration parameters loaded from
@@ -80,8 +79,7 @@ extends AbstractMutableStringConfig {
      * @param sources The sources to load the configuration parameters from
      */
     public PropertiesConfig(
-            @NotNull
-            final Object... sources) {
+            final @NotNull Object... sources) {
         this(new Properties(), sources);
     }
 
@@ -96,10 +94,8 @@ extends AbstractMutableStringConfig {
      * @param sources The sources to load the configuration parameters from
      */
     protected PropertiesConfig(
-            @NotNull
-            final Properties config,
-            @NotNull
-            final Object... sources) {
+            final @NotNull Properties config,
+            final @NotNull Object... sources) {
         super();
         this.config = config;
         load(sources);
@@ -111,8 +107,7 @@ extends AbstractMutableStringConfig {
      * @param sources The sources to load the configuration parameters from
      */
     protected final void load(
-            @NotNull
-            final Object... sources) {
+            final @NotNull Object... sources) {
         Validate.notNull(sources, "Parameter sources is required");
         for (final Object source : sources) {
             loadSource(source);
@@ -127,8 +122,7 @@ extends AbstractMutableStringConfig {
      * @param source The source to load the configuration parameters from
      */
     protected final void loadSource(
-            @NotNull
-            final Object source) {
+            final @NotNull Object source) {
         Validate.notNull(source, "Parameter source is required");
         if (source instanceof String) {
             loadFromResource((String) source);
@@ -155,8 +149,7 @@ extends AbstractMutableStringConfig {
      * @param values The configuration parameters to load
      */
     protected final void loadFromValues(
-            @NotNull
-            final Properties values) {
+            final @NotNull Properties values) {
         this.config.putAll(values);
     }
 
@@ -167,8 +160,7 @@ extends AbstractMutableStringConfig {
      * @param path The path of the classpath resource to load
      */
     protected final void loadFromResource(
-            @NotNull
-            final String path) {
+            final @NotNull String path) {
         try {
             final Enumeration<URL> resources =
                     Thread.currentThread()
@@ -190,8 +182,7 @@ extends AbstractMutableStringConfig {
      * @param file The file to load the parameters from
      */
     protected final void loadFromFile(
-            @NotNull
-            final File file) {
+            final @NotNull File file) {
         try {
             final InputStream fileIS = new FileInputStream(file);
             try {
@@ -212,8 +203,7 @@ extends AbstractMutableStringConfig {
      * @param url The URL to load the parameters from
      */
     protected final void loadFromURL(
-            @NotNull
-            final URL url) {
+            final @NotNull URL url) {
         try {
             final InputStream urlIS = url.openStream();
             try {
@@ -232,8 +222,7 @@ extends AbstractMutableStringConfig {
      * 
      * @return The configuration properties
      */
-    @NotNull
-    protected Properties getProperties() {
+    protected @NotNull Properties getProperties() {
         return this.config;
     }
 
@@ -242,8 +231,7 @@ extends AbstractMutableStringConfig {
      */
     @Override
     protected boolean containsParameter(
-            @NotBlank
-            final String key)
+            final @NotBlank String key)
     throws ConfigException {
         Validate.notBlank(key, "Parameter key mus be a non blank string");
         return this.config.containsKey(key);
@@ -253,10 +241,8 @@ extends AbstractMutableStringConfig {
      * {@inheritDoc}
      */
     @Override
-    @Nullable
     protected String getRawValue(
-            @NotBlank
-            final String key)
+            final @NotBlank String key)
     throws ConfigException {
         Validate.notBlank(key, "Parameter key mus be a non blank string");
         return this.config.getProperty(key);
@@ -267,9 +253,7 @@ extends AbstractMutableStringConfig {
      */
     @Override
     protected void setRawValue(
-            @NotBlank
-            final String key,
-            @Nullable
+            final @NotBlank String key,
             final String value)
     throws ConfigException {
         Validate.notBlank(key, "Parameter key mus be a non blank string");
@@ -285,8 +269,7 @@ extends AbstractMutableStringConfig {
      */
     @Override
     public void remove(
-            @NotBlank
-            final String key)
+            final @NotBlank String key)
     throws ConfigException {
         Validate.notBlank(key, "Parameter key mus be a non blank string");
         this.config.remove(key);

@@ -41,10 +41,8 @@ public interface ConfigCryptoProvider {
      * @throws ConfigCryptoProviderException If an exception occurs during the
      * encryption process
      */
-    @NotNull
-    String encrypt(
-            @NotNull
-            String value)
+    @NotNull String encrypt(
+            @NotNull String value)
     throws ConfigCryptoProviderException;
 
     /**
@@ -55,9 +53,7 @@ public interface ConfigCryptoProvider {
      * @throws ConfigCryptoProviderException If an exception occurs during the
      * decryption process
      */
-    @NotNull
-    String decrypt(
-            @NotNull
-            String value)
+    @NotNull String decrypt(
+            @NotNull String value)
     throws ConfigCryptoProviderException;
 }

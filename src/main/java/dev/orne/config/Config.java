@@ -22,7 +22,6 @@ package dev.orne.config;
  * #L%
  */
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -45,8 +44,7 @@ public interface Config {
      * property
      */
     boolean contains(
-            @NotBlank
-            String key)
+            @NotBlank String key)
     throws ConfigException;
 
     /**
@@ -59,12 +57,9 @@ public interface Config {
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value
      */
-    @Nullable
     <T> T get(
-            @NotBlank
-            String key,
-            @NotNull
-            Class<T> type)
+            @NotBlank String key,
+            @NotNull Class<T> type)
     throws ConfigException;
 
     /**
@@ -75,10 +70,8 @@ public interface Config {
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value
      */
-    @Nullable
     Boolean getBoolean(
-            @NotBlank
-            String key)
+            @NotBlank String key)
     throws ConfigException;
 
     /**
@@ -89,10 +82,8 @@ public interface Config {
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value
      */
-    @Nullable
     String getString(
-            @NotBlank
-            String key)
+            @NotBlank String key)
     throws ConfigException;
 
     /**
@@ -103,9 +94,7 @@ public interface Config {
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value
      */
-    @Nullable
     Number getNumber(
-            @NotBlank
-            String key)
+            @NotBlank String key)
     throws ConfigException;
 }

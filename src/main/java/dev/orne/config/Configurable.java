@@ -41,8 +41,7 @@ public interface Configurable {
      * @param config The config to apply
      */
     void configure(
-            @NotNull
-            Config config);
+            @NotNull Config config);
 
     /**
      * Returns {@code true} if this instance is already configured.

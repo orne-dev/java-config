@@ -22,8 +22,6 @@ package dev.orne.config;
  * #L%
  */
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -44,8 +42,7 @@ public abstract class AbstractConfig
 implements Config {
 
     /** The value converter. */
-    @Nonnull
-    private ConvertUtilsBean converter;
+    private @NotNull ConvertUtilsBean converter;
 
     /**
      * Creates a new instance. Sets {@code converter} to the result of
@@ -61,7 +58,7 @@ implements Config {
      * 
      * @return The value converter
      */
-    public ConvertUtilsBean getConverter() {
+    public @NotNull ConvertUtilsBean getConverter() {
         return this.converter;
     }
 
@@ -70,7 +67,7 @@ implements Config {
      * 
      * @param converter The value converter
      */
-    public void setConverter(final ConvertUtilsBean converter) {
+    public void setConverter(final @NotNull ConvertUtilsBean converter) {
         this.converter = converter;
     }
 
@@ -87,7 +84,7 @@ implements Config {
      * 
      * @return A new value converter configured with the default settings
      */
-    public static ConvertUtilsBean createDefaultConverter() {
+    public static @NotNull ConvertUtilsBean createDefaultConverter() {
         final ConvertUtilsBean result = new ConvertUtilsBean();
         result.register(false, true, 0);
         OrneBeansConverters.register(result, true);
@@ -130,12 +127,9 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    @Nullable
     public <T> T get(
-            @NotBlank
-            final String key,
-            @NotNull
-            final Class<T> type)
+            final @NotBlank String key,
+            final @NotNull Class<T> type)
     throws ConfigException {
         T value = null;
         if (containsParameter(key)) {
@@ -160,12 +154,9 @@ implements Config {
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value
      */
-    @Nullable
     protected <T> T getParameter(
-            @NotBlank
-            final String key,
-            @NotNull
-            final Class<T> type)
+            final @NotBlank String key,
+            final @NotNull Class<T> type)
     throws ConfigException {
         return convertValue(getStringParameter(key), type);
     }
@@ -180,12 +171,9 @@ implements Config {
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value
      */
-    @Nullable
     protected <T> T convertValue(
-            @Nullable
             final Object value,
-            @NotNull
-            final Class<T> type)
+            final @NotNull Class<T> type)
     throws ConfigException {
         final T result;
         if (value == null) {
@@ -215,12 +203,9 @@ implements Config {
      * property value
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    @Nullable
     protected Enum<?> getEnum(
-            @NotBlank
-            final Class<?> type,
-            @Nullable
-            final String name)
+            final @NotBlank Class<?> type,
+            final @NotNull String name)
     throws ConfigException {
         final Class<? extends Enum> enumType = (Class<? extends Enum>) type;
         return Enum.valueOf(enumType, name);
@@ -230,10 +215,8 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    @Nullable
     public Boolean getBoolean(
-            @NotBlank
-            final String key)
+            final @NotBlank String key)
     throws ConfigException {
         Boolean value = null;
         if (containsParameter(key)) {
@@ -256,20 +239,16 @@ implements Config {
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value
      */
-    @Nullable
     protected abstract Boolean getBooleanParameter(
-            @NotBlank
-            String key)
+            @NotBlank String key)
     throws ConfigException;
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @Nullable
     public String getString(
-            @NotBlank
-            final String key)
+            final @NotBlank String key)
     throws ConfigException {
         String value = null;
         if (containsParameter(key)) {
@@ -292,20 +271,16 @@ implements Config {
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value
      */
-    @Nullable
     protected abstract String getStringParameter(
-            @NotBlank
-            String key)
+            @NotBlank String key)
     throws ConfigException;
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @Nullable
     public Number getNumber(
-            @NotBlank
-            final String key)
+            final @NotBlank String key)
     throws ConfigException {
         Number value = null;
         if (containsParameter(key)) {
@@ -329,7 +304,6 @@ implements Config {
      * property value
      */
     protected abstract Number getNumberParameter(
-            @NotBlank
-            String key)
+            @NotBlank String key)
     throws ConfigException;
 }

@@ -24,7 +24,6 @@ package dev.orne.config;
 
 import java.math.BigDecimal;
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -69,10 +68,8 @@ extends AbstractConfig {
      * {@inheritDoc}
      */
     @Override
-    @Nullable
     protected String getStringParameter(
-            @NotBlank
-            final String key)
+            final @NotBlank String key)
     throws ConfigException {
         String result = getRawValue(key);
         if (this.nullPlaceholderEnabled && NULL.equals(result)) {
@@ -90,20 +87,16 @@ extends AbstractConfig {
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value
      */
-    @Nullable
     protected abstract String getRawValue(
-            @NotBlank
-            String key)
+            @NotBlank String key)
     throws ConfigException;
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @Nullable
     protected Boolean getBooleanParameter(
-            @NotBlank
-            final String key)
+            final @NotBlank String key)
     throws ConfigException {
         return getParameter(key, Boolean.class);
     }
@@ -112,10 +105,8 @@ extends AbstractConfig {
      * {@inheritDoc}
      */
     @Override
-    @Nullable
     protected Number getNumberParameter(
-            @NotBlank
-            final String key)
+            final @NotBlank String key)
     throws ConfigException {
         return getParameter(key, BigDecimal.class);
     }

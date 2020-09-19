@@ -79,15 +79,15 @@ implements ConfigCryptoEngine {
             "Error decrypting secret value. Original value encrypted with another key?";
 
     /** The {@code SecretKeyFactory} algorithm. */
-    private String secretKeyFactoryAlgorithm = DEFAULT_KEY_FACTORY_ALGORITHM;
+    private final @NotNull String secretKeyFactoryAlgorithm;
     /** The generated {@code SecretKey} salt iterations. */
     private int secretKeyIterations = DEFAULT_SECRET_KEY_ITERATIONS;
     /** The generated {@code SecretKey} length. */
     private int secretKeyLength = DEFAULT_SECRET_KEY_LENGTH;
     /** The {@code SecretKey} algorithm. */
-    private String secretKeyAlgorithm = DEFAULT_KEY_ALGORITHM;
+    private final @NotNull String secretKeyAlgorithm;
     /** The {@code Cipher} algorithm. */
-    private String cipherAlgorithm = DEFAULT_CIPHER_ALGORITHM;
+    private final @NotNull String cipherAlgorithm;
     /** The GCM initial vector length. */
     private int gcmInitVectorLength = DEFAULT_GCM_IV_LENGTH;
     /** The GCM tag length. */
@@ -112,12 +112,9 @@ implements ConfigCryptoEngine {
      * @param cipherAlgorithm The {@code Cipher} algorithm
      */
     public ConfigCryptoAesGcmEngine(
-            @NotNull
-            final String secretKeyFactoryAlgorithm,
-            @NotNull
-            final String secretKeyAlgorithm,
-            @NotNull
-            final String cipherAlgorithm) {
+            final @NotNull String secretKeyFactoryAlgorithm,
+            final @NotNull String secretKeyAlgorithm,
+            final @NotNull String cipherAlgorithm) {
         super();
         this.secretKeyFactoryAlgorithm = secretKeyFactoryAlgorithm;
         this.secretKeyAlgorithm = secretKeyAlgorithm;
@@ -129,7 +126,7 @@ implements ConfigCryptoEngine {
      * 
      * @return The {@code SecretKeyFactory} algorithm.
      */
-    public String getSecretKeyFactoryAlgorithm() {
+    public @NotNull String getSecretKeyFactoryAlgorithm() {
         return this.secretKeyFactoryAlgorithm;
     }
 
@@ -174,7 +171,7 @@ implements ConfigCryptoEngine {
      * 
      * @return The {@code SecretKey} algorithm
      */
-    public String getSecretKeyAlgorithm() {
+    public @NotNull String getSecretKeyAlgorithm() {
         return this.secretKeyAlgorithm;
     }
 
@@ -183,7 +180,7 @@ implements ConfigCryptoEngine {
      * 
      * @return The {@code Cipher} algorithm
      */
-    public String getCipherAlgorithm() {
+    public @NotNull String getCipherAlgorithm() {
         return this.cipherAlgorithm;
     }
 
@@ -228,8 +225,7 @@ implements ConfigCryptoEngine {
      */
     @Override
     public @NotNull SecretKey createSecretKey(
-            @NotBlank
-            final String password)
+            final @NotBlank String password)
     throws ConfigCryptoProviderException {
         try {
             final SecretKeyFactory factory = getSecretKeyFactory(
@@ -252,9 +248,8 @@ implements ConfigCryptoEngine {
      * @throws ConfigCryptoProviderException If an error occurs when creating
      * the specification
      */
-    protected KeySpec createKeySpec(
-            @NotBlank
-            final String password)
+    protected @NotNull KeySpec createKeySpec(
+            final @NotBlank String password)
     throws ConfigCryptoProviderException {
         try {
             return new PBEKeySpec(
@@ -277,7 +272,7 @@ implements ConfigCryptoEngine {
      * @throws ConfigCryptoProviderException If an error occurs generating
      * the random salt
      */
-    public byte[] getSalt()
+    public @NotNull byte[] getSalt()
     throws ConfigCryptoProviderException {
         synchronized (this) {
             if (this.salt == null) {
@@ -293,8 +288,7 @@ implements ConfigCryptoEngine {
      * @param salt The salt to be used for the {@code SecretKey} creations
      */
     public void setSalt(
-            @NotNull
-            final byte[] salt) {
+            final @NotNull byte[] salt) {
         synchronized (this) {
             this.salt = new byte[salt.length];
             System.arraycopy(salt, 0, this.salt, 0, salt.length);
@@ -315,12 +309,9 @@ implements ConfigCryptoEngine {
      */
     @Override
     public @NotNull String encrypt(
-            @NotNull
-            final String value,
-            @NotNull
-            final SecretKey key,
-            @NotNull
-            final Cipher cipher)
+            final @NotNull String value,
+            final @NotNull SecretKey key,
+            final @NotNull Cipher cipher)
     throws ConfigCryptoProviderException {
         final byte[] valueBytes = value.getBytes(StandardCharsets.UTF_8);
         final byte[] initVector = new byte[getGcmInitVectorLength()];
@@ -345,12 +336,9 @@ implements ConfigCryptoEngine {
      */
     @Override
     public @NotNull String decrypt(
-            @NotNull
-            final String value,
-            @NotNull
-            final SecretKey key,
-            @NotNull
-            final Cipher cipher)
+            final @NotNull String value,
+            final @NotNull SecretKey key,
+            final @NotNull Cipher cipher)
     throws ConfigCryptoProviderException {
         final byte[] cipherBytes = Base64.decodeBase64(value);
         final GCMParameterSpec gcmSpec = new GCMParameterSpec(

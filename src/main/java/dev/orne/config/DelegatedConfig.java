@@ -38,7 +38,7 @@ public class DelegatedConfig
 extends AbstractConfig {
 
     /** The delegate {@code Config} instance. */
-    private final Config delegate;
+    private final @NotNull Config delegate;
 
     /**
      * Creates a new instance.
@@ -46,8 +46,7 @@ extends AbstractConfig {
      * @param delegate The delegate {@code Config} instance
      */
     public DelegatedConfig(
-            @NotNull
-            final Config delegate) {
+            final @NotNull Config delegate) {
         super();
         this.delegate = Validate.notNull(delegate);
     }
@@ -58,7 +57,7 @@ extends AbstractConfig {
      * @return The delegate {@code Config} instance
      */
     @NotNull
-    protected Config getDelegate() {
+    protected @NotNull Config getDelegate() {
         return delegate;
     }
 
@@ -67,8 +66,7 @@ extends AbstractConfig {
      */
     @Override
     protected boolean containsParameter(
-            @NotBlank
-            final String key)
+            final @NotBlank String key)
     throws ConfigException {
         return this.delegate.contains(key);
     }
@@ -78,10 +76,8 @@ extends AbstractConfig {
      */
     @Override
     protected <T> T getParameter(
-            @NotBlank
-            final String key,
-            @NotNull
-            final Class<T> type)
+            final @NotBlank String key,
+            final @NotNull Class<T> type)
     throws ConfigException {
         return this.delegate.get(key, type);
     }
@@ -91,8 +87,7 @@ extends AbstractConfig {
      */
     @Override
     protected Boolean getBooleanParameter(
-            @NotBlank
-            final String key)
+            final @NotBlank String key)
     throws ConfigException {
         return this.delegate.getBoolean(key);
     }
@@ -102,8 +97,7 @@ extends AbstractConfig {
      */
     @Override
     protected String getStringParameter(
-            @NotBlank
-            final String key)
+            final @NotBlank String key)
     throws ConfigException {
         return this.delegate.getString(key);
     }
@@ -113,8 +107,7 @@ extends AbstractConfig {
      */
     @Override
     protected Number getNumberParameter(
-            @NotBlank
-            final String key)
+            final @NotBlank String key)
     throws ConfigException {
         return this.delegate.getNumber(key);
     }

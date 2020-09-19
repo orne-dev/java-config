@@ -22,7 +22,6 @@ package dev.orne.config;
  * #L%
  */
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -45,9 +44,7 @@ extends Config {
      * property value
      */
     void set(
-            @NotBlank
-            String key,
-            @Nullable
+            @NotBlank String key,
             Object value)
     throws ConfigException;
 
@@ -59,7 +56,6 @@ extends Config {
      * property
      */
     void remove(
-            @NotBlank
-            String key)
+            @NotBlank String key)
     throws ConfigException;
 }

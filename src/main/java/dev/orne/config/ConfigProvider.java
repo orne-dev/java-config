@@ -22,7 +22,6 @@ package dev.orne.config;
  * #L%
  */
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -39,8 +38,7 @@ public interface ConfigProvider {
      * 
      * @return The default {@code Config} instance
      */
-    @NotNull
-    Config getDefaultConfig();
+    @NotNull Config getDefaultConfig();
 
     /**
      * Returns a suitable {@code Config} instance for the configuration
@@ -54,10 +52,7 @@ public interface ConfigProvider {
      * @return The selected {@code Config} instance, or {@code null} if no one
      * is suitable
      */
-    @Nullable
     Config selectConfig(
-            @Nullable
             final ConfigurationOptions options,
-            @NotNull
-            final Class<?> targetClass);
+            final @NotNull Class<?> targetClass);
 }

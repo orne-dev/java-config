@@ -22,8 +22,6 @@ package dev.orne.config;
  * #L%
  */
 
-import javax.annotation.Nullable;
-
 /**
  * Interface for classes containing configuration values that
  * delegate in parent instances for missing parameters.
@@ -40,6 +38,5 @@ extends Config {
      * 
      * @return The parent instance
      */
-    @Nullable
     Config getParent();
 }

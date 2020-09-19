@@ -24,7 +24,7 @@ package dev.orne.config;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -87,8 +87,7 @@ class ExceptionsTest {
      * @param exception The exception to test
      */
     private void assertEmptyException(
-            @Nonnull
-            final Exception exception) {
+            final @NotNull Exception exception) {
         assertNotNull(exception);
         assertNull(exception.getMessage());
         assertNull(exception.getCause());
@@ -100,8 +99,7 @@ class ExceptionsTest {
      * @param exception The exception to test
      */
     private void assertMessageException(
-            @Nonnull
-            final Exception exception) {
+            final @NotNull Exception exception) {
         assertNotNull(exception);
         assertNotNull(exception.getMessage());
         assertEquals(TEST_MESSAGE, exception.getMessage());
@@ -114,8 +112,7 @@ class ExceptionsTest {
      * @param exception The exception to test
      */
     private void assertCauseException(
-            @Nonnull
-            final Exception exception) {
+            final @NotNull Exception exception) {
         assertNotNull(exception);
         assertNotNull(exception.getMessage());
         assertEquals(TEST_CAUSE.toString(), exception.getMessage());
@@ -129,8 +126,7 @@ class ExceptionsTest {
      * @param exception The exception to test
      */
     private void assertFullException(
-            @Nonnull
-            final Exception exception) {
+            final @NotNull Exception exception) {
         assertNotNull(exception);
         assertNotNull(exception.getMessage());
         assertEquals(TEST_MESSAGE, exception.getMessage());

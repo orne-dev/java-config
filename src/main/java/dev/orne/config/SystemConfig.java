@@ -43,8 +43,7 @@ extends AbstractStringConfig {
      */
     @Override
     protected boolean containsParameter(
-            @NotBlank
-            final String key)
+            final @NotBlank String key)
     throws ConfigException {
         try {
             return getSystemProperty(key) != null;
@@ -58,8 +57,7 @@ extends AbstractStringConfig {
      */
     @Override
     protected String getRawValue(
-            @NotBlank
-            final String key)
+            final @NotBlank String key)
     throws ConfigException {
         try {
             return getSystemProperty(key);
@@ -78,8 +76,9 @@ extends AbstractStringConfig {
      * system property.
      */
     protected String getSystemProperty(
-            final String key) {
-        Validate.notBlank(key, "Parameter key mus be a non blank string");
-        return System.getProperty(key);
+            final @NotBlank String key) {
+        return System.getProperty(Validate.notBlank(
+                key,
+                "Parameter key mus be a non blank string"));
     }
 }

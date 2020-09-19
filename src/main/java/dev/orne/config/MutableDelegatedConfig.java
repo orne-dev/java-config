@@ -42,8 +42,7 @@ implements MutableConfig {
      * @param delegate The delegate {@code MutableConfig} instance
      */
     public MutableDelegatedConfig(
-            @NotNull
-            final MutableConfig delegate) {
+            final @NotNull MutableConfig delegate) {
         super(delegate);
     }
 
@@ -53,8 +52,7 @@ implements MutableConfig {
      * @return The delegate {@code MutableConfig} instance
      */
     @Override
-    @NotNull
-    protected MutableConfig getDelegate() {
+    protected @NotNull MutableConfig getDelegate() {
         return (MutableConfig) super.getDelegate();
     }
 
@@ -63,8 +61,7 @@ implements MutableConfig {
      */
     @Override
     public void set(
-            @NotBlank
-            final String key,
+            final @NotBlank String key,
             final Object value)
     throws ConfigException {
         getDelegate().set(key, value);
@@ -75,8 +72,7 @@ implements MutableConfig {
      */
     @Override
     public void remove(
-            @NotBlank
-            final String key)
+            final @NotBlank String key)
     throws ConfigException {
         getDelegate().remove(key);
     }

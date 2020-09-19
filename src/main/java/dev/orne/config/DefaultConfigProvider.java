@@ -25,7 +25,6 @@ package dev.orne.config;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.Validate;
@@ -61,8 +60,7 @@ implements ConfigProvider {
      * @param defaultConfig The default configuration
      */
     public DefaultConfigProvider(
-            @NotNull
-            final Config defaultConfig) {
+            final @NotNull Config defaultConfig) {
         super();
         Validate.notNull(defaultConfig, NULL_DEFAULT_ERR);
         this.defaultConfig = defaultConfig;
@@ -76,8 +74,7 @@ implements ConfigProvider {
      * @param config The configuration to register
      */
     public void registerConfig(
-            @NotNull
-            final Config config) {
+            final @NotNull Config config) {
         Validate.notNull(config, NULL_CONFIG_ERR);
         mapConfigType(config.getClass(), config);
     }
@@ -91,10 +88,8 @@ implements ConfigProvider {
      * @param config The configuration instance
      */
     protected void mapConfigType(
-            @NotNull
-            final Class<?> type,
-            @NotNull
-            final Config config) {
+            final @NotNull Class<?> type,
+            final @NotNull Config config) {
         if (!this.mappings.containsKey(type)) {
             this.mappings.put(type, config);
             for (final Class<?> iface : type.getInterfaces()) {
@@ -111,8 +106,7 @@ implements ConfigProvider {
      * {@inheritDoc}
      */
     @Override
-    @NotNull
-    public Config getDefaultConfig() {
+    public @NotNull Config getDefaultConfig() {
         return this.defaultConfig;
     }
 
@@ -120,12 +114,9 @@ implements ConfigProvider {
      * {@inheritDoc}
      */
     @Override
-    @Nullable
     public Config selectConfig(
-            @Nullable
             final ConfigurationOptions options,
-            @NotNull
-            final Class<?> targetClass) {
+            final @NotNull Class<?> targetClass) {
         Config result = null;
         if (options == null || options.preferedConfigs() == null) {
             result = this.defaultConfig;
@@ -153,8 +144,7 @@ implements ConfigProvider {
      * class
      */
     protected boolean isMapped(
-            @NotNull
-            final Class<?> type) {
+            final @NotNull Class<?> type) {
         return this.mappings.containsKey(type);
     }
 }

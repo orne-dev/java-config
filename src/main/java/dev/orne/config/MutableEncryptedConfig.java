@@ -25,7 +25,6 @@ package dev.orne.config;
  * #L%
  */
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -49,10 +48,8 @@ implements MutableConfig {
      * @param cryptoProvider The provider of cryptography transformations
      */
     public MutableEncryptedConfig(
-            @NotNull
-            final MutableConfig delegate,
-            @NotNull
-            final ConfigCryptoProvider cryptoProvider) {
+            final @NotNull MutableConfig delegate,
+            final @NotNull ConfigCryptoProvider cryptoProvider) {
         super(delegate, cryptoProvider);
     }
 
@@ -62,8 +59,7 @@ implements MutableConfig {
      * @return The delegate {@code MutableConfig} instance
      */
     @Override
-    @NotNull
-    protected MutableConfig getDelegate() {
+    protected @NotNull MutableConfig getDelegate() {
         return (MutableConfig) super.getDelegate();
     }
 
@@ -72,8 +68,7 @@ implements MutableConfig {
      */
     @Override
     public void set(
-            @NotBlank
-            final String key,
+            final @NotBlank String key,
             final Object value)
     throws ConfigException {
         String plainValue = convertValueToString(value);
@@ -88,9 +83,7 @@ implements MutableConfig {
      * @return The value in {@code String} form
      * @throws ConfigException If an error occurs converting the value
      */
-    @NotNull
-    protected String convertValueToString(
-            @Nullable
+    protected @NotNull String convertValueToString(
             final Object value)
     throws ConfigException {
         String result = AbstractMutableStringConfig.convertValueToString(
@@ -107,8 +100,7 @@ implements MutableConfig {
      */
     @Override
     public void remove(
-            @NotBlank
-            final String key)
+            final @NotBlank String key)
     throws ConfigException {
         getDelegate().remove(key);
     }

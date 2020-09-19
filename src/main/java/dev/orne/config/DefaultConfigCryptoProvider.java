@@ -40,11 +40,11 @@ public class DefaultConfigCryptoProvider
 implements ConfigCryptoProvider {
 
     /** The cryptographic engine. */
-    private final ConfigCryptoEngine engine;
+    private final @NotNull ConfigCryptoEngine engine;
     /** The {@code Cipher} to use during encryption and decryption. */
     private Cipher cipher;
     /** The secret key to use during encryption and decryption. */
-    private final SecretKey secretKey;
+    private final @NotNull SecretKey secretKey;
 
     /**
      * Creates a new instance for the specified algorithm and secret key.
@@ -55,8 +55,8 @@ implements ConfigCryptoProvider {
      * secret key
      */
     public DefaultConfigCryptoProvider(
-            final ConfigCryptoEngine engine,
-            final String password)
+            final @NotNull ConfigCryptoEngine engine,
+            final @NotNull String password)
     throws ConfigCryptoProviderException {
         this.engine = engine;
         this.secretKey = engine.createSecretKey(password);
@@ -69,8 +69,8 @@ implements ConfigCryptoProvider {
      * @param secretKey The secret key to use during encryption and decryption
      */
     public DefaultConfigCryptoProvider(
-            final ConfigCryptoEngine engine,
-            final SecretKey secretKey) {
+            final @NotNull ConfigCryptoEngine engine,
+            final @NotNull SecretKey secretKey) {
         this.engine = engine;
         this.secretKey = secretKey;
     }
@@ -80,7 +80,7 @@ implements ConfigCryptoProvider {
      * 
      * @return The cryptographic engine
      */
-    protected ConfigCryptoEngine getEngine() {
+    protected @NotNull ConfigCryptoEngine getEngine() {
         return this.engine;
     }
 
@@ -89,7 +89,7 @@ implements ConfigCryptoProvider {
      * 
      * @return The secret key to use during encryption and decryption
      */
-    protected SecretKey getSecretKey() {
+    protected @NotNull SecretKey getSecretKey() {
         return this.secretKey;
     }
 
@@ -116,8 +116,7 @@ implements ConfigCryptoProvider {
      */
     @Override
     public @NotNull String encrypt(
-            @NotNull
-            final String value)
+            final @NotNull String value)
     throws ConfigCryptoProviderException {
         final Cipher opCipher = getCipher();
         synchronized (opCipher) {
@@ -130,8 +129,7 @@ implements ConfigCryptoProvider {
      */
     @Override
     public @NotNull String decrypt(
-            @NotNull
-            final String value)
+            final @NotNull String value)
     throws ConfigCryptoProviderException {
         final Cipher opCipher = getCipher();
         synchronized (opCipher) {
