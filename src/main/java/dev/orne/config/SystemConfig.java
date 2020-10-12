@@ -22,8 +22,12 @@ package dev.orne.config;
  * #L%
  */
 
+import java.util.Iterator;
+import java.util.Properties;
+
 import javax.validation.constraints.NotBlank;
 
+import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -37,6 +41,33 @@ import org.apache.commons.lang3.Validate;
  */
 public class SystemConfig
 extends AbstractStringConfig {
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isEmpty()
+    throws ConfigException {
+        try {
+            return getSystemProperties().isEmpty();
+        } catch (final SecurityException se) {
+            throw new ConfigException("Error accessing configuration", se);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public Iterator<String> getKeys()
+    throws ConfigException {
+        try {
+            return IteratorUtils.asIterator(getSystemProperties().keys());
+        } catch (final SecurityException se) {
+            throw new ConfigException("Error accessing configuration", se);
+        }
+    }
 
     /**
      * {@inheritDoc}
@@ -64,6 +95,19 @@ extends AbstractStringConfig {
         } catch (final SecurityException se) {
             throw new ConfigException("Error retrieving configuration property value", se);
         }
+    }
+
+    /**
+     * Returns system properties.
+     * 
+     * @return The system properties
+     * @throws SecurityException If a security manager exists and its
+     * {@code checkPropertyAccess} method doesn't allow access to the
+     * system properties.
+     * @see System#getProperties()
+     */
+    protected Properties getSystemProperties() {
+        return System.getProperties();
     }
 
     /**

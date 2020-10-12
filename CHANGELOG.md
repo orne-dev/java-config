@@ -11,8 +11,10 @@
     01. :boom: Methods of `dev.orne.config.PreferencesConfig` throw `ConfigException`
     01. :boom: Methods of `dev.orne.config.PropertiesConfig` throw `ConfigException`
     01. :boom: Methods of `dev.orne.config.SystemConfig` throw `ConfigException`
-01. Simplified interface `dev.orne.config.Config`
+01. Improved interface `dev.orne.config.Config`
     01. :boom: Removed method `Instant getInstant(String)`
+    01. :gift: Added method `boolean isEmpty()`
+    01. :gift: Added method `Iterator<String> getKeys()`
 01. Simplified class  `dev.orne.config.AbstractConfig`
     01. :boom: Adapted to `dev.orne.config.Config` changes
     01. :gift: Delegated value conversion in instance of Apache Commons BeanUtils `ConvertUtilsBean`
@@ -23,7 +25,9 @@
 01. Simplified class `dev.orne.config.AbstractMutableStringConfig`
     01. :boom: Adapted to `dev.orne.config.AbstractStringConfig` changes
     01. :gift: Delegated value to String conversion in instance of Apache Commons BeanUtils `ConvertUtilsBean`
-01. :boom: Adapted `dev.orne.config.SystemConfig` to `dev.orne.config.AbstractStringConfig` changes
+01. :gift: Adapted `dev.orne.config.PropertiesConfig` to `dev.orne.config.Config` changes
+01. :boom: Adapted `dev.orne.config.SystemConfig` to `dev.orne.config.Config` and `dev.orne.config.AbstractStringConfig` changes
+01. :gift: Adapted `dev.orne.config.PreferencesConfig` to `dev.orne.config.Config` changes
 01. :gift: Added class `dev.orne.config.DelegatedConfig`
 01. :gift: Added class `dev.orne.config.MutableDelegatedConfig`
 01. :gift: Added interface `dev.orne.config.ConfigCryptoProvider`
@@ -47,6 +51,7 @@
 01. :gift: Added `dev.orne.config.MutableConfig`
 01. :gift: Added `dev.orne.config.AbstractMutableStringConfig`
 01. :gift: Added `dev.orne.config.PropertiesConfig`
+01. :gift: Added `dev.orne.config.PreferencesConfig`
 01. :gift: Added `dev.orne.config.Configurable`
 01. :gift: Added `dev.orne.config.ConfigurableProperty`
 01. :gift: Added `dev.orne.config.ConfigurationOptions`

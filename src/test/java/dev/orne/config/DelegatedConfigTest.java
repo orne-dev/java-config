@@ -25,6 +25,8 @@ package dev.orne.config;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
+import java.util.Iterator;
+
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +38,7 @@ import org.junit.jupiter.api.Test;
  * @since 0.2
  */
 @Tag("ut")
-public class DelegatedConfigTest {
+class DelegatedConfigTest {
 
     private static final String TEST_KEY = "test.key";
 
@@ -44,7 +46,7 @@ public class DelegatedConfigTest {
      * Test method for {@link DelegatedConfig#DelegatedConfig(Config)}.
      */
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         final Config delegated = mock(Config.class);
         final DelegatedConfig config = new DelegatedConfig(delegated);
         assertSame(delegated, config.getDelegate());
@@ -55,10 +57,47 @@ public class DelegatedConfigTest {
      * with {@code null} parameter.
      */
     @Test
-    public void testConstructorNull() {
+    void testConstructorNull() {
         assertThrows(NullPointerException.class, () -> {
             new DelegatedConfig(null);
         });
+    }
+
+    /**
+     * Test method for {@link DelegatedConfig#isEmpty()}.
+     * @throws ConfigException Shouldn't happen
+     */
+    @Test
+    void testIsEmpty() throws ConfigException {
+        final Config delegated = mock(Config.class);
+        final DelegatedConfig config = new DelegatedConfig(delegated);
+        
+        final boolean expectedValue = true;
+        willReturn(expectedValue).given(delegated).isEmpty();
+        
+        final boolean result = config.isEmpty();
+        assertSame(expectedValue, result);
+        
+        then(delegated).should(times(1)).isEmpty();
+    }
+
+    /**
+     * Test method for {@link DelegatedConfig#getKeys()}.
+     * @throws ConfigException Shouldn't happen
+     */
+    @Test
+    void testsGetKeys() throws ConfigException {
+        final Config delegated = mock(Config.class);
+        final DelegatedConfig config = new DelegatedConfig(delegated);
+        
+        @SuppressWarnings("unchecked")
+        final Iterator<String> expectedValue = mock(Iterator.class);
+        willReturn(expectedValue).given(delegated).getKeys();
+        
+        final Iterator<String> result = config.getKeys();
+        assertSame(expectedValue, result);
+        
+        then(delegated).should(times(1)).getKeys();
     }
 
     /**
@@ -66,7 +105,7 @@ public class DelegatedConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testContainsParameter() throws ConfigException {
+    void testContainsParameter() throws ConfigException {
         final Config delegated = mock(Config.class);
         final DelegatedConfig config = new DelegatedConfig(delegated);
         
@@ -84,7 +123,7 @@ public class DelegatedConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetParameter() throws ConfigException {
+    void testGetParameter() throws ConfigException {
         final Config delegated = mock(Config.class);
         final DelegatedConfig config = new DelegatedConfig(delegated);
         
@@ -102,7 +141,7 @@ public class DelegatedConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetBooleanParameter() throws ConfigException {
+    void testGetBooleanParameter() throws ConfigException {
         final Config delegated = mock(Config.class);
         final DelegatedConfig config = new DelegatedConfig(delegated);
         
@@ -120,7 +159,7 @@ public class DelegatedConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetNumberParameter() throws ConfigException {
+    void testGetNumberParameter() throws ConfigException {
         final Config delegated = mock(Config.class);
         final DelegatedConfig config = new DelegatedConfig(delegated);
         
@@ -138,7 +177,7 @@ public class DelegatedConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetStringParameter() throws ConfigException {
+    void testGetStringParameter() throws ConfigException {
         final Config delegated = mock(Config.class);
         final DelegatedConfig config = new DelegatedConfig(delegated);
         

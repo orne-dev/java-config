@@ -22,6 +22,8 @@ package dev.orne.config;
  * #L%
  */
 
+import java.util.Iterator;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -59,6 +61,24 @@ extends AbstractConfig {
     @NotNull
     protected @NotNull Config getDelegate() {
         return delegate;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isEmpty()
+    throws ConfigException {
+        return this.delegate.isEmpty();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterator<String> getKeys()
+    throws ConfigException {
+        return this.delegate.getKeys();
     }
 
     /**

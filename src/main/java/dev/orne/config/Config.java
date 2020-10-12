@@ -22,6 +22,8 @@ package dev.orne.config;
  * #L%
  */
 
+import java.util.Iterator;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -33,6 +35,24 @@ import javax.validation.constraints.NotNull;
  * @since 0.1
  */
 public interface Config {
+
+    /**
+     * Returns {@code true} if the configuration contains no parameter.
+     * 
+     * @return Returns {@code true} if the configuration contains no parameter
+     * @throws ConfigException If an error occurs accessing the configuration
+     */
+    boolean isEmpty()
+    throws ConfigException;
+
+    /**
+     * Returns the keys of the parameters contained in this configuration.
+     * 
+     * @return A {@code Iterator} with the keys of the parameters contained
+     * @throws ConfigException If an error occurs accessing the configuration
+     */
+    Iterator<String> getKeys()
+    throws ConfigException;
 
     /**
      * Returns {@code true} if the parameter with the key passed as argument
