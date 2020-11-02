@@ -1,6 +1,7 @@
 # :package: 0.2.0
 
 01. :wrench: Update parent POM to 0.1.1
+01. :wrench: Updated dependency with `org.apache.commons:commons-lang3` to 3.11
 01. :wrench: Added dependency with `dev.orne:beans:0.3.0`
 01. :gift: Added exception `dev.orne.config.ConfigException`
     01. :boom: Methods of `dev.orne.config.Config` throw `ConfigException`
@@ -45,6 +46,22 @@
     01. :gift: Added class `dev.orne.config.commons.CommonsMutableConfig`
     01. :gift: Added class `dev.orne.config.commons.CommonsImmutableConfiguration`
     01. :gift: Added class `dev.orne.config.commons.CommonsConfiguration`
+01. :gift: Added Java Preferences support for Apache Commons Configuration 2.x
+    01. :gift: Added class `dev.orne.config.commons.PreferencesConfiguration`
+    01. :gift: Added exception `dev.orne.config.commons.prefs.PreferencesNodeDeletedException`
+    01. :gift: Added interface `dev.orne.config.commons.prefs.PreferencesMapper`
+    01. :gift: Added class `dev.orne.config.commons.prefs.AbstractPreferencesMapper`
+    01. :gift: Added class `dev.orne.config.commons.prefs.AbstractImmutableNodePreferencesMapper`
+    01. :gift: Added class `dev.orne.config.commons.prefs.AttributeBasedPreferencesMapper`
+    01. :gift: Added class `dev.orne.config.commons.prefs.NodeBasedPreferencesMapper`
+    01. :gift: Added interface `dev.orne.config.commons.prefs.EventCoordinationStrategy`
+    01. :gift: Added class `dev.orne.config.commons.prefs.ByThreadEventCoordinationStrategy`
+    01. :gift: Added interface `dev.orne.config.commons.prefs.PreferencesBased`
+    01. :gift: Added class `dev.orne.config.commons.prefs.PreferencesHandler`
+    01. :gift: Added interface `dev.orne.config.commons.prefs.PreferencesBuilderProperties`
+    01. :gift: Added interface `dev.orne.config.commons.prefs.PreferencesBuilderParameters`
+    01. :gift: Added class `dev.orne.config.commons.prefs.PreferencesBuilderParametersImpl`
+    01. :gift: Added class `dev.orne.config.commons.prefs.PreferencesConfigurationBuilder`
 
 # :package: 0.1.0
 
