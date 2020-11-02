@@ -43,6 +43,8 @@
 01. :gift: Added Apache Commons Configuration 2.x interoperability
     01. :gift: Added class `dev.orne.config.commons.CommonsConfig`
     01. :gift: Added class `dev.orne.config.commons.CommonsMutableConfig`
+    01. :gift: Added class `dev.orne.config.commons.CommonsImmutableConfiguration`
+    01. :gift: Added class `dev.orne.config.commons.CommonsConfiguration`
 
 # :package: 0.1.0
 
