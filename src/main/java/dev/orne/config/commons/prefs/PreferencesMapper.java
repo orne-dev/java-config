@@ -119,7 +119,6 @@ public interface PreferencesMapper<N> {
      * @param config The {@code Preferences} based {@code Configuration}
      * @param baseNode The configuration's base {@code Preferences} node
      * @param name The {@code HierarchicalConfiguration} property key
-     * @param value The {@code HierarchicalConfiguration} property value
      * @throws ConfigurationRuntimeException If an error occurs removing
      * the property value
      */
@@ -137,7 +136,6 @@ public interface PreferencesMapper<N> {
      * @param config The {@code Preferences} based {@code Configuration}
      * @param baseNode The configuration's base {@code Preferences} node
      * @param name The {@code HierarchicalConfiguration} property key
-     * @param value The {@code HierarchicalConfiguration} property value
      * @throws ConfigurationRuntimeException If an error occurs removing
      * the node
      */

@@ -36,7 +36,6 @@ import org.apache.commons.configuration2.tree.ImmutableNode;
  *
  * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
  * @version 1.0, 2021-01
- * @param <N> The type of nodes of the generated {@code PreferencesBased}
  * @since 0.2
  */
 public interface PreferencesBuilderParameters

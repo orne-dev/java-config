@@ -91,7 +91,7 @@ implements PreferencesBased<ImmutableNode> {
      * instance, the other configuration is a {@code PreferencesConfiguration},
      * too, things like base Preferences node will be lost.
      *
-     * @param c the configuration to copy
+     * @param copy The configuration to copy
      */
     public PreferencesConfiguration(
             final HierarchicalConfiguration<ImmutableNode> copy) {

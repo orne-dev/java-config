@@ -91,8 +91,11 @@ public class PreferencesHandler<N> {
     private final @NotNull EventListenerManager eventListenerManager;
     /** The base {@code Preferences} node. */
     private Preferences baseNode;
+    /** The handled {@code PreferencesBased} configuration.*/
     private PreferencesBased<N> content;
+    /** If auto save mode is currently active. */
     private boolean autoSave;
+    /** If auto load mode is currently active. */
     private boolean autoLoad;
 
     /**
@@ -123,7 +126,7 @@ public class PreferencesHandler<N> {
      * 
      * @param mapper The node and property mapper
      * @param coordinationStrategy The event coordination strategy
-     * @param listenerManager 
+     * @param listenerManager The listeners manager
      */
     protected PreferencesHandler(
             final @NotNull PreferencesMapper<N> mapper,
@@ -141,6 +144,15 @@ public class PreferencesHandler<N> {
         }
     }
 
+    /**
+     * Creates and configured a new {@code PreferencesHandler} instance,
+     * using the values of the parameters map for configuration.
+     * 
+     * @param <N> The {@code HierarchicalConfiguration} node type
+     * @param map The parameters map
+     * @param mapper The node and property mapper 
+     * @return The configured {@code PreferencesHandler} instance
+     */
     public static <N> @NotNull PreferencesHandler<N> fromMap(
             final Map<String, ?> map,
             final @NotNull PreferencesMapper<N> mapper) {
@@ -230,7 +242,7 @@ public class PreferencesHandler<N> {
     }
 
     /**
-     * Returns the base {@code Preferences} node, ensuring that is set and
+     * Returns the base {@code Preferences} node, ensuring that it is set and
      * not {@code null}.
      * 
      * @return The base {@code Preferences} node
@@ -279,10 +291,20 @@ public class PreferencesHandler<N> {
         setBaseNode(node);
     }
 
+    /**
+     * Returns the handled {@code PreferencesBased} configuration.
+     * 
+     * @return The handled {@code PreferencesBased} configuration
+     */
     public synchronized PreferencesBased<N> getContent() {
         return this.content;
     }
 
+    /**
+     * Sets the handled {@code PreferencesBased} configuration.
+     * 
+     * @param content The handled {@code PreferencesBased} configuration
+     */
     public synchronized void setContent(
             final PreferencesBased<N> content) {
         if (this.content != null && this.autoSave) {
@@ -294,6 +316,12 @@ public class PreferencesHandler<N> {
         }
     }
 
+    /**
+     * Returns the handled {@code PreferencesBased} configuration, ensuring
+     * that it is set and not {@code null}.
+     * 
+     * @return The handled {@code PreferencesBased} configuration
+     */
     protected synchronized PreferencesBased<N> checkContent() {
         if (this.content == null) {
             throw new IllegalStateException("The PreferenceBased configuration has not been set.");
@@ -387,6 +415,10 @@ public class PreferencesHandler<N> {
         this.autoLoad = enabled;
     }
 
+    /**
+     * Synchronizes the {@code Preferences} base node with changes performed
+     * by other threads.
+     */
     protected void synchronizeBaseNode() {
         try {
             checkBaseNode().sync();
@@ -397,6 +429,9 @@ public class PreferencesHandler<N> {
         }
     }
 
+    /**
+     * Flushes changed made to the {@code Preferences} base node.
+     */
     protected void flushBaseNode() {
         try {
             checkBaseNode().flush();
@@ -407,6 +442,10 @@ public class PreferencesHandler<N> {
         }
     }
 
+    /**
+     * Loads the content of the {@code Preferences} base node in
+     * the handled {@code PreferencesBased} instance.
+     */
     public synchronized void load() {
         getEventCoordinationStrategy().preventEvents(() -> {
             checkBaseNode();
@@ -421,7 +460,7 @@ public class PreferencesHandler<N> {
     }
 
     /**
-     * Refresh the content of the {@code PreferencesConfiguration} instance
+     * Refresh the content of the handled {@code PreferencesBased} instance
      * with the updated content of the {@code Preferences} base node.
      */
     public synchronized void refresh() {
@@ -449,6 +488,11 @@ public class PreferencesHandler<N> {
         });
     }
 
+    /**
+     * Callback for {@code Preferences} properties changed events.
+     * 
+     * @param event The event to handle
+     */
     protected void onPreferenceChangeEvent(
             final @NotNull PreferenceChangeEvent event) {
         getEventCoordinationStrategy().handlePreferencesEvent(
@@ -456,6 +500,11 @@ public class PreferencesHandler<N> {
                 PreferencesHandler.this::handlePreferenceChangeEvent);
     }
 
+    /**
+     * Handler for {@code Preferences} properties changed events.
+     * 
+     * @param event The event to handle
+     */
     protected void handlePreferenceChangeEvent(
             final @NotNull PreferenceChangeEvent event) {
         if (autoLoadRequired(event)) {
@@ -472,6 +521,11 @@ public class PreferencesHandler<N> {
         }
     }
 
+    /**
+     * Callback for {@code Preferences} node added events.
+     * 
+     * @param event The event to handle
+     */
     protected void onPreferenceNodeAddedEvent(
             final @NotNull NodeChangeEvent event) {
         getEventCoordinationStrategy().handlePreferencesEvent(
@@ -479,6 +533,11 @@ public class PreferencesHandler<N> {
                 PreferencesHandler.this::handlePreferenceNodeAddedEvent);
     }
 
+    /**
+     * Handler for {@code Preferences} node added events.
+     * 
+     * @param event The event to handle
+     */
     protected void handlePreferenceNodeAddedEvent(
             final @NotNull NodeChangeEvent event) {
         if (autoLoadRequired(event)) {
@@ -497,6 +556,11 @@ public class PreferencesHandler<N> {
         }
     }
 
+    /**
+     * Callback for {@code Preferences} node removed events.
+     * 
+     * @param event The event to handle
+     */
     protected void onPreferenceNodeRemovedEvent(
             final @NotNull NodeChangeEvent event) {
         getEventCoordinationStrategy().handlePreferencesEvent(
@@ -504,6 +568,11 @@ public class PreferencesHandler<N> {
                 PreferencesHandler.this::handlePreferenceNodeRemovedEvent);
     }
 
+    /**
+     * Handler for {@code Preferences} node removed events.
+     * 
+     * @param event The event to handle
+     */
     protected void handlePreferenceNodeRemovedEvent(
             final @NotNull NodeChangeEvent event) {
         if (autoLoadRequired(event)) {
@@ -519,6 +588,11 @@ public class PreferencesHandler<N> {
         }
     }
 
+    /**
+     * Callback for {@code PreferencesBased} property added events.
+     * 
+     * @param event The event to handle
+     */
     protected void onConfigurationAddPropertyEvent(
             final @NotNull ConfigurationEvent event) {
         getEventCoordinationStrategy().handleConfigurationEvent(
@@ -526,6 +600,11 @@ public class PreferencesHandler<N> {
                 this::handleConfigurationSetPropertyEvent);
     }
 
+    /**
+     * Callback for {@code PreferencesBased} property changed events.
+     * 
+     * @param event The event to handle
+     */
     protected void onConfigurationSetPropertyEvent(
             final @NotNull ConfigurationEvent event) {
         getEventCoordinationStrategy().handleConfigurationEvent(
@@ -533,6 +612,11 @@ public class PreferencesHandler<N> {
                 this::handleConfigurationSetPropertyEvent);
     }
 
+    /**
+     * Handler for {@code PreferencesBased} property value set events.
+     * 
+     * @param event The event to handle
+     */
     protected void handleConfigurationSetPropertyEvent(
             final @NotNull ConfigurationEvent event) {
         if (!event.isBeforeUpdate() && autoSaveRequired(event)) {
@@ -549,6 +633,11 @@ public class PreferencesHandler<N> {
         }
     }
 
+    /**
+     * Callback for {@code PreferencesBased} property removed events.
+     * 
+     * @param event The event to handle
+     */
     protected void onConfigurationClearPropertyEvent(
             final @NotNull ConfigurationEvent event) {
         getEventCoordinationStrategy().handleConfigurationEvent(
@@ -556,6 +645,11 @@ public class PreferencesHandler<N> {
                 this::handleConfigurationClearPropertyEvent);
     }
 
+    /**
+     * Handler for {@code PreferencesBased} property removed events.
+     * 
+     * @param event The event to handle
+     */
     protected void handleConfigurationClearPropertyEvent(
             final @NotNull ConfigurationEvent event) {
         if (event.isBeforeUpdate() && autoSaveRequired(event)) {
@@ -571,6 +665,11 @@ public class PreferencesHandler<N> {
         }
     }
 
+    /**
+     * Callback for {@code PreferencesBased} nodes added events.
+     * 
+     * @param event The event to handle
+     */
     protected void onConfigurationAddNodesEvent(
             final @NotNull ConfigurationEvent event) {
         getEventCoordinationStrategy().handleConfigurationEvent(
@@ -578,6 +677,11 @@ public class PreferencesHandler<N> {
                 this::handleConfigurationAddNodesEvent);
     }
 
+    /**
+     * Handler for {@code PreferencesBased} nodes added events.
+     * 
+     * @param event The event to handle
+     */
     protected void handleConfigurationAddNodesEvent(
             final @NotNull ConfigurationEvent event) {
         if (!event.isBeforeUpdate() && autoSaveRequired(event)) {
@@ -597,6 +701,11 @@ public class PreferencesHandler<N> {
         }
     }
 
+    /**
+     * Callback for {@code PreferencesBased} node removed events.
+     * 
+     * @param event The event to handle
+     */
     protected void onConfigurationClearTreeEvent(
             final @NotNull ConfigurationEvent event) {
         getEventCoordinationStrategy().handleConfigurationEvent(
@@ -604,6 +713,11 @@ public class PreferencesHandler<N> {
                 this::handleConfigurationClearTreeEvent);
     }
 
+    /**
+     * Handler for {@code PreferencesBased} node removed events.
+     * 
+     * @param event The event to handle
+     */
     protected void handleConfigurationClearTreeEvent(
             final @NotNull ConfigurationEvent event) {
         if (event.isBeforeUpdate() && autoSaveRequired(event)) {
@@ -619,6 +733,11 @@ public class PreferencesHandler<N> {
         }
     }
 
+    /**
+     * Callback for {@code PreferencesBased} cleared events.
+     * 
+     * @param event The event to handle
+     */
     protected void onConfigurationClearEvent(
             final @NotNull ConfigurationEvent event) {
         getEventCoordinationStrategy().handleConfigurationEvent(
@@ -626,6 +745,11 @@ public class PreferencesHandler<N> {
                 this::handleConfigurationClearEvent);
     }
 
+    /**
+     * Handler for {@code PreferencesBased} cleared events.
+     * 
+     * @param event The event to handle
+     */
     protected void handleConfigurationClearEvent(
             final @NotNull ConfigurationEvent event) {
         if (event.isBeforeUpdate() && autoSaveRequired(event)) {
@@ -862,7 +986,7 @@ public class PreferencesHandler<N> {
         /**
          * Installs the {@code PreferencesBased} listeners.
          * 
-         * @param The {@code PreferencesBased} to listen
+         * @param target The {@code PreferencesBased} to listen
          */
         public void installConfigurationListeners(
                 final @NotNull PreferencesBased<N> target) {

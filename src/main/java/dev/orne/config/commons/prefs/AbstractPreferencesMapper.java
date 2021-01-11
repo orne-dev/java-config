@@ -810,9 +810,10 @@ implements PreferencesMapper<N> {
         /**
          * Creates a new instance.
          * 
-         * @param path
-         * @param name
-         * @param attribute
+         * @param path The names of the node path to the parent node of the
+         * property's final target
+         * @param name The name of the property's final target
+         * @param attribute If the property's final target is an attribute
          */
         public PropertyData(
                 final @NotNull List<String> path,
