@@ -46,6 +46,7 @@
     01. :gift: Added class `dev.orne.config.commons.CommonsMutableConfig`
     01. :gift: Added class `dev.orne.config.commons.CommonsImmutableConfiguration`
     01. :gift: Added class `dev.orne.config.commons.CommonsConfiguration`
+    01. :gift: Added class `dev.orne.config.commons.ProviderConfigurationDecoder`
 01. :gift: Added Java Preferences support for Apache Commons Configuration 2.x
     01. :gift: Added class `dev.orne.config.commons.PreferencesConfiguration`
     01. :gift: Added exception `dev.orne.config.commons.prefs.PreferencesNodeDeletedException`
