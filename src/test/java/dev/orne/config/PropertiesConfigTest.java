@@ -23,7 +23,13 @@ package dev.orne.config;
  */
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.*;
 
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Properties;
+
+import org.apache.commons.collections.iterators.EnumerationIterator;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -44,10 +50,52 @@ class PropertiesConfigTest {
      * no sources.
      */
     @Test
-    public void testEmptyConstructor() {
+    void testEmptyConstructor() {
         final PropertiesConfig config = new PropertiesConfig();
         assertNotNull(config.getProperties());
         assertTrue(config.getProperties().isEmpty());
+    }
+
+    /**
+     * Test method for {@link PropertiesConfig#isEmpty()}.
+     * @throws ConfigException Shouldn't happen
+     */
+    @Test
+    void testIsEmpty()
+    throws ConfigException {
+        final Properties props = mock(Properties.class);
+        final PropertiesConfig config = new PropertiesConfig(props);
+        
+        willReturn(true).given(props).isEmpty();
+        
+        final boolean result = config.isEmpty();
+        assertTrue(result);
+        
+        then(props).should(times(1)).isEmpty();
+        then(props).shouldHaveNoMoreInteractions();
+    }
+
+    /**
+     * Test method for {@link PropertiesConfig#isEmpty()}.
+     * @throws ConfigException Shouldn't happen
+     */
+    @Test
+    void testGetKeys()
+    throws ConfigException {
+        final Properties props = mock(Properties.class);
+        final PropertiesConfig config = new PropertiesConfig(props);
+        
+        @SuppressWarnings("unchecked")
+        final Enumeration<Object> mockKeys = mock(Enumeration.class);
+        willReturn(mockKeys).given(props).keys();
+        
+        final Iterator<String> result = config.getKeys();
+        assertTrue(result instanceof EnumerationIterator);
+        final EnumerationIterator enumIt = (EnumerationIterator) result;
+        assertSame(mockKeys, enumIt.getEnumeration());
+        
+        then(props).should(times(1)).keys();
+        then(props).shouldHaveNoMoreInteractions();
     }
 
     /**
@@ -56,7 +104,7 @@ class PropertiesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testContainsParameterFalse()
+    void testContainsParameterFalse()
     throws ConfigException {
         final PropertiesConfig config = new PropertiesConfig();
         assertFalse(config.containsParameter(TEST_KEY));
@@ -68,7 +116,7 @@ class PropertiesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testContainsParameterTrue()
+    void testContainsParameterTrue()
     throws ConfigException {
         final PropertiesConfig config = new PropertiesConfig();
         config.getProperties().setProperty(TEST_KEY, "somaValue");
@@ -81,7 +129,7 @@ class PropertiesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testContainsParameterTrueNull()
+    void testContainsParameterTrueNull()
     throws ConfigException {
         final PropertiesConfig config = new PropertiesConfig();
         config.getProperties().setProperty(TEST_KEY, PropertiesConfig.NULL);
@@ -94,7 +142,7 @@ class PropertiesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetStringMissing()
+    void testGetStringMissing()
     throws ConfigException {
         System.clearProperty(TEST_KEY);
         final PropertiesConfig config = new PropertiesConfig();
@@ -108,7 +156,7 @@ class PropertiesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetStringNullPlaceholderDisabled()
+    void testGetStringNullPlaceholderDisabled()
     throws ConfigException {
         final PropertiesConfig config = new PropertiesConfig();
         config.getProperties().setProperty(TEST_KEY, PropertiesConfig.NULL);
@@ -123,7 +171,7 @@ class PropertiesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetStringNullPlaceholderEnabled()
+    void testGetStringNullPlaceholderEnabled()
     throws ConfigException {
         final PropertiesConfig config = new PropertiesConfig();
         config.setNullPlaceholderEnabled(true);
@@ -138,7 +186,7 @@ class PropertiesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetString()
+    void testGetString()
     throws ConfigException {
         final String expectedValue = "customValue";
         final PropertiesConfig config = new PropertiesConfig();

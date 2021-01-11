@@ -34,6 +34,7 @@ import java.util.Properties;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -224,6 +225,25 @@ extends AbstractMutableStringConfig {
      */
     protected @NotNull Properties getProperties() {
         return this.config;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isEmpty()
+    throws ConfigException {
+        return this.config.isEmpty();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public Iterator<String> getKeys()
+    throws ConfigException {
+        return IteratorUtils.asIterator(this.config.keys());
     }
 
     /**

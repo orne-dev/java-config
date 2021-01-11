@@ -29,6 +29,8 @@ import javax.validation.constraints.NotNull;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import dev.orne.config.commons.prefs.PreferencesNodeDeletedException;
+
 /**
  * Unit tests for library exceptions.
  * 
@@ -44,6 +46,14 @@ class ExceptionsTest {
     private static final String TEST_MESSAGE = "Test message";
     /** Cause for exception testing. */
     private static final Throwable TEST_CAUSE = new Exception();
+    /** Message format for exception varargs testing. */
+    private static final String TEST_VARARGS_FORMAT = "Test %s message %s";
+    /** Value #1 for exception varargs testing. */
+    private static final String TEST_VARARGS_VALUE1 = "value1";
+    /** Value #1 for exception varargs testing. */
+    private static final String TEST_VARARGS_VALUE2 = "value2";
+    /** Message for exception varargs testing. */
+    private static final String TEST_VARARGS_MESSAGE = "Test value1 message value2";
 
     /**
      * Test for {@link ConfigException}.
@@ -82,6 +92,21 @@ class ExceptionsTest {
     }
 
     /**
+     * Test for {@link PreferencesNodeDeletedException}.
+     */
+    @Test
+    void testPreferencesNodeDeletedException() {
+        assertEmptyException(new PreferencesNodeDeletedException());
+        assertMessageException(new PreferencesNodeDeletedException(TEST_MESSAGE));
+        assertStringFormatMessageException(new PreferencesNodeDeletedException(
+                TEST_VARARGS_FORMAT,
+                TEST_VARARGS_VALUE1,
+                TEST_VARARGS_VALUE2));
+        assertCauseException(new PreferencesNodeDeletedException(TEST_CAUSE));
+        assertFullException(new PreferencesNodeDeletedException(TEST_MESSAGE, TEST_CAUSE));
+    }
+
+    /**
      * Asserts that exception has no message and no cause.
      * 
      * @param exception The exception to test
@@ -103,6 +128,20 @@ class ExceptionsTest {
         assertNotNull(exception);
         assertNotNull(exception.getMessage());
         assertEquals(TEST_MESSAGE, exception.getMessage());
+        assertNull(exception.getCause());
+    }
+
+    /**
+     * Asserts that exception has message formatted by
+     * {@link String#format(String, Object...)} but no cause.
+     * 
+     * @param exception The exception to test
+     */
+    private void assertStringFormatMessageException(
+            final @NotNull Exception exception) {
+        assertNotNull(exception);
+        assertNotNull(exception.getMessage());
+        assertEquals(TEST_VARARGS_MESSAGE, exception.getMessage());
         assertNull(exception.getCause());
     }
 

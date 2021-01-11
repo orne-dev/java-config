@@ -25,6 +25,8 @@ package dev.orne.config;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
+import java.util.Iterator;
+
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -239,6 +241,14 @@ class DefaultConfigProviderTest {
     public static class Level2ConfigImpl
     extends AbstractStringConfig
     implements Level2Config {
+        @Override
+        public boolean isEmpty() {
+            return false;
+        }
+        @Override
+        public Iterator<String> getKeys() {
+            return null;
+        }
         @Override
         protected boolean containsParameter(String key) {
             return false;

@@ -12,7 +12,7 @@
 
   <groupId>dev.orne</groupId>
   <artifactId>config</artifactId>
-  <version>0.2.0-SNAPSHOT</version>
+  <version>0.2.0-commons-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Orne Config</name>
@@ -46,12 +46,16 @@
     <java.version>1.8</java.version>
     <license.licenseName>lgpl_v3</license.licenseName>
 
-    <commons.lang.version>3.9</commons.lang.version>
+    <commons.lang.version>3.11</commons.lang.version>
     <commons.beanutils.version>1.9.4</commons.beanutils.version>
-    <commons.pool.version>2.8.1</commons.pool.version>
+    <commons.collections.version>3.2.2</commons.collections.version>
     <orne.beans.version>0.3.0-SNAPSHOT</orne.beans.version>
 
     <javax.validation.version>2.0.1.Final</javax.validation.version>
+    <commons.pool.version>2.8.1</commons.pool.version>
+    <commons.configuration.version>2.7</commons.configuration.version>
+
+    <junit.pioneer.version>1.0.0</junit.pioneer.version>
   </properties>
 
   <dependencies>
@@ -80,11 +84,22 @@
       </exclusions>
     </dependency>
     <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+      <version>${commons.collections.version}</version>
+    </dependency>
+    <dependency>
       <groupId>dev.orne</groupId>
       <artifactId>beans</artifactId>
       <version>${orne.beans.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+      <version>${javax.validation.version}</version>
+      <optional>true</optional>
+    </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-pool2</artifactId>
@@ -92,9 +107,9 @@
       <optional>true</optional>
     </dependency>
     <dependency>
-      <groupId>javax.validation</groupId>
-      <artifactId>validation-api</artifactId>
-      <version>${javax.validation.version}</version>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-configuration2</artifactId>
+      <version>${commons.configuration.version}</version>
       <optional>true</optional>
     </dependency>
 
@@ -106,6 +121,12 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit-pioneer</groupId>
+      <artifactId>junit-pioneer</artifactId>
+      <version>${junit.pioneer.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>

@@ -22,11 +22,13 @@ package dev.orne.config;
  * #L%
  */
 
-import java.io.OutputStream;
-import java.util.prefs.NodeChangeListener;
-import java.util.prefs.PreferenceChangeListener;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.prefs.AbstractPreferences;
 import java.util.prefs.Preferences;
 import java.util.prefs.PreferencesFactory;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * Mock {@code PreferencesFactory} implementation for testing classes
@@ -102,13 +104,25 @@ implements PreferencesFactory {
      * NOP implementation of {@code Preferences}.
      */
     public static class NopPreferences
-    extends Preferences {
+    extends AbstractPreferences {
+
+        public NopPreferences() {
+            super(null, "");
+        }
+
+        protected NopPreferences(
+                final @NotNull NopPreferences parent,
+                final @NotNull String name) {
+            super(parent, name);
+        }
 
         /**
          * {@inheritDoc}
          */
         @Override
-        public void put(String key, String value) {
+        protected void putSpi(
+                final @NotNull String key,
+                final @NotNull String value) {
             // NOP
         }
 
@@ -116,8 +130,8 @@ implements PreferencesFactory {
          * {@inheritDoc}
          */
         @Override
-        public String get(String key, String def) {
-            // NOP
+        protected String getSpi(
+                final @NotNull String key) {
             return null;
         }
 
@@ -125,7 +139,8 @@ implements PreferencesFactory {
          * {@inheritDoc}
          */
         @Override
-        public void remove(String key) {
+        protected void removeSpi(
+                final @NotNull String key) {
             // NOP
         }
 
@@ -133,7 +148,7 @@ implements PreferencesFactory {
          * {@inheritDoc}
          */
         @Override
-        public void clear() {
+        protected void removeNodeSpi() {
             // NOP
         }
 
@@ -141,7 +156,32 @@ implements PreferencesFactory {
          * {@inheritDoc}
          */
         @Override
-        public void putInt(String key, int value) {
+        protected String[] keysSpi() {
+            return new String[0];
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        protected String[] childrenNamesSpi() {
+            return new String[0];
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        protected AbstractPreferences childSpi(
+                final @NotNull String name) {
+            return new NopPreferences(this, name);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        protected void syncSpi() {
             // NOP
         }
 
@@ -149,146 +189,109 @@ implements PreferencesFactory {
          * {@inheritDoc}
          */
         @Override
-        public int getInt(String key, int def) {
+        protected void flushSpi() {
             // NOP
-            return 0;
+        }
+    }
+
+    /**
+     * In memory implementation of {@code Preferences}.
+     */
+    public static class InMemoryPreferences
+    extends AbstractPreferences {
+
+        private final Map<String, String> attributes;
+        private final Map<String, InMemoryPreferences> childs;
+
+        public InMemoryPreferences() {
+            this(null, "");
+        }
+
+        protected InMemoryPreferences(
+                final @NotNull InMemoryPreferences parent,
+                final @NotNull String name) {
+            super(parent, name);
+            this.attributes = new HashMap<>();
+            this.childs = new HashMap<>();
         }
 
         /**
          * {@inheritDoc}
          */
         @Override
-        public void putLong(String key, long value) {
-            // NOP
+        public InMemoryPreferences parent() {
+            return (InMemoryPreferences) super.parent();
         }
 
         /**
          * {@inheritDoc}
          */
         @Override
-        public long getLong(String key, long def) {
-            // NOP
-            return 0;
+        protected void putSpi(
+                final @NotNull String key,
+                final @NotNull String value) {
+            this.attributes.put(key, value);
         }
 
         /**
          * {@inheritDoc}
          */
         @Override
-        public void putBoolean(String key, boolean value) {
-            // NOP
+        protected String getSpi(
+                final @NotNull String key) {
+            return this.attributes.get(key);
         }
 
         /**
          * {@inheritDoc}
          */
         @Override
-        public boolean getBoolean(String key, boolean def) {
-            // NOP
-            return false;
+        protected void removeSpi(
+                final @NotNull String key) {
+            this.attributes.remove(key);
         }
 
         /**
          * {@inheritDoc}
          */
         @Override
-        public void putFloat(String key, float value) {
-            // NOP
+        protected void removeNodeSpi() {
+            parent().childs.remove(name());
         }
 
         /**
          * {@inheritDoc}
          */
         @Override
-        public float getFloat(String key, float def) {
-            // NOP
-            return 0;
+        protected String[] keysSpi() {
+            return this.attributes.keySet().toArray(new String[0]);
         }
 
         /**
          * {@inheritDoc}
          */
         @Override
-        public void putDouble(String key, double value) {
-            // NOP
+        protected String[] childrenNamesSpi() {
+            return this.childs.keySet().toArray(new String[0]);
         }
 
         /**
          * {@inheritDoc}
          */
         @Override
-        public double getDouble(String key, double def) {
-            // NOP
-            return 0;
+        protected InMemoryPreferences childSpi(
+                final @NotNull String name) {
+            if (!this.childs.containsKey(name)) {
+                this.childs.put(name, new InMemoryPreferences(this, name));
+            }
+            return this.childs.get(name);
         }
 
         /**
          * {@inheritDoc}
          */
         @Override
-        public void putByteArray(String key, byte[] value) {
-            // NOP
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public byte[] getByteArray(String key, byte[] def) {
-            // NOP
-            return null;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String[] keys() {
-            // NOP
-            return null;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String[] childrenNames() {
-            // NOP
-            return null;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Preferences parent() {
-            // NOP
-            return null;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Preferences node(String pathName) {
-            // NOP
-            return null;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public boolean nodeExists(String pathName) {
-            // NOP
-            return false;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void removeNode() {
+        protected void syncSpi() {
             // NOP
         }
 
@@ -296,95 +299,7 @@ implements PreferencesFactory {
          * {@inheritDoc}
          */
         @Override
-        public String name() {
-            return null;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String absolutePath() {
-            return null;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public boolean isUserNode() {
-            return false;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String toString() {
-            return null;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void flush() {
-            // NOP
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void sync() {
-            // NOP
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void addPreferenceChangeListener(PreferenceChangeListener pcl) {
-            // NOP
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void removePreferenceChangeListener(PreferenceChangeListener pcl) {
-            // NOP
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void addNodeChangeListener(NodeChangeListener ncl) {
-            // NOP
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void removeNodeChangeListener(NodeChangeListener ncl) {
-            // NOP
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void exportNode(OutputStream os) {
-            // NOP
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void exportSubtree(OutputStream os) {
+        protected void flushSpi() {
             // NOP
         }
     }

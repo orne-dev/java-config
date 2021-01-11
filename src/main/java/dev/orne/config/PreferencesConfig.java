@@ -22,11 +22,14 @@ package dev.orne.config;
  * #L%
  */
 
+import java.util.Iterator;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.collections.iterators.ObjectArrayIterator;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -231,6 +234,33 @@ implements MutableConfig {
      */
     protected @NotNull Preferences getPreferences() {
         return this.preferences;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isEmpty()
+    throws ConfigException {
+        try {
+            return this.preferences.keys().length == 0;
+        } catch (final IllegalStateException | BackingStoreException e) {
+            throw new ConfigException("Error accessing configuration", e);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public Iterator<String> getKeys()
+    throws ConfigException {
+        try {
+            return new ObjectArrayIterator(this.preferences.keys());
+        } catch (final IllegalStateException | BackingStoreException e) {
+            throw new ConfigException("Error accessing configuration", e);
+        }
     }
 
     /**

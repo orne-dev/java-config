@@ -24,10 +24,12 @@ package dev.orne.config;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
-import static org.mockito.Mockito.times;
 
+import java.util.Iterator;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import org.apache.commons.collections.iterators.ObjectArrayIterator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -40,7 +42,7 @@ import org.junit.jupiter.api.Test;
  * @since 0.2
  */
 @Tag("ut")
-public class PreferencesConfigTest {
+class PreferencesConfigTest {
 
     private static final String TEST_KEY = "test.key";
 
@@ -57,7 +59,7 @@ public class PreferencesConfigTest {
      * Test method for {@link PreferencesConfig#PreferencesConfig()}.
      */
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         final Preferences preferences = mock(Preferences.class);
         TestPreferencesFactory.setUserRoot(preferences);
         final PreferencesConfig config = new PreferencesConfig();
@@ -68,7 +70,7 @@ public class PreferencesConfigTest {
      * Test method for {@link PreferencesConfig#PreferencesConfig(boolean)}.
      */
     @Test
-    public void testConstructorUser() {
+    void testConstructorUser() {
         final Preferences preferences = mock(Preferences.class);
         TestPreferencesFactory.setUserRoot(preferences);
         final PreferencesConfig config = new PreferencesConfig(false);
@@ -79,7 +81,7 @@ public class PreferencesConfigTest {
      * Test method for {@link PreferencesConfig#PreferencesConfig(boolean)}.
      */
     @Test
-    public void testConstructorSystem() {
+    void testConstructorSystem() {
         final Preferences preferences = mock(Preferences.class);
         TestPreferencesFactory.setSystemRoot(preferences);
         final PreferencesConfig config = new PreferencesConfig(true);
@@ -90,7 +92,7 @@ public class PreferencesConfigTest {
      * Test method for {@link PreferencesConfig#PreferencesConfig(Class)}.
      */
     @Test
-    public void testConstructorClass() {
+    void testConstructorClass() {
         final Preferences rootPreferences = mock(Preferences.class);
         TestPreferencesFactory.setUserRoot(rootPreferences);
         final Preferences preferences = mock(Preferences.class);
@@ -109,7 +111,7 @@ public class PreferencesConfigTest {
      * Test method for {@link PreferencesConfig#PreferencesConfig(boolean, Class)}.
      */
     @Test
-    public void testConstructorUserClass() {
+    void testConstructorUserClass() {
         final Preferences rootPreferences = mock(Preferences.class);
         TestPreferencesFactory.setUserRoot(rootPreferences);
         final Preferences preferences = mock(Preferences.class);
@@ -128,7 +130,7 @@ public class PreferencesConfigTest {
      * Test method for {@link PreferencesConfig#PreferencesConfig(boolean, Class)}.
      */
     @Test
-    public void testConstructorSystemClass() {
+    void testConstructorSystemClass() {
         final Preferences rootPreferences = mock(Preferences.class);
         TestPreferencesFactory.setSystemRoot(rootPreferences);
         final Preferences preferences = mock(Preferences.class);
@@ -147,7 +149,7 @@ public class PreferencesConfigTest {
      * Test method for {@link PreferencesConfig#PreferencesConfig(String)}.
      */
     @Test
-    public void testConstructorPath() {
+    void testConstructorPath() {
         final Preferences rootPreferences = mock(Preferences.class);
         TestPreferencesFactory.setUserRoot(rootPreferences);
         final Preferences preferences = mock(Preferences.class);
@@ -167,7 +169,7 @@ public class PreferencesConfigTest {
      * Test method for {@link PreferencesConfig#PreferencesConfig(boolean, String)}.
      */
     @Test
-    public void testConstructorUserPath() {
+    void testConstructorUserPath() {
         final Preferences rootPreferences = mock(Preferences.class);
         TestPreferencesFactory.setUserRoot(rootPreferences);
         final Preferences preferences = mock(Preferences.class);
@@ -187,7 +189,7 @@ public class PreferencesConfigTest {
      * Test method for {@link PreferencesConfig#PreferencesConfig(boolean, String)}.
      */
     @Test
-    public void testConstructorSystemPath() {
+    void testConstructorSystemPath() {
         final Preferences rootPreferences = mock(Preferences.class);
         TestPreferencesFactory.setSystemRoot(rootPreferences);
         final Preferences preferences = mock(Preferences.class);
@@ -207,7 +209,7 @@ public class PreferencesConfigTest {
      * Test method for {@link PreferencesConfig#PreferencesConfig(Class, String)}.
      */
     @Test
-    public void testConstructorClassPath() {
+    void testConstructorClassPath() {
         final Preferences rootPreferences = mock(Preferences.class);
         TestPreferencesFactory.setUserRoot(rootPreferences);
         final Preferences classPreferences = mock(Preferences.class);
@@ -232,7 +234,7 @@ public class PreferencesConfigTest {
      * Test method for {@link PreferencesConfig#PreferencesConfig(boolean, Class, String)}.
      */
     @Test
-    public void testConstructorUserClassPath() {
+    void testConstructorUserClassPath() {
         final Preferences rootPreferences = mock(Preferences.class);
         TestPreferencesFactory.setUserRoot(rootPreferences);
         final Preferences classPreferences = mock(Preferences.class);
@@ -257,7 +259,7 @@ public class PreferencesConfigTest {
      * Test method for {@link PreferencesConfig#PreferencesConfig(boolean, Class, String)}.
      */
     @Test
-    public void testConstructorSystemClassPath() {
+    void testConstructorSystemClassPath() {
         final Preferences rootPreferences = mock(Preferences.class);
         TestPreferencesFactory.setSystemRoot(rootPreferences);
         final Preferences classPreferences = mock(Preferences.class);
@@ -282,10 +284,174 @@ public class PreferencesConfigTest {
      * Test method for {@link PreferencesConfig#PreferencesConfig(Preferences)}.
      */
     @Test
-    public void testConstructorPreferences() {
+    void testConstructorPreferences() {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfig config = new PreferencesConfig(preferences);
         assertSame(preferences, config.getPreferences());
+    }
+
+    /**
+     * Test method for {@link PreferencesConfig#isEmpty()}.
+     * @throws ConfigException Shouldn't happen
+     * @throws BackingStoreException Shouldn't happen
+     */
+    @Test
+    void testIsEmpty()
+    throws ConfigException, BackingStoreException {
+        final Preferences preferences = mock(Preferences.class);
+        final PreferencesConfig config = new PreferencesConfig(preferences);
+        
+        willReturn(new String[0]).given(preferences).keys();
+        
+        final boolean result = config.isEmpty();
+        assertTrue(result);
+        
+        then(preferences).should(times(1)).keys();
+        then(preferences).shouldHaveNoMoreInteractions();
+    }
+
+    /**
+     * Test method for {@link PreferencesConfig#isEmpty()}.
+     * @throws ConfigException Shouldn't happen
+     * @throws BackingStoreException Shouldn't happen
+     */
+    @Test
+    void testIsEmptyFalse()
+    throws ConfigException, BackingStoreException {
+        final Preferences preferences = mock(Preferences.class);
+        final PreferencesConfig config = new PreferencesConfig(preferences);
+        
+        final String[] mockKeys = new String[] { TEST_KEY };
+        willReturn(mockKeys).given(preferences).keys();
+        
+        final boolean result = config.isEmpty();
+        assertFalse(result);
+        
+        then(preferences).should(times(1)).keys();
+        then(preferences).shouldHaveNoMoreInteractions();
+    }
+
+    /**
+     * Test method for {@link PreferencesConfig#isEmpty()}.
+     * @throws ConfigException Shouldn't happen
+     * @throws BackingStoreException Shouldn't happen
+     */
+    @Test
+    void testIsEmptyBackingStoreException()
+    throws ConfigException, BackingStoreException {
+        final Preferences preferences = mock(Preferences.class);
+        final PreferencesConfig config = new PreferencesConfig(preferences);
+        
+        final BackingStoreException mockException = new BackingStoreException("mock");
+        willThrow(mockException).given(preferences).keys();
+        
+        final ConfigException result = assertThrows(ConfigException.class, () -> {
+            config.isEmpty();
+        });
+        assertSame(mockException, result.getCause());
+        
+        then(preferences).should(times(1)).keys();
+        then(preferences).shouldHaveNoMoreInteractions();
+    }
+
+    /**
+     * Test method for {@link PreferencesConfig#isEmpty()}.
+     * @throws ConfigException Shouldn't happen
+     * @throws BackingStoreException Shouldn't happen
+     */
+    @Test
+    void testIsEmptyIllegalStateException()
+    throws ConfigException, BackingStoreException {
+        final Preferences preferences = mock(Preferences.class);
+        final PreferencesConfig config = new PreferencesConfig(preferences);
+        
+        final IllegalStateException mockException = new IllegalStateException();
+        willThrow(mockException).given(preferences).keys();
+        
+        final ConfigException result = assertThrows(ConfigException.class, () -> {
+            config.isEmpty();
+        });
+        assertSame(mockException, result.getCause());
+        
+        then(preferences).should(times(1)).keys();
+        then(preferences).shouldHaveNoMoreInteractions();
+    }
+
+    /**
+     * Test method for {@link PreferencesConfig#isEmpty()}.
+     * @throws ConfigException Shouldn't happen
+     * @throws BackingStoreException Shouldn't happen
+     */
+    @Test
+    void testGetKeys()
+    throws ConfigException, BackingStoreException {
+        final Preferences preferences = mock(Preferences.class);
+        final PreferencesConfig config = new PreferencesConfig(preferences);
+        
+        final String[] mockKeys = new String[] {
+                TEST_KEY,
+                "itKey1",
+                "itKey2",
+                "itKey3",
+                "itKey4"
+        };
+        willReturn(mockKeys).given(preferences).keys();
+        
+        final Iterator<String> result = config.getKeys();
+        assertTrue(result instanceof ObjectArrayIterator);
+        final ObjectArrayIterator arrayIt = (ObjectArrayIterator) result;
+        assertSame(mockKeys, arrayIt.getArray());
+        assertEquals(0, arrayIt.getStartIndex());
+        assertEquals(mockKeys.length, arrayIt.getEndIndex());
+        
+        then(preferences).should(times(1)).keys();
+        then(preferences).shouldHaveNoMoreInteractions();
+    }
+
+    /**
+     * Test method for {@link PreferencesConfig#isEmpty()}.
+     * @throws ConfigException Shouldn't happen
+     * @throws BackingStoreException Shouldn't happen
+     */
+    @Test
+    void testGetKeysBackingStoreException()
+    throws ConfigException, BackingStoreException {
+        final Preferences preferences = mock(Preferences.class);
+        final PreferencesConfig config = new PreferencesConfig(preferences);
+        
+        final BackingStoreException mockException = new BackingStoreException("mock");
+        willThrow(mockException).given(preferences).keys();
+        
+        final ConfigException result = assertThrows(ConfigException.class, () -> {
+            config.getKeys();
+        });
+        assertSame(mockException, result.getCause());
+        
+        then(preferences).should(times(1)).keys();
+        then(preferences).shouldHaveNoMoreInteractions();
+    }
+
+    /**
+     * Test method for {@link PreferencesConfig#isEmpty()}.
+     * @throws ConfigException Shouldn't happen
+     * @throws BackingStoreException Shouldn't happen
+     */
+    @Test
+    void testGetKeysIllegalStateException()
+    throws ConfigException, BackingStoreException {
+        final Preferences preferences = mock(Preferences.class);
+        final PreferencesConfig config = new PreferencesConfig(preferences);
+        
+        final IllegalStateException mockException = new IllegalStateException();
+        willThrow(mockException).given(preferences).keys();
+        
+        final ConfigException result = assertThrows(ConfigException.class, () -> {
+            config.getKeys();
+        });
+        assertSame(mockException, result.getCause());
+        
+        then(preferences).should(times(1)).keys();
+        then(preferences).shouldHaveNoMoreInteractions();
     }
 
     /**
@@ -293,7 +459,7 @@ public class PreferencesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testContainsParameter()
+    void testContainsParameter()
     throws ConfigException {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfig config = new PreferencesConfig(preferences);
@@ -314,7 +480,7 @@ public class PreferencesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testContainsParameterNullKey()
+    void testContainsParameterNullKey()
     throws ConfigException {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfig config = new PreferencesConfig(preferences);
@@ -332,7 +498,7 @@ public class PreferencesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testContainsParameterBlankKey()
+    void testContainsParameterBlankKey()
     throws ConfigException {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfig config = new PreferencesConfig(preferences);
@@ -350,7 +516,7 @@ public class PreferencesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testContainsParameterNullValue()
+    void testContainsParameterNullValue()
     throws ConfigException {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfig config = new PreferencesConfig(preferences);
@@ -370,7 +536,7 @@ public class PreferencesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testContainsParameterError()
+    void testContainsParameterError()
     throws ConfigException {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfig config = new PreferencesConfig(preferences);
@@ -390,7 +556,7 @@ public class PreferencesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetStringParameterValue()
+    void testGetStringParameterValue()
     throws ConfigException {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfig config = new PreferencesConfig(preferences);
@@ -411,7 +577,7 @@ public class PreferencesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetStringParameterNullKey()
+    void testGetStringParameterNullKey()
     throws ConfigException {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfig config = new PreferencesConfig(preferences);
@@ -429,7 +595,7 @@ public class PreferencesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetStringParameterBlankKey()
+    void testGetStringParameterBlankKey()
     throws ConfigException {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfig config = new PreferencesConfig(preferences);
@@ -447,7 +613,7 @@ public class PreferencesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetStringParameterNullValue()
+    void testGetStringParameterNullValue()
     throws ConfigException {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfig config = new PreferencesConfig(preferences);
@@ -467,7 +633,7 @@ public class PreferencesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetStringParameterError()
+    void testGetStringParameterError()
     throws ConfigException {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfig config = new PreferencesConfig(preferences);
@@ -487,7 +653,7 @@ public class PreferencesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetRawValue()
+    void testSetRawValue()
     throws ConfigException {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfig config = new PreferencesConfig(preferences);
@@ -505,7 +671,7 @@ public class PreferencesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetRawValueNullKey()
+    void testSetRawValueNullKey()
     throws ConfigException {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfig config = new PreferencesConfig(preferences);
@@ -524,7 +690,7 @@ public class PreferencesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetRawValueBlankKey()
+    void testSetRawValueBlankKey()
     throws ConfigException {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfig config = new PreferencesConfig(preferences);
@@ -543,7 +709,7 @@ public class PreferencesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetRawValueNullValue()
+    void testSetRawValueNullValue()
     throws ConfigException {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfig config = new PreferencesConfig(preferences);
@@ -560,7 +726,7 @@ public class PreferencesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testSetRawValueError()
+    void testSetRawValueError()
     throws ConfigException {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfig config = new PreferencesConfig(preferences);
@@ -581,7 +747,7 @@ public class PreferencesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testRemove()
+    void testRemove()
     throws ConfigException {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfig config = new PreferencesConfig(preferences);
@@ -598,7 +764,7 @@ public class PreferencesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testRemoveNullKey()
+    void testRemoveNullKey()
     throws ConfigException {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfig config = new PreferencesConfig(preferences);
@@ -616,7 +782,7 @@ public class PreferencesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testRemoveBlankKey()
+    void testRemoveBlankKey()
     throws ConfigException {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfig config = new PreferencesConfig(preferences);
@@ -634,7 +800,7 @@ public class PreferencesConfigTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testRemoveError()
+    void testRemoveError()
     throws ConfigException {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfig config = new PreferencesConfig(preferences);

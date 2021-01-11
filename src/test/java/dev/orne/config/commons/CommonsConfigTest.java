@@ -1,10 +1,10 @@
-package dev.orne.config;
+package dev.orne.config.commons;
 
 /*-
  * #%L
  * Orne Config
  * %%
- * Copyright (C) 2019 Orne Developments
+ * Copyright (C) 2020 Orne Developments
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -25,52 +25,57 @@ package dev.orne.config;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
+import java.math.BigDecimal;
 import java.util.Iterator;
 
+import org.apache.commons.configuration2.ImmutableConfiguration;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import dev.orne.config.ConfigException;
+
 /**
- * Unit tests for {@code DelegatedConfig}.
+ * Unit tests for {@code CommonsConfig}.
  * 
  * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
  * @version 1.0
  * @since 0.2
+ * @see CommonsConfig
  */
 @Tag("ut")
-class DelegatedConfigTest {
+class CommonsConfigTest {
 
     private static final String TEST_KEY = "test.key";
 
     /**
-     * Test method for {@link DelegatedConfig#DelegatedConfig(Config)}.
+     * Test method for {@link CommonsConfig#CommonsConfig(ImmutableConfiguration)}.
      */
     @Test
     void testConstructor() {
-        final Config delegated = mock(Config.class);
-        final DelegatedConfig config = new DelegatedConfig(delegated);
-        assertSame(delegated, config.getDelegate());
+        final ImmutableConfiguration delegated = mock(ImmutableConfiguration.class);
+        final CommonsConfig config = new CommonsConfig(delegated);
+        assertSame(delegated, config.getConfig());
     }
 
     /**
-     * Test method for {@link DelegatedConfig#DelegatedConfig(Config)}
+     * Test method for {@link CommonsConfig#CommonsConfig(ImmutableConfiguration)}
      * with {@code null} parameter.
      */
     @Test
     void testConstructorNull() {
         assertThrows(NullPointerException.class, () -> {
-            new DelegatedConfig(null);
+            new CommonsConfig(null);
         });
     }
 
     /**
-     * Test method for {@link DelegatedConfig#isEmpty()}.
+     * Test method for {@link CommonsConfig#isEmpty()}.
      * @throws ConfigException Shouldn't happen
      */
     @Test
     void testIsEmpty() throws ConfigException {
-        final Config delegated = mock(Config.class);
-        final DelegatedConfig config = new DelegatedConfig(delegated);
+        final ImmutableConfiguration delegated = mock(ImmutableConfiguration.class);
+        final CommonsConfig config = new CommonsConfig(delegated);
         
         final boolean expectedValue = true;
         willReturn(expectedValue).given(delegated).isEmpty();
@@ -82,13 +87,13 @@ class DelegatedConfigTest {
     }
 
     /**
-     * Test method for {@link DelegatedConfig#getKeys()}.
+     * Test method for {@link CommonsConfig#getKeys()}.
      * @throws ConfigException Shouldn't happen
      */
     @Test
     void testsGetKeys() throws ConfigException {
-        final Config delegated = mock(Config.class);
-        final DelegatedConfig config = new DelegatedConfig(delegated);
+        final ImmutableConfiguration delegated = mock(ImmutableConfiguration.class);
+        final CommonsConfig config = new CommonsConfig(delegated);
         
         @SuppressWarnings("unchecked")
         final Iterator<String> expectedValue = mock(Iterator.class);
@@ -101,90 +106,90 @@ class DelegatedConfigTest {
     }
 
     /**
-     * Test method for {@link DelegatedConfig#containsParameter(String)}.
+     * Test method for {@link CommonsConfig#contains(String)}.
      * @throws ConfigException Shouldn't happen
      */
     @Test
     void testContainsParameter() throws ConfigException {
-        final Config delegated = mock(Config.class);
-        final DelegatedConfig config = new DelegatedConfig(delegated);
+        final ImmutableConfiguration delegated = mock(ImmutableConfiguration.class);
+        final CommonsConfig config = new CommonsConfig(delegated);
         
         final boolean expectedValue = true;
-        willReturn(expectedValue).given(delegated).contains(TEST_KEY);
+        willReturn(expectedValue).given(delegated).containsKey(TEST_KEY);
         
-        final boolean result = config.containsParameter(TEST_KEY);
+        final boolean result = config.contains(TEST_KEY);
         assertSame(expectedValue, result);
         
-        then(delegated).should(times(1)).contains(TEST_KEY);
+        then(delegated).should(times(1)).containsKey(TEST_KEY);
     }
 
     /**
-     * Test method for {@link DelegatedConfig#getParameter(String, Class)}.
+     * Test method for {@link CommonsConfig#get(String, Class)}.
      * @throws ConfigException Shouldn't happen
      */
     @Test
     void testGetParameter() throws ConfigException {
-        final Config delegated = mock(Config.class);
-        final DelegatedConfig config = new DelegatedConfig(delegated);
+        final ImmutableConfiguration delegated = mock(ImmutableConfiguration.class);
+        final CommonsConfig config = new CommonsConfig(delegated);
         
         final Object expectedValue = new Object();
-        willReturn(expectedValue).given(delegated).get(TEST_KEY, Object.class);
+        willReturn(expectedValue).given(delegated).get(Object.class, TEST_KEY);
         
-        final Object result = config.getParameter(TEST_KEY, Object.class);
+        final Object result = config.get(TEST_KEY, Object.class);
         assertSame(expectedValue, result);
         
-        then(delegated).should(times(1)).get(TEST_KEY, Object.class);
+        then(delegated).should(times(1)).get(Object.class, TEST_KEY);
     }
 
     /**
-     * Test method for {@link DelegatedConfig#getBooleanParameter(String)}.
+     * Test method for {@link CommonsConfig#getBoolean(String)}.
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    void testGetBooleanParameter() throws ConfigException {
-        final Config delegated = mock(Config.class);
-        final DelegatedConfig config = new DelegatedConfig(delegated);
+    void testGetBoolean() throws ConfigException {
+        final ImmutableConfiguration delegated = mock(ImmutableConfiguration.class);
+        final CommonsConfig config = new CommonsConfig(delegated);
         
         final boolean expectedValue = true;
-        willReturn(expectedValue).given(delegated).getBoolean(TEST_KEY);
+        willReturn(expectedValue).given(delegated).getBoolean(TEST_KEY, null);
         
-        final boolean result = config.getBooleanParameter(TEST_KEY);
+        final boolean result = config.getBoolean(TEST_KEY);
         assertSame(expectedValue, result);
         
-        then(delegated).should(times(1)).getBoolean(TEST_KEY);
+        then(delegated).should(times(1)).getBoolean(TEST_KEY, null);
     }
 
     /**
-     * Test method for {@link DelegatedConfig#getNumberParameter(String)}.
+     * Test method for {@link CommonsConfig#getNumber(String)}.
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    void testGetNumberParameter() throws ConfigException {
-        final Config delegated = mock(Config.class);
-        final DelegatedConfig config = new DelegatedConfig(delegated);
+    void testGetNumber() throws ConfigException {
+        final ImmutableConfiguration delegated = mock(ImmutableConfiguration.class);
+        final CommonsConfig config = new CommonsConfig(delegated);
         
-        final Number expectedValue = 15445;
-        willReturn(expectedValue).given(delegated).getNumber(TEST_KEY);
+        final BigDecimal expectedValue = BigDecimal.valueOf(15445);
+        willReturn(expectedValue).given(delegated).getBigDecimal(TEST_KEY);
         
-        final Number result = config.getNumberParameter(TEST_KEY);
+        final Number result = config.getNumber(TEST_KEY);
         assertSame(expectedValue, result);
         
-        then(delegated).should(times(1)).getNumber(TEST_KEY);
+        then(delegated).should(times(1)).getBigDecimal(TEST_KEY);
     }
 
     /**
-     * Test method for {@link DelegatedConfig#getStringParameter(String)}.
+     * Test method for {@link CommonsConfig#getString(String)}.
      * @throws ConfigException Shouldn't happen
      */
     @Test
     void testGetStringParameter() throws ConfigException {
-        final Config delegated = mock(Config.class);
-        final DelegatedConfig config = new DelegatedConfig(delegated);
+        final ImmutableConfiguration delegated = mock(ImmutableConfiguration.class);
+        final CommonsConfig config = new CommonsConfig(delegated);
         
         final String expectedValue = "mock value";
         willReturn(expectedValue).given(delegated).getString(TEST_KEY);
         
-        final String result = config.getStringParameter(TEST_KEY);
+        final String result = config.getString(TEST_KEY);
         assertSame(expectedValue, result);
         
         then(delegated).should(times(1)).getString(TEST_KEY);

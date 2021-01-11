@@ -1,4 +1,4 @@
-package dev.orne.config;
+package dev.orne.config.commons;
 
 /*-
  * #%L
@@ -27,40 +27,45 @@ import java.util.Iterator;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.configuration2.ImmutableConfiguration;
 import org.apache.commons.lang3.Validate;
 
+import dev.orne.config.Config;
+import dev.orne.config.ConfigException;
+
 /**
- * Delegated {@code Config} implementation.
+ * Implementation of {@code Config} based on Apache Commons
+ * {@code ImmutableConfiguration}.
  * 
  * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
- * @version 1.0, 2020-04
+ * @version 1.0, 2020-09
  * @since 0.2
+ * @see ImmutableConfiguration
  */
-public class DelegatedConfig
-extends AbstractConfig {
+public class CommonsConfig
+implements Config {
 
-    /** The delegate {@code Config} instance. */
-    private final @NotNull Config delegate;
+    /** The delegated Apache Commons configuration. */
+    private final @NotNull ImmutableConfiguration config;
 
     /**
      * Creates a new instance.
      * 
-     * @param delegate The delegate {@code Config} instance
+     * @param config The delegated Apache Commons configuration
      */
-    public DelegatedConfig(
-            final @NotNull Config delegate) {
+    public CommonsConfig(
+            final @NotNull ImmutableConfiguration config) {
         super();
-        this.delegate = Validate.notNull(delegate);
+        this.config = Validate.notNull(config);
     }
 
     /**
-     * Returns the delegate {@code Config} instance.
+     * Returns the delegated Apache Commons configuration.
      * 
-     * @return The delegate {@code Config} instance
+     * @return The delegated Apache Commons configuration
      */
-    @NotNull
-    protected @NotNull Config getDelegate() {
-        return delegate;
+    protected @NotNull ImmutableConfiguration getConfig() {
+        return this.config;
     }
 
     /**
@@ -69,7 +74,7 @@ extends AbstractConfig {
     @Override
     public boolean isEmpty()
     throws ConfigException {
-        return this.delegate.isEmpty();
+        return this.config.isEmpty();
     }
 
     /**
@@ -78,57 +83,57 @@ extends AbstractConfig {
     @Override
     public Iterator<String> getKeys()
     throws ConfigException {
-        return this.delegate.getKeys();
+        return this.config.getKeys();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected boolean containsParameter(
+    public boolean contains(
             final @NotBlank String key)
     throws ConfigException {
-        return this.delegate.contains(key);
+        return this.config.containsKey(key);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected <T> T getParameter(
+    public <T> T get(
             final @NotBlank String key,
             final @NotNull Class<T> type)
     throws ConfigException {
-        return this.delegate.get(key, type);
+        return this.config.get(type, key);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected Boolean getBooleanParameter(
+    public Boolean getBoolean(
             final @NotBlank String key)
     throws ConfigException {
-        return this.delegate.getBoolean(key);
+        return this.config.getBoolean(key, null);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected String getStringParameter(
+    public String getString(
             final @NotBlank String key)
     throws ConfigException {
-        return this.delegate.getString(key);
+        return this.config.getString(key);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected Number getNumberParameter(
+    public Number getNumber(
             final @NotBlank String key)
     throws ConfigException {
-        return this.delegate.getNumber(key);
+        return this.config.getBigDecimal(key);
     }
 }
