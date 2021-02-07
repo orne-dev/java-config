@@ -27,6 +27,7 @@ import javax.validation.constraints.NotNull;
 
 import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.beanutils.ConvertUtilsBean;
+import org.apache.commons.lang3.Validate;
 
 import dev.orne.beans.converters.OrneBeansConverters;
 
@@ -48,7 +49,7 @@ implements Config {
      * Creates a new instance. Sets {@code converter} to the result of
      * {@link #createDefaultConverter()}.
      */
-    public AbstractConfig() {
+    protected AbstractConfig() {
         super();
         this.converter = createDefaultConverter();
     }
@@ -203,12 +204,13 @@ implements Config {
      * property value
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    protected Enum<?> getEnum(
-            final @NotBlank Class<?> type,
+    protected <T> T getEnum(
+            final @NotBlank Class<T> type,
             final @NotNull String name)
     throws ConfigException {
+        Validate.isTrue(type.isEnum());
         final Class<? extends Enum> enumType = (Class<? extends Enum>) type;
-        return Enum.valueOf(enumType, name);
+        return type.cast(Enum.valueOf(enumType, name));
     }
 
     /**

@@ -90,8 +90,7 @@ implements ConfigProvider {
     protected void mapConfigType(
             final @NotNull Class<?> type,
             final @NotNull Config config) {
-        if (!this.mappings.containsKey(type)) {
-            this.mappings.put(type, config);
+        this.mappings.computeIfAbsent(type, key -> {
             for (final Class<?> iface : type.getInterfaces()) {
                 mapConfigType(iface, config);
             }
@@ -99,7 +98,8 @@ implements ConfigProvider {
             if (superType != null && !Object.class.equals(superType)) {
                 mapConfigType(superType, config);
             }
-        }
+            return config;
+        });
     }
 
     /**

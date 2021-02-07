@@ -56,13 +56,15 @@ extends AbstractMutableStringConfig {
     private static final Logger LOG =
             LoggerFactory.getLogger(PropertiesConfig.class);
 
-    /** Mensaje de error para tipos de origenes no soportados. */
+    /** Error message for blank keys. */
+    private static final String KEY_BLANK_ERR =
+            "Parameter key mus be a non blank string";
+    /** Error message for unsupported source types. */
     private static final String SOURCE_TYPE_ERR =
             "Unsupported configuration source type ({}). Ignored.";
-    /** Mensaje de error para origenes no encontrados. */
+    /** Error message for not found resources. */
     private static final String RESOURCES_ERR =
             "Could not find resources ({}).";
-    /** Mensaje de error para errores de lectura en fichero de propiedades. */
     /** Properties file read error message. */
     private static final String PROP_FILE_ERR =
             "Could not read configuration file ({}).";
@@ -184,13 +186,8 @@ extends AbstractMutableStringConfig {
      */
     protected final void loadFromFile(
             final @NotNull File file) {
-        try {
-            final InputStream fileIS = new FileInputStream(file);
-            try {
-                this.config.load(fileIS);
-            } finally {
-                fileIS.close();
-            }
+        try (final InputStream fileIS = new FileInputStream(file)) {
+            this.config.load(fileIS);
         } catch (final IOException ioe) {
             LOG.warn(MessageFormatter.format(PROP_FILE_ERR, file).getMessage(),
                     ioe);
@@ -253,7 +250,7 @@ extends AbstractMutableStringConfig {
     protected boolean containsParameter(
             final @NotBlank String key)
     throws ConfigException {
-        Validate.notBlank(key, "Parameter key mus be a non blank string");
+        Validate.notBlank(key, KEY_BLANK_ERR);
         return this.config.containsKey(key);
     }
 
@@ -264,7 +261,7 @@ extends AbstractMutableStringConfig {
     protected String getRawValue(
             final @NotBlank String key)
     throws ConfigException {
-        Validate.notBlank(key, "Parameter key mus be a non blank string");
+        Validate.notBlank(key, KEY_BLANK_ERR);
         return this.config.getProperty(key);
     }
 
@@ -276,7 +273,7 @@ extends AbstractMutableStringConfig {
             final @NotBlank String key,
             final String value)
     throws ConfigException {
-        Validate.notBlank(key, "Parameter key mus be a non blank string");
+        Validate.notBlank(key, KEY_BLANK_ERR);
         if (value == null) {
             remove(key);
         } else {
@@ -291,7 +288,7 @@ extends AbstractMutableStringConfig {
     public void remove(
             final @NotBlank String key)
     throws ConfigException {
-        Validate.notBlank(key, "Parameter key mus be a non blank string");
+        Validate.notBlank(key, KEY_BLANK_ERR);
         this.config.remove(key);
     }
 }

@@ -71,7 +71,7 @@ class DefaultConfigurerPrimitivePropertiesTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testConfigurePrimitiveProperties()
+    void testConfigurePrimitiveProperties()
     throws ConfigException {
         final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
         final Config config = BDDMockito.mock(Config.class);
@@ -129,7 +129,7 @@ class DefaultConfigurerPrimitivePropertiesTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testConfigurePrimitivePropertiesNull()
+    void testConfigurePrimitivePropertiesNull()
     throws ConfigException {
         final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
         final Config config = BDDMockito.mock(Config.class);
@@ -187,7 +187,7 @@ class DefaultConfigurerPrimitivePropertiesTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testConfigurePrimitivePropertiesUnconfigured()
+    void testConfigurePrimitivePropertiesUnconfigured()
     throws ConfigException {
         final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
         final Config config = BDDMockito.mock(Config.class);
@@ -245,7 +245,7 @@ class DefaultConfigurerPrimitivePropertiesTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testConfigureWrapperProperties()
+    void testConfigureWrapperProperties()
     throws ConfigException {
         final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
         final Config config = BDDMockito.mock(Config.class);
@@ -303,7 +303,7 @@ class DefaultConfigurerPrimitivePropertiesTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testConfigureWrapperPropertiesNull()
+    void testConfigureWrapperPropertiesNull()
     throws ConfigException {
         final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
         final Config config = BDDMockito.mock(Config.class);
@@ -361,7 +361,7 @@ class DefaultConfigurerPrimitivePropertiesTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testConfigureWrapperPropertiesUnconfigured()
+    void testConfigureWrapperPropertiesUnconfigured()
     throws ConfigException {
         final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
         final Config config = BDDMockito.mock(Config.class);
@@ -419,7 +419,7 @@ class DefaultConfigurerPrimitivePropertiesTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testConfigurePropertiesPermissions()
+    void testConfigurePropertiesPermissions()
     throws ConfigException {
         final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
         final Config config = BDDMockito.mock(Config.class);
@@ -477,7 +477,7 @@ class DefaultConfigurerPrimitivePropertiesTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testConfigurePropertiesPermissionsNull()
+    void testConfigurePropertiesPermissionsNull()
     throws ConfigException {
         final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
         final Config config = BDDMockito.mock(Config.class);
@@ -535,7 +535,7 @@ class DefaultConfigurerPrimitivePropertiesTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testConfigurePropertiesPermissionsUnconfigured()
+    void testConfigurePropertiesPermissionsUnconfigured()
     throws ConfigException {
         final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
         final Config config = BDDMockito.mock(Config.class);
@@ -593,7 +593,7 @@ class DefaultConfigurerPrimitivePropertiesTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testConfigureWithBeanError()
+    void testConfigureWithBeanError()
     throws ConfigException {
         final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
         final Config config = BDDMockito.mock(Config.class);
@@ -617,7 +617,7 @@ class DefaultConfigurerPrimitivePropertiesTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testConfigureWithConfigError()
+    void testConfigureWithConfigError()
     throws ConfigException {
         final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
         final Config config = BDDMockito.mock(Config.class);
@@ -886,20 +886,16 @@ class DefaultConfigurerPrimitivePropertiesTest {
         protected void setLongProp(long longProp) {
             this.longProp = longProp;
         }
-        @SuppressWarnings("unused")
-        private Float getFloatProp() {
+        protected Float getFloatProp() {
             return floatProp;
         }
-        @SuppressWarnings("unused")
-        private void setFloatProp(Float floatProp) {
+        protected void setFloatProp(Float floatProp) {
             this.floatProp = floatProp;
         }
-        @SuppressWarnings("unused")
-        private double getDoubleProp() {
+        protected double getDoubleProp() {
             return doubleProp;
         }
-        @SuppressWarnings("unused")
-        private void setDoubleProp(double doubleProp) {
+        protected void setDoubleProp(double doubleProp) {
             this.doubleProp = doubleProp;
         }
     }

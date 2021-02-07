@@ -52,7 +52,7 @@ class AbstractConfigHierarchicalTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testContainsConfigured()
+    void testContainsConfigured()
     throws ConfigException {
         final AbstractHierarchicalConfig config = spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(true);
@@ -69,7 +69,7 @@ class AbstractConfigHierarchicalTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testContainsUnconfiguredNoParent()
+    void testContainsUnconfiguredNoParent()
     throws ConfigException {
         final AbstractHierarchicalConfig config = spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);
@@ -87,7 +87,7 @@ class AbstractConfigHierarchicalTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testContainsUnconfiguredParent()
+    void testContainsUnconfiguredParent()
     throws ConfigException {
         final AbstractHierarchicalConfig config = spy(AbstractHierarchicalConfig.class);
         final Config parent = mock(Config.class);
@@ -109,7 +109,7 @@ class AbstractConfigHierarchicalTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testContainsUnconfiguredParentUnconfigured()
+    void testContainsUnconfiguredParentUnconfigured()
     throws ConfigException {
         final AbstractHierarchicalConfig config = spy(AbstractHierarchicalConfig.class);
         final Config parent = mock(Config.class);
@@ -131,7 +131,7 @@ class AbstractConfigHierarchicalTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetConfigured()
+    void testGetConfigured()
     throws ConfigException {
         final AbstractHierarchicalConfig config = spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(true);
@@ -153,7 +153,7 @@ class AbstractConfigHierarchicalTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetConfiguredNull()
+    void testGetConfiguredNull()
     throws ConfigException {
         final AbstractHierarchicalConfig config = spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(true);
@@ -174,7 +174,7 @@ class AbstractConfigHierarchicalTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetUnconfiguredNoParent()
+    void testGetUnconfiguredNoParent()
     throws ConfigException {
         final AbstractHierarchicalConfig config = spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);
@@ -194,7 +194,7 @@ class AbstractConfigHierarchicalTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetUnconfiguredParent()
+    void testGetUnconfiguredParent()
     throws ConfigException {
         final Config parent = mock(Config.class);
         final AbstractHierarchicalConfig config = spy(AbstractHierarchicalConfig.class);
@@ -220,7 +220,7 @@ class AbstractConfigHierarchicalTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetUnconfiguredParentNull()
+    void testGetUnconfiguredParentNull()
     throws ConfigException {
         final Config parent = mock(Config.class);
         final AbstractHierarchicalConfig config = spy(AbstractHierarchicalConfig.class);
@@ -245,7 +245,7 @@ class AbstractConfigHierarchicalTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetBooleanConfigured()
+    void testGetBooleanConfigured()
     throws ConfigException {
         final AbstractHierarchicalConfig config = spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(true);
@@ -266,7 +266,7 @@ class AbstractConfigHierarchicalTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetBooleanConfiguredNull()
+    void testGetBooleanConfiguredNull()
     throws ConfigException {
         final AbstractHierarchicalConfig config = spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(true);
@@ -286,7 +286,7 @@ class AbstractConfigHierarchicalTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetBooleanUnconfiguredNoParent()
+    void testGetBooleanUnconfiguredNoParent()
     throws ConfigException {
         final AbstractHierarchicalConfig config = spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);
@@ -306,7 +306,7 @@ class AbstractConfigHierarchicalTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetBooleanUnconfiguredParent()
+    void testGetBooleanUnconfiguredParent()
     throws ConfigException {
         final Config parent = mock(Config.class);
         final AbstractHierarchicalConfig config = spy(AbstractHierarchicalConfig.class);
@@ -333,7 +333,7 @@ class AbstractConfigHierarchicalTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetBooleanUnconfiguredParentNull()
+    void testGetBooleanUnconfiguredParentNull()
     throws ConfigException {
         final Config parent = mock(Config.class);
         final AbstractHierarchicalConfig config = spy(AbstractHierarchicalConfig.class);
@@ -358,7 +358,7 @@ class AbstractConfigHierarchicalTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetStringConfigured()
+    void testGetStringConfigured()
     throws ConfigException {
         final AbstractHierarchicalConfig config = spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(true);
@@ -379,7 +379,7 @@ class AbstractConfigHierarchicalTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetStringConfiguredNull()
+    void testGetStringConfiguredNull()
     throws ConfigException {
         final AbstractHierarchicalConfig config = spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(true);
@@ -399,7 +399,7 @@ class AbstractConfigHierarchicalTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetStringUnconfiguredNoParent()
+    void testGetStringUnconfiguredNoParent()
     throws ConfigException {
         final AbstractHierarchicalConfig config = spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);
@@ -419,7 +419,7 @@ class AbstractConfigHierarchicalTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetStringUnconfiguredParent()
+    void testGetStringUnconfiguredParent()
     throws ConfigException {
         final Config parent = mock(Config.class);
         final AbstractHierarchicalConfig config = spy(AbstractHierarchicalConfig.class);
@@ -446,7 +446,7 @@ class AbstractConfigHierarchicalTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetStringUnconfiguredParentNull()
+    void testGetStringUnconfiguredParentNull()
     throws ConfigException {
         final Config parent = mock(Config.class);
         final AbstractHierarchicalConfig config = spy(AbstractHierarchicalConfig.class);
@@ -471,7 +471,7 @@ class AbstractConfigHierarchicalTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetNumberConfigured()
+    void testGetNumberConfigured()
     throws ConfigException {
         final AbstractHierarchicalConfig config = spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(true);
@@ -492,7 +492,7 @@ class AbstractConfigHierarchicalTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetNumberConfiguredNull()
+    void testGetNumberConfiguredNull()
     throws ConfigException {
         final AbstractHierarchicalConfig config = spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(true);
@@ -512,7 +512,7 @@ class AbstractConfigHierarchicalTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetNumberUnconfiguredNoParent()
+    void testGetNumberUnconfiguredNoParent()
     throws ConfigException {
         final AbstractHierarchicalConfig config = spy(AbstractHierarchicalConfig.class);
         given(config.containsParameter(TEST_KEY)).willReturn(false);
@@ -532,7 +532,7 @@ class AbstractConfigHierarchicalTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetNumberUnconfiguredParent()
+    void testGetNumberUnconfiguredParent()
     throws ConfigException {
         final Config parent = mock(Config.class);
         final AbstractHierarchicalConfig config = spy(AbstractHierarchicalConfig.class);
@@ -559,7 +559,7 @@ class AbstractConfigHierarchicalTest {
      * @throws ConfigException Shouldn't happen
      */
     @Test
-    public void testGetNumberUnconfiguredParentNull()
+    void testGetNumberUnconfiguredParentNull()
     throws ConfigException {
         final Config parent = mock(Config.class);
         final AbstractHierarchicalConfig config = spy(AbstractHierarchicalConfig.class);
