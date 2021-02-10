@@ -2,7 +2,7 @@
 
 Provides utilities for application configuration management.
 
-## Usage
+## Dependency information
 
 The library can be obtained from [Maven Central][maven central] with the
 following coordinates:
@@ -15,66 +15,20 @@ following coordinates:
 </dependency>
 ```
 
-## Configurations
+## Features provided (or planed)
 
-Interface `Config` is the central interface, used to access configuration
-values abstracting the mechanism used to store such information. Provides
-methods to retrieve `String`, `Boolean` and `Number` values "out of the box",
-plus a generic method to retrieve any value type. It's base implementation
-(`AbstractConfig`) uses [Apache Commons BeanUtils][apache beanutils] for
-value conversion, that by default includes the additional converters provided
-by [Orne Beans][orne beans].
+- [x] Simple usage API
+- [x] Basic configuration providers implementations
+- [x] Secure configuration values
+- [ ] Fluent configuration mechanism
+- [x] Configurations hierarchy
+- [x] Apache Commons Configuration integration
+- [x] Automatic beans configuration
+- [ ] Spring integration
 
-Interface `MutableConfig` provides additional methods to modify the
-configuration values, such as user preferences.
+## Usage and further information
 
-### Provided implementations
-
-#### SystemConfig
-
-#### PropertiesConfig
-
-#### PreferencesConfig
-
-### Hierarchical configurations
-
-## Secure configuration storage
-
-
-
-## Integration with [Apache Commons Configuration][apache configuration]
-
-### Java Preferences based Apache Commons Configuration
-
-
-## Extension
-
-```mermaid
-classDiagram
-    class Config
-    <<interface>> Config
-    class MutableConfig
-    <<interface>> MutableConfig
-    class AbstractConfig
-    <<abstract>> AbstractConfig
-    class AbstractStringConfig
-    <<abstract>> AbstractStringConfig
-    class AbstractMutableStringConfig
-    <<abstract>> AbstractMutableStringConfig
-    class SystemConfig
-    class PropertiesConfig
-    class PreferencesConfig
-    Config <|-- MutableConfig
-    Config <|.. AbstractConfig
-    AbstractConfig <|-- AbstractStringConfig
-    MutableConfig <|.. AbstractMutableStringConfig
-    AbstractStringConfig <|-- AbstractMutableStringConfig
-    AbstractStringConfig <|-- SystemConfig
-    AbstractMutableStringConfig <|-- PropertiesConfig
-    AbstractMutableStringConfig <|-- PreferencesConfig
-```
+For further information refer to the [project Wiki][wiki].
 
 [maven central]: https://search.maven.org/
-[apache beanutils]: http://commons.apache.org/proper/commons-beanutils/
-[apache configuration]: http://commons.apache.org/proper/commons-configuration/
-[orne beans]: https://github.com/orne-dev/java-beans/
+[wiki]: https://github.com/orne-dev/java-config/wiki

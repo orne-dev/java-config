@@ -30,7 +30,7 @@ import javax.validation.constraints.NotNull;
  * Implementation of {@code PreferencesMapper} for
  * {@code ImmutableNode} based {@code HierarchicalConfiguration} instances that
  * maps all {@code Preferences} properties to {@code ImmutableNode} attributes,
- * creating child {@code ImmutableNode} instances for only for child
+ * creating child {@code ImmutableNode} instances only for child
  * {@code Preferences} nodes.
  * <p>
  * All {@code Preferences} are mapped as {@code ImmutableNode} attributes.

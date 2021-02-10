@@ -58,7 +58,7 @@ public interface PreferencesBuilderProperties<T, N> {
     /**
      * Set the configuration's base preferences node. 
      * 
-     * @param The configuration's base preferences node
+     * @param baseNode The configuration's base preferences node
      * @return a reference to this object for method chaining
      */
     T setBaseNode(Preferences baseNode);

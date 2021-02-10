@@ -197,6 +197,7 @@ implements Config {
      * Returns the constant of the enumeration type for the name passed as
      * argument.
      * 
+     * @param <T> The type of the enumeration
      * @param type The enumeration type. Must be a subcass of {¢ode Enum}.
      * @param name The name of the requested constant
      * @return The constant with the requested name
