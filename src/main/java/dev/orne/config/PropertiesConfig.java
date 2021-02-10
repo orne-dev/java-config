@@ -220,7 +220,7 @@ extends AbstractMutableStringConfig {
      * 
      * @return The configuration properties
      */
-    protected @NotNull Properties getProperties() {
+    public @NotNull Properties getProperties() {
         return this.config;
     }
 

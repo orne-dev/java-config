@@ -209,8 +209,8 @@ implements Config {
             final @NotNull String name)
     throws ConfigException {
         Validate.isTrue(type.isEnum());
-        final Class<? extends Enum> enumType = (Class<? extends Enum>) type;
-        return type.cast(Enum.valueOf(enumType, name));
+        final Object value = Enum.valueOf((Class<? extends Enum>) type, name);
+        return type.cast(value);
     }
 
     /**
