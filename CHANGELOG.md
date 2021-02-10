@@ -43,6 +43,8 @@
     01. :gift: Added class `dev.orne.config.ConfigCryptoAesGcmEngine`
 01. :gift: Added class `dev.orne.config.DefaultConfigCryptoProvider`
 01. :gift: Added class `dev.orne.config.PooledConfigCryptoProvider`
+01. :fix: Corrected properties spelling in `dev.orne.config.ConfigurationOptions`
+  01. :boom: Renamed property `preferedConfigs` to `preferredConfigs`
 01. :gift: Added Apache Commons Configuration 2.x interoperability
     01. :gift: Added class `dev.orne.config.commons.CommonsConfig`
     01. :gift: Added class `dev.orne.config.commons.CommonsMutableConfig`

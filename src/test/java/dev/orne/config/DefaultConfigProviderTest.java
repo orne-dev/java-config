@@ -268,13 +268,13 @@ class DefaultConfigProviderTest {
         // Empty class
     }
 
-    @ConfigurationOptions(preferedConfigs=Level2Config.class)
+    @ConfigurationOptions(preferredConfigs=Level2Config.class)
     public static class Level2TestBean {
         // Empty class
     }
 
     @ConfigurationOptions(
-            preferedConfigs=Level2Config.class,
+            preferredConfigs=Level2Config.class,
             fallbackToDefaultConfig=false)
     public static class Level2NoDefaultTestBean {
         // Empty class

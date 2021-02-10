@@ -118,13 +118,13 @@ implements ConfigProvider {
             final ConfigurationOptions options,
             final @NotNull Class<?> targetClass) {
         Config result = null;
-        if (options == null || options.preferedConfigs() == null) {
+        if (options == null || options.preferredConfigs().length == 0) {
             result = this.defaultConfig;
         } else {
-            for (final Class<?> prefered : options.preferedConfigs()) {
-                Validate.notNull(prefered, NULL_PREFERRED_ERR + targetClass);
-                if (this.mappings.containsKey(prefered)) {
-                    result = this.mappings.get(prefered);
+            for (final Class<?> preferred : options.preferredConfigs()) {
+                Validate.notNull(preferred, NULL_PREFERRED_ERR + targetClass);
+                if (this.mappings.containsKey(preferred)) {
+                    result = this.mappings.get(preferred);
                     break;
                 }
             }

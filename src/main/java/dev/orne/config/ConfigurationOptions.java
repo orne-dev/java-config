@@ -36,7 +36,7 @@ import java.lang.annotation.Target;
  * Sets the configuration preferences for the class.
  * 
  * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
- * @version 1.0
+ * @version 2.0
  * @since 1.0, 2019-07
  * @see Config
  */
@@ -45,7 +45,7 @@ public @interface ConfigurationOptions {
     /**
      * @return The preferred configuration classes.
      */
-    Class<? extends Config>[] preferedConfigs() default {};
+    Class<? extends Config>[] preferredConfigs() default {};
 
     /**
      * @return {@code true} if the default configuration should be used if one of the
