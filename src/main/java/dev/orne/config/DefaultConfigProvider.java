@@ -72,11 +72,13 @@ implements ConfigProvider {
      * Registers a new configuration available for bean configuration.
      * 
      * @param config The configuration to register
+     * @return This instance for method chaining
      */
-    public void registerConfig(
+    public DefaultConfigProvider registerConfig(
             final @NotNull Config config) {
         Validate.notNull(config, NULL_CONFIG_ERR);
         mapConfigType(config.getClass(), config);
+        return this;
     }
 
     /**
