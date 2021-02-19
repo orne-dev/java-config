@@ -206,8 +206,8 @@ implements Config {
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     protected <T> T getEnum(
-            final @NotBlank Class<T> type,
-            final @NotNull String name)
+            final @NotNull Class<T> type,
+            final @NotBlank String name)
     throws ConfigException {
         Validate.isTrue(type.isEnum());
         final Object value = Enum.valueOf((Class<? extends Enum>) type, name);

@@ -62,7 +62,7 @@ import dev.orne.beans.converters.EnumConverter;
  * @since 0.2
  */
 @Tag("ut")
-public class ConfigValueConversionTest {
+class ConfigValueConversionTest {
 
     private static final String NULL_ERR = "Unexpected null conversion result";
     private static final String NON_NULL_ERR = "Unexpected non null conversion result";
@@ -78,7 +78,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testStringToBoolean() {
+    void testStringToBoolean() {
         assertNullConversionValue((String) null, Boolean.class);
         assertConversionValue("true", Boolean.class, true);
         assertConversionValue("TRUE", Boolean.class, true);
@@ -87,7 +87,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testBooleanToString() {
+    void testBooleanToString() {
         assertNullConversionValue((Boolean) null, String.class);
         assertConversionValue(true, String.class, "true");
         assertConversionValue(Boolean.TRUE, String.class, "true");
@@ -96,18 +96,18 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testStringToChar() {
+    void testStringToChar() {
         assertNullConversionValue((String) null, Character.class);
         assertConversionValue("w", Character.class, 'w');
     }
 
     @Test
-    public void testCharToString() {
+    void testCharToString() {
         assertConversionValue('w', String.class, "w");
     }
 
     @Test
-    public void testStringToByte() {
+    void testStringToByte() {
         assertNullConversionValue((String) null, Byte.class);
         assertConversionValue("0", Byte.class, Byte.valueOf("0"));
         assertConversionValue("61", Byte.class, Byte.valueOf("61"));
@@ -120,7 +120,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testStringToShort() {
+    void testStringToShort() {
         assertNullConversionValue((String) null, Short.class);
         assertConversionValue("0", Short.class, Short.valueOf("0"));
         assertConversionValue("1554", Short.class, Short.valueOf("1554"));
@@ -133,7 +133,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testStringToInteger() {
+    void testStringToInteger() {
         assertNullConversionValue((String) null, Integer.class);
         assertConversionValue("0", Integer.class, 0);
         assertConversionValue("1554", Integer.class, 1554);
@@ -146,7 +146,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testStringToLong() {
+    void testStringToLong() {
         assertNullConversionValue((String) null, Long.class);
         assertConversionValue("0", Long.class, 0l);
         assertConversionValue("1554", Long.class, 1554l);
@@ -160,7 +160,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testStringToFloat() {
+    void testStringToFloat() {
         assertNullConversionValue((String) null, Float.class);
         assertConversionValue("0", Float.class, 0f);
         assertConversionValue("1554", Float.class, 1554f);
@@ -175,7 +175,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testStringToDouble() {
+    void testStringToDouble() {
         assertNullConversionValue((String) null, Double.class);
         assertConversionValue("0", Double.class, 0d);
         assertConversionValue("1554", Double.class, 1554d);
@@ -193,7 +193,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testStringToBigInteger() {
+    void testStringToBigInteger() {
         assertNullConversionValue((String) null, BigInteger.class);
         assertConversionValue("0", BigInteger.class, BigInteger.ZERO);
         assertConversionValue("1554", BigInteger.class, BigInteger.valueOf(1554));
@@ -209,7 +209,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testStringToBigDecimal() {
+    void testStringToBigDecimal() {
         assertNullConversionValue((String) null, BigDecimal.class);
         assertConversionValue("0", BigDecimal.class, BigDecimal.ZERO);
         assertConversionValue("1554",
@@ -233,7 +233,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testNumberToString() {
+    void testNumberToString() {
         assertNullConversionValue((Number) null, String.class);
         assertConversionValue(0, String.class, "0");
         assertConversionValue(BigDecimal.ZERO, String.class, "0");
@@ -258,33 +258,33 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testStringToEnum() {
+    void testStringToEnum() {
         assertNullConversionValue((String) null, TestEnum.class);
         assertConversionValue("VALUEA", TestEnum.class, TestEnum.VALUEA);
     }
 
     @Test
-    public void testEnumToString() {
+    void testEnumToString() {
         assertNullConversionValue((TestEnum) null, String.class);
         assertConversionValue(TestEnum.VALUEA, String.class, "VALUEA");
     }
 
     @Test
-    public void testStringToLocale() {
+    void testStringToLocale() {
         assertNullConversionValue((String) null, Locale.class);
         assertConversionValue("en", Locale.class, Locale.ENGLISH);
         assertConversionValue("fr-CA", Locale.class, Locale.CANADA_FRENCH);
     }
 
     @Test
-    public void testLocaleToString() {
+    void testLocaleToString() {
         assertNullConversionValue((Locale) null, String.class);
         assertConversionValue(Locale.ENGLISH, String.class, "en");
         assertConversionValue(Locale.CANADA_FRENCH, String.class, "fr-CA");
     }
 
     @Test
-    public void testStringToURL() throws MalformedURLException {
+    void testStringToURL() throws MalformedURLException {
         assertNullConversionValue((String) null, URL.class);
         final String strValue = "http://projects.orne.dev/some/path";
         final URL expectedValue = new URL(strValue);
@@ -292,7 +292,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testURLToString() throws MalformedURLException {
+    void testURLToString() throws MalformedURLException {
         assertNullConversionValue((URL) null, String.class);
         final String expectedValue = "http://projects.orne.dev/some/path";
         final URL value = new URL(expectedValue);
@@ -300,7 +300,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testStringToURI() {
+    void testStringToURI() {
         assertNullConversionValue((String) null, URI.class);
         final String strValue = "/some/path";
         final URI expectedValue = URI.create(strValue);
@@ -308,7 +308,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testURIToString() {
+    void testURIToString() {
         assertNullConversionValue((URI) null, String.class);
         final String expectedValue = "/some/path";
         final URI value = URI.create(expectedValue);
@@ -316,7 +316,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testStringToFile() {
+    void testStringToFile() {
         assertNullConversionValue((String) null, URI.class);
         final String strValue = "/some/path";
         final File expectedValue = new File(strValue);
@@ -324,7 +324,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testFileToString() {
+    void testFileToString() {
         assertNullConversionValue((File) null, String.class);
         final String expectedValue =
                 File.separatorChar + "some" +
@@ -334,7 +334,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testStringToInstant() {
+    void testStringToInstant() {
         assertNullConversionValue((String) null, Instant.class);
         assertConversionValue(
                 "2007-12-03T10:15:30.00Z",
@@ -351,7 +351,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testInstantToString() {
+    void testInstantToString() {
         assertNullConversionValue((Instant) null, String.class);
         assertConversionValue(
                 Instant.parse("2007-12-03T10:15:30.00Z"),
@@ -364,7 +364,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testStringToDate() {
+    void testStringToDate() {
         assertNullConversionValue((String) null, Date.class);
         assertConversionValue("2007-12-03T10:15:30.00Z", Date.class,
                 Date.from(Instant.parse("2007-12-03T10:15:30.00Z")));
@@ -375,7 +375,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testDateToString() {
+    void testDateToString() {
         assertNullConversionValue((Instant) null, String.class);
         assertConversionValue(
                 Date.from(Instant.parse("2007-12-03T10:15:30.00Z")),
@@ -388,7 +388,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testStringToCalendar() {
+    void testStringToCalendar() {
         assertNullConversionValue((String) null, Calendar.class);
         assertConversionValue("2007-12-03T10:15:30.00Z", Calendar.class,
                 GregorianCalendar.from(ZonedDateTime.parse("2007-12-03T10:15:30.00Z")));
@@ -399,7 +399,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testCalendarToString() {
+    void testCalendarToString() {
         assertNullConversionValue((Calendar) null, String.class);
         assertConversionValue(
                 GregorianCalendar.from(ZonedDateTime.parse("2007-12-03T10:15:30.00Z")),
@@ -412,7 +412,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testStringToLocalDateTime() {
+    void testStringToLocalDateTime() {
         assertNullConversionValue((String) null, LocalDateTime.class);
         assertConversionValue(
                 "1500-03-12T15:47:22",
@@ -429,7 +429,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testLocalDateTimeToString() {
+    void testLocalDateTimeToString() {
         assertNullConversionValue((LocalDateTime) null, String.class);
         assertConversionValue(
                 LocalDateTime.of(1500,3,12,15,47,22),
@@ -446,7 +446,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testStringToLocalDate() {
+    void testStringToLocalDate() {
         assertNullConversionValue((String) null, LocalDate.class);
         assertConversionValue("1500-03-12", LocalDate.class, LocalDate.of(1500,3,12));
         assertConversionValue("-0300-05-02", LocalDate.class, LocalDate.of(-300,5,2));
@@ -454,7 +454,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testLocalDateToString() {
+    void testLocalDateToString() {
         assertNullConversionValue((LocalDate) null, String.class);
         assertConversionValue(LocalDate.of(1500,3,12), String.class, "1500-03-12");
         assertConversionValue(LocalDate.of(-300,5,2), String.class, "-0300-05-02");
@@ -462,7 +462,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testStringToYearMonth() {
+    void testStringToYearMonth() {
         assertNullConversionValue((String) null, Year.class);
         assertConversionValue("1500-03", YearMonth.class, YearMonth.of(1500,3));
         assertConversionValue("-0300-05", YearMonth.class, YearMonth.of(-300,5));
@@ -470,7 +470,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testMonthYearToString() {
+    void testMonthYearToString() {
         assertNullConversionValue((YearMonth) null, String.class);
         assertConversionValue(YearMonth.of(1500,3), String.class, "1500-03");
         assertConversionValue(YearMonth.of(-300,5), String.class, "-0300-05");
@@ -478,7 +478,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testStringToYear() {
+    void testStringToYear() {
         assertNullConversionValue((String) null, Year.class);
         assertConversionValue("1500", Year.class, Year.parse("1500"));
         assertConversionValue("-0300", Year.class, Year.parse("-0300"));
@@ -486,7 +486,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testYearToString() {
+    void testYearToString() {
         assertNullConversionValue((Year) null, String.class);
         assertConversionValue(Year.parse("1500"), String.class, "1500");
         assertConversionValue(Year.parse("-0400"), String.class, "-0400");
@@ -494,7 +494,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testStringToLocalTime() {
+    void testStringToLocalTime() {
         assertNullConversionValue((String) null, LocalTime.class);
         assertConversionValue("15:47:22", LocalTime.class, LocalTime.of(15,47,22));
         assertConversionValue("12:00", LocalTime.class, LocalTime.of(12,0,0));
@@ -502,7 +502,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testLocalTimeToString() {
+    void testLocalTimeToString() {
         assertNullConversionValue((LocalTime) null, String.class);
         assertConversionValue(LocalTime.of(15,47,22), String.class, "15:47:22");
         assertConversionValue(LocalTime.of(12,0,0), String.class, "12:00:00");
@@ -510,7 +510,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testStringToZoneOffset() {
+    void testStringToZoneOffset() {
         assertNullConversionValue((String) null, URI.class);
         final ZoneOffset expectedValue = ZoneOffset.ofHours(3);
         final String strValue = expectedValue.toString();
@@ -518,7 +518,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testZoneOffsetToString() {
+    void testZoneOffsetToString() {
         assertNullConversionValue((ZoneOffset) null, String.class);
         final ZoneOffset value = ZoneOffset.ofHours(3);
         final String expectedValue = value.toString();
@@ -526,7 +526,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testStringToPeriod() {
+    void testStringToPeriod() {
         assertNullConversionValue((String) null, URI.class);
         final Period expectedValue = Period.of(1, 2, 3);
         final String strValue = expectedValue.toString();
@@ -534,7 +534,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testPeriodToString() {
+    void testPeriodToString() {
         assertNullConversionValue((Period) null, String.class);
         final Period value = Period.of(1, 2, 3);
         final String expectedValue = value.toString();
@@ -542,7 +542,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testStringToDuration() {
+    void testStringToDuration() {
         assertNullConversionValue((String) null, URI.class);
         final Duration expectedValue = Duration.ofDays(3).plusHours(10);
         final String strValue = expectedValue.toString();
@@ -550,7 +550,7 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testDurationToString() {
+    void testDurationToString() {
         assertNullConversionValue((Duration) null, String.class);
         final Duration value = Duration.ofDays(3).plusHours(10);
         final String expectedValue = value.toString();
@@ -558,13 +558,13 @@ public class ConfigValueConversionTest {
     }
 
     @Test
-    public void testStringToIdentity() {
+    void testStringToIdentity() {
         assertNullConversionValue((String) null, Identity.class);
         assertConversionValue("mock token", Identity.class, TokenIdentity.fromToken("mock token"));
     }
 
     @Test
-    public void testIdentityToString() {
+    void testIdentityToString() {
         assertNullConversionValue((Identity) null, String.class);
         assertConversionValue(TokenIdentity.fromToken("mock token"), String.class, "mock token");
     }

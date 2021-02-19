@@ -45,7 +45,7 @@ class DefaultConfigProviderTest {
      * {@code null} default configuration.
      */
     @Test
-    public void testConstructorNull() {
+    void testConstructorNull() {
         assertThrows(NullPointerException.class, () -> {
             new DefaultConfigProvider(null);
         });
@@ -55,7 +55,7 @@ class DefaultConfigProviderTest {
      * Test method for {@link DefaultConfigProvider#DefaultConfigProvider(Config)}.
      */
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         final Config defaultConfig = mock(Level1Config.class);
         final DefaultConfigProvider provider = new DefaultConfigProvider(defaultConfig);
 
@@ -72,13 +72,14 @@ class DefaultConfigProviderTest {
      * Test method for {@link DefaultConfigProvider#registerConfig(Config)}.
      */
     @Test
-    public void testRegister() {
+    void testRegister() {
         final Config defaultConfig = mock(Level1Config.class);
         final Config testConfig = mock(Level2Config.class);
         final DefaultConfigProvider provider = new DefaultConfigProvider(defaultConfig);
 
-        provider.registerConfig(testConfig);
+        final DefaultConfigProvider result = provider.registerConfig(testConfig);
 
+        assertSame(result, provider);
         assertNotNull(provider.getDefaultConfig());
         assertSame(defaultConfig, provider.getDefaultConfig());
         assertTrue(provider.isMapped(defaultConfig.getClass()));
@@ -97,11 +98,11 @@ class DefaultConfigProviderTest {
      * with null options.
      */
     @Test
-    public void testSelectNoOptions() {
+    void testSelectNoOptions() {
         final Config defaultConfig = mock(Level1Config.class);
         final Config testConfig = mock(Level2Config.class);
-        final DefaultConfigProvider provider = new DefaultConfigProvider(defaultConfig);
-        provider.registerConfig(testConfig);
+        final DefaultConfigProvider provider = new DefaultConfigProvider(defaultConfig)
+                .registerConfig(testConfig);
         final Class<?> targetClass = NoOptionsTestBean.class;
         final ConfigurationOptions options = targetClass.getAnnotation(
                 ConfigurationOptions.class);
@@ -121,11 +122,11 @@ class DefaultConfigProviderTest {
      * with default options.
      */
     @Test
-    public void testSelectDefaultOptions() {
+    void testSelectDefaultOptions() {
         final Config defaultConfig = mock(Level1Config.class);
         final Config testConfig = mock(Level2Config.class);
-        final DefaultConfigProvider provider = new DefaultConfigProvider(defaultConfig);
-        provider.registerConfig(testConfig);
+        final DefaultConfigProvider provider = new DefaultConfigProvider(defaultConfig)
+                .registerConfig(testConfig);
         final Class<?> targetClass = DefaultOptionsTestBean.class;
         final ConfigurationOptions options = targetClass.getAnnotation(
                 ConfigurationOptions.class);
@@ -145,11 +146,11 @@ class DefaultConfigProviderTest {
      * with preferred configuration.
      */
     @Test
-    public void testSelectPreferredOptions() {
+    void testSelectPreferredOptions() {
         final Config defaultConfig = mock(Level1Config.class);
         final Config testConfig = spy(new Level2ConfigImpl());
-        final DefaultConfigProvider provider = new DefaultConfigProvider(defaultConfig);
-        provider.registerConfig(testConfig);
+        final DefaultConfigProvider provider = new DefaultConfigProvider(defaultConfig)
+                .registerConfig(testConfig);
         final Class<?> targetClass = Level2TestBean.class;
         final ConfigurationOptions options = targetClass.getAnnotation(
                 ConfigurationOptions.class);
@@ -169,7 +170,7 @@ class DefaultConfigProviderTest {
      * with preferred not found configuration.
      */
     @Test
-    public void testSelectPreferredOptionsNoFound() {
+    void testSelectPreferredOptionsNoFound() {
         final Config defaultConfig = mock(Level1Config.class);
         final DefaultConfigProvider provider = new DefaultConfigProvider(defaultConfig);
         final Class<?> targetClass = Level2TestBean.class;
@@ -190,7 +191,7 @@ class DefaultConfigProviderTest {
      * with preferred configuration with no default accepted.
      */
     @Test
-    public void testSelectPreferredNoDefaultOptions() {
+    void testSelectPreferredNoDefaultOptions() {
         final Config defaultConfig = mock(Level1Config.class);
         final Config testConfig = spy(new Level2ConfigImpl());
         final DefaultConfigProvider provider = new DefaultConfigProvider(defaultConfig);
@@ -214,7 +215,7 @@ class DefaultConfigProviderTest {
      * with preferred not found configuration with no default accepted.
      */
     @Test
-    public void testSelectPreferredNoDefaultOptionsNoFound() {
+    void testSelectPreferredNoDefaultOptionsNoFound() {
         final Config defaultConfig = mock(Level1Config.class);
         final DefaultConfigProvider provider = new DefaultConfigProvider(defaultConfig);
         final Class<?> targetClass = Level2NoDefaultTestBean.class;
