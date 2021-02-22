@@ -15,12 +15,17 @@ following coordinates:
 </dependency>
 ```
 
-## Features provided (or planed)
+## Features provided (or planned)
 
 - [x] Simple usage API
-- [x] Basic configuration providers implementations
+- [x] System properties based configuration provider
+- [x] Java `Properties` based configuration provider
+- [x] Java `Preferences` based configuration provider
+- [ ] JSON based configuration provider
+- [ ] XML based configuration provider
+- [ ] YAML based configuration provider
 - [x] Secure configuration values
-- [ ] Fluent configuration mechanism
+- [ ] Fluent setup mechanism
 - [x] Configurations hierarchy
 - [x] Apache Commons Configuration integration
 - [x] Automatic beans configuration
