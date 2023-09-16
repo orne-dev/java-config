@@ -48,6 +48,8 @@
     <commons.pool.version>2.8.1</commons.pool.version>
     <commons.configuration.version>2.8.0</commons.configuration.version>
     <fasterxml.jackson.version>2.11.1</fasterxml.jackson.version>
+
+    <sonar.projectKey>orne-dev_java-config</sonar.projectKey>
   </properties>
 
   <dependencies>

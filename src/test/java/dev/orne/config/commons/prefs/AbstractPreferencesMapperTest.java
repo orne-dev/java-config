@@ -47,7 +47,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.junitpioneer.jupiter.CartesianProductTest;
+import org.junitpioneer.jupiter.cartesian.CartesianTest;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -73,7 +73,7 @@ class AbstractPreferencesMapperTest {
 
     @BeforeEach
     public void initMocks() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     protected void expectNodeModel() {
@@ -2382,7 +2382,7 @@ class AbstractPreferencesMapperTest {
      * Test for {@link AbstractPreferencesMapper#saveChildNode(PreferencesBased, Preferences, Object)}.
      * @throws BackingStoreException Shouldn't happen
      */
-    @CartesianProductTest
+    @CartesianTest
     void testSaveChildNode(
             final boolean nullValue,
             final boolean attrsEmpty,
@@ -2430,14 +2430,6 @@ class AbstractPreferencesMapperTest {
         then(node).should(atLeast(0)).nodeExists(childNodeName);
         then(node).shouldHaveNoMoreInteractions();
         then(config).shouldHaveNoInteractions();
-    }
-
-    static CartesianProductTest.Sets testSaveChildNode() {
-        return new CartesianProductTest.Sets()
-                .add(false, true)
-                .add(false, true)
-                .add(false, true)
-                .add(false, true);
     }
 
     /**

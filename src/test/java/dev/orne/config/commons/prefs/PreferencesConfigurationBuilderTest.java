@@ -63,7 +63,7 @@ class PreferencesConfigurationBuilderTest {
 
     @BeforeEach
     public void initMocks() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     /**

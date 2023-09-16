@@ -45,7 +45,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.junitpioneer.jupiter.CartesianProductTest;
+import org.junitpioneer.jupiter.cartesian.CartesianTest;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -74,7 +74,7 @@ class PreferencesHandlerTest {
 
     @BeforeEach
     public void initMocks() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     /**
@@ -114,7 +114,7 @@ class PreferencesHandlerTest {
     /**
      * Test for {@link PreferencesHandler#PreferencesHandler(PreferencesMapper, EventCoordinationStrategy)}.
      */
-    @CartesianProductTest()
+    @CartesianTest
     void testConstructor_Coordinator(
             final boolean nullMapper,
             final boolean nullCoordinator) {
@@ -136,16 +136,10 @@ class PreferencesHandlerTest {
         }
     }
 
-    static CartesianProductTest.Sets testConstructor_Coordinator() {
-        return new CartesianProductTest.Sets()
-                .add(false, true)
-                .add(false, true);
-    }
-
     /**
      * Test for {@link PreferencesHandler#PreferencesHandler(PreferencesMapper, EventCoordinationStrategy)}.
      */
-    @CartesianProductTest()
+    @CartesianTest
     void testConstructor_CoordinatorManager(
             final boolean nullMapper,
             final boolean nullCoordinator,
@@ -173,17 +167,10 @@ class PreferencesHandlerTest {
         }
     }
 
-    static CartesianProductTest.Sets testConstructor_CoordinatorManager() {
-        return new CartesianProductTest.Sets()
-                .add(false, true)
-                .add(false, true)
-                .add(false, true);
-    }
-
     /**
      * Test for {@link PreferencesHandler#fromMap(java.util.Map, PreferencesMapper)}.
      */
-    @CartesianProductTest()
+    @CartesianTest
     void testFromMap(
             final boolean withBaseNode,
             final boolean withBaseNodeScope,
@@ -254,17 +241,6 @@ class PreferencesHandlerTest {
         assertNotNull(handler.getEventListenerManager());
     }
 
-    static CartesianProductTest.Sets testFromMap() {
-        return new CartesianProductTest.Sets()
-                .add(false, true)
-                .add(false, true)
-                .add(false, true)
-                .add(false, true)
-                .add(false, true)
-                .add(false, true)
-                .add(false, true);
-    }
-
     /**
      * Test for {@link PreferencesHandler#fromMap(java.util.Map, PreferencesMapper)}.
      */
@@ -327,7 +303,7 @@ class PreferencesHandlerTest {
     /**
      * Test for {@link PreferencesHandler#setBaseNode(boolean, Class, String)}.
      */
-    @CartesianProductTest()
+    @CartesianTest
     void testSetBaseNode_Components(
             final boolean systemScope,
             final boolean withBaseClass,
@@ -368,13 +344,6 @@ class PreferencesHandlerTest {
             then(mockRoot).should().node(testPath);
         }
         then(handler).should().setBaseNode(result);
-    }
-
-    static CartesianProductTest.Sets testSetBaseNode_Components() {
-        return new CartesianProductTest.Sets()
-                .add(false, true)
-                .add(false, true)
-                .add(false, true);
     }
 
     /**
@@ -472,7 +441,7 @@ class PreferencesHandlerTest {
     /**
      * Test for {@link PreferencesHandler#autoLoadRequired(EventObject)}.
      */
-    @CartesianProductTest
+    @CartesianTest
     void testAutoLoadRequired(
             final boolean autoLoadEnabled,
             final boolean withBaseNode,
@@ -494,13 +463,6 @@ class PreferencesHandlerTest {
         } else {
             assertFalse(handler.autoLoadRequired(configurationEvent));
         }
-    }
-
-    static CartesianProductTest.Sets testAutoLoadRequired() {
-        return new CartesianProductTest.Sets()
-                .add(false, true)
-                .add(false, true)
-                .add(false, true);
     }
 
     /**
@@ -539,7 +501,7 @@ class PreferencesHandlerTest {
     /**
      * Test for {@link PreferencesHandler#autoSaveRequired(EventObject)}.
      */
-    @CartesianProductTest
+    @CartesianTest
     void testAutoSaveRequired(
             final boolean autoSaveEnabled,
             final boolean withBaseNode,
@@ -561,13 +523,6 @@ class PreferencesHandlerTest {
         } else {
             assertFalse(handler.autoSaveRequired(configurationEvent));
         }
-    }
-
-    static CartesianProductTest.Sets testAutoSaveRequired() {
-        return new CartesianProductTest.Sets()
-                .add(false, true)
-                .add(false, true)
-                .add(false, true);
     }
 
     /**
@@ -1423,7 +1378,7 @@ class PreferencesHandlerTest {
      * Test for {@link PreferencesHandler#handleConfigurationSetPropertyEvent(ConfigurationEvent)}.
      * @throws BackingStoreException Shouldn't happen
      */
-    @CartesianProductTest
+    @CartesianTest
     void testHandleConfigurationSetPropertyEvent(
             final boolean beforeUpdate,
             final boolean addEvent)
@@ -1456,12 +1411,6 @@ class PreferencesHandlerTest {
             shouldNotModify(baseNode);
         }
         shouldNotModify(config);
-    }
-
-    static CartesianProductTest.Sets testHandleConfigurationSetPropertyEvent() {
-        return new CartesianProductTest.Sets()
-                .add(false, true)
-                .add(false, true);
     }
 
     /**

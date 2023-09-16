@@ -1,0 +1,31 @@
+# Orne Java configuration utilities.
+
+## Usage
+
+```xml
+<project ...>
+...
+  <dependency>
+    <groupId>${project.groupId}</groupId>
+    <artifactId>${project.artifactId}</artifactId>
+    <version>${project.version}</version>
+  </dependency>
+...
+</project>
+```
+
+## Features
+
+- [x] Simple usage API
+- [x] System properties based configuration provider
+- [x] Java `Properties` based configuration provider
+- [x] Java `Preferences` based configuration provider
+- [ ] JSON based configuration provider
+- [ ] XML based configuration provider
+- [ ] YAML based configuration provider
+- [x] Secure configuration values
+- [ ] Fluent setup mechanism
+- [x] Configurations hierarchy
+- [x] Apache Commons Configuration integration
+- [x] Automatic beans configuration
+- [ ] Spring integration

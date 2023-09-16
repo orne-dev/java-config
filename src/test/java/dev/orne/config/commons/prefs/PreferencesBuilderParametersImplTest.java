@@ -36,7 +36,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.junitpioneer.jupiter.CartesianProductTest;
+import org.junitpioneer.jupiter.cartesian.CartesianTest;
 
 /**
  * Unit tests for {@code PreferencesBuilderParametersImpl}.
@@ -293,7 +293,7 @@ class PreferencesBuilderParametersImplTest {
     /**
      * Test for {@link PreferencesBuilderParametersImpl#inheritFrom(Map)}.
      */
-    @CartesianProductTest()
+    @CartesianTest()
     void testInheritFrom(
             final boolean nullExpressionEngine,
             final boolean nullPreferencesMapper,
@@ -343,22 +343,6 @@ class PreferencesBuilderParametersImplTest {
     }
 
     /**
-     * Values for {@link #testInheritFrom(boolean, boolean, boolean, boolean, boolean, boolean, boolean, boolean)}.
-     */
-    static CartesianProductTest.Sets testInheritFrom() {
-        return new CartesianProductTest.Sets()
-                .add(false, true)
-                .add(false, true)
-                .add(false, true)
-                .add(false, true)
-                .add(false, true)
-                .add(false, true)
-                .add(false, true)
-                .add(false, true)
-                .add(false, true);
-    }
-
-    /**
      * Test for {@link PreferencesBuilderParametersImpl#fromParameters(Map)}.
      */
     @ParameterizedTest
@@ -396,7 +380,7 @@ class PreferencesBuilderParametersImplTest {
     /**
      * Test for {@link PreferencesBuilderParametersImpl#fromParameters(Map, boolean)}.
      */
-    @CartesianProductTest()
+    @CartesianTest
     void testFromParameters_Create(
             final boolean present,
             final boolean create) {
@@ -421,15 +405,6 @@ class PreferencesBuilderParametersImplTest {
     }
 
     /**
-     * Values for {@link #testFromParameters_Create(boolean, boolean)}.
-     */
-    static CartesianProductTest.Sets testFromParameters_Create() {
-        return new CartesianProductTest.Sets()
-                .add(false, true)
-                .add(false, true);
-    }
-
-    /**
      * Test for {@link PreferencesBuilderParametersImpl#fromParameters(Map, boolean)}.
      */
     @ParameterizedTest
@@ -444,7 +419,7 @@ class PreferencesBuilderParametersImplTest {
     /**
      * Test for {@link PreferencesBuilderParametersImpl#fromMap(Map)}.
      */
-    @CartesianProductTest()
+    @CartesianTest
     void testFromMap(
             final boolean nullExpressionEngine,
             final boolean nullPreferencesMapper,
@@ -492,22 +467,6 @@ class PreferencesBuilderParametersImplTest {
         assertEquals(autoLoad, result.get(PreferencesHandler.PROP_AUTO_LOAD));
         assertEquals(autoSave, result.get(PreferencesHandler.PROP_AUTO_SAVE));
         assertEquals(eventCoordStr, result.get(PreferencesHandler.PROP_EVENT_COORDINATOR));
-    }
-
-    /**
-     * Values for {@link #testFromMap(boolean, boolean, boolean, boolean, boolean, boolean, boolean, boolean)}.
-     */
-    static CartesianProductTest.Sets testFromMap() {
-        return new CartesianProductTest.Sets()
-                .add(false, true)
-                .add(false, true)
-                .add(false, true)
-                .add(false, true)
-                .add(false, true)
-                .add(false, true)
-                .add(false, true)
-                .add(false, true)
-                .add(false, true);
     }
 
     /**
