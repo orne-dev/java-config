@@ -1,6 +1,5 @@
 # :package: 0.2.0
 
-01. :wrench: Update parent POM to 0.1.1
 01. :wrench: Updated dependency with `org.apache.commons:commons-lang3` to 3.11
 01. :wrench: Added dependency with `dev.orne:beans:0.3.0`
 01. :gift: Added exception `dev.orne.config.ConfigException`

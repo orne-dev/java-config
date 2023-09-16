@@ -6,11 +6,10 @@
   <parent>
     <groupId>dev.orne</groupId>
     <artifactId>java-root-pom</artifactId>
-    <version>0.1.1</version>
+    <version>0.5.4</version>
     <relativePath />
   </parent>
 
-  <groupId>dev.orne</groupId>
   <artifactId>config</artifactId>
   <version>0.2.0-SNAPSHOT</version>
   <packaging>jar</packaging>
@@ -18,12 +17,12 @@
   <name>Orne Config</name>
   <description>Orne configuration utilities</description>
   <inceptionYear>2019</inceptionYear>
-  <url>http://projects.orne.dev/java/orne-config/</url>
+  <url>https://orne-dev.github.io/java-config/</url>
 
   <licenses>
     <license>
       <name>GNU Lesser General Public License (LGPL) version 3.0</name>
-      <url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
+      <url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
@@ -31,31 +30,24 @@
     <developer>
       <id>wamphiry</id>
       <name>(w) Iker Hernaez</name>
-      <email>i.hernaez@orne.dev</email>
+      <url>https://github.com/ihernaez</url>
     </developer>
   </developers>
 
-  <scm>
-    <url>http://github.com/orne-dev/java-config/tree/master</url>
-    <connection>scm:git:git://github.com/orne-dev/java-config.git</connection>
-    <developerConnection>scm:git:ssh://github.com:orne-dev/java-config.git</developerConnection>
-    <tag>HEAD</tag>
-  </scm>
-
   <properties>
-    <java.version>1.8</java.version>
+    <java.version>8</java.version>
+    <java.module.name>dev.orne.config</java.module.name>
     <license.licenseName>lgpl_v3</license.licenseName>
 
     <commons.lang.version>3.11</commons.lang.version>
     <commons.beanutils.version>1.9.4</commons.beanutils.version>
     <commons.collections.version>3.2.2</commons.collections.version>
-    <orne.beans.version>0.3.0-SNAPSHOT</orne.beans.version>
+    <orne.beans.version>0.3.0</orne.beans.version>
 
     <javax.validation.version>2.0.1.Final</javax.validation.version>
     <commons.pool.version>2.8.1</commons.pool.version>
-    <commons.configuration.version>2.7</commons.configuration.version>
-
-    <junit.pioneer.version>1.0.0</junit.pioneer.version>
+    <commons.configuration.version>2.8.0</commons.configuration.version>
+    <fasterxml.jackson.version>2.11.1</fasterxml.jackson.version>
   </properties>
 
   <dependencies>
@@ -112,6 +104,18 @@
       <version>${commons.configuration.version}</version>
       <optional>true</optional>
     </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${fasterxml.jackson.version}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-yaml</artifactId>
+      <version>${fasterxml.jackson.version}</version>
+      <optional>true</optional>
+    </dependency>
 
     <dependency>
       <groupId>ch.qos.logback</groupId>
@@ -126,14 +130,7 @@
     <dependency>
       <groupId>org.junit-pioneer</groupId>
       <artifactId>junit-pioneer</artifactId>
-      <version>${junit.pioneer.version}</version>
       <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.junit.platform</groupId>
-          <artifactId>junit-platform-commons</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
@@ -160,15 +157,27 @@
           </configuration>
         </plugin>
         <plugin>
-          <groupId>com.amashchenko.maven.plugin</groupId>
-          <artifactId>gitflow-maven-plugin</artifactId>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
           <configuration>
-            <postReleaseGoals>clean verify deploy -Prelease,major-release</postReleaseGoals>
-            <postHotfixGoals>clean verify deploy -Prelease,major-release</postHotfixGoals>
+            <topSiteURL>https://orne-dev.github.io/java-config/</topSiteURL>
           </configuration>
         </plugin>
       </plugins>
     </pluginManagement>
   </build>
+
+  <scm>
+    <connection>scm:git:https://github.com/orne-dev/java-config.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com:orne-dev/java-config.git</developerConnection>
+    <url>https://github.com/orne-dev/java-config/</url>
+  </scm>
+  <distributionManagement>
+    <site>
+      <id>github</id>
+      <name>Github Project Pages</name>
+      <url>${project.url}</url>
+    </site>
+  </distributionManagement>
 
 </project>
