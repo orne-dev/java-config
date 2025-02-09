@@ -6,7 +6,7 @@
   <parent>
     <groupId>dev.orne</groupId>
     <artifactId>java-root-pom</artifactId>
-    <version>0.5.4</version>
+    <version>0.7.0</version>
     <relativePath />
   </parent>
 
@@ -49,6 +49,7 @@
     <commons.configuration.version>2.8.0</commons.configuration.version>
     <fasterxml.jackson.version>2.11.1</fasterxml.jackson.version>
 
+    <github.project.id>java-config</github.project.id>
     <sonar.projectKey>orne-dev_java-config</sonar.projectKey>
   </properties>
 
@@ -158,21 +159,14 @@
             <groups>it</groups>
           </configuration>
         </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-site-plugin</artifactId>
-          <configuration>
-            <topSiteURL>https://orne-dev.github.io/java-config/</topSiteURL>
-          </configuration>
-        </plugin>
       </plugins>
     </pluginManagement>
   </build>
 
   <scm>
-    <connection>scm:git:https://github.com/orne-dev/java-config.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com:orne-dev/java-config.git</developerConnection>
-    <url>https://github.com/orne-dev/java-config/</url>
+    <connection>${github.scm.connection}</connection>
+    <developerConnection>${github.scm.connection.dev}</developerConnection>
+    <url>${github.scm.url}</url>
   </scm>
   <distributionManagement>
     <site>
