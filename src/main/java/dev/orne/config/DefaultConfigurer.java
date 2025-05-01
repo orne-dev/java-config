@@ -4,7 +4,7 @@ package dev.orne.config;
  * #%L
  * Orne Config
  * %%
- * Copyright (C) 2019 Orne Developments
+ * Copyright (C) 2019 - 2025 Orne Developments
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -30,21 +30,28 @@ import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.beanutils.ConversionException;
+import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.Validate;
+import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.MessageFormatter;
 
+import dev.orne.beans.converters.OrneBeansConverters;
+
 /**
  * Default implementation of {@code Configurer}.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
- * @version 2.0, 2020-04
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
+ * @version 1.0, 2019-07
+ * @version 2.0, 2025-04
  * @since 0.1
  * @see Configurer
  */
+@API(status = API.Status.STABLE, since = "1.0")
 public class DefaultConfigurer
 implements Configurer {
 
@@ -52,7 +59,9 @@ implements Configurer {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultConfigurer.class);
 
     /** The configuration provider. */
-    private final ConfigProvider configProvider;
+    private final @NotNull ConfigProvider configProvider;
+    /** The value converter. */
+    private final @NotNull ConvertUtilsBean converter;
 
     /**
      * Creates a new instance.
@@ -61,8 +70,42 @@ implements Configurer {
      */
     public DefaultConfigurer(
             final @NotNull ConfigProvider configProvider) {
+        this(configProvider, defaultConverter());
+    }
+
+    /**
+     * Creates a new instance.
+     * 
+     * @param configProvider The configuration provider
+     * @param converter The value converter.
+     */
+    public DefaultConfigurer(
+            final @NotNull ConfigProvider configProvider,
+            final @NotNull ConvertUtilsBean converter) {
         Validate.notNull(configProvider, "A valid configuration provider is required.");
         this.configProvider = configProvider;
+        Validate.notNull(configProvider, "A valid value converter is required.");
+        this.converter = converter;
+    }
+
+    /**
+     * <p>Creates a new value converter configured with the default settings.</p>
+     * 
+     * <p>This converter is configured to:</p>
+     * <ul>
+     * <li>Return {@code null} for {@code null} values.
+     * <li>Return {@code null} for values of incompatible types.
+     * <li>Return empty arrays for {@code null} values.
+     * <li>Return empty collections for {@code null} values.
+     * </ul>
+     * 
+     * @return A new value converter configured with the default settings
+     */
+    public static @NotNull ConvertUtilsBean defaultConverter() {
+        final ConvertUtilsBean result = new ConvertUtilsBean();
+        result.register(false, true, 0);
+        OrneBeansConverters.register(result, true);
+        return result;
     }
 
     /**
@@ -148,23 +191,42 @@ implements Configurer {
         final Class<?> type = field.getType();
         try {
             if (config.contains(key)) {
+                final String strValue = config.get(key);
                 if (type.isPrimitive()) {
                     final Class<?> wrapperType = ClassUtils.primitiveToWrapper(type);
-                    final Object wrapperValue = config.get(key, wrapperType);
+                    final Object wrapperValue = convertValue(strValue, wrapperType);
                     if (wrapperValue == null) {
                         LOG.warn("Null value in key '{}' for type {}", key, type);
                     } else {
                         setPropertyValue(bean, field, wrapperValue);
                     }
                 } else {
-                    final Object value = config.get(key, type);
-                    setPropertyValue(bean, field, value);
+                    setPropertyValue(bean, field, convertValue(strValue, type));
                 }
             }
         } catch (final ConfigException ce) {
             LOG.error(String.format("Error configuring property '%s' on bean of class %s",
                     field.getName(),
                     bean.getClass()), ce);
+        }
+    }
+
+    /**
+     * Converts the configuration property value to the specified target type.
+     * 
+     * @param <T> The target type.
+     * @param value The configuration property value.
+     * @param type The target type.
+     * @return The converted configuration value.
+     * throws ConfigException If an error occurs converting the value.
+     */
+    protected <T> T convertValue(
+            final String value,
+            final Class<T> type) {
+        try {
+            return type.cast(this.converter.convert(value, type));
+        } catch (final ConversionException e) {
+            throw new ConfigException("Error converting configuration property value", e);
         }
     }
 

@@ -1,10 +1,12 @@
 package dev.orne.config;
 
+import org.apiguardian.api.API;
+
 /*-
  * #%L
  * Orne Config
  * %%
- * Copyright (C) 2019 - 2020 Orne Developments
+ * Copyright (C) 2019 - 2025 Orne Developments
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -26,16 +28,17 @@ package dev.orne.config;
  * Base exception thrown by providers of cryptography transformations for
  * configuration values.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2020-04
- * @since 0.2
+ * @since 1.0
  * @see ConfigCryptoProvider
  */
+@API(status = API.Status.STABLE, since = "1.0")
 public class ConfigCryptoProviderException
 extends ConfigException {
 
     /** The serial version UID. */
-    private static final long serialVersionUID = 9108417807892736896L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * Constructs a new exception with {@code null} as its detail message.

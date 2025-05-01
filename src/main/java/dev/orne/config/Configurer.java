@@ -4,7 +4,7 @@ package dev.orne.config;
  * #%L
  * Orne Config
  * %%
- * Copyright (C) 2019 Orne Developments
+ * Copyright (C) 2019 - 2025 Orne Developments
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -24,13 +24,16 @@ package dev.orne.config;
 
 import javax.validation.constraints.NotNull;
 
+import org.apiguardian.api.API;
+
 /**
  * Generic interface for the bean configurator.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
- * @version 1.0
- * @since 1.0, 2019-07
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
+ * @version 1.0, 2019-07
+ * @since 1.0
  */
+@API(status = API.Status.STABLE, since = "1.0")
 public interface Configurer {
 
     /**

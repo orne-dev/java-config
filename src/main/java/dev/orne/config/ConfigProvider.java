@@ -24,13 +24,16 @@ package dev.orne.config;
 
 import javax.validation.constraints.NotNull;
 
+import org.apiguardian.api.API;
+
 /**
  * Generic interface for {@code Config} providers.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
- * @version 1.0
- * @since 1.0, 2019-07
+ * @version 1.0, 2019-07
+ * @since 0.1
  */
+@API(status = API.Status.STABLE, since = "1.0")
 public interface ConfigProvider {
 
     /**

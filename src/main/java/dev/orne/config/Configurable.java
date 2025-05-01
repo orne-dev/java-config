@@ -31,10 +31,11 @@ import org.apiguardian.api.API;
  * Allows to be configured by an instance of {@code Config} at runtime.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
- * @version 1.0
- * @since 1.0, 2019-07
+ * @version 1.0, 2019-07
+ * @since 0.1
  * @see Config
  */
+@API(status = API.Status.STABLE, since = "1.0")
 public interface Configurable {
 
     /**

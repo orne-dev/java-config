@@ -29,17 +29,20 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-@Documented
-@Retention(RUNTIME)
-@Target({ TYPE })
+import org.apiguardian.api.API;
+
 /**
  * Sets the configuration preferences for the class.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
- * @version 2.0
- * @since 1.0, 2019-07
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
+ * @version 2.0, 2019-07
+ * @since 0.1
  * @see Config
  */
+@Documented
+@Retention(RUNTIME)
+@Target({ TYPE })
+@API(status = API.Status.STABLE, since = "1.0")
 public @interface ConfigurationOptions {
 
     /**

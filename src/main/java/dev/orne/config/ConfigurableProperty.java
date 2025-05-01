@@ -4,7 +4,7 @@ package dev.orne.config;
  * #%L
  * Orne Config
  * %%
- * Copyright (C) 2019 Orne Developments
+ * Copyright (C) 2019 - 2025 Orne Developments
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -29,16 +29,19 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-@Documented
-@Retention(RUNTIME)
-@Target(FIELD)
+import org.apiguardian.api.API;
+
 /**
  * Marks a property as automatically configurable.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
- * @version 1.0
- * @since 1.0, 2019-07
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
+ * @version 1.0, 2019-07
+ * @since 0.1
  */
+@Documented
+@Retention(RUNTIME)
+@Target(FIELD)
+@API(status = API.Status.STABLE, since = "1.0")
 public @interface ConfigurableProperty {
 
     /** @return The configuration key to apply to the property. */

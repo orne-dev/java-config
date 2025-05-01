@@ -4,7 +4,7 @@ package dev.orne.config;
  * #%L
  * Orne Config
  * %%
- * Copyright (C) 2019 Orne Developments
+ * Copyright (C) 2019 - 2025 Orne Developments
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -28,14 +28,16 @@ import java.util.Map;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.Validate;
+import org.apiguardian.api.API;
 
 /**
  * Default implementation of {@code ConfigProvider}.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 2.0, 2020-04
  * @since 0.1
  */
+@API(status = API.Status.STABLE, since = "1.0")
 public class DefaultConfigProvider
 implements ConfigProvider {
 
@@ -92,7 +94,7 @@ implements ConfigProvider {
     protected void mapConfigType(
             final @NotNull Class<?> type,
             final @NotNull Config config) {
-        this.mappings.computeIfAbsent(type, key -> {
+        if (this.mappings.putIfAbsent(type, config) == null) {
             for (final Class<?> iface : type.getInterfaces()) {
                 mapConfigType(iface, config);
             }
@@ -100,8 +102,7 @@ implements ConfigProvider {
             if (superType != null && !Object.class.equals(superType)) {
                 mapConfigType(superType, config);
             }
-            return config;
-        });
+        }
     }
 
     /**
