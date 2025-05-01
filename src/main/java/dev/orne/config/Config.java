@@ -4,7 +4,7 @@ package dev.orne.config;
  * #%L
  * Orne Config
  * %%
- * Copyright (C) 2019 Orne Developments
+ * Copyright (C) 2019 - 2025 Orne Developments
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -22,77 +22,106 @@ package dev.orne.config;
  * #L%
  */
 
-import java.util.Iterator;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.ObjectUtils;
+import org.apiguardian.api.API;
+
 /**
- * Interface for classes containing configuration values.
+ * Configuration properties provider.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
- * @version 2.0, 2020-04
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
+ * @version 1.0, 2019-07
+ * @version 2.0, 2025-05
  * @since 0.1
  */
+@API(status = API.Status.STABLE, since = "1.0")
 public interface Config {
 
     /**
-     * Returns {@code true} if the configuration contains no parameter.
-     * 
-     * @return Returns {@code true} if the configuration contains no parameter
-     * @throws ConfigException If an error occurs accessing the configuration
-     */
-    boolean isEmpty()
-    throws ConfigException;
-
-    /**
-     * Returns the keys of the parameters contained in this configuration.
-     * 
-     * @return A {@code Iterator} with the keys of the parameters contained
-     * @throws ConfigException If an error occurs accessing the configuration
-     */
-    Iterator<String> getKeys()
-    throws ConfigException;
-
-    /**
-     * Returns {@code true} if the parameter with the key passed as argument
+     * Returns {@code true} if the property with the key passed as argument
      * has been configured.
      * 
-     * @param key The key of the configuration parameter
-     * @return Returns {@code true} if the parameter has been configured
-     * @throws ConfigException If an error occurs accessing the configuration
-     * property
+     * @param key The configuration property.
+     * @return Returns {@code true} if the property has been configured.
      */
-    boolean contains(
-            @NotBlank String key)
-    throws ConfigException;
+    default boolean contains(
+            @NotBlank String key) {
+        return get(key) != null;
+    }
 
     /**
-     * Returns the value of the configuration parameter.
+     * Returns {@code true} if the configuration contains no property.
      * 
-     * @param <T> The target type of the parameter
-     * @param key The key of the configuration parameter
-     * @param type The target type of the parameter
-     * @return The configuration parameter value converted to the target type
+     * @return Returns {@code true} if the configuration contains no property.
+     * @throws NonIterableConfigException If the configuration property keys
+     * cannot be iterated.
+     * @throws ConfigException If an error occurs accessing the configuration.
+     */
+    default boolean isEmpty() {
+        return getKeys().iterator().hasNext();
+    }
+
+    /**
+     * Returns the configuration property keys contained in this configuration.
+     * 
+     * @return The configuration property keys.
+     * @throws NonIterableConfigException If the configuration property keys
+     * cannot be iterated.
+     * @throws ConfigException If an error occurs accessing the configuration.
+     */
+    default @NotNull Iterable<String> getKeys() {
+        throw new NonIterableConfigException(
+                "Configuration property keys cannot be iterated.");
+    }
+
+    /**
+     * Returns the configuration property keys contained in this configuration
+     * that match the specified predicate.
+     * 
+     * @param filter The predicate to filter the property keys with.
+     * @return The configuration property keys that match the predicate.
+     * @throws NonIterableConfigException If the configuration property keys
+     * cannot be iterated.
+     * @throws ConfigException If an error occurs accessing the configuration.
+     */
+    default @NotNull Stream<String> getKeys(
+            final @NotNull Predicate<String> filter) {
+        return StreamSupport.stream(getKeys().spliterator(), true)
+                .filter(filter);
+    }
+
+    /**
+     * Returns the configuration property keys contained in this configuration
+     * that start with the specified prefix.
+     * 
+     * @param prefix The predicate to filter the property keys with.
+     * @return The configuration property keys that match the predicate.
+     * @throws NonIterableConfigException If the configuration property keys
+     * cannot be iterated.
+     * @throws ConfigException If an error occurs accessing the configuration.
+     */
+    default @NotNull Stream<String> getKeys(
+            final @NotNull String prefix) {
+        return getKeys(key -> key.startsWith(prefix));
+    }
+
+    /**
+     * Returns the value of the configuration parameter as {@code String}.
+     * 
+     * @param key The configuration property
+     * @return The configuration parameter value as {@code String}
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value
      */
-    <T> T get(
-            @NotBlank String key,
-            @NotNull Class<T> type)
-    throws ConfigException;
-
-    /**
-     * Returns the value of the configuration parameter as {@code Boolean}.
-     * 
-     * @param key The key of the configuration parameter
-     * @return The configuration parameter value as {@code Boolean}
-     * @throws ConfigException If an error occurs retrieving the configuration
-     * property value
-     */
-    Boolean getBoolean(
-            @NotBlank String key)
-    throws ConfigException;
+    String get(
+            @NotBlank String key);
 
     /**
      * Returns the value of the configuration parameter as {@code String}.
@@ -102,19 +131,154 @@ public interface Config {
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value
      */
-    String getString(
-            @NotBlank String key)
-    throws ConfigException;
+    default String get(
+            @NotBlank String key,
+            String defaultValue) {
+        return ObjectUtils.firstNonNull(get(key), defaultValue);
+    }
 
     /**
-     * Returns the value of the configuration parameter as {@code Number}.
+     * Returns the value of the configuration parameter as {@code String}.
      * 
      * @param key The key of the configuration parameter
-     * @return The configuration parameter value as {@code Number}
+     * @return The configuration parameter value as {@code String}
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value
      */
-    Number getNumber(
-            @NotBlank String key)
-    throws ConfigException;
+    default String get(
+            @NotBlank String key,
+            @NotNull Supplier<String> defaultValue) {
+        return ObjectUtils.getFirstNonNull(() -> get(key), defaultValue);
+    }
+
+    /**
+     * Returns the value of the configuration parameter as {@code Boolean}.
+     * 
+     * @param key The key of the configuration parameter
+     * @return The configuration parameter value as {@code Boolean}
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
+     */
+    default Boolean getBoolean(
+            @NotBlank String key) {
+        return Boolean.parseBoolean(get(key)); 
+    }
+
+    /**
+     * Returns the value of the configuration parameter as {@code Boolean}.
+     * 
+     * @param key The key of the configuration parameter
+     * @return The configuration parameter value as {@code Boolean}
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
+     */
+    default boolean getBoolean(
+            @NotBlank String key,
+            boolean defaultValue) {
+        return ObjectUtils.firstNonNull(getBoolean(key), defaultValue);
+    }
+
+    /**
+     * Returns the value of the configuration parameter as {@code Boolean}.
+     * 
+     * @param key The key of the configuration parameter
+     * @return The configuration parameter value as {@code Boolean}
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
+     */
+    default Boolean getBoolean(
+            @NotBlank String key,
+            @NotNull Supplier<Boolean> defaultValue) {
+        return ObjectUtils.getFirstNonNull(() -> getBoolean(key), defaultValue);
+    }
+
+    /**
+     * Returns the integer value of the specified configuration property,
+     * with variable substitution.
+     * 
+     * @param key The configuration property.
+     * @return The value configuration property, if any.
+     * @throws NumberFormatException If the configuration value cannot be
+     * parsed as an integer.
+     */
+    default Integer getInteger(
+            @NotNull String key) {
+        final String strValue = get(key);
+        return strValue == null ? null : Integer.valueOf(strValue);
+    }
+
+    /**
+     * Returns the integer value of the specified configuration property,
+     * with variable substitution.
+     * 
+     * @param key The configuration property.
+     * @param defaultValue The default value if 
+     * @return The value configuration property, if any.
+     * @throws NumberFormatException If the configuration value cannot be
+     * parsed as an integer.
+     */
+    default int getInteger(
+            @NotNull String key,
+            int defaultValue) {
+        return Integer.parseInt(get(key, String.valueOf(defaultValue)));
+    }
+
+    /**
+     * Returns the value of the configuration parameter as {@code Boolean}.
+     * 
+     * @param key The key of the configuration parameter
+     * @return The configuration parameter value as {@code Boolean}
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
+     */
+    default Integer getInteger(
+            @NotBlank String key,
+            @NotNull Supplier<Integer> defaultValue) {
+        return ObjectUtils.getFirstNonNull(() -> getInteger(key), defaultValue);
+    }
+
+    /**
+     * Returns the integer value of the specified configuration property,
+     * with variable substitution.
+     * 
+     * @param key The configuration property.
+     * @return The value configuration property, if any.
+     * @throws NumberFormatException If the configuration value cannot be
+     * parsed as an long.
+     */
+    default Long getLong(
+            @NotNull String key) {
+        final String strValue = get(key);
+        return strValue == null ? null : Long.valueOf(strValue);
+    }
+
+    /**
+     * Returns the integer value of the specified configuration property,
+     * with variable substitution.
+     * 
+     * @param key The configuration property.
+     * @param defaultValue The default value if 
+     * @return The value configuration property, if any.
+     * @throws NumberFormatException If the configuration value cannot be
+     * parsed as an long.
+     */
+    default long getLong(
+            @NotNull String key,
+            long defaultValue) {
+        return Long.parseLong(get(key, String.valueOf(defaultValue)));
+    }
+
+    /**
+     * Returns the value of the configuration parameter as {@code Boolean}.
+     * 
+     * @param key The key of the configuration parameter
+     * @return The configuration parameter value as {@code Boolean}
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
+     */
+    default Long getLong(
+            @NotBlank String key,
+            @NotNull Supplier<Long> defaultValue) {
+        return ObjectUtils.getFirstNonNull(() -> getLong(key), defaultValue);
+    }
 }

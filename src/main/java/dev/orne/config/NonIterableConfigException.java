@@ -4,7 +4,7 @@ package dev.orne.config;
  * #%L
  * Orne Config
  * %%
- * Copyright (C) 2020 - 2025 Orne Developments
+ * Copyright (C) 2025 Orne Developments
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -25,15 +25,16 @@ package dev.orne.config;
 import org.apiguardian.api.API;
 
 /**
- * Exception thrown during configuration operations.
+ * Exception thrown when configuration property keys cannot be
+ * iterated.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
- * @version 1.0, 2020-04
+ * @version 1.0, 2025-04
  * @since 1.0
  */
 @API(status = API.Status.STABLE, since = "1.0")
-public class ConfigException
-extends RuntimeException {
+public class NonIterableConfigException
+extends ConfigException {
 
     /** The serial version UID. */
     private static final long serialVersionUID = 1L;
@@ -43,7 +44,7 @@ extends RuntimeException {
      * The cause is not initialized, and may subsequently be initialized by a
      * call to {@link #initCause}.
      */
-    public ConfigException() {
+    public NonIterableConfigException() {
         super();
     }
 
@@ -55,7 +56,7 @@ extends RuntimeException {
      * @param   message   the detail message. The detail message is saved for
      *          later retrieval by the {@link #getMessage()} method.
      */
-    public ConfigException(
+    public NonIterableConfigException(
             final String message) {
         super(message);
     }
@@ -73,7 +74,7 @@ extends RuntimeException {
      *         permitted, and indicates that the cause is nonexistent or
      *         unknown.)
      */
-    public ConfigException(
+    public NonIterableConfigException(
             final Throwable cause) {
         super(cause);
     }
@@ -91,7 +92,7 @@ extends RuntimeException {
      *         permitted, and indicates that the cause is nonexistent or
      *         unknown.)
      */
-    public ConfigException(
+    public NonIterableConfigException(
             final String message,
             final Throwable cause) {
         super(message, cause);
@@ -110,7 +111,7 @@ extends RuntimeException {
      * @param writableStackTrace whether or not the stack trace should
      *                           be writable
      */
-    public ConfigException(
+    public NonIterableConfigException(
             final String message,
             final Throwable cause,
             final boolean enableSuppression,

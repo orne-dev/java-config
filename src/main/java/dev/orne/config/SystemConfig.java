@@ -1,10 +1,12 @@
 package dev.orne.config;
 
+import java.util.Set;
+
 /*-
  * #%L
  * Orne Config
  * %%
- * Copyright (C) 2019 Orne Developments
+ * Copyright (C) 2019 - 2025 Orne Developments
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -22,107 +24,96 @@ package dev.orne.config;
  * #L%
  */
 
-import java.util.Iterator;
-import java.util.Properties;
-
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
-import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.lang3.Validate;
+import org.apiguardian.api.API;
 
 /**
  * Implementation of {@code Config} based on the system properties.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
- * @version 2.0, 2020-04
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
+ * @version 1.0, 2019-07
+ * @version 2.0, 2025-04
  * @since 0.1
  * @see Config
  * @see System#getProperties()
  */
+@API(status = API.Status.STABLE, since = "1.0")
 public class SystemConfig
-extends AbstractStringConfig {
+implements Config {
 
     /**
-     * {@inheritDoc}
+     * Protected constructor for extension.
+     * Use 
      */
-    @Override
-    public boolean isEmpty()
-    throws ConfigException {
-        try {
-            return getSystemProperties().isEmpty();
-        } catch (final SecurityException se) {
-            throw new ConfigException("Error accessing configuration", se);
-        }
+    protected SystemConfig() {
+        super();
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public Iterator<String> getKeys()
-    throws ConfigException {
-        try {
-            return IteratorUtils.asIterator(getSystemProperties().keys());
-        } catch (final SecurityException se) {
-            throw new ConfigException("Error accessing configuration", se);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean containsParameter(
-            final @NotBlank String key)
-    throws ConfigException {
-        try {
-            return getSystemProperty(key) != null;
-        } catch (final SecurityException se) {
-            throw new ConfigException("Error accessing configuration property", se);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected String getRawValue(
-            final @NotBlank String key)
-    throws ConfigException {
-        try {
-            return getSystemProperty(key);
-        } catch (final SecurityException se) {
-            throw new ConfigException("Error retrieving configuration property value", se);
-        }
-    }
-
-    /**
-     * Returns system properties.
+     * Returns the shared system properties based configuration instance.
      * 
-     * @return The system properties
-     * @throws SecurityException If a security manager exists and its
-     * {@code checkPropertyAccess} method doesn't allow access to the
-     * system properties.
-     * @see System#getProperties()
+     * @return The shared instance.
      */
-    protected Properties getSystemProperties() {
-        return System.getProperties();
+    public @NotNull SystemConfig getInstance() {
+        return SingletonHolder.INSTANCE;
     }
 
     /**
-     * Returns system property value.
-     * 
-     * @param key The key of the system property
-     * @return The value of the system property, or {@code null} if not set
-     * @throws SecurityException If a security manager exists and its
-     * {@code checkPropertyAccess} method doesn't allow access to the specified
-     * system property.
+     * {@inheritDoc}
      */
-    protected String getSystemProperty(
+    @Override
+    public boolean contains(
+            final @NotBlank String key) {
+        return System.getProperties().contains(key);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull Set<String> getKeys() {
+        return System.getProperties().stringPropertyNames();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isEmpty() {
+        return System.getProperties().isEmpty();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String get(
             final @NotBlank String key) {
         return System.getProperty(Validate.notBlank(
                 key,
-                "Parameter key mus be a non blank string"));
+                "Parameter key must be a non blank string"));
+    }
+
+    /**
+     * Singleton instance holder for lazy instance creation.
+     * 
+     * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
+     * @version 1.0, 2025-04
+     */
+    @API(status = API.Status.INTERNAL, since = "1.0")
+    private static final class SingletonHolder {
+
+        /** Shared instance. */
+        private static final SystemConfig INSTANCE = new SystemConfig();
+
+        /**
+         * No instances allowed.
+         */
+        private SingletonHolder() {
+            // Utility class
+        }
     }
 }

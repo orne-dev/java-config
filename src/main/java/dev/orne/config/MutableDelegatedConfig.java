@@ -4,7 +4,7 @@ package dev.orne.config;
  * #%L
  * Orne Config
  * %%
- * Copyright (C) 2019 - 2020 Orne Developments
+ * Copyright (C) 2020 - 2025 Orne Developments
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -25,13 +25,16 @@ package dev.orne.config;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.apiguardian.api.API;
+
 /**
  * Delegated {@code MutableConfig} implementation.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
- * @version 1.0, 2020-04
- * @since 0.2
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
+ * @version 1.0, 2025-04
+ * @since 1.0
  */
+@API(status = API.Status.STABLE, since = "1.0")
 public class MutableDelegatedConfig
 extends DelegatedConfig
 implements MutableConfig {
@@ -62,7 +65,40 @@ implements MutableConfig {
     @Override
     public void set(
             final @NotBlank String key,
-            final Object value)
+            final String value)
+    throws ConfigException {
+        getDelegate().set(key, value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void set(
+            final @NotBlank String key,
+            final Boolean value)
+    throws ConfigException {
+        getDelegate().set(key, value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void set(
+            final @NotBlank String key,
+            final Integer value)
+    throws ConfigException {
+        getDelegate().set(key, value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void set(
+            final @NotBlank String key,
+            final Long value)
     throws ConfigException {
         getDelegate().set(key, value);
     }

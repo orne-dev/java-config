@@ -4,7 +4,7 @@ package dev.orne.config;
  * #%L
  * Orne Config
  * %%
- * Copyright (C) 2019 Orne Developments
+ * Copyright (C) 2019 - 2025 Orne Developments
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -24,50 +24,54 @@ package dev.orne.config;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.lang3.Validate;
+import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.helpers.MessageFormatter;
 
 /**
  * Implementation of {@code Config} based on {@code Properties} files.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
- * @version 2.0, 2020-04
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
+ * @version 1.0, 2019-07
+ * @version 2.0, 2025-04
  * @since 0.1
  * @see Config
  * @see Properties
  */
+@API(status = API.Status.STABLE, since = "1.0")
 public class PropertiesConfig
-extends AbstractMutableStringConfig {
+implements Config {
 
     /** The class logger. */
     private static final Logger LOG =
             LoggerFactory.getLogger(PropertiesConfig.class);
 
-    /** Error message for blank keys. */
-    private static final String KEY_BLANK_ERR =
-            "Parameter key mus be a non blank string";
+    /** Error message for blank property keys. */
+    protected static final String KEY_BLANK_ERR =
+            "Property key must be a non blank string";
     /** Error message for unsupported source types. */
     private static final String SOURCE_TYPE_ERR =
-            "Unsupported configuration source type ({}). Ignored.";
+            "Ignored unsupported configuration source type: {}";
     /** Error message for not found resources. */
-    private static final String RESOURCES_ERR =
-            "Could not find resources ({}).";
+    private static final String RESOURCE_NOT_FOUND_ERR =
+            "Configuration resource not found: {}";
     /** Properties file read error message. */
-    private static final String PROP_FILE_ERR =
-            "Could not read configuration file ({}).";
+    private static final String READ_ERR =
+            "Error reading configuration resource: {}";
 
     /** Current configuration parameters. */
     private final @NotNull Properties config;
@@ -75,11 +79,12 @@ extends AbstractMutableStringConfig {
     /**
      * Creates a new instance with the configuration parameters loaded from
      * the sources passed as argument.
+     * <p>
+     * Supports {@code String} class path resources,
+     * files as {@code Path} or {@code File} instances,
+     * {@code URL} or {@code Iterable} collections of any of them.
      * 
-     * Supports classpath resources, files, URL or {@code Iterable} objects
-     * of any of them.
-     * 
-     * @param sources The sources to load the configuration parameters from
+     * @param sources The sources to load the configuration parameters from.
      */
     public PropertiesConfig(
             final @NotNull Object... sources) {
@@ -89,12 +94,13 @@ extends AbstractMutableStringConfig {
     /**
      * Creates a new instance with the configuration parameters loaded from
      * the sources passed as argument.
+     * <p>
+     * Supports {@code String} class path resources,
+     * files as {@code Path} or {@code File} instances,
+     * {@code URL} or {@code Iterable} collections of any of them.
      * 
-     * Supports classpath resources, files, URL or {@code Iterable} objects
-     * of any of them.
-     * 
-     * @param config The {@code Properties} instance to use as inner container
-     * @param sources The sources to load the configuration parameters from
+     * @param config The {@code Properties} instance to use as inner container.
+     * @param sources The sources to load the configuration parameters from.
      */
     protected PropertiesConfig(
             final @NotNull Properties config,
@@ -107,7 +113,7 @@ extends AbstractMutableStringConfig {
     /**
      * Loads the configuration parameters from the sources passed as argument.
      * 
-     * @param sources The sources to load the configuration parameters from
+     * @param sources The sources to load the configuration parameters from.
      */
     protected final void load(
             final @NotNull Object... sources) {
@@ -119,16 +125,20 @@ extends AbstractMutableStringConfig {
 
     /**
      * Loads the configuration parameters from the source passed as argument.
-     * Supports classpath resources, files, URL or an {@code Iterable} of any
-     * of them.
+     * <p>
+     * Supports {@code String} class path resources,
+     * files as {@code Path} or {@code File} instances,
+     * {@code URL} or {@code Iterable} collections of any of them.
      * 
-     * @param source The source to load the configuration parameters from
+     * @param source The source to load the configuration parameters from.
      */
     protected final void loadSource(
             final @NotNull Object source) {
         Validate.notNull(source, "Parameter source is required");
         if (source instanceof String) {
             loadFromResource((String) source);
+        } else if (source instanceof Path) {
+            loadFromPath((Path) source);
         } else if (source instanceof File) {
             loadFromFile((File) source);
         } else if (source instanceof URL) {
@@ -136,9 +146,8 @@ extends AbstractMutableStringConfig {
         } else if (source instanceof Properties) {
             loadFromValues((Properties) source);
         } else if (source instanceof Iterable) {
-            final Iterator<?> subIt = ((Iterable<?>) source).iterator();
-            while (subIt.hasNext()) {
-                loadSource(subIt.next());
+            for (final Object nestedSource : ((Iterable<?>) source)) {
+                loadSource(nestedSource);
             }
         } else {
             LOG.warn(SOURCE_TYPE_ERR, source);
@@ -169,12 +178,32 @@ extends AbstractMutableStringConfig {
                     Thread.currentThread()
                             .getContextClassLoader()
                             .getResources(path);
+            if (!resources.hasMoreElements()) {
+                LOG.warn(RESOURCE_NOT_FOUND_ERR, path);
+            }
             while (resources.hasMoreElements()) {
                 loadFromURL(resources.nextElement());
             }
-        } catch (final IOException ioe) {
-            LOG.warn(MessageFormatter.format(RESOURCES_ERR, path).getMessage(),
-                    ioe);
+        } catch (final IOException e) {
+            LOG.warn(READ_ERR, path, e);
+        }
+    }
+
+    /**
+     * Loads the configuration parameters contained in the file in the
+     * specified path.
+     * 
+     * @param path The file to load the parameters from.
+     */
+    protected final void loadFromPath(
+            final @NotNull Path path) {
+        if (!Files.exists(path)) {
+            LOG.warn(RESOURCE_NOT_FOUND_ERR, path);
+        }
+        try (final InputStream fileIS = Files.newInputStream(path)) {
+            this.config.load(fileIS);
+        } catch (final IOException e) {
+            LOG.warn(READ_ERR, path, e);
         }
     }
 
@@ -188,9 +217,10 @@ extends AbstractMutableStringConfig {
             final @NotNull File file) {
         try (final InputStream fileIS = new FileInputStream(file)) {
             this.config.load(fileIS);
-        } catch (final IOException ioe) {
-            LOG.warn(MessageFormatter.format(PROP_FILE_ERR, file).getMessage(),
-                    ioe);
+        } catch (final FileNotFoundException e) {
+            LOG.warn(RESOURCE_NOT_FOUND_ERR, file, e);
+        } catch (final IOException e) {
+            LOG.warn(READ_ERR, file, e);
         }
     }
 
@@ -209,9 +239,8 @@ extends AbstractMutableStringConfig {
             } finally {
                 urlIS.close();
             }
-        } catch (final IOException ioe) {
-            LOG.warn(MessageFormatter.format(PROP_FILE_ERR, url).getMessage(),
-                    ioe);
+        } catch (final IOException e) {
+            LOG.warn(READ_ERR, url, e);
         }
     }
 
@@ -220,7 +249,7 @@ extends AbstractMutableStringConfig {
      * 
      * @return The configuration properties
      */
-    public @NotNull Properties getProperties() {
+    protected @NotNull Properties getProperties() {
         return this.config;
     }
 
@@ -228,8 +257,7 @@ extends AbstractMutableStringConfig {
      * {@inheritDoc}
      */
     @Override
-    public boolean isEmpty()
-    throws ConfigException {
+    public boolean isEmpty() {
         return this.config.isEmpty();
     }
 
@@ -237,19 +265,16 @@ extends AbstractMutableStringConfig {
      * {@inheritDoc}
      */
     @Override
-    @SuppressWarnings("unchecked")
-    public Iterator<String> getKeys()
-    throws ConfigException {
-        return IteratorUtils.asIterator(this.config.keys());
+    public @NotNull Set<String> getKeys() {
+        return this.config.stringPropertyNames();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected boolean containsParameter(
-            final @NotBlank String key)
-    throws ConfigException {
+    public boolean contains(
+            final @NotBlank String key) {
         Validate.notBlank(key, KEY_BLANK_ERR);
         return this.config.containsKey(key);
     }
@@ -258,37 +283,9 @@ extends AbstractMutableStringConfig {
      * {@inheritDoc}
      */
     @Override
-    protected String getRawValue(
-            final @NotBlank String key)
-    throws ConfigException {
+    public String get(
+            final @NotBlank String key) {
         Validate.notBlank(key, KEY_BLANK_ERR);
         return this.config.getProperty(key);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void setRawValue(
-            final @NotBlank String key,
-            final String value)
-    throws ConfigException {
-        Validate.notBlank(key, KEY_BLANK_ERR);
-        if (value == null) {
-            remove(key);
-        } else {
-            this.config.setProperty(key, value);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void remove(
-            final @NotBlank String key)
-    throws ConfigException {
-        Validate.notBlank(key, KEY_BLANK_ERR);
-        this.config.remove(key);
     }
 }

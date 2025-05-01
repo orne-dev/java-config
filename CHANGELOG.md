@@ -1,33 +1,29 @@
-# :package: 0.2.0
+# :package: 1.0.0
 
 01. :wrench: Updated dependency with `org.apache.commons:commons-lang3` to 3.11
 01. :wrench: Added dependency with `dev.orne:beans:0.3.0`
-01. :gift: Added exception `dev.orne.config.ConfigException`
-    01. :boom: Methods of `dev.orne.config.Config` throw `ConfigException`
-    01. :boom: Methods of `dev.orne.config.MutableConfig` throw `ConfigException`
-    01. :boom: Methods of `dev.orne.config.AbstractConfig` throw `ConfigException`
-    01. :boom: Methods of `dev.orne.config.AbstractStringConfig` throw `ConfigException`
-    01. :boom: Methods of `dev.orne.config.AbstractMutableStringConfig` throw `ConfigException`
-    01. :boom: Methods of `dev.orne.config.PreferencesConfig` throw `ConfigException`
-    01. :boom: Methods of `dev.orne.config.PropertiesConfig` throw `ConfigException`
-    01. :boom: Methods of `dev.orne.config.SystemConfig` throw `ConfigException`
-01. Improved interface `dev.orne.config.Config`
+01. Added runtime exception `dev.orne.config.ConfigException`
+01. Added runtime exception `dev.orne.config.NonIterableConfigException`
+01. Simplified base configuration interfaces.
+    01. Simplified `dev.orne.config.Config`.
+    01. Simplified `dev.orne.config.MutableConfig`.
     01. :boom: Removed method `Instant getInstant(String)`
-    01. :gift: Added method `boolean isEmpty()`
-    01. :gift: Added method `Iterator<String> getKeys()`
-01. Simplified class  `dev.orne.config.AbstractConfig`
-    01. :boom: Adapted to `dev.orne.config.Config` changes
-    01. :gift: Delegated value conversion in instance of Apache Commons BeanUtils `ConvertUtilsBean`
-    01. :gift: Added method `convertValue(Object, Class)`
-01. Simplified class `dev.orne.config.AbstractStringConfig`
-    01. :boom: Adapted to `dev.orne.config.AbstractConfig` changes
-    01. :gift: Added support for null values placeholder
-01. Simplified class `dev.orne.config.AbstractMutableStringConfig`
-    01. :boom: Adapted to `dev.orne.config.AbstractStringConfig` changes
-    01. :gift: Delegated value to String conversion in instance of Apache Commons BeanUtils `ConvertUtilsBean`
-01. :gift: Adapted `dev.orne.config.PropertiesConfig` to `dev.orne.config.Config` changes
-01. :boom: Adapted `dev.orne.config.SystemConfig` to `dev.orne.config.Config` and `dev.orne.config.AbstractStringConfig` changes
-01. :gift: Adapted `dev.orne.config.PreferencesConfig` to `dev.orne.config.Config` changes
+    01. Added method `Iterable<String> getKeys()`
+01. Adapted implementation classes to `dev.orne.config.Config` changes.
+    01. Adapted `dev.orne.config.SystemConfig` and made singleton.
+    01. Adapted `dev.orne.config.PropertiesConfig`.
+        01. Added `Path` support.
+        01. Moved `MutableConfig` methods to `MutablePropertiesConfig`.
+    01. Adapted `dev.orne.config.PreferencesConfig`.
+        01. Replaced constructors for factory methods. 
+        01. Moved `MutableConfig` methods to `MutablePreferencesConfig`.
+01. Adapted implementation classes to `dev.orne.config.MutableConfig` changes.
+    01. Added class `dev.orne.config.MutablePropertiesConfig`.
+    01. Added class `dev.orne.config.MutablePreferencesConfig`.
+01. :boom: Removed obsolete classes.
+    01. Removed `dev.orne.config.AbstractConfig`
+    01. Removed `dev.orne.config.AbstractStringConfig`
+    01. Removed `dev.orne.config.AbstractMutableStringConfig`
 01. :gift: Added class `dev.orne.config.DelegatedConfig`
 01. :gift: Added class `dev.orne.config.MutableDelegatedConfig`
 01. :gift: Added class `dev.orne.config.DelegatedHierarchicalConfig`

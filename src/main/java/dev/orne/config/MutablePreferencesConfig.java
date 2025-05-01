@@ -22,8 +22,6 @@ package dev.orne.config;
  * #L%
  */
 
-import java.util.Arrays;
-import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import javax.validation.constraints.NotBlank;
@@ -33,24 +31,18 @@ import org.apache.commons.lang3.Validate;
 import org.apiguardian.api.API;
 
 /**
- * Implementation of {@code Config} based on Java {@code Preferences}.
+ * Implementation of {@code MutableConfig} based on Java {@code Preferences}.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
- * @version 1.0, 2019-07
- * @version 2.0, 2025-05
+ * @version 1.0, 2025-05
  * @since 0.1
- * @see Config
+ * @see MutableConfig
  * @see Preferences
  */
 @API(status = API.Status.STABLE, since = "1.0")
-public class PreferencesConfig
-implements Config {
-
-    /** Error message for invalid keys. */
-    protected static final String INVALID_KEY_ERROR = "Parameter key must be a non blank string";
-
-    /** The preferences node to use as storage of configuration parameters. */
-    private final @NotNull Preferences preferences;
+public class MutablePreferencesConfig
+extends PreferencesConfig
+implements MutableConfig {
 
     /**
      * Creates a new instance with the configuration parameters of the
@@ -59,10 +51,9 @@ implements Config {
      * @param preferences The preferences node to use as storage of configuration
      * parameters
      */
-    public PreferencesConfig(
+    public MutablePreferencesConfig(
             final @NotNull Preferences preferences) {
-        super();
-        this.preferences = preferences;
+        super(preferences);
     }
 
     /**
@@ -71,8 +62,8 @@ implements Config {
      * @return The created instance.
      * @see Preferences#userRoot()
      */
-    public static @NotNull PreferencesConfig ofUser() {
-        return new PreferencesConfig(
+    public static @NotNull MutablePreferencesConfig ofUser() {
+        return new MutablePreferencesConfig(
                 Preferences.userRoot());
     }
 
@@ -86,9 +77,9 @@ implements Config {
      * @see Preferences#userRoot()
      * @see Preferences#node(String)
      */
-    public static @NotNull PreferencesConfig ofUser(
+    public static @NotNull MutablePreferencesConfig ofUser(
             final @NotNull String path) {
-        return new PreferencesConfig(
+        return new MutablePreferencesConfig(
                 Preferences.userRoot().node(path));
     }
 
@@ -100,9 +91,9 @@ implements Config {
      * @return The created instance.
      * @see Preferences#userNodeForPackage(Class)
      */
-    public static @NotNull PreferencesConfig ofUser(
+    public static @NotNull MutablePreferencesConfig ofUser(
             final @NotNull Class<?> clazz) {
-        return new PreferencesConfig(
+        return new MutablePreferencesConfig(
                 Preferences.userNodeForPackage(clazz));
     }
 
@@ -118,10 +109,10 @@ implements Config {
      * @see Preferences#userNodeForPackage(Class)
      * @see Preferences#node(String)
      */
-    public static @NotNull PreferencesConfig ofUser(
+    public static @NotNull MutablePreferencesConfig ofUser(
             final @NotNull Class<?> clazz,
             final @NotNull String path) {
-        return new PreferencesConfig(
+        return new MutablePreferencesConfig(
                 Preferences.userNodeForPackage(clazz).node(path));
     }
 
@@ -131,8 +122,8 @@ implements Config {
      * @return The created instance.
      * @see Preferences#systemRoot()
      */
-    public static @NotNull PreferencesConfig ofSystem() {
-        return new PreferencesConfig(
+    public static @NotNull MutablePreferencesConfig ofSystem() {
+        return new MutablePreferencesConfig(
                 Preferences.systemRoot());
     }
 
@@ -146,9 +137,9 @@ implements Config {
      * @see Preferences#systemRoot()
      * @see Preferences#node(String)
      */
-    public static @NotNull PreferencesConfig ofSystem(
+    public static @NotNull MutablePreferencesConfig ofSystem(
             final @NotNull String path) {
-        return new PreferencesConfig(
+        return new MutablePreferencesConfig(
                 Preferences.systemRoot().node(path));
     }
 
@@ -160,9 +151,9 @@ implements Config {
      * @return The created instance.
      * @see Preferences#systemNodeForPackage(Class)
      */
-    public static @NotNull PreferencesConfig ofSystem(
+    public static @NotNull MutablePreferencesConfig ofSystem(
             final @NotNull Class<?> clazz) {
-        return new PreferencesConfig(
+        return new MutablePreferencesConfig(
                 Preferences.systemNodeForPackage(clazz));
     }
 
@@ -178,32 +169,29 @@ implements Config {
      * @see Preferences#systemNodeForPackage(Class)
      * @see Preferences#node(String)
      */
-    public static @NotNull PreferencesConfig ofSystem(
+    public static @NotNull MutablePreferencesConfig ofSystem(
             final @NotNull Class<?> clazz,
             final @NotNull String path) {
-        return new PreferencesConfig(
+        return new MutablePreferencesConfig(
                 Preferences.systemNodeForPackage(clazz).node(path));
     }
 
     /**
-     * Returns the preferences node to use as storage of configuration
-     * parameters.
-     * 
-     * @return The preferences node.
-     */
-    protected @NotNull Preferences getPreferences() {
-        return this.preferences;
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull Iterable<String> getKeys() {
-        try {
-            return Arrays.asList(this.preferences.keys());
-        } catch (final IllegalStateException | BackingStoreException e) {
-            throw new ConfigException("Error accessing configuration", e);
+    public synchronized void set(
+            final @NotBlank String key,
+            final String value) {
+        if (value == null) {
+            remove(key);
+        } else {
+            Validate.notBlank(key, INVALID_KEY_ERROR);
+            try {
+                getPreferences().put(key, value);
+            } catch (final IllegalStateException ise) {
+                throw new ConfigException("Error setting configuration property value", ise);
+            }
         }
     }
 
@@ -211,27 +199,15 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    public boolean contains(
-            final @NotBlank String key) {
-        Validate.notBlank(key, INVALID_KEY_ERROR);
-        try {
-            return this.preferences.get(key, null) != null;
-        } catch (final IllegalStateException ise) {
-            throw new ConfigException("Error accessing configuration property", ise);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String get(
-            final @NotBlank String key) {
-        Validate.notBlank(key, INVALID_KEY_ERROR);
-        try {
-            return this.preferences.get(key, null);
-        } catch (final IllegalStateException ise) {
-            throw new ConfigException("Error retrieving configuration property value", ise);
+    public synchronized void remove(
+            final @NotBlank String... keys) {
+        for (final String key : keys) {
+            Validate.notBlank(key, INVALID_KEY_ERROR);
+            try {
+                getPreferences().remove(key);
+            } catch (final IllegalStateException ise) {
+                throw new ConfigException("Error retrieving configuration property value", ise);
+            }
         }
     }
 }

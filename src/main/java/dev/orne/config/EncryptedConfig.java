@@ -1,12 +1,12 @@
 package dev.orne.config;
 
-import java.math.BigDecimal;
+import java.util.Objects;
 
 /*-
  * #%L
  * Orne Config
  * %%
- * Copyright (C) 2019 - 2020 Orne Developments
+ * Copyright (C) 2019 - 2025 Orne Developments
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -30,30 +30,42 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.Validate;
 
 /**
- * Encrypted {@code Config} implementation. Decrypts values obtained from
- * delegate {@code Config}.
+ * Encrypted {@code Config} implementation.
+ * Decrypts values obtained from delegate {@code Config}.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2020-04
- * @since 0.2
+ * @since 1.0
  */
 public class EncryptedConfig
-extends DelegatedConfig {
+implements Config {
 
+    /** The delegate {@code Config} instance. */
+    private final @NotNull Config delegate;
     /** The cryptography transformations provider. */
     private final @NotNull ConfigCryptoProvider cryptoProvider;
 
     /**
      * Creates a new instance.
      * 
-     * @param delegate The cryptography transformations provider
-     * @param cryptoProvider The provider of cryptography transformations
+     * @param delegate The delegate {@code Config} instance.
+     * @param cryptoProvider The cryptography transformations provider.
      */
     public EncryptedConfig(
             final @NotNull Config delegate,
             final @NotNull ConfigCryptoProvider cryptoProvider) {
-        super(delegate);
+        super();
+        this.delegate = Validate.notNull(delegate);
         this.cryptoProvider = Validate.notNull(cryptoProvider);
+    }
+
+    /**
+     * Returns the delegate {@code Config} instance.
+     * 
+     * @return The delegate {@code Config} instance.
+     */
+    protected @NotNull Config getDelegate() {
+        return delegate;
     }
 
     /**
@@ -69,53 +81,40 @@ extends DelegatedConfig {
      * {@inheritDoc}
      */
     @Override
-    protected <T> T getParameter(
-            final @NotBlank String key,
-            final @NotNull Class<T> type)
+    public String get(
+            final @NotBlank String key)
     throws ConfigException {
-        final String cryptValue = super.getStringParameter(key);
-        final String strValue = this.cryptoProvider.decrypt(cryptValue);
-        T result;
-        if (AbstractStringConfig.NULL.equals(strValue)) {
-            result = null;
-        } else {
-            result = this.convertValue(strValue, type);
+        final String cryptValue = this.delegate.get(key);
+        if (cryptValue == null) {
+            return null;
         }
-        return result;
+        return this.cryptoProvider.decrypt(cryptValue);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected String getStringParameter(
-            final @NotBlank String key)
-    throws ConfigException {
-        final String cryptValue = super.getStringParameter(key);
-        String result = this.cryptoProvider.decrypt(cryptValue);
-        if (AbstractStringConfig.NULL.equals(result)) {
-            result = null;
+    public int hashCode() {
+        return Objects.hash(this.delegate, this.cryptoProvider);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
         }
-        return result;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected Boolean getBooleanParameter(
-            final @NotBlank String key)
-    throws ConfigException {
-        return getParameter(key, Boolean.class);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected Number getNumberParameter(
-            final @NotBlank String key)
-    throws ConfigException {
-        return getParameter(key, BigDecimal.class);
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final EncryptedConfig other = (EncryptedConfig) obj;
+        return Objects.equals(this.delegate, other.delegate)
+                && Objects.equals(this.cryptoProvider, other.cryptoProvider);
     }
 }
