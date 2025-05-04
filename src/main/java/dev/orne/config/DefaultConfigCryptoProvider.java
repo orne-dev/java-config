@@ -22,6 +22,8 @@ package dev.orne.config;
  * #L%
  */
 
+import java.util.Objects;
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.validation.constraints.NotNull;
@@ -30,7 +32,7 @@ import javax.validation.constraints.NotNull;
  * Default implementation of {@code ConfigCryptoProvider} based on
  * {@code ConfigCryptoEngine} with synchronized {@code Cipher}.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2020-08
  * @since 0.2
  * @see ConfigCryptoProvider
@@ -135,5 +137,32 @@ implements ConfigCryptoProvider {
         synchronized (opCipher) {
             return this.engine.decrypt(value, this.secretKey, opCipher);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.engine, this.secretKey);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final DefaultConfigCryptoProvider other = (DefaultConfigCryptoProvider) obj;
+        return Objects.equals(this.engine, other.engine)
+                && Objects.equals(this.secretKey, other.secretKey);
     }
 }

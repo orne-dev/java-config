@@ -46,7 +46,7 @@ import org.apache.commons.configuration2.tree.ImmutableNode;
  * <p>
  * No {@code ImmutableNode} has attributes.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="mailto:https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
  * @since 0.2
  */

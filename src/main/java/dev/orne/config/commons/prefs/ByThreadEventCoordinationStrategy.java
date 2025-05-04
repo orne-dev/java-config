@@ -22,9 +22,10 @@ package dev.orne.config.commons.prefs;
  * #L%
  */
 
+import java.util.Objects;
+
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.function.FailableRunnable;
 
 /**
@@ -32,7 +33,7 @@ import org.apache.commons.lang3.function.FailableRunnable;
  * prevents handling of events caused during the handling of a previous
  * event in the same {@code Thread}.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="mailto:https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
  * @since 0.2
  */
@@ -100,7 +101,7 @@ implements EventCoordinationStrategy {
     public <E extends Throwable> void preventEvents(
             final @NotNull FailableRunnable<E> body)
     throws E {
-        Validate.notNull(body);
+        Objects.requireNonNull(body);
         startPreferencesPrevention();
         startConfigurationPrevention();
         try {
@@ -118,7 +119,7 @@ implements EventCoordinationStrategy {
     public <E extends Throwable> void preventPreferencesEvents(
             final @NotNull FailableRunnable<E> body)
     throws E {
-        Validate.notNull(body);
+        Objects.requireNonNull(body);
         startPreferencesPrevention();
         try {
             body.run();
@@ -143,8 +144,8 @@ implements EventCoordinationStrategy {
             final @NotNull T event,
             final @NotNull EventHandler<T, E> handler)
     throws E {
-        Validate.notNull(event);
-        Validate.notNull(handler);
+        Objects.requireNonNull(event);
+        Objects.requireNonNull(handler);
         if (!arePreferencesEventsPrevented()) {
             handler.handle(event);
         }
@@ -157,7 +158,7 @@ implements EventCoordinationStrategy {
     public <E extends Throwable> void preventConfigurationEvents(
             final @NotNull FailableRunnable<E> body)
     throws E {
-        Validate.notNull(body);
+        Objects.requireNonNull(body);
         startConfigurationPrevention();
         try {
             body.run();
@@ -182,8 +183,8 @@ implements EventCoordinationStrategy {
             final @NotNull T event,
             final @NotNull EventHandler<T, E> handler)
     throws E {
-        Validate.notNull(event);
-        Validate.notNull(handler);
+        Objects.requireNonNull(event);
+        Objects.requireNonNull(handler);
         if (!areConfigurationEventsPrevented()) {
             handler.handle(event);
         }

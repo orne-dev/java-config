@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.EventObject;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.NodeChangeEvent;
 import java.util.prefs.NodeChangeListener;
@@ -42,7 +43,6 @@ import org.apache.commons.configuration2.event.EventListener;
 import org.apache.commons.configuration2.event.EventSource;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
  * Class that handles the conversion and communication between
  * {@code Preferences} nodes and a {@code HierarchicalConfiguration} instance.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="mailto:https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
  * @param <N> The {@code HierarchicalConfiguration} node type
  * @since 0.2
@@ -133,8 +133,8 @@ public class PreferencesHandler<N> {
             final @NotNull EventCoordinationStrategy coordinationStrategy,
             final EventListenerManager listenerManager) {
         super();
-        Validate.notNull(mapper);
-        Validate.notNull(coordinationStrategy);
+        Objects.requireNonNull(mapper);
+        Objects.requireNonNull(coordinationStrategy);
         this.mapper = mapper;
         this.eventCoordinationStrategy = coordinationStrategy;
         if (listenerManager == null) {
@@ -771,7 +771,7 @@ public class PreferencesHandler<N> {
      * <p>
      * Should delegate event management in {@code PreferencesHandler} instance.
      * 
-     * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+     * @author <a href="mailto:https://github.com/ihernaez">(w) Iker Hernaez</a>
      * @version 1.0
      * @since 0.2
      */

@@ -30,7 +30,6 @@ import java.util.stream.Stream;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.lang3.Validate;
 import org.apiguardian.api.API;
 
 /**
@@ -55,7 +54,7 @@ implements Config {
     public DelegatedConfig(
             final @NotNull Config delegate) {
         super();
-        this.delegate = Validate.notNull(delegate);
+        this.delegate = Objects.requireNonNull(delegate);
     }
 
     /**
@@ -88,7 +87,7 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull Iterable<String> getKeys() {
+    public @NotNull Stream<String> getKeys() {
         return this.delegate.getKeys();
     }
 

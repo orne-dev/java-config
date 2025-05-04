@@ -34,7 +34,7 @@ import org.apache.commons.configuration2.tree.ImmutableNode;
  * implemented by client code! It defines a set of available properties and may
  * be extended even in minor releases.
  *
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="mailto:https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2021-01
  * @since 0.2
  */

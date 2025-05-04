@@ -38,7 +38,7 @@ import java.util.prefs.Preferences;
  * be extended even in minor releases.
  * </p>
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="mailto:https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2020-09
  * @param <T> The type of the result of all set methods for method chaining
  * @param <N> The type of nodes of the generated {@code HierarchicalConfiguration}

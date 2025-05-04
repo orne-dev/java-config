@@ -22,9 +22,10 @@ package dev.orne.config;
  * #L%
  */
 
-import java.util.Arrays;
+import java.util.Objects;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+import java.util.stream.Stream;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -199,9 +200,9 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull Iterable<String> getKeys() {
+    public @NotNull Stream<String> getKeys() {
         try {
-            return Arrays.asList(this.preferences.keys());
+            return Stream.of(this.preferences.keys());
         } catch (final IllegalStateException | BackingStoreException e) {
             throw new ConfigException("Error accessing configuration", e);
         }
@@ -233,5 +234,31 @@ implements Config {
         } catch (final IllegalStateException ise) {
             throw new ConfigException("Error retrieving configuration property value", ise);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.preferences);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final PreferencesConfig other = (PreferencesConfig) obj;
+        return Objects.equals(this.preferences, other.preferences);
     }
 }

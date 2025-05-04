@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Abstract implementation of {@code PreferencesMapper}.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="mailto:https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
  * @param <N> The {@code HierarchicalConfiguration} node type
  * @since 0.2
@@ -791,7 +791,7 @@ implements PreferencesMapper<N> {
      * <li>If the property's final target is an attribute.</li>
      * </ul>
      * 
-     * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+     * @author <a href="mailto:https://github.com/ihernaez">(w) Iker Hernaez</a>
      * @version 1.0
      * @since 0.2
      */

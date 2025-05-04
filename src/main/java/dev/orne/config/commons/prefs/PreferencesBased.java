@@ -34,7 +34,7 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
  * Specialization of {@code HierarchicalConfiguration} for configurations
  * based on Java {@code Preferences}.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="mailto:https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
  * @param <N> The {@code HierarchicalConfiguration} node type
  * @since 0.2

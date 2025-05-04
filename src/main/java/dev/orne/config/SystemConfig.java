@@ -1,7 +1,5 @@
 package dev.orne.config;
 
-import java.util.Set;
-
 /*-
  * #%L
  * Orne Config
@@ -24,6 +22,7 @@ import java.util.Set;
  * #L%
  */
 
+import java.util.stream.Stream;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -74,8 +73,8 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull Set<String> getKeys() {
-        return System.getProperties().stringPropertyNames();
+    public @NotNull Stream<String> getKeys() {
+        return System.getProperties().stringPropertyNames().stream();
     }
 
     /**

@@ -28,7 +28,7 @@ import javax.validation.constraints.NotNull;
  * Delegated {@code HierarchicalConfig} implementation that also implements
  * {@code MutableConfig}
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="mailto:https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2021-02
  * @since 0.2
  */

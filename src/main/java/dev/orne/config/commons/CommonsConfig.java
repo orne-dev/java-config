@@ -22,13 +22,14 @@ package dev.orne.config.commons;
  * #L%
  */
 
-import java.util.Iterator;
+import java.util.Objects;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.configuration2.ImmutableConfiguration;
-import org.apache.commons.lang3.Validate;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigException;
@@ -37,7 +38,7 @@ import dev.orne.config.ConfigException;
  * Implementation of {@code Config} based on Apache Commons
  * {@code ImmutableConfiguration}.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2020-09
  * @since 0.2
  * @see ImmutableConfiguration
@@ -56,7 +57,7 @@ implements Config {
     public CommonsConfig(
             final @NotNull ImmutableConfiguration config) {
         super();
-        this.config = Validate.notNull(config);
+        this.config = Objects.requireNonNull(config);
     }
 
     /**
@@ -72,18 +73,10 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    public boolean isEmpty()
+    public Stream<String> getKeys()
     throws ConfigException {
-        return this.config.isEmpty();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Iterator<String> getKeys()
-    throws ConfigException {
-        return this.config.getKeys();
+        final Iterable<String> iterable = this.config::getKeys;
+        return StreamSupport.stream(iterable.spliterator(), false);
     }
 
     /**
@@ -100,11 +93,10 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    public <T> T get(
-            final @NotBlank String key,
-            final @NotNull Class<T> type)
+    public String get(
+            final @NotBlank String key)
     throws ConfigException {
-        return this.config.get(type, key);
+        return this.config.getString(key);
     }
 
     /**
@@ -121,19 +113,19 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    public String getString(
+    public Integer getInteger(
             final @NotBlank String key)
     throws ConfigException {
-        return this.config.getString(key);
+        return this.config.getInteger(key, null);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Number getNumber(
+    public Long getLong(
             final @NotBlank String key)
     throws ConfigException {
-        return this.config.getBigDecimal(key);
+        return this.config.getLong(key, null);
     }
 }

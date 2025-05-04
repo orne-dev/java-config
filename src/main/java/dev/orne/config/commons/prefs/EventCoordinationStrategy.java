@@ -46,7 +46,7 @@ import org.apache.commons.lang3.function.FailableRunnable;
  * Classes implementing this interface must prevent such cycles and be
  * {@code Thread} safe.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="mailto:https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
  * @since 0.2
  * @see PreferencesHandler
@@ -142,7 +142,7 @@ public interface EventCoordinationStrategy {
     /**
      * Functional interface for event handler.
      * 
-     * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+     * @author <a href="mailto:https://github.com/ihernaez">(w) Iker Hernaez</a>
      * @version 1.0
      * @param <T> The event type
      * @since 0.2

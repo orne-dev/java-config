@@ -23,13 +23,13 @@ package dev.orne.config.commons;
  */
 
 import java.util.Iterator;
+import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.ImmutableConfiguration;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
-import org.apache.commons.lang3.Validate;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigException;
@@ -38,7 +38,7 @@ import dev.orne.config.ConfigException;
 * Implementation of Apache Commons {@code ImmutableConfiguration} based on
 * {@code Config}.
 * 
-* @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
 * @version 1.0, 2020-20
 * @since 0.2
 * @see ImmutableConfiguration
@@ -63,7 +63,7 @@ implements ImmutableConfiguration {
     public CommonsImmutableConfiguration(
             final @NotNull Config config) {
         super();
-        this.config = Validate.notNull(config);
+        this.config = Objects.requireNonNull(config);
     }
 
     /**
@@ -106,7 +106,7 @@ implements ImmutableConfiguration {
     @Override
     protected Iterator<String> getKeysInternal() {
         try {
-            return this.config.getKeys();
+            return this.config.getKeys().iterator();
         } catch (final ConfigException ce) {
             throw new ConfigurationRuntimeException(ce);
         }
@@ -119,7 +119,7 @@ implements ImmutableConfiguration {
     protected Object getPropertyInternal(
             final String key) {
         try {
-            return this.config.getString(key);
+            return this.config.get(key);
         } catch (final ConfigException ce) {
             throw new ConfigurationRuntimeException(ce);
         }

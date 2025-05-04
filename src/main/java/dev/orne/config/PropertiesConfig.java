@@ -31,8 +31,9 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Enumeration;
+import java.util.Objects;
 import java.util.Properties;
-import java.util.Set;
+import java.util.stream.Stream;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -265,8 +266,8 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull Set<String> getKeys() {
-        return this.config.stringPropertyNames();
+    public @NotNull Stream<String> getKeys() {
+        return this.config.stringPropertyNames().stream();
     }
 
     /**
@@ -287,5 +288,31 @@ implements Config {
             final @NotBlank String key) {
         Validate.notBlank(key, KEY_BLANK_ERR);
         return this.config.getProperty(key);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.config);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final PropertiesConfig other = (PropertiesConfig) obj;
+        return Objects.equals(this.config, other.config);
     }
 }

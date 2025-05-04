@@ -1,7 +1,5 @@
 package dev.orne.config;
 
-import java.lang.ref.SoftReference;
-
 /*-
  * #%L
  * Orne Config
@@ -24,7 +22,9 @@ import java.lang.ref.SoftReference;
  * #L%
  */
 
+import java.lang.ref.SoftReference;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -41,7 +41,7 @@ import org.apache.commons.pool2.impl.SoftReferenceObjectPool;
  * Default implementation of {@code ConfigCryptoProvider} based on
  * {@code ConfigCryptoEngine} with synchronized {@code Cipher}.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2020-08
  * @since 0.2
  * @see Cipher
@@ -203,10 +203,37 @@ implements ConfigCryptoProvider {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.engine, this.secretKey);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final PooledConfigCryptoProvider other = (PooledConfigCryptoProvider) obj;
+        return Objects.equals(this.engine, other.engine)
+                && Objects.equals(this.secretKey, other.secretKey);
+    }
+
+    /**
      * Implementation of {@code PooledObjectFactory} that creates new instances
      * of {@code Cipher} using an instance of {@code ConfigCryptoEngine}.
      * 
-     * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+     * @author <a href="mailto:https://github.com/ihernaez">(w) Iker Hernaez</a>
      * @version 1.0, 2020-08
      * @since 0.2
      * @see PooledObjectFactory

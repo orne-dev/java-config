@@ -22,11 +22,12 @@ package dev.orne.config.commons;
  * #L%
  */
 
+import java.util.Objects;
+
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.configuration2.ConfigurationDecoder;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
-import org.apache.commons.lang3.Validate;
 
 import dev.orne.config.ConfigCryptoProvider;
 import dev.orne.config.ConfigCryptoProviderException;
@@ -35,7 +36,7 @@ import dev.orne.config.ConfigCryptoProviderException;
  * {@code ConfigCryptoProvider} based implementation of Apache Commons
  * {@code ConfigurationDecoder}.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2020-10
  * @since 0.2
  * @see ConfigCryptoProvider
@@ -54,7 +55,7 @@ implements ConfigurationDecoder {
     public ProviderConfigurationDecoder(
             final @NotNull ConfigCryptoProvider provider) {
         super();
-        this.provider = Validate.notNull(provider);
+        this.provider = Objects.requireNonNull(provider);
     }
 
     /**

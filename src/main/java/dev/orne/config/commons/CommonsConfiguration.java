@@ -34,7 +34,7 @@ import dev.orne.config.MutableConfig;
 * Implementation of Apache Commons {@code Configuration} based on
 * {@code MutableConfig}.
 * 
-* @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
 * @version 1.0, 2020-20
 * @since 0.2
 * @see Configuration
@@ -69,7 +69,7 @@ extends CommonsImmutableConfiguration {
             final String key,
             final Object value) {
         try {
-            getConfig().set(key, value);
+            getConfig().set(key, value == null ? null : String.valueOf(value));
         } catch (final ConfigException ce) {
             throw new ConfigurationRuntimeException(ce);
         }

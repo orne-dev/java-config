@@ -4,7 +4,7 @@ package dev.orne.config;
  * #%L
  * Orne Config
  * %%
- * Copyright (C) 2019 - 2020 Orne Developments
+ * Copyright (C) 2019 - 2025 Orne Developments
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -25,6 +25,8 @@ package dev.orne.config;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.spec.KeySpec;
+import java.util.Base64;
+import java.util.Objects;
 
 import javax.crypto.AEADBadTagException;
 import javax.crypto.Cipher;
@@ -36,13 +38,11 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.codec.binary.Base64;
-
 /**
  * Implementation of {@code ConfigCryptoEngine} based on
  * Java Cryptography Architecture using AES with GCM symmetric algorithm.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2020-08
  * @since 0.2
  */
@@ -257,8 +257,6 @@ implements ConfigCryptoEngine {
                     getSalt(),
                     getSecretKeyIterations(),
                     getSecretKeyLength());
-        } catch (final NullPointerException npe) {
-            throw new ConfigCryptoProviderException(SECRET_KEY_CREATION_ERROR, npe);
         } catch (final IllegalArgumentException iae) {
             throw new ConfigCryptoProviderException(SECRET_KEY_CREATION_ERROR, iae);
         }
@@ -325,7 +323,7 @@ implements ConfigCryptoEngine {
             final byte[] ciphertext = new byte[resultBytes];
             System.arraycopy(initVector, 0, ciphertext, 0, initVector.length);
             cipher.doFinal(valueBytes, 0, valueBytes.length, ciphertext, initVector.length);
-            return Base64.encodeBase64String(ciphertext);
+            return Base64.getEncoder().encodeToString(ciphertext);
         } catch (final GeneralSecurityException gse) {
             throw new ConfigCryptoProviderException(ENCRYPTION_ERROR, gse);
         }
@@ -340,7 +338,7 @@ implements ConfigCryptoEngine {
             final @NotNull SecretKey key,
             final @NotNull Cipher cipher)
     throws ConfigCryptoProviderException {
-        final byte[] cipherBytes = Base64.decodeBase64(value);
+        final byte[] cipherBytes = Base64.getDecoder().decode(value);
         final GCMParameterSpec gcmSpec = new GCMParameterSpec(
                 getGcmTagLength() * java.lang.Byte.SIZE,
                 cipherBytes,
@@ -358,5 +356,48 @@ implements ConfigCryptoEngine {
         } catch (final GeneralSecurityException gse) {
             throw new ConfigCryptoProviderException(DECRYPTION_ERROR, gse);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                super.hashCode(),
+                this.secretKeyFactoryAlgorithm,
+                this.secretKeyIterations,
+                this.secretKeyLength,
+                this.secretKeyAlgorithm,
+                this.cipherAlgorithm,
+                this.gcmInitVectorLength,
+                this.gcmTagLength,
+                this.salt);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ConfigCryptoAesGcmEngine other = (ConfigCryptoAesGcmEngine) obj;
+        return super.equals(obj)
+                && Objects.equals(this.secretKeyFactoryAlgorithm, other.secretKeyFactoryAlgorithm)
+                && Objects.equals(this.secretKeyIterations, other.secretKeyIterations)
+                && Objects.equals(this.secretKeyLength, other.secretKeyLength)
+                && Objects.equals(this.secretKeyAlgorithm, other.secretKeyAlgorithm)
+                && Objects.equals(this.cipherAlgorithm, other.cipherAlgorithm)
+                && Objects.equals(this.gcmInitVectorLength, other.gcmInitVectorLength)
+                && Objects.equals(this.gcmTagLength, other.gcmTagLength)
+                && Objects.equals(this.salt, other.salt);
     }
 }

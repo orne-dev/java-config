@@ -34,7 +34,7 @@ import dev.orne.config.MutableConfig;
  * Implementation of {@code MutableConfig} based on Apache Commons
  * {@code Configuration}.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2020-09
  * @since 0.2
  * @see Configuration
@@ -67,8 +67,37 @@ implements MutableConfig {
     @Override
     public void set(
             final @NotBlank String key,
-            final Object value)
-    throws ConfigException {
+            final String value) {
+        getConfig().setProperty(key, value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void set(
+            final @NotBlank String key,
+            final Boolean value) {
+        getConfig().setProperty(key, value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void set(
+            final @NotBlank String key,
+            final Integer value) {
+        getConfig().setProperty(key, value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void set(
+            final @NotBlank String key,
+            final Long value) {
         getConfig().setProperty(key, value);
     }
 
@@ -77,8 +106,10 @@ implements MutableConfig {
      */
     @Override
     public void remove(
-            final @NotBlank String key)
+            final @NotBlank String... keys)
     throws ConfigException {
-        getConfig().clearProperty(key);
+        for (final String key : keys) {
+            getConfig().clearProperty(key);
+        }
     }
 }

@@ -1,7 +1,5 @@
 package dev.orne.config;
 
-import java.util.Objects;
-
 /*-
  * #%L
  * Orne Config
@@ -24,10 +22,10 @@ import java.util.Objects;
  * #L%
  */
 
+import java.util.Objects;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
-import org.apache.commons.lang3.Validate;
 
 /**
  * Encrypted {@code Config} implementation.
@@ -55,8 +53,8 @@ implements Config {
             final @NotNull Config delegate,
             final @NotNull ConfigCryptoProvider cryptoProvider) {
         super();
-        this.delegate = Validate.notNull(delegate);
-        this.cryptoProvider = Validate.notNull(cryptoProvider);
+        this.delegate = Objects.requireNonNull(delegate);
+        this.cryptoProvider = Objects.requireNonNull(cryptoProvider);
     }
 
     /**

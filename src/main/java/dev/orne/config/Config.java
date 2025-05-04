@@ -25,7 +25,6 @@ package dev.orne.config;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -45,18 +44,6 @@ import org.apiguardian.api.API;
 public interface Config {
 
     /**
-     * Returns {@code true} if the property with the key passed as argument
-     * has been configured.
-     * 
-     * @param key The configuration property.
-     * @return Returns {@code true} if the property has been configured.
-     */
-    default boolean contains(
-            @NotBlank String key) {
-        return get(key) != null;
-    }
-
-    /**
      * Returns {@code true} if the configuration contains no property.
      * 
      * @return Returns {@code true} if the configuration contains no property.
@@ -69,6 +56,18 @@ public interface Config {
     }
 
     /**
+     * Returns {@code true} if the property with the key passed as argument
+     * has been configured.
+     * 
+     * @param key The configuration property.
+     * @return Returns {@code true} if the property has been configured.
+     */
+    default boolean contains(
+            @NotBlank String key) {
+        return get(key) != null;
+    }
+
+    /**
      * Returns the configuration property keys contained in this configuration.
      * 
      * @return The configuration property keys.
@@ -76,7 +75,7 @@ public interface Config {
      * cannot be iterated.
      * @throws ConfigException If an error occurs accessing the configuration.
      */
-    default @NotNull Iterable<String> getKeys() {
+    default @NotNull Stream<String> getKeys() {
         throw new NonIterableConfigException(
                 "Configuration property keys cannot be iterated.");
     }
@@ -93,8 +92,7 @@ public interface Config {
      */
     default @NotNull Stream<String> getKeys(
             final @NotNull Predicate<String> filter) {
-        return StreamSupport.stream(getKeys().spliterator(), true)
-                .filter(filter);
+        return getKeys().filter(filter);
     }
 
     /**

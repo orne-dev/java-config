@@ -108,8 +108,8 @@ implements MutableConfig {
      */
     @Override
     public void remove(
-            final @NotBlank String key)
+            final @NotBlank String... keys)
     throws ConfigException {
-        getDelegate().remove(key);
+        getDelegate().remove(keys);
     }
 }

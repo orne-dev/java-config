@@ -64,7 +64,7 @@ import org.apache.commons.configuration2.tree.NodeModel;
  * config.addProperty(&quot;test.dir[@name]&quot;, &quot;D:\\Data\\&quot;);
  * </pre>
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="mailto:https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
  * @since 0.2
  * @see Preferences

@@ -36,7 +36,7 @@ import org.apache.commons.configuration2.tree.ImmutableNode;
  * Abstract implementation of {@code PreferencesMapper} for
  * {@code ImmutableNode} based {@code HierarchicalConfiguration} instances.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="mailto:https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
  * @see ImmutableNode
  * @since 0.2

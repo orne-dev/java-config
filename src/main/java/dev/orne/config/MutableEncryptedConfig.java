@@ -1,13 +1,10 @@
-/**
- * 
- */
 package dev.orne.config;
 
 /*-
  * #%L
  * Orne Config
  * %%
- * Copyright (C) 2019 - 2020 Orne Developments
+ * Copyright (C) 2019 - 2025 Orne Developments
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -33,7 +30,7 @@ import javax.validation.constraints.NotNull;
  * Decrypts values obtained from delegate {@code MutableConfig} and encrypts
  * values before storing them in the delegate instance.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2020-04
  * @since 0.2
  */
@@ -69,30 +66,14 @@ implements MutableConfig {
     @Override
     public void set(
             final @NotBlank String key,
-            final Object value)
+            final String value)
     throws ConfigException {
-        String plainValue = convertValueToString(value);
-        final String cryptoValue = getCryptoProvider().encrypt(plainValue);
-        getDelegate().set(key, cryptoValue);
-    }
-
-    /**
-     * Converts specified value to {@code String} value.
-     * 
-     * @param value The value in any form
-     * @return The value in {@code String} form
-     * @throws ConfigException If an error occurs converting the value
-     */
-    protected @NotNull String convertValueToString(
-            final Object value)
-    throws ConfigException {
-        String result = AbstractMutableStringConfig.convertValueToString(
-                getConverter(),
-                value);
         if (value == null) {
-            result = AbstractStringConfig.NULL;
+            getDelegate().set(key, value);
+        } else {
+            final String cryptoValue = getCryptoProvider().encrypt(value);
+            getDelegate().set(key, cryptoValue);
         }
-        return result;
     }
 
     /**
@@ -100,8 +81,8 @@ implements MutableConfig {
      */
     @Override
     public void remove(
-            final @NotBlank String key)
+            final @NotBlank String... keys)
     throws ConfigException {
-        getDelegate().remove(key);
+        getDelegate().remove(keys);
     }
 }

@@ -48,7 +48,7 @@ import org.apache.commons.lang3.Validate;
  * and initialized by a single thread during configuration of a
  * {@code ConfigurationBuilder}.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="mailto:https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2020-09
  * @since 0.2
  */

@@ -4,7 +4,7 @@ package dev.orne.config;
  * #%L
  * Orne Config
  * %%
- * Copyright (C) 2020 Orne Developments
+ * Copyright (C) 2020 - 2025 Orne Developments
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -25,6 +25,7 @@ package dev.orne.config;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Objects;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKeyFactory;
@@ -33,7 +34,7 @@ import javax.validation.constraints.NotNull;
 /**
  * Abstract base implementation of {@code ConfigCryptoEngine}.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2020-08
  * @since 0.2
  */
@@ -194,5 +195,32 @@ implements ConfigCryptoEngine {
                     String.format(CIPHER_CREATION_ERROR, algorithm),
                     gse);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.secureRandom, this.saltLength);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final AbstractConfigCryptoEngine other = (AbstractConfigCryptoEngine) obj;
+        return Objects.equals(this.secureRandom, other.secureRandom)
+                && Objects.equals(this.saltLength, other.saltLength);
     }
 }

@@ -50,7 +50,7 @@ import org.apache.commons.configuration2.tree.ImmutableNode;
  * method. However, when the builder's initialization parameters are reset by
  * calling {@code resetParameters()} the location is reset, too.
  *
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="mailto:https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
  * @since 0.2
  * @see PreferencesConfiguration

@@ -30,7 +30,7 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
  * Exception thrown when a {@code Preferences} node has been deleted by another
  * Thread.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="mailto:https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2020-11
  * @since 0.2
  * @see Preferences

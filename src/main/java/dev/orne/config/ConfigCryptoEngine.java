@@ -1,14 +1,10 @@
 package dev.orne.config;
 
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.validation.constraints.NotBlank;
-
 /*-
  * #%L
  * Orne Config
  * %%
- * Copyright (C) 2019 - 2020 Orne Developments
+ * Copyright (C) 2019 - 2025 Orne Developments
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -26,12 +22,15 @@ import javax.validation.constraints.NotBlank;
  * #L%
  */
 
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
  * Engine of cryptography transformations for configuration values.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2020-04
  * @since 0.2
  */
