@@ -1,85 +1,104 @@
-# :package: 1.0.0
+# Orne Java configuration utilities - Changelog
 
-01. :wrench: Updated dependency with `org.apache.commons:commons-lang3` to 3.11
-01. :wrench: Added dependency with `dev.orne:beans:0.3.0`
-01. Added runtime exception `dev.orne.config.ConfigException`
-01. Added runtime exception `dev.orne.config.NonIterableConfigException`
-01. Simplified base configuration interfaces.
-    01. Simplified `dev.orne.config.Config`.
-    01. Simplified `dev.orne.config.MutableConfig`.
-    01. :boom: Removed method `Instant getInstant(String)`
-    01. Added method `Iterable<String> getKeys()`
-01. Adapted implementation classes to `dev.orne.config.Config` changes.
-    01. Adapted `dev.orne.config.SystemConfig` and made singleton.
-    01. Adapted `dev.orne.config.PropertiesConfig`.
-        01. Added `Path` support.
-        01. Moved `MutableConfig` methods to `MutablePropertiesConfig`.
-    01. Adapted `dev.orne.config.PreferencesConfig`.
-        01. Replaced constructors for factory methods. 
-        01. Moved `MutableConfig` methods to `MutablePreferencesConfig`.
-01. Adapted implementation classes to `dev.orne.config.MutableConfig` changes.
-    01. Added class `dev.orne.config.MutablePropertiesConfig`.
-    01. Added class `dev.orne.config.MutablePreferencesConfig`.
-01. :boom: Removed obsolete classes.
-    01. Removed `dev.orne.config.AbstractConfig`
-    01. Removed `dev.orne.config.AbstractStringConfig`
-    01. Removed `dev.orne.config.AbstractMutableStringConfig`
-01. :gift: Added class `dev.orne.config.DelegatedConfig`
-01. :gift: Added class `dev.orne.config.MutableDelegatedConfig`
-01. :gift: Added class `dev.orne.config.DelegatedHierarchicalConfig`
-01. :gift: Added class `dev.orne.config.MutableDelegatedHierarchicalConfig`
-01. :gift: Added interface `dev.orne.config.ConfigCryptoProvider`
-    01. :gift: Added exception `dev.orne.config.ConfigCryptoProviderException`
-    01. :gift: Added exception `dev.orne.config.ConfigCryptoWrongKeyException`
-01. :gift: Added class `dev.orne.config.EncryptedConfig`
-01. :gift: Added class `dev.orne.config.MutableEncryptedConfig`
-01. :gift: Added interface `dev.orne.config.ConfigCryptoEngine`
-    01. :gift: Added class `dev.orne.config.AbstractConfigCryptoEngine`
-    01. :gift: Added class `dev.orne.config.ConfigCryptoAesGcmEngine`
-01. :gift: Added class `dev.orne.config.DefaultConfigCryptoProvider`
-01. :gift: Added class `dev.orne.config.PooledConfigCryptoProvider`
-01. :fix: Corrected properties spelling in `dev.orne.config.ConfigurationOptions`
-  01. :boom: Renamed property `preferedConfigs` to `preferredConfigs`
-01. :feat: Simplified `DefaultConfigProvider` configuration
-  01. :boom: Modified method `registerConfig` to allow method chaining
-01. :gift: Added Apache Commons Configuration 2.x interoperability
-    01. :gift: Added class `dev.orne.config.commons.CommonsConfig`
-    01. :gift: Added class `dev.orne.config.commons.CommonsMutableConfig`
-    01. :gift: Added class `dev.orne.config.commons.CommonsImmutableConfiguration`
-    01. :gift: Added class `dev.orne.config.commons.CommonsConfiguration`
-    01. :gift: Added class `dev.orne.config.commons.ProviderConfigurationDecoder`
-01. :gift: Added Java Preferences support for Apache Commons Configuration 2.x
-    01. :gift: Added class `dev.orne.config.commons.PreferencesConfiguration`
-    01. :gift: Added exception `dev.orne.config.commons.prefs.PreferencesNodeDeletedException`
-    01. :gift: Added interface `dev.orne.config.commons.prefs.PreferencesMapper`
-    01. :gift: Added class `dev.orne.config.commons.prefs.AbstractPreferencesMapper`
-    01. :gift: Added class `dev.orne.config.commons.prefs.AbstractImmutableNodePreferencesMapper`
-    01. :gift: Added class `dev.orne.config.commons.prefs.AttributeBasedPreferencesMapper`
-    01. :gift: Added class `dev.orne.config.commons.prefs.NodeBasedPreferencesMapper`
-    01. :gift: Added interface `dev.orne.config.commons.prefs.EventCoordinationStrategy`
-    01. :gift: Added class `dev.orne.config.commons.prefs.ByThreadEventCoordinationStrategy`
-    01. :gift: Added interface `dev.orne.config.commons.prefs.PreferencesBased`
-    01. :gift: Added class `dev.orne.config.commons.prefs.PreferencesHandler`
-    01. :gift: Added interface `dev.orne.config.commons.prefs.PreferencesBuilderProperties`
-    01. :gift: Added interface `dev.orne.config.commons.prefs.PreferencesBuilderParameters`
-    01. :gift: Added class `dev.orne.config.commons.prefs.PreferencesBuilderParametersImpl`
-    01. :gift: Added class `dev.orne.config.commons.prefs.PreferencesConfigurationBuilder`
+## [Unreleased]
 
-# :package: 0.1.0
+### Changed
 
-01. :gift: Added `dev.orne.config.Config`
-01. :gift: Added `dev.orne.config.AbstractConfig`
-01. :gift: Added `dev.orne.config.HierarchicalConfig`
-01. :gift: Added `dev.orne.config.AbstractStringConfig`
-01. :gift: Added `dev.orne.config.SystemConfig`
-01. :gift: Added `dev.orne.config.MutableConfig`
-01. :gift: Added `dev.orne.config.AbstractMutableStringConfig`
-01. :gift: Added `dev.orne.config.PropertiesConfig`
-01. :gift: Added `dev.orne.config.PreferencesConfig`
-01. :gift: Added `dev.orne.config.Configurable`
-01. :gift: Added `dev.orne.config.ConfigurableProperty`
-01. :gift: Added `dev.orne.config.ConfigurationOptions`
-01. :gift: Added `dev.orne.config.Configurer`
-01. :gift: Added `dev.orne.config.ConfigProvider`
-01. :gift: Added `dev.orne.config.DefaultConfigurer`
-01. :gift: Added `dev.orne.config.DefaultConfigProvider`
+- **Breaking:** Simplify base configuration API.
+    - Make `Config` a functional interface with a `String get(String)` method.
+    - Limit supported value types to String, Boolean and Long.
+    - Add `Iterable<String> getKeys()` method to `Config` for properties scanning.
+- **Breaking:** Adapt basic configuration implementations to base configuration API changes.
+    - Make `SystemConfig` singleton.
+    - Replace `PreferencesConfig` constructors by factory methods.
+- **Breaking:** Remove `MutableConfig` methods from basic configuration implementations. 
+    - Move `PropertiesConfig` methods to `MutablePropertiesConfig`.
+    - Move `PreferencesConfig` methods to `MutablePreferencesConfig`.
+- **Breaking:** Rename `ConfigurationOptions.preferedConfigs` property to `preferredConfigs`.
+
+### Added
+
+- Dependency with `dev.orne:beans:0.3.0`.
+- Configuration exceptions hierarchy.
+    - `dev.orne.config.ConfigException` runtime exception.
+    - `dev.orne.config.NonIterableConfigException` runtime exception.
+- `Path` based resources support to `dev.orne.config.PropertiesConfig`.
+- Basic mutable configuration implementations.
+    - `dev.orne.config.MutablePropertiesConfig` class.
+    - `dev.orne.config.MutablePreferencesConfig` class.
+- Delegated configuration system.
+    - `dev.orne.config.DelegatedConfig` class.
+    - `dev.orne.config.MutableDelegatedConfig` class.
+- Hierarchical configuration system.
+    - `dev.orne.config.DelegatedHierarchicalConfig` class.
+    - `dev.orne.config.MutableDelegatedHierarchicalConfig` class.
+- Encrypted configuration system.
+    - `dev.orne.config.ConfigCryptoProvider` interface.
+    - `dev.orne.config.ConfigCryptoProviderException` exception.
+    - `dev.orne.config.ConfigCryptoWrongKeyException` exception.
+    - `dev.orne.config.EncryptedConfig` class.
+    - `dev.orne.config.MutableEncryptedConfig` class.
+    - `dev.orne.config.ConfigCryptoEngine` interface.
+    - `dev.orne.config.AbstractConfigCryptoEngine` class.
+    - `dev.orne.config.ConfigCryptoAesGcmEngine` class.
+    - `dev.orne.config.DefaultConfigCryptoProvider` class.
+    - `dev.orne.config.PooledConfigCryptoProvider` class.
+- Apache Commons Configuration 2.x interoperability
+    - `dev.orne.config.commons.CommonsConfig` class.
+    - `dev.orne.config.commons.CommonsMutableConfig` class.
+    - `dev.orne.config.commons.CommonsImmutableConfiguration` class.
+    - `dev.orne.config.commons.CommonsConfiguration` class.
+    - `dev.orne.config.commons.ProviderConfigurationDecoder` class.
+- Java Preferences support for Apache Commons Configuration 2.x
+    - `dev.orne.config.commons.PreferencesConfiguration` class.
+    - `dev.orne.config.commons.prefs.PreferencesNodeDeletedException` exception.
+    - `dev.orne.config.commons.prefs.PreferencesMapper` interface.
+    - `dev.orne.config.commons.prefs.AbstractPreferencesMapper` class.
+    - `dev.orne.config.commons.prefs.AbstractImmutableNodePreferencesMapper` class.
+    - `dev.orne.config.commons.prefs.AttributeBasedPreferencesMapper` class.
+    - `dev.orne.config.commons.prefs.NodeBasedPreferencesMapper` class.
+    - `dev.orne.config.commons.prefs.EventCoordinationStrategy` interface.
+    - `dev.orne.config.commons.prefs.ByThreadEventCoordinationStrategy` class.
+    - `dev.orne.config.commons.prefs.PreferencesBased` interface.
+    - `dev.orne.config.commons.prefs.PreferencesHandler` class.
+    - `dev.orne.config.commons.prefs.PreferencesBuilderProperties` interface.
+    - `dev.orne.config.commons.prefs.PreferencesBuilderParameters` interface.
+    - `dev.orne.config.commons.prefs.PreferencesBuilderParametersImpl` class.
+    - `dev.orne.config.commons.prefs.PreferencesConfigurationBuilder` class.
+- Support for method chaining in `DefaultConfigProvider.registerConfig()` method.
+
+### Removed
+
+- **Breaking:** Removed obsolete classes.
+    - `dev.orne.config.AbstractConfig` class.
+    - `dev.orne.config.AbstractStringConfig` class.
+    - `dev.orne.config.AbstractMutableStringConfig` class.
+
+## 0.1.0 - 2020-04-28
+
+_First experimental release._
+
+### Added
+
+- Dependency with `org.apache.commons:commons-lang3` 3.9.
+- Dependency with `commons-beanutils:commons-beanutils` 1.9.4.
+- Base configuration API.
+    - `dev.orne.config.Config` interface.
+    - `dev.orne.config.MutableConfig` interface.
+    - `dev.orne.config.HierarchicalConfig` interface.
+- Basic configuration implementations.
+    - `dev.orne.config.AbstractConfig` class.
+    - `dev.orne.config.AbstractStringConfig` class.
+    - `dev.orne.config.SystemConfig` class.
+    - `dev.orne.config.AbstractMutableStringConfig` class.
+    - `dev.orne.config.PropertiesConfig` class.
+    - `dev.orne.config.PreferencesConfig` class.
+- Configurable componentes API.
+    - `dev.orne.config.Configurable` annotation.
+    - `dev.orne.config.ConfigurableProperty` annotation.
+    - `dev.orne.config.ConfigurationOptions` annotation.
+- Configurable componentes management.
+    - `dev.orne.config.Configurer` interface.
+    - `dev.orne.config.ConfigProvider` interface.
+    - `dev.orne.config.DefaultConfigurer` class.
+    - `dev.orne.config.DefaultConfigProvider` class.
