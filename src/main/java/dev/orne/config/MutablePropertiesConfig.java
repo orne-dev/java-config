@@ -42,7 +42,10 @@ import org.apiguardian.api.API;
 @API(status = API.Status.STABLE, since = "1.0")
 public class MutablePropertiesConfig
 extends PropertiesConfig
-implements MutableConfig {
+implements WatchableConfig {
+
+    /** The configuration change events handler. */
+    private final @NotNull EventsHandler events;
 
     /**
      * Creates a new instance with the configuration parameters loaded from
@@ -56,7 +59,7 @@ implements MutableConfig {
      */
     public MutablePropertiesConfig(
             final @NotNull Object... sources) {
-        this(new Properties(), sources);
+        this(new Properties(), new EventsHandler(), sources);
     }
 
     /**
@@ -68,13 +71,24 @@ implements MutableConfig {
      * {@code URL} or {@code Iterable} collections of any of them.
      * 
      * @param config The {@code Properties} instance to use as inner container.
+     * @param events The configuration change events handler.
      * @param sources The sources to load the configuration parameters from.
      */
     protected MutablePropertiesConfig(
             final @NotNull Properties config,
+            final @NotNull EventsHandler events,
             final @NotNull Object... sources) {
         super(config, sources);
-        this.events = events;
+        this.events = Objects.requireNonNull(events);
+    }
+
+    /**
+     * Returns the configuration change events handler.
+     * 
+     * @return The configuration change events handler.
+     */
+    protected @NotNull EventsHandler getEvents() {
+        return this.events;
     }
 
     /**
@@ -90,6 +104,7 @@ implements MutableConfig {
         } else {
             getProperties().setProperty(key, value);
         }
+        this.events.notify(this, key);
     }
 
     /**
@@ -102,5 +117,51 @@ implements MutableConfig {
             Validate.notBlank(key, KEY_BLANK_ERR);
             getProperties().remove(key);
         }
+        this.events.notify(this, keys);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void addListener(
+            final @NotNull Listener listener) {
+        this.events.add(listener);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void removeListener(
+            final @NotNull Listener listener) {
+        this.events.remove(listener);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), this.events);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MutablePropertiesConfig other = (MutablePropertiesConfig) obj;
+        return super.equals(obj)
+                && Objects.equals(this.events, other.events);
     }
 }

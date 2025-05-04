@@ -28,18 +28,23 @@
 - Basic mutable configuration implementations.
     - `dev.orne.config.MutablePropertiesConfig` class.
     - `dev.orne.config.MutablePreferencesConfig` class.
-- Delegated configuration system.
+- Watchable mutable configuration support.
+    - `dev.orne.config.WatchableConfig` interface.
+- Delegated configuration utilities.
     - `dev.orne.config.DelegatedConfig` class.
     - `dev.orne.config.MutableDelegatedConfig` class.
-- Hierarchical configuration system.
+    - `dev.orne.config.WatchableDelegatedConfig` class.
+- Hierarchical configuration support.
     - `dev.orne.config.DelegatedHierarchicalConfig` class.
     - `dev.orne.config.MutableDelegatedHierarchicalConfig` class.
-- Encrypted configuration system.
+    - `dev.orne.config.WatchableDelegatedHierarchicalConfig` class.
+- Encrypted configuration support.
     - `dev.orne.config.ConfigCryptoProvider` interface.
     - `dev.orne.config.ConfigCryptoProviderException` exception.
     - `dev.orne.config.ConfigCryptoWrongKeyException` exception.
     - `dev.orne.config.EncryptedConfig` class.
     - `dev.orne.config.MutableEncryptedConfig` class.
+    - `dev.orne.config.WatchableEncryptedConfig` class.
     - `dev.orne.config.ConfigCryptoEngine` interface.
     - `dev.orne.config.AbstractConfigCryptoEngine` class.
     - `dev.orne.config.ConfigCryptoAesGcmEngine` class.

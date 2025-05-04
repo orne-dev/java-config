@@ -22,6 +22,8 @@ package dev.orne.config;
  * #L%
  */
 
+import java.util.Objects;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import javax.validation.constraints.NotBlank;
@@ -42,7 +44,10 @@ import org.apiguardian.api.API;
 @API(status = API.Status.STABLE, since = "1.0")
 public class MutablePreferencesConfig
 extends PreferencesConfig
-implements MutableConfig {
+implements WatchableConfig {
+
+    /** The configuration change events handler. */
+    private final @NotNull EventsHandler events;
 
     /**
      * Creates a new instance with the configuration parameters of the
@@ -53,7 +58,24 @@ implements MutableConfig {
      */
     public MutablePreferencesConfig(
             final @NotNull Preferences preferences) {
+        this(preferences, new EventsHandler());
+    }
+
+    /**
+     * Creates a new instance with the configuration parameters of the
+     * specified preferences node.
+     * 
+     * @param preferences The preferences node to use as storage of configuration
+     * parameters
+     */
+    protected MutablePreferencesConfig(
+            final @NotNull Preferences preferences,
+            final @NotNull EventsHandler events) {
         super(preferences);
+        this.events = Objects.requireNonNull(events);
+        preferences.addPreferenceChangeListener(event ->
+            this.events.notify(this, event.getKey())
+        );
     }
 
     /**
@@ -177,6 +199,15 @@ implements MutableConfig {
     }
 
     /**
+     * Returns the configuration change events handler.
+     * 
+     * @return The configuration change events handler.
+     */
+    protected @NotNull EventsHandler getEvents() {
+        return this.events;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -209,5 +240,82 @@ implements MutableConfig {
                 throw new ConfigException("Error retrieving configuration property value", ise);
             }
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void addListener(
+            final @NotNull Listener listener) {
+        this.events.add(listener);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void removeListener(
+            final @NotNull Listener listener) {
+        this.events.remove(listener);
+    }
+
+    /**
+     * Synchronizes the configuration properties from the source preferences
+     * node.
+     * 
+     * @throws ConfigException If an error occurs synchronizing the
+     * configuration properties.
+     * @see Preferences#sync()
+     */
+    public void sync() {
+        try {
+            getPreferences().sync();
+        } catch (final BackingStoreException e) {
+            throw new ConfigException("Error synchronizing preferences.", e);
+        }
+    }
+
+    /**
+     * Saves the current configuration properties to the source preferences
+     * node.
+     * 
+     * @throws ConfigException If an error occurs writing the configuration
+     * properties.
+     * @see Preferences#flush()
+     */
+    public void flush() {
+        try {
+            getPreferences().flush();
+        } catch (final BackingStoreException e) {
+            throw new ConfigException("Error flushing preferences.", e);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), this.events);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MutablePreferencesConfig other = (MutablePreferencesConfig) obj;
+        return super.equals(obj)
+                && Objects.equals(this.events, other.events);
     }
 }
