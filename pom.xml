@@ -39,15 +39,13 @@
     <java.module.name>dev.orne.config</java.module.name>
     <license.licenseName>lgpl_v3</license.licenseName>
 
-    <commons.lang.version>3.11</commons.lang.version>
-    <commons.beanutils.version>1.9.4</commons.beanutils.version>
-    <commons.collections.version>3.2.2</commons.collections.version>
-    <orne.beans.version>0.3.0</orne.beans.version>
+    <commons.lang.version>3.17.0</commons.lang.version>
+    <commons.beanutils.version>1.10.1</commons.beanutils.version>
 
     <javax.validation.version>2.0.1.Final</javax.validation.version>
-    <commons.pool.version>2.8.1</commons.pool.version>
-    <commons.configuration.version>2.8.0</commons.configuration.version>
-    <fasterxml.jackson.version>2.11.1</fasterxml.jackson.version>
+    <commons.pool.version>2.12.1</commons.pool.version>
+    <commons.configuration.version>2.12.0</commons.configuration.version>
+    <fasterxml.jackson.version>2.19.0</fasterxml.jackson.version>
 
     <github.project.id>java-config</github.project.id>
     <sonar.projectKey>orne-dev_java-config</sonar.projectKey>
@@ -78,16 +76,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <dependency>
-      <groupId>commons-collections</groupId>
-      <artifactId>commons-collections</artifactId>
-      <version>${commons.collections.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>dev.orne</groupId>
-      <artifactId>beans</artifactId>
-      <version>${orne.beans.version}</version>
-    </dependency>
 
     <dependency>
       <groupId>org.apiguardian</groupId>
@@ -111,6 +99,12 @@
       <artifactId>commons-configuration2</artifactId>
       <version>${commons.configuration.version}</version>
       <optional>true</optional>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>

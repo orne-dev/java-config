@@ -40,8 +40,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.MessageFormatter;
 
-import dev.orne.beans.converters.OrneBeansConverters;
-
 /**
  * Default implementation of {@code Configurer}.
  * 
@@ -104,7 +102,6 @@ implements Configurer {
     public static @NotNull ConvertUtilsBean defaultConverter() {
         final ConvertUtilsBean result = new ConvertUtilsBean();
         result.register(false, true, 0);
-        OrneBeansConverters.register(result, true);
         return result;
     }
 

@@ -104,6 +104,16 @@ implements ImmutableConfiguration {
      * {@inheritDoc}
      */
     @Override
+    protected boolean containsValueInternal(
+            final Object value) {
+        return this.config.getKeys()
+                .anyMatch(key -> Objects.equals(value, getProperty(key)));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected Iterator<String> getKeysInternal() {
         try {
             return this.config.getKeys().iterator();
