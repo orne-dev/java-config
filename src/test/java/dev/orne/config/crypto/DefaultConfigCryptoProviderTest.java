@@ -1,4 +1,4 @@
-package dev.orne.config;
+package dev.orne.config.crypto;
 
 /*-
  * #%L
@@ -38,10 +38,14 @@ import javax.crypto.SecretKey;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import dev.orne.config.crypto.ConfigCryptoEngine;
+import dev.orne.config.crypto.ConfigCryptoProviderException;
+import dev.orne.config.crypto.DefaultConfigCryptoProvider;
+
 /**
  * Unit tests for {@code DefaultConfigCryptoProvider}.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
  * @since 0.2
  * @see DefaultConfigCryptoProvider
@@ -50,21 +54,19 @@ import org.junit.jupiter.api.Test;
 class DefaultConfigCryptoProviderTest {
 
     /**
-     * Test for {@link DefaultConfigCryptoProvider#DefaultConfigCryptoProvider(ConfigCryptoEngine, String)}.
+     * Test for {@link DefaultConfigCryptoProvider#DefaultConfigCryptoProvider(ConfigCryptoEngine, boolean, SecretKey)}.
      */
     @Test
     void testConstructor()
     throws ConfigCryptoProviderException {
         final ConfigCryptoEngine engine = mock(ConfigCryptoEngine.class);
-        final String mockPassword = "mock password";
         final SecretKey key = mock(SecretKey.class);
-        willReturn(key).given(engine).createSecretKey(mockPassword);
         final DefaultConfigCryptoProvider provider = new DefaultConfigCryptoProvider(
                 engine,
-                mockPassword);
+                false,
+                key);
         assertSame(engine, provider.getEngine());
         assertSame(key, provider.getSecretKey());
-        then(engine).should(times(1)).createSecretKey(mockPassword);
     }
 
     /**

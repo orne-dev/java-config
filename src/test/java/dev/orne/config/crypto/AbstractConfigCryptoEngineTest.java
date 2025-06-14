@@ -1,10 +1,10 @@
-package dev.orne.config;
+package dev.orne.config.crypto;
 
 /*-
  * #%L
  * Orne Config
  * %%
- * Copyright (C) 2020 Orne Developments
+ * Copyright (C) 2020 - 2025 Orne Developments
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -39,7 +39,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for {@code AbstractConfigCryptoEngine}.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
  * @since 0.2
  */
@@ -137,75 +137,6 @@ class AbstractConfigCryptoEngineTest {
         assertSame(expectedResult, result);
         
         then(engine).should(never()).createSecureRandom();
-    }
-
-    /**
-     * Test for {@link AbstractConfigCryptoEngine#getSaltLength()}
-     * @throws Exception Should not happen
-     */
-    @Test
-    void testGetSaltLength()
-    throws Exception {
-        final AbstractConfigCryptoEngine engine = spy(AbstractConfigCryptoEngine.class);
-        
-        final int result = engine.getSaltLength();
-        assertNotNull(result);
-        assertEquals(AbstractConfigCryptoEngine.DEFAULT_SECRET_KEY_SALT_SIZE, result);
-    }
-
-    /**
-     * Test for {@link AbstractConfigCryptoEngine#setSaltLength()}
-     * @throws Exception Should not happen
-     */
-    @Test
-    void testSetSaltLength()
-    throws Exception {
-        final int mockLength = 978;
-        final AbstractConfigCryptoEngine engine = spy(AbstractConfigCryptoEngine.class);
-        engine.setSaltLength(mockLength);
-        
-        final int result = engine.getSaltLength();
-        assertNotNull(result);
-        assertEquals(mockLength, result);
-    }
-
-    /**
-     * Test for {@link AbstractConfigCryptoEngine#createSalt(int)}
-     * @throws Exception Should not happen
-     */
-    @Test
-    void testCreateSaltLength()
-    throws Exception {
-        final SecureRandom mockRandom = mock(SecureRandom.class);
-        final int length = 12;
-        final AbstractConfigCryptoEngine engine = spy(AbstractConfigCryptoEngine.class);
-        engine.setSecureRandom(mockRandom);
-        
-        final byte[] result = engine.createSalt(length);
-        assertNotNull(result);
-        assertEquals(length, result.length);
-        
-        then(mockRandom).should(times(1)).nextBytes(result);
-    }
-
-    /**
-     * Test for {@link AbstractConfigCryptoEngine#createSalt()}
-     * @throws Exception Should not happen
-     */
-    @Test
-    void testCreateSalt()
-    throws Exception {
-        final SecureRandom mockRandom = mock(SecureRandom.class);
-        final int length = 12;
-        final AbstractConfigCryptoEngine engine = spy(AbstractConfigCryptoEngine.class);
-        engine.setSecureRandom(mockRandom);
-        engine.setSaltLength(length);
-        
-        final byte[] result = engine.createSalt();
-        assertNotNull(result);
-        assertEquals(length, result.length);
-        
-        then(mockRandom).should(times(1)).nextBytes(result);
     }
 
     /**

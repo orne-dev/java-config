@@ -1,4 +1,4 @@
-package dev.orne.config;
+package dev.orne.config.crypto;
 
 /*-
  * #%L
@@ -22,11 +22,11 @@ package dev.orne.config;
  * #L%
  */
 
-import java.util.Objects;
-
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.validation.constraints.NotNull;
+
+import org.apiguardian.api.API;
 
 /**
  * Default implementation of {@code ConfigCryptoProvider} based on
@@ -38,61 +38,36 @@ import javax.validation.constraints.NotNull;
  * @see ConfigCryptoProvider
  * @see ConfigCryptoEngine
  */
+@API(status = API.Status.STABLE, since = "1.0")
 public class DefaultConfigCryptoProvider
-implements ConfigCryptoProvider {
+extends AbstractConfigCryptoProvider {
 
-    /** The cryptographic engine. */
-    private final @NotNull ConfigCryptoEngine engine;
     /** The {@code Cipher} to use during encryption and decryption. */
     private Cipher cipher;
-    /** The secret key to use during encryption and decryption. */
-    private final @NotNull SecretKey secretKey;
 
     /**
-     * Creates a new instance for the specified algorithm and secret key.
+     * Creates a new instance with specified builder configuration options.
      * 
-     * @param engine The cryptographic engine
-     * @param password The password to use to build the secret key
-     * @throws ConfigCryptoProviderException If an error occurs creating the
-     * secret key
+     * @param options The configured builder options.
      */
+    @API(status = API.Status.INTERNAL, since = "1.0")
     public DefaultConfigCryptoProvider(
-            final @NotNull ConfigCryptoEngine engine,
-            final @NotNull String password)
-    throws ConfigCryptoProviderException {
-        this.engine = engine;
-        this.secretKey = engine.createSecretKey(password);
+            final @NotNull CryptoProviderOptions options) {
+        super(options);
     }
 
     /**
-     * Creates a new instance for the specified algorithm and secret key.
+     * Creates a new instance.
      * 
-     * @param engine The cryptographic engine
-     * @param secretKey The secret key to use during encryption and decryption
+     * @param engine The cryptographic engine to use.
+     * @param destroyEngine If the engine must be destroyed with provider.
+     * @param secretKey The secret key to use.
      */
     public DefaultConfigCryptoProvider(
             final @NotNull ConfigCryptoEngine engine,
+            final boolean destroyEngine,
             final @NotNull SecretKey secretKey) {
-        this.engine = engine;
-        this.secretKey = secretKey;
-    }
-
-    /**
-     * Returns the cryptographic engine.
-     * 
-     * @return The cryptographic engine
-     */
-    protected @NotNull ConfigCryptoEngine getEngine() {
-        return this.engine;
-    }
-
-    /**
-     * Returns the secret key to use during encryption and decryption.
-     * 
-     * @return The secret key to use during encryption and decryption
-     */
-    protected @NotNull SecretKey getSecretKey() {
-        return this.secretKey;
+        super(engine, destroyEngine, secretKey);
     }
 
     /**
@@ -107,7 +82,7 @@ implements ConfigCryptoProvider {
     throws ConfigCryptoProviderException {
         synchronized (this) {
             if (this.cipher == null) {
-                this.cipher = this.engine.createCipher();
+                this.cipher = getEngine().createCipher();
             }
             return this.cipher;
         }
@@ -117,12 +92,16 @@ implements ConfigCryptoProvider {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull String encrypt(
-            final @NotNull String value)
+    public String encrypt(
+            final String value)
     throws ConfigCryptoProviderException {
+        checkDestroyed();
+        if (value == null) {
+            return value;
+        }
         final Cipher opCipher = getCipher();
         synchronized (opCipher) {
-            return this.engine.encrypt(value, this.secretKey, opCipher);
+            return getEngine().encrypt(value, getSecretKey(), opCipher);
         }
     }
 
@@ -130,13 +109,23 @@ implements ConfigCryptoProvider {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull String decrypt(
-            final @NotNull String value)
+    public String decrypt(
+            final String value)
     throws ConfigCryptoProviderException {
+        checkDestroyed();
+        if (value == null) {
+            return value;
+        }
         final Cipher opCipher = getCipher();
         synchronized (opCipher) {
-            return this.engine.decrypt(value, this.secretKey, opCipher);
+            return getEngine().decrypt(value, getSecretKey(), opCipher);
         }
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        this.cipher = null;
     }
 
     /**
@@ -144,25 +133,17 @@ implements ConfigCryptoProvider {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(this.engine, this.secretKey);
+        // Ignore cipher
+        return super.hashCode();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final DefaultConfigCryptoProvider other = (DefaultConfigCryptoProvider) obj;
-        return Objects.equals(this.engine, other.engine)
-                && Objects.equals(this.secretKey, other.secretKey);
+    public boolean equals(
+            final Object obj) {
+        // Ignore cipher
+        return super.equals(obj);
     }
 }

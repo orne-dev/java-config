@@ -1,4 +1,4 @@
-package dev.orne.config;
+package dev.orne.config.crypto;
 
 /*-
  * #%L
@@ -27,6 +27,8 @@ import javax.crypto.SecretKey;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.apiguardian.api.API;
+
 /**
  * Engine of cryptography transformations for configuration values.
  * 
@@ -34,6 +36,7 @@ import javax.validation.constraints.NotNull;
  * @version 1.0, 2020-04
  * @since 0.2
  */
+@API(status = API.Status.STABLE, since = "1.0")
 public interface ConfigCryptoEngine {
 
     /**
@@ -46,7 +49,7 @@ public interface ConfigCryptoEngine {
      * the {@code SecretKey}
      */
     @NotNull SecretKey createSecretKey(
-            @NotBlank String password)
+            @NotBlank char[] password)
     throws ConfigCryptoProviderException;
 
     /**
@@ -90,4 +93,14 @@ public interface ConfigCryptoEngine {
             @NotNull SecretKey key,
             @NotNull Cipher cipher)
     throws ConfigCryptoProviderException;
+
+    /**
+     * Destroys all secret information.
+     * Any further call to the instance will throw an
+     * {@code IllegalStateException}.
+     * 
+     * @throws ConfigCryptoProviderException If an error occurs destroying the
+     * secret information.
+     */
+    void destroy();
 }

@@ -1,4 +1,4 @@
-package dev.orne.config;
+package dev.orne.config.crypto;
 
 /*-
  * #%L
@@ -31,6 +31,8 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKeyFactory;
 import javax.validation.constraints.NotNull;
 
+import org.apiguardian.api.API;
+
 /**
  * Abstract base implementation of {@code ConfigCryptoEngine}.
  * 
@@ -38,6 +40,7 @@ import javax.validation.constraints.NotNull;
  * @version 1.0, 2020-08
  * @since 0.2
  */
+@API(status = API.Status.STABLE, since = "1.0")
 public abstract class AbstractConfigCryptoEngine
 implements ConfigCryptoEngine {
 
@@ -57,8 +60,8 @@ implements ConfigCryptoEngine {
 
     /** The {@code SecureRandom} instance. */
     private SecureRandom secureRandom;
-    /** The secret key salt length. */
-    private int saltLength = DEFAULT_SECRET_KEY_SALT_SIZE;
+    /** If the engine has been destroyed. */
+    private boolean destroyed;
 
     /**
      * Returns the {@code SecureRandom} instance of this instance.
@@ -109,51 +112,6 @@ implements ConfigCryptoEngine {
     }
 
     /**
-     * Returns the secret key salt length.
-     * 
-     * @return The secret key salt length
-     */
-    public int getSaltLength() {
-        return this.saltLength;
-    }
-
-    /**
-     * Sets the secret key salt length.
-     * 
-     * @param length The secret key salt length
-     */
-    public void setSaltLength(final int length) {
-        this.saltLength = length;
-    }
-
-    /**
-     * Generates random password salt bytes.
-     * 
-     * @return The generated salt bytes
-     * @throws ConfigCryptoProviderException If an error occurs creating the password salt
-     */
-    @NotNull
-    public byte[] createSalt()
-    throws ConfigCryptoProviderException {
-        return createSalt(this.saltLength);
-    }
-
-    /**
-     * Generates random password salt bytes.
-     * 
-     * @param size The size of the generated salt bytes
-     * @return The generated salt bytes
-     * @throws ConfigCryptoProviderException If an error occurs creating the password salt
-     */
-    @NotNull
-    public byte[] createSalt(final int size)
-    throws ConfigCryptoProviderException {
-        final byte[] salt = new byte[size];
-        getSecureRandom().nextBytes(salt);
-        return salt;
-    }
-
-    /**
      * Gets a {@code SecretKeyFactory} for the specified algorithm.
      * 
      * @param algorithm The algorithm to use
@@ -201,8 +159,37 @@ implements ConfigCryptoEngine {
      * {@inheritDoc}
      */
     @Override
+    public void destroy() {
+        this.destroyed = true;
+    }
+
+    /**
+     * Returns {@code true} if the cryptographic engine has been destroyed.
+     * 
+     * @return If the cryptographic engine has been destroyed.
+     */
+    public boolean isDestroyed() {
+        return this.destroyed;
+    }
+
+    /**
+     * Checks if the cryptographic engine has been destroyed.
+     * 
+     * @throws IllegalStateException If the cryptographic engine has been
+     * destroyed.
+     */
+    protected void checkDestroyed() {
+        if (this.destroyed) {
+            throw new IllegalStateException("The cryptographic engine has been destroyed.");
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public int hashCode() {
-        return Objects.hash(this.secureRandom, this.saltLength);
+        return Objects.hash(this.secureRandom);
     }
 
     /**
@@ -220,7 +207,6 @@ implements ConfigCryptoEngine {
             return false;
         }
         final AbstractConfigCryptoEngine other = (AbstractConfigCryptoEngine) obj;
-        return Objects.equals(this.secureRandom, other.secureRandom)
-                && Objects.equals(this.saltLength, other.saltLength);
+        return Objects.equals(this.secureRandom, other.secureRandom);
     }
 }

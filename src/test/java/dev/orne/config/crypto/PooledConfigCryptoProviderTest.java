@@ -1,4 +1,4 @@
-package dev.orne.config;
+package dev.orne.config.crypto;
 
 /*-
  * #%L
@@ -37,12 +37,15 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 
-import dev.orne.config.PooledConfigCryptoProvider.PooledCipherFactory;
+import dev.orne.config.crypto.ConfigCryptoEngine;
+import dev.orne.config.crypto.ConfigCryptoProviderException;
+import dev.orne.config.crypto.PooledConfigCryptoProvider;
+import dev.orne.config.crypto.PooledConfigCryptoProvider.PooledCipherFactory;
 
 /**
  * Unit tests for {@code PooledConfigCryptoProvider}.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
  * @since 0.2
  * @see PooledConfigCryptoProvider
@@ -57,7 +60,7 @@ class PooledConfigCryptoProviderTest {
     void testConstructor()
     throws ConfigCryptoProviderException {
         final ConfigCryptoEngine engine = mock(ConfigCryptoEngine.class);
-        final String mockPassword = "mock password";
+        final char[] mockPassword = "mock password".toCharArray();
         final SecretKey key = mock(SecretKey.class);
         willReturn(key).given(engine).createSecretKey(mockPassword);
         final PooledConfigCryptoProvider provider = new PooledConfigCryptoProvider(

@@ -1,4 +1,4 @@
-package dev.orne.config;
+package dev.orne.config.crypto;
 
 /*-
  * #%L
@@ -25,6 +25,7 @@ package dev.orne.config;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.spec.KeySpec;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Objects;
 
@@ -35,8 +36,9 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import org.apiguardian.api.API;
 
 /**
  * Implementation of {@code ConfigCryptoEngine} based on
@@ -46,9 +48,9 @@ import javax.validation.constraints.NotNull;
  * @version 1.0, 2020-08
  * @since 0.2
  */
+@API(status = API.Status.STABLE, since = "1.0")
 public class ConfigCryptoAesGcmEngine
-extends AbstractConfigCryptoEngine
-implements ConfigCryptoEngine {
+extends AbstractConfigCryptoEngine {
 
     /** The default {@code SecretKeyFactory} algorithm. */
     public static final String DEFAULT_KEY_FACTORY_ALGORITHM = "PBKDF2WithHmacSHA256";
@@ -86,21 +88,24 @@ implements ConfigCryptoEngine {
     private int secretKeyLength = DEFAULT_SECRET_KEY_LENGTH;
     /** The {@code SecretKey} algorithm. */
     private final @NotNull String secretKeyAlgorithm;
+    /** The salt used for the {@code SecretKey} creations. */
+    private final @NotNull byte[] secretKeySalt;
     /** The {@code Cipher} algorithm. */
     private final @NotNull String cipherAlgorithm;
     /** The GCM initial vector length. */
     private int gcmInitVectorLength = DEFAULT_GCM_IV_LENGTH;
     /** The GCM tag length. */
     private int gcmTagLength = DEFAULT_GCM_TAG_LENGTH;
-    /** The salt used for the {@code SecretKey} creations. */
-    private byte[] salt;
 
     /**
      * Creates a new instance with the default {@code SecretKeyFactory},
      * {@code SecretKey} and {@code Cipher} algorithms.
+     * 
+     * @param secretKeySalt The salt used for the {@code SecretKey} creations.
      */
-    public ConfigCryptoAesGcmEngine() {
-        this(DEFAULT_KEY_FACTORY_ALGORITHM, DEFAULT_KEY_ALGORITHM, DEFAULT_CIPHER_ALGORITHM);
+    public ConfigCryptoAesGcmEngine(
+            final @NotNull byte[] secretKeySalt) {
+        this(DEFAULT_KEY_FACTORY_ALGORITHM, DEFAULT_KEY_ALGORITHM, secretKeySalt, DEFAULT_CIPHER_ALGORITHM);
     }
 
     /**
@@ -109,15 +114,18 @@ implements ConfigCryptoEngine {
      * 
      * @param secretKeyFactoryAlgorithm The {@code SecretKeyFactory} algorithm
      * @param secretKeyAlgorithm The {@code SecretKey} algorithm
+     * @param secretKeySalt The salt used for the {@code SecretKey} creations.
      * @param cipherAlgorithm The {@code Cipher} algorithm
      */
     public ConfigCryptoAesGcmEngine(
             final @NotNull String secretKeyFactoryAlgorithm,
             final @NotNull String secretKeyAlgorithm,
+            final @NotNull byte[] secretKeySalt,
             final @NotNull String cipherAlgorithm) {
         super();
         this.secretKeyFactoryAlgorithm = secretKeyFactoryAlgorithm;
         this.secretKeyAlgorithm = secretKeyAlgorithm;
+        this.secretKeySalt = secretKeySalt;
         this.cipherAlgorithm = cipherAlgorithm;
     }
 
@@ -225,8 +233,9 @@ implements ConfigCryptoEngine {
      */
     @Override
     public @NotNull SecretKey createSecretKey(
-            final @NotBlank String password)
+            final @NotNull char[] password)
     throws ConfigCryptoProviderException {
+        checkDestroyed();
         try {
             final SecretKeyFactory factory = getSecretKeyFactory(
                     getSecretKeyFactoryAlgorithm());
@@ -249,47 +258,16 @@ implements ConfigCryptoEngine {
      * the specification
      */
     protected @NotNull KeySpec createKeySpec(
-            final @NotBlank String password)
+            final @NotNull char[] password)
     throws ConfigCryptoProviderException {
         try {
             return new PBEKeySpec(
-                    password.toCharArray(),
-                    getSalt(),
+                    password,
+                    this.secretKeySalt,
                     getSecretKeyIterations(),
                     getSecretKeyLength());
         } catch (final IllegalArgumentException iae) {
             throw new ConfigCryptoProviderException(SECRET_KEY_CREATION_ERROR, iae);
-        }
-    }
-
-    /**
-     * Returns the salt used for the {@code SecretKey} creations. If no salt
-     * has been set a random one is generated and set.
-     * 
-     * @return The salt used for the {@code SecretKey} creations
-     * @throws ConfigCryptoProviderException If an error occurs generating
-     * the random salt
-     */
-    public @NotNull byte[] getSalt()
-    throws ConfigCryptoProviderException {
-        synchronized (this) {
-            if (this.salt == null) {
-                this.salt = createSalt();
-            }
-            return this.salt;
-        }
-    }
-
-    /**
-     * Sets the salt to be used for the {@code SecretKey} creations.
-     * 
-     * @param salt The salt to be used for the {@code SecretKey} creations
-     */
-    public void setSalt(
-            final @NotNull byte[] salt) {
-        synchronized (this) {
-            this.salt = new byte[salt.length];
-            System.arraycopy(salt, 0, this.salt, 0, salt.length);
         }
     }
 
@@ -299,6 +277,7 @@ implements ConfigCryptoEngine {
     @Override
     public @NotNull Cipher createCipher()
     throws ConfigCryptoProviderException {
+        checkDestroyed();
         return createCipher(getCipherAlgorithm());
     }
 
@@ -311,6 +290,7 @@ implements ConfigCryptoEngine {
             final @NotNull SecretKey key,
             final @NotNull Cipher cipher)
     throws ConfigCryptoProviderException {
+        checkDestroyed();
         final byte[] valueBytes = value.getBytes(StandardCharsets.UTF_8);
         final byte[] initVector = new byte[getGcmInitVectorLength()];
         getSecureRandom().nextBytes(initVector);
@@ -338,6 +318,7 @@ implements ConfigCryptoEngine {
             final @NotNull SecretKey key,
             final @NotNull Cipher cipher)
     throws ConfigCryptoProviderException {
+        checkDestroyed();
         final byte[] cipherBytes = Base64.getDecoder().decode(value);
         final GCMParameterSpec gcmSpec = new GCMParameterSpec(
                 getGcmTagLength() * java.lang.Byte.SIZE,
@@ -362,6 +343,15 @@ implements ConfigCryptoEngine {
      * {@inheritDoc}
      */
     @Override
+    public void destroy() {
+        Arrays.fill(this.secretKeySalt, (byte) 0);
+        super.destroy();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public int hashCode() {
         return Objects.hash(
                 super.hashCode(),
@@ -369,10 +359,10 @@ implements ConfigCryptoEngine {
                 this.secretKeyIterations,
                 this.secretKeyLength,
                 this.secretKeyAlgorithm,
+                this.secretKeySalt,
                 this.cipherAlgorithm,
                 this.gcmInitVectorLength,
-                this.gcmTagLength,
-                this.salt);
+                this.gcmTagLength);
     }
 
     /**
@@ -395,9 +385,9 @@ implements ConfigCryptoEngine {
                 && Objects.equals(this.secretKeyIterations, other.secretKeyIterations)
                 && Objects.equals(this.secretKeyLength, other.secretKeyLength)
                 && Objects.equals(this.secretKeyAlgorithm, other.secretKeyAlgorithm)
+                && Objects.equals(this.secretKeySalt, other.secretKeySalt)
                 && Objects.equals(this.cipherAlgorithm, other.cipherAlgorithm)
                 && Objects.equals(this.gcmInitVectorLength, other.gcmInitVectorLength)
-                && Objects.equals(this.gcmTagLength, other.gcmTagLength)
-                && Objects.equals(this.salt, other.salt);
+                && Objects.equals(this.gcmTagLength, other.gcmTagLength);
     }
 }

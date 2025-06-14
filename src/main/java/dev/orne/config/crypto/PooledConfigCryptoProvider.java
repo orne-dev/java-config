@@ -1,4 +1,4 @@
-package dev.orne.config;
+package dev.orne.config.crypto;
 
 /*-
  * #%L
@@ -24,7 +24,6 @@ package dev.orne.config;
 
 import java.lang.ref.SoftReference;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -36,10 +35,11 @@ import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.PooledSoftReference;
 import org.apache.commons.pool2.impl.SoftReferenceObjectPool;
+import org.apiguardian.api.API;
 
 /**
  * Default implementation of {@code ConfigCryptoProvider} based on
- * {@code ConfigCryptoEngine} with synchronized {@code Cipher}.
+ * {@code ConfigCryptoEngine} with pooled {@code Cipher}s.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2020-08
@@ -47,71 +47,58 @@ import org.apache.commons.pool2.impl.SoftReferenceObjectPool;
  * @see Cipher
  * @see SecretKey
  */
+@API(status = API.Status.STABLE, since = "1.0")
 public class PooledConfigCryptoProvider
-implements ConfigCryptoProvider {
+extends AbstractConfigCryptoProvider {
 
-    /** The cryptographic engine. */
-    private final @NotNull ConfigCryptoEngine engine;
-    /** The pool of {@code Cipher} to use during encryption and decryption. */
+    /** The pool of {@code Cipher} instances to use. */
     private final @NotNull ObjectPool<Cipher> ciphersPool;
-    /** The secret key to use during encryption and decryption. */
-    private final @NotNull SecretKey secretKey;
 
     /**
-     * Creates a new instance with the specified cryptographic engine and
-     * password. A new {@code ObjectPool} is created for the {@code Cipher}s
-     * reused between threads.
+     * Creates a new instance with specified builder configuration options.
      * 
-     * @param engine The cryptographic engine
-     * @param password The password to use to build the secret key
-     * @throws ConfigCryptoProviderException If an error occurs creating the
-     * secret key
+     * @param options The configured builder options.
      */
+    @API(status = API.Status.INTERNAL, since = "1.0")
     public PooledConfigCryptoProvider(
-            final @NotNull ConfigCryptoEngine engine,
-            final @NotNull String password)
-    throws ConfigCryptoProviderException {
-        this(engine, engine.createSecretKey(password));
+            final @NotNull CryptoProviderOptions options) {
+        super(options);
+        this.ciphersPool = new SoftReferenceObjectPool<>(new PooledCipherFactory(options.getEngine()));
     }
 
     /**
-     * Creates a new instance with the specified cryptographic engine and
-     * secret key. A new {@code ObjectPool} is created for the {@code Cipher}s
-     * reused between threads.
+     * Creates a new instance.
      * 
-     * @param engine The cryptographic engine
-     * @param secretKey The secret key to use during encryption and decryption
+     * @param engine The cryptographic engine to use.
+     * @param destroyEngine If the engine must be destroyed with provider.
+     * @param secretKey The secret key to use.
      */
     public PooledConfigCryptoProvider(
             final @NotNull ConfigCryptoEngine engine,
+            final boolean destroyEngine,
             final @NotNull SecretKey secretKey) {
-        this(engine, new SoftReferenceObjectPool<>(new PooledCipherFactory(engine)), secretKey);
+        this(
+                engine,
+                destroyEngine,
+                secretKey,
+                new SoftReferenceObjectPool<>(new PooledCipherFactory(engine)));
     }
 
     /**
-     * Creates a new instance with the specified cryptographic engine, secret
-     * key and pool of {@code Cipher}s.
+     * Creates a new instance.
      * 
-     * @param engine The cryptographic engine
-     * @param pool The pool of {@code Cipher} to use during encryption and decryption
-     * @param secretKey The secret key to use during encryption and decryption
+     * @param engine The cryptographic engine to use.
+     * @param destroyEngine If the engine must be destroyed with provider.
+     * @param secretKey The secret key to use.
+     * @param pool The pool of {@code Cipher} instances to use.
      */
-    public PooledConfigCryptoProvider(
+    protected PooledConfigCryptoProvider(
             final @NotNull ConfigCryptoEngine engine,
-            final @NotNull ObjectPool<Cipher> pool,
-            final @NotNull SecretKey secretKey) {
-        this.engine = engine;
+            final boolean destroyEngine,
+            final @NotNull SecretKey secretKey,
+            final @NotNull ObjectPool<Cipher> pool) {
+        super(engine, destroyEngine, secretKey);
         this.ciphersPool = pool;
-        this.secretKey = secretKey;
-    }
-
-    /**
-     * Returns the cryptographic engine.
-     * 
-     * @return The cryptographic engine
-     */
-    protected @NotNull ConfigCryptoEngine getEngine() {
-        return this.engine;
     }
 
     /**
@@ -126,15 +113,6 @@ implements ConfigCryptoProvider {
     }
 
     /**
-     * Returns the secret key to use during encryption and decryption.
-     * 
-     * @return The secret key to use during encryption and decryption
-     */
-    protected @NotNull SecretKey getSecretKey() {
-        return this.secretKey;
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -145,7 +123,7 @@ implements ConfigCryptoProvider {
         try {
             final Cipher cipher = this.ciphersPool.borrowObject();
             try {
-                return this.engine.encrypt(value, this.secretKey, cipher);
+                return encrypt(value, cipher);
             } catch (final ConfigCryptoProviderException ccpe) {
                 encryptException = ccpe;
                 throw ccpe;
@@ -179,7 +157,7 @@ implements ConfigCryptoProvider {
         try {
             final Cipher cipher = this.ciphersPool.borrowObject();
             try {
-                return this.engine.decrypt(value, this.secretKey, cipher);
+                return decrypt(value, cipher);
             } catch (final ConfigCryptoProviderException ccpe) {
                 decryptException = ccpe;
                 throw ccpe;
@@ -207,26 +185,18 @@ implements ConfigCryptoProvider {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(this.engine, this.secretKey);
+        // Ignore cipher pool
+        return super.hashCode();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final PooledConfigCryptoProvider other = (PooledConfigCryptoProvider) obj;
-        return Objects.equals(this.engine, other.engine)
-                && Objects.equals(this.secretKey, other.secretKey);
+    public boolean equals(
+            final Object obj) {
+        // Ignore cipher pool
+        return super.equals(obj);
     }
 
     /**
@@ -238,6 +208,7 @@ implements ConfigCryptoProvider {
      * @since 0.2
      * @see PooledObjectFactory
      */
+    @API(status = API.Status.INTERNAL, since = "1.0")
     public static class PooledCipherFactory
     extends BasePooledObjectFactory<Cipher> {
 

@@ -1,6 +1,8 @@
-package dev.orne.config;
+package dev.orne.config.crypto;
 
 import org.apiguardian.api.API;
+
+import dev.orne.config.ConfigException;
 
 /*-
  * #%L
@@ -25,17 +27,17 @@ import org.apiguardian.api.API;
  */
 
 /**
- * Exception exception thrown by providers of cryptography transformations for
- * wrong secret key (password).
+ * Base exception thrown by providers of cryptography transformations for
+ * configuration values.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
- * @version 1.0, 2020-08
+ * @version 1.0, 2020-04
  * @since 1.0
  * @see ConfigCryptoProvider
  */
 @API(status = API.Status.STABLE, since = "1.0")
-public class ConfigCryptoWrongKeyException
-extends ConfigCryptoProviderException {
+public class ConfigCryptoProviderException
+extends ConfigException {
 
     /** The serial version UID. */
     private static final long serialVersionUID = 1L;
@@ -45,7 +47,7 @@ extends ConfigCryptoProviderException {
      * The cause is not initialized, and may subsequently be initialized by a
      * call to {@link #initCause}.
      */
-    public ConfigCryptoWrongKeyException() {
+    public ConfigCryptoProviderException() {
         super();
     }
 
@@ -57,7 +59,7 @@ extends ConfigCryptoProviderException {
      * @param   message   the detail message. The detail message is saved for
      *          later retrieval by the {@link #getMessage()} method.
      */
-    public ConfigCryptoWrongKeyException(
+    public ConfigCryptoProviderException(
             final String message) {
         super(message);
     }
@@ -75,7 +77,7 @@ extends ConfigCryptoProviderException {
      *         permitted, and indicates that the cause is nonexistent or
      *         unknown.)
      */
-    public ConfigCryptoWrongKeyException(
+    public ConfigCryptoProviderException(
             final Throwable cause) {
         super(cause);
     }
@@ -93,7 +95,7 @@ extends ConfigCryptoProviderException {
      *         permitted, and indicates that the cause is nonexistent or
      *         unknown.)
      */
-    public ConfigCryptoWrongKeyException(
+    public ConfigCryptoProviderException(
             final String message,
             final Throwable cause) {
         super(message, cause);
@@ -112,7 +114,7 @@ extends ConfigCryptoProviderException {
      * @param writableStackTrace whether or not the stack trace should
      *                           be writable
      */
-    public ConfigCryptoWrongKeyException(
+    public ConfigCryptoProviderException(
             final String message,
             final Throwable cause,
             final boolean enableSuppression,

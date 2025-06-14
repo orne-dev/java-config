@@ -1,4 +1,4 @@
-package dev.orne.config;
+package dev.orne.config.crypto;
 
 /*-
  * #%L
@@ -38,24 +38,30 @@ import javax.crypto.spec.PBEKeySpec;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import dev.orne.config.crypto.ConfigCryptoAesGcmEngine;
+import dev.orne.config.crypto.ConfigCryptoProviderException;
+import dev.orne.config.crypto.ConfigCryptoWrongKeyException;
+
 /**
  * Unit tests for {@code ConfigCryptoAesGcmEngine}.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
  * @since 0.2
  */
 @Tag("ut")
 class ConfigCryptoAesGcmEngineTest {
 
+    private static final byte[] SALT = "mock salt bytes".getBytes();
+
     /**
-     * Test for {@link ConfigCryptoAesGcmEngine#ConfigCryptoAesGcmEngine()}
+     * Test for {@link ConfigCryptoAesGcmEngine#ConfigCryptoAesGcmEngine(byte[])}
      * @throws Exception Should not happen
      */
     @Test
     void testConstructor()
     throws Exception {
-        final ConfigCryptoAesGcmEngine engine = new ConfigCryptoAesGcmEngine();
+        final ConfigCryptoAesGcmEngine engine = new ConfigCryptoAesGcmEngine(SALT);
         assertNotNull(engine);
         assertEquals(ConfigCryptoAesGcmEngine.DEFAULT_KEY_FACTORY_ALGORITHM, engine.getSecretKeyFactoryAlgorithm());
         assertEquals(ConfigCryptoAesGcmEngine.DEFAULT_SECRET_KEY_ITERATIONS, engine.getSecretKeyIterations());
@@ -64,6 +70,12 @@ class ConfigCryptoAesGcmEngineTest {
         assertEquals(ConfigCryptoAesGcmEngine.DEFAULT_CIPHER_ALGORITHM, engine.getCipherAlgorithm());
         assertEquals(ConfigCryptoAesGcmEngine.DEFAULT_GCM_IV_LENGTH, engine.getGcmInitVectorLength());
         assertEquals(ConfigCryptoAesGcmEngine.DEFAULT_GCM_TAG_LENGTH, engine.getGcmTagLength());
+        assertThrows(ConfigCryptoProviderException.class, () -> {
+            new ConfigCryptoAesGcmEngine(null);
+        });
+        assertThrows(ConfigCryptoProviderException.class, () -> {
+            new ConfigCryptoAesGcmEngine(new byte[0]);
+        });
     }
 
     /**
@@ -77,7 +89,7 @@ class ConfigCryptoAesGcmEngineTest {
         final String mockKeyAlg = "mock key algorithm";
         final String mockCipherAlg = "mock cipher algorithm";
         final ConfigCryptoAesGcmEngine engine = new ConfigCryptoAesGcmEngine(
-                mockKeyFactoryAlg, mockKeyAlg, mockCipherAlg);
+                mockKeyFactoryAlg, mockKeyAlg, SALT, mockCipherAlg);
         assertNotNull(engine);
         assertEquals(mockKeyFactoryAlg, engine.getSecretKeyFactoryAlgorithm());
         assertEquals(ConfigCryptoAesGcmEngine.DEFAULT_SECRET_KEY_ITERATIONS, engine.getSecretKeyIterations());
@@ -86,44 +98,12 @@ class ConfigCryptoAesGcmEngineTest {
         assertEquals(mockCipherAlg, engine.getCipherAlgorithm());
         assertEquals(ConfigCryptoAesGcmEngine.DEFAULT_GCM_IV_LENGTH, engine.getGcmInitVectorLength());
         assertEquals(ConfigCryptoAesGcmEngine.DEFAULT_GCM_TAG_LENGTH, engine.getGcmTagLength());
-    }
-
-    /**
-     * Test for {@link ConfigCryptoAesGcmEngine#getSalt()}
-     * @throws Exception Should not happen
-     */
-    @Test
-    void testGetSalt()
-    throws Exception {
-        final byte[] expectedResult = "mock salt bytes".getBytes();
-        final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine());
-        willReturn(expectedResult).given(engine).createSalt();
-        
-        final byte[] result = engine.getSalt();
-        
-        assertNotNull(result);
-        assertArrayEquals(expectedResult, result);
-        
-        then(engine).should(times(1)).createSalt();
-    }
-
-    /**
-     * Test for {@link ConfigCryptoAesGcmEngine#setSalt(byte[])}
-     * @throws Exception Should not happen
-     */
-    @Test
-    void testSetSalt()
-    throws Exception {
-        final byte[] expectedResult = "mock salt bytes".getBytes();
-        final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine());
-        engine.setSalt(expectedResult);
-        
-        final byte[] result = engine.getSalt();
-        
-        assertNotNull(result);
-        assertArrayEquals(expectedResult, result);
-        
-        then(engine).should(never()).createSalt();
+        assertThrows(ConfigCryptoProviderException.class, () -> {
+            new ConfigCryptoAesGcmEngine(mockKeyFactoryAlg, mockKeyAlg, null, mockCipherAlg);
+        });
+        assertThrows(ConfigCryptoProviderException.class, () -> {
+            new ConfigCryptoAesGcmEngine(mockKeyFactoryAlg, mockKeyAlg, new byte[0], mockCipherAlg);
+        });
     }
 
     /**
@@ -134,12 +114,11 @@ class ConfigCryptoAesGcmEngineTest {
     void testSetSecretKeyIterations()
     throws Exception {
         final int expectedResult = 787;
-        final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine());
+        final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine(SALT));
         
         engine.setSecretKeyIterations(expectedResult);
         final int result = engine.getSecretKeyIterations();
         
-        assertNotNull(result);
         assertEquals(expectedResult, result);
     }
 
@@ -151,12 +130,11 @@ class ConfigCryptoAesGcmEngineTest {
     void testSetSecretKeyLength()
     throws Exception {
         final int expectedResult = 787;
-        final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine());
+        final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine(SALT));
         
         engine.setSecretKeyLength(expectedResult);
         final int result = engine.getSecretKeyLength();
         
-        assertNotNull(result);
         assertEquals(expectedResult, result);
     }
 
@@ -168,12 +146,11 @@ class ConfigCryptoAesGcmEngineTest {
     void testSetGcmInitVectorLength()
     throws Exception {
         final int expectedResult = 787;
-        final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine());
+        final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine(SALT));
         
         engine.setGcmInitVectorLength(expectedResult);
         final int result = engine.getGcmInitVectorLength();
         
-        assertNotNull(result);
         assertEquals(expectedResult, result);
     }
 
@@ -185,12 +162,11 @@ class ConfigCryptoAesGcmEngineTest {
     void testSetGcmTagLength()
     throws Exception {
         final int expectedResult = 787;
-        final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine());
+        final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine(SALT));
         
         engine.setGcmTagLength(expectedResult);
         final int result = engine.getGcmTagLength();
         
-        assertNotNull(result);
         assertEquals(expectedResult, result);
     }
 
@@ -201,27 +177,24 @@ class ConfigCryptoAesGcmEngineTest {
     @Test
     void testCreateKeySpec()
     throws Exception {
-        final byte[] salt = "mock salt bytes".getBytes();
         final int iterations = 100;
         final int keyLength = 128;
         final String password = "mock password";
         
-        final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine());
-        engine.setSalt(salt);
+        final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine(SALT));
         engine.setSecretKeyIterations(iterations);
         engine.setSecretKeyLength(keyLength);
         
-        final KeySpec result = engine.createKeySpec(password);
+        final KeySpec result = engine.createKeySpec(password.toCharArray());
         
         assertNotNull(result);
         assertTrue(result instanceof PBEKeySpec);
         final PBEKeySpec pbeSpec = (PBEKeySpec) result;
-        assertArrayEquals(salt, pbeSpec.getSalt());
+        assertArrayEquals(SALT, pbeSpec.getSalt());
         assertEquals(iterations, pbeSpec.getIterationCount());
         assertEquals(keyLength, pbeSpec.getKeyLength());
         assertArrayEquals(password.toCharArray(), pbeSpec.getPassword());
 
-        then(engine).should(times(1)).getSalt();
         then(engine).should(times(1)).getSecretKeyIterations();
         then(engine).should(times(1)).getSecretKeyLength();
     }
@@ -231,59 +204,13 @@ class ConfigCryptoAesGcmEngineTest {
      * @throws Exception Should not happen
      */
     @Test
-    void testCreateKeySpecNullSalt()
-    throws Exception {
-        final byte[] salt = null;
-        final int iterations = 100;
-        final int keyLength = 128;
-        final String password = "mock password";
-        
-        final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine());
-        willReturn(salt).given(engine).getSalt();
-        engine.setSecretKeyIterations(iterations);
-        engine.setSecretKeyLength(keyLength);
-        
-        assertThrows(ConfigCryptoProviderException.class, () -> {
-            engine.createKeySpec(password);
-        });
-    }
-
-    /**
-     * Test for {@link ConfigCryptoAesGcmEngine#createKeySpec(String)}
-     * @throws Exception Should not happen
-     */
-    @Test
-    void testCreateKeySpecEmptySalt()
-    throws Exception {
-        final byte[] salt = new byte[0];
-        final int iterations = 100;
-        final int keyLength = 128;
-        final String password = "mock password";
-        
-        final ConfigCryptoAesGcmEngine engine = new ConfigCryptoAesGcmEngine();
-        engine.setSalt(salt);
-        engine.setSecretKeyIterations(iterations);
-        engine.setSecretKeyLength(keyLength);
-        
-        assertThrows(ConfigCryptoProviderException.class, () -> {
-            engine.createKeySpec(password);
-        });
-    }
-
-    /**
-     * Test for {@link ConfigCryptoAesGcmEngine#createKeySpec(String)}
-     * @throws Exception Should not happen
-     */
-    @Test
     void testCreateKeySpecNegativeIterations()
     throws Exception {
-        final byte[] salt = "mock salt bytes".getBytes();
         final int iterations = 100;
         final int keyLength = -1;
-        final String password = "mock password";
+        final char[] password = "mock password".toCharArray();
         
-        final ConfigCryptoAesGcmEngine engine = new ConfigCryptoAesGcmEngine();
-        engine.setSalt(salt);
+        final ConfigCryptoAesGcmEngine engine = new ConfigCryptoAesGcmEngine(SALT);
         engine.setSecretKeyIterations(iterations);
         engine.setSecretKeyLength(keyLength);
         
@@ -299,13 +226,11 @@ class ConfigCryptoAesGcmEngineTest {
     @Test
     void testCreateKeySpecNegativeLength()
     throws Exception {
-        final byte[] salt = "mock salt bytes".getBytes();
         final int iterations = 100;
         final int keyLength = -1;
-        final String password = "mock password";
+        final char[] password = "mock password".toCharArray();
         
-        final ConfigCryptoAesGcmEngine engine = new ConfigCryptoAesGcmEngine();
-        engine.setSalt(salt);
+        final ConfigCryptoAesGcmEngine engine = new ConfigCryptoAesGcmEngine(SALT);
         engine.setSecretKeyIterations(iterations);
         engine.setSecretKeyLength(keyLength);
         
@@ -321,18 +246,17 @@ class ConfigCryptoAesGcmEngineTest {
     @Test
     void testCreateSecretKey()
     throws Exception {
-        final ConfigCryptoAesGcmEngine realEngine = new ConfigCryptoAesGcmEngine();
+        final ConfigCryptoAesGcmEngine realEngine = new ConfigCryptoAesGcmEngine(SALT);
         final int iterations = 100;
         final int keyLength = 128;
-        final String password = "mock password";
-        final byte[] salt = realEngine.getSalt();
+        final char[] password = "mock password".toCharArray();
         final String secretKeyFactoryAlgorithm = realEngine.getSecretKeyFactoryAlgorithm();
         final String secretKeyAlgorithm = realEngine.getSecretKeyAlgorithm();
         realEngine.setSecretKeyIterations(iterations);
         realEngine.setSecretKeyLength(keyLength);
         final PBEKeySpec spec = new PBEKeySpec(
-                password.toCharArray(),
-                salt,
+                password,
+                SALT,
                 iterations,
                 keyLength);
         final ConfigCryptoAesGcmEngine engine = spy(realEngine);
@@ -340,7 +264,7 @@ class ConfigCryptoAesGcmEngineTest {
         
         final SecretKeyFactory mySKF = SecretKeyFactory.getInstance(secretKeyFactoryAlgorithm);
         final SecretKey expectedSK = mySKF.generateSecret(new PBEKeySpec(
-                password.toCharArray(), salt, iterations, keyLength));
+                password, SALT, iterations, keyLength));
         
         final SecretKey result = engine.createSecretKey(password);
         
@@ -359,10 +283,10 @@ class ConfigCryptoAesGcmEngineTest {
     @Test
     void testCreateSecretKeyWrongSKFAlgorithm()
     throws Exception {
-        final String password = "mock password";
+        final char[] password = "mock password".toCharArray();
         final String mockSKFAlgorithm = "unknown SKF algorithm";
         final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine(
-                mockSKFAlgorithm, "unused", "unused"));
+                mockSKFAlgorithm, "unused", SALT, "unused"));
         willThrow(ConfigCryptoProviderException.class).given(engine).getSecretKeyFactory(mockSKFAlgorithm);
         
         assertThrows(ConfigCryptoProviderException.class, () -> {
@@ -379,9 +303,9 @@ class ConfigCryptoAesGcmEngineTest {
     @Test
     void testCreateSecretKeyWrongParams()
     throws Exception {
-        final String password = "mock password";
-        final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine());
-        final KeySpec spec = new DESKeySpec(password.getBytes());
+        final char[] password = "mock password".toCharArray();
+        final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine(SALT));
+        final KeySpec spec = new DESKeySpec("mock password".getBytes());
         willReturn(spec).given(engine).createKeySpec(password);
         
         assertThrows(ConfigCryptoProviderException.class, () -> {
@@ -399,7 +323,7 @@ class ConfigCryptoAesGcmEngineTest {
         final String cipherAlgorithm = "mock algorithm";
         final Cipher expectedResult = mock(Cipher.class);
         final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine(
-                "unused", "unused", cipherAlgorithm));
+                "unused", "unused", SALT, cipherAlgorithm));
         willReturn(expectedResult).given(engine).createCipher(cipherAlgorithm);
         
         final Cipher result = engine.createCipher();
@@ -417,10 +341,9 @@ class ConfigCryptoAesGcmEngineTest {
     @Test
     void testEncrypt()
     throws Exception {
-        final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine());
-        final byte[] salt = "mock salt bytes".getBytes();
-        engine.setSalt(salt);
-        final SecretKey key = engine.createSecretKey("mock password");
+        final char[] password = "mock password".toCharArray();
+        final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine(SALT));
+        final SecretKey key = engine.createSecretKey(password);
         final Cipher cipher = engine.createCipher();
         final String plainText = "mock plain text";
         
@@ -436,9 +359,7 @@ class ConfigCryptoAesGcmEngineTest {
     @Test
     void testEncryptBadKey()
     throws Exception {
-        final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine());
-        final byte[] salt = "mock salt bytes".getBytes();
-        engine.setSalt(salt);
+        final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine(SALT));
         final SecretKeyFactory skf = SecretKeyFactory.getInstance("DES");
         final KeySpec spec = new DESKeySpec("mock password".getBytes());
         final SecretKey key = skf.generateSecret(spec);
@@ -457,10 +378,9 @@ class ConfigCryptoAesGcmEngineTest {
     @Test
     void testDecrypt()
     throws Exception {
-        final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine());
-        final byte[] salt = "mock salt bytes".getBytes();
-        engine.setSalt(salt);
-        final SecretKey key = engine.createSecretKey("mock password");
+        final char[] password = "mock password".toCharArray();
+        final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine(SALT));
+        final SecretKey key = engine.createSecretKey(password);
         final Cipher cipher = engine.createCipher();
         final String encryptedText = "oWn2xhVxeNVK9iWUbfab+5Wo/j3TIWW6X1oYMu5ecaFgSmAfHr7VzAX3Qw==";
         final String expectedValue = "mock plain text";
@@ -478,9 +398,7 @@ class ConfigCryptoAesGcmEngineTest {
     @Test
     void testDecryptBadKeyType()
     throws Exception {
-        final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine());
-        final byte[] salt = "mock salt bytes".getBytes();
-        engine.setSalt(salt);
+        final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine(SALT));
         final SecretKeyFactory skf = SecretKeyFactory.getInstance("DES");
         final KeySpec spec = new DESKeySpec("mock password".getBytes());
         final SecretKey key = skf.generateSecret(spec);
@@ -499,10 +417,9 @@ class ConfigCryptoAesGcmEngineTest {
     @Test
     void testDecryptWrongPassword()
     throws Exception {
-        final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine());
-        final byte[] salt = "mock salt bytes".getBytes();
-        engine.setSalt(salt);
-        final SecretKey key = engine.createSecretKey("mock wrong password");
+        final char[] password = "mock wrong password".toCharArray();
+        final ConfigCryptoAesGcmEngine engine = spy(new ConfigCryptoAesGcmEngine(SALT));
+        final SecretKey key = engine.createSecretKey(password);
         final Cipher cipher = engine.createCipher();
         final String encryptedText = "oWn2xhVxeNVK9iWUbfab+5Wo/j3TIWW6X1oYMu5ecaFgSmAfHr7VzAX3Qw==";
         
