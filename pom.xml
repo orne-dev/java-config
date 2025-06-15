@@ -6,7 +6,7 @@
   <parent>
     <groupId>dev.orne</groupId>
     <artifactId>java-root-pom</artifactId>
-    <version>0.7.0</version>
+    <version>0.8.2</version>
     <relativePath />
   </parent>
 
