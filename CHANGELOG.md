@@ -56,23 +56,7 @@
     - `dev.orne.config.commons.CommonsImmutableConfiguration` class.
     - `dev.orne.config.commons.CommonsConfiguration` class.
     - `dev.orne.config.commons.ProviderConfigurationDecoder` class.
-- Java Preferences support for Apache Commons Configuration 2.x
-    - `dev.orne.config.commons.PreferencesConfiguration` class.
-    - `dev.orne.config.commons.prefs.PreferencesNodeDeletedException` exception.
-    - `dev.orne.config.commons.prefs.PreferencesMapper` interface.
-    - `dev.orne.config.commons.prefs.AbstractPreferencesMapper` class.
-    - `dev.orne.config.commons.prefs.AbstractImmutableNodePreferencesMapper` class.
-    - `dev.orne.config.commons.prefs.AttributeBasedPreferencesMapper` class.
-    - `dev.orne.config.commons.prefs.NodeBasedPreferencesMapper` class.
-    - `dev.orne.config.commons.prefs.EventCoordinationStrategy` interface.
-    - `dev.orne.config.commons.prefs.ByThreadEventCoordinationStrategy` class.
-    - `dev.orne.config.commons.prefs.PreferencesBased` interface.
-    - `dev.orne.config.commons.prefs.PreferencesHandler` class.
-    - `dev.orne.config.commons.prefs.PreferencesBuilderProperties` interface.
-    - `dev.orne.config.commons.prefs.PreferencesBuilderParameters` interface.
-    - `dev.orne.config.commons.prefs.PreferencesBuilderParametersImpl` class.
-    - `dev.orne.config.commons.prefs.PreferencesConfigurationBuilder` class.
-- Support for method chaining in `DefaultConfigProvider.registerConfig()` method.
+- Add `DefaultConfigProvider.registerConfig()` method.
 
 ### Removed
 
