@@ -25,36 +25,45 @@ package dev.orne.config;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
-import java.util.Enumeration;
-import java.util.Iterator;
+import java.security.Permission;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.stream.Stream;
 
-import org.apache.commons.collections.iterators.EnumerationIterator;
+import javax.validation.constraints.NotNull;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 /**
  * Unit tests for {@code SystemConfig}.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
  * @since 0.1
  */
 @Tag("ut")
-class SystemConfigTest {
-
-    private static final String TEST_KEY = "test.key";
+class SystemConfigTest
+extends AbstractConfigTest {
 
     private static String propOriginalValue;
+    private static String derivedPropOriginalValue;
+
+    private @Mock ValueDecoder mockDecoder;
+    private @Mock ValueDecorator mockDecorator;
+    private @Mock Properties mockProperties;
 
     /**
      * Saves the value of the test property.
      */
     @BeforeAll
-    public static void backupSystemPropertyValue() {
+    static void backupSystemPropertyValue() {
         propOriginalValue = System.getProperty(TEST_KEY);
+        derivedPropOriginalValue = System.getProperty(TEST_DERIVED_KEY);
     }
 
     /**
@@ -62,210 +71,168 @@ class SystemConfigTest {
      * removes it if not set.
      */
     @AfterAll
-    public static void restoreSystemPropertyValue() {
+    static void restoreSystemPropertyValue() {
         if (propOriginalValue == null) {
             System.clearProperty(TEST_KEY);
         } else {
             System.setProperty(TEST_KEY, propOriginalValue);
         }
+        if (derivedPropOriginalValue == null) {
+            System.clearProperty(TEST_DERIVED_KEY);
+        } else {
+            System.setProperty(TEST_DERIVED_KEY, derivedPropOriginalValue);
+        }
+    }
+
+    @Override
+    protected ConfigBuilder createBuilder(
+            final @NotNull Map<String, String> properties) {
+        System.getProperties().putAll(properties);
+        return Config.ofSystemProperties();
     }
 
     /**
-     * Test method for {@link SystemConfig#isEmpty()}.
-     * @throws ConfigException Shouldn't happen
+     * Tests empty instance building.
      */
     @Test
-    void testIsEmpty()
-    throws ConfigException {
-        final Properties props = mock(Properties.class);
-        final SystemConfig config = spy(SystemConfig.class);
-        given(config.getSystemProperties()).willReturn(props);
-        given(props.isEmpty()).willReturn(true);
+    void testBuilder() {
+        SystemConfig config = Config.ofSystemProperties()
+                .build();
+        assertNotNull(config);
+        assertNull(config.getParent());
+        assertSame(ValueDecoder.DEFAULT, config.getDecoder());
+        assertSame(ValueDecorator.DEFAULT, config.getDecorator());
+        assertFalse(config.getResolver().isPresent());
+        assertSame(System.getProperties(), config.getSystemProperties());
+    }
+
+    /**
+     * Test method for {@link SystemConfig#SystemConfig(Config, ValueDecoder, ValueDecorator).
+     */
+    @Test
+    void testComponentsConstructor() {
+        assertThrows(NullPointerException.class, () -> {
+            new SystemConfig(null, null, null);
+        });
+        assertThrows(NullPointerException.class, () -> {
+            new SystemConfig(mockParent, null, mockDecorator);
+        });
+        assertThrows(NullPointerException.class, () -> {
+            new SystemConfig(mockParent, mockDecoder, null);
+        });
+        assertDoesNotThrow(() -> {
+            new SystemConfig(null, mockDecoder, mockDecorator);
+        });
         
-        final boolean result = config.isEmpty();
+        final SystemConfig config = new SystemConfig(mockParent, mockDecoder, mockDecorator);
+        assertSame(mockParent, config.getParent());
+        assertSame(mockDecoder, config.getDecoder());
+        assertSame(mockDecorator, config.getDecorator());
+    }
+
+    /**
+     * Test method for {@link SystemConfig#getSystemProperties()} when
+     * {@code SecurityException} is thrown by {@code System.getProperty()}.
+     */
+    @Test
+    void testGetSystemPropertiesSecurityException() {
+        final SystemConfig config = Config.ofSystemProperties()
+                .build();
+        assertSame(System.getProperties(), config.getSystemProperties());
+        final SecurityManager sm = new SecurityManager() {
+            @Override
+            public void checkPropertiesAccess() {
+                throw new SecurityException("Mock exception");
+            }
+            @Override
+            public void checkPermission(Permission perm) {
+                if (!"setSecurityManager".equals(perm.getName())) {
+                    super.checkPermission(perm);
+                } 
+            }
+            
+        };
+        System.setSecurityManager(sm);
+        try {
+            assertThrows(ConfigException.class, config::getSystemProperties);
+        } finally {
+            System.setSecurityManager(null);
+        }
+    }
+
+    /**
+     * Test method for {@link SystemConfig#isEmptyInt()}.
+     */
+    @Test
+    void testIsEmptyInt() {
+        final SystemConfig config = spy(Config.ofSystemProperties()
+                .build());
+        given(config.getSystemProperties()).willReturn(mockProperties);
+        given(mockProperties.isEmpty()).willReturn(true);
+        
+        final boolean result = config.isEmptyInt();
         assertTrue(result);
         
-        then(props).should(times(1)).isEmpty();
-        then(props).shouldHaveNoMoreInteractions();
+        then(mockProperties).should().isEmpty();
+        then(mockProperties).shouldHaveNoMoreInteractions();
     }
 
     /**
-     * Test method for {@link SystemConfig#isEmpty()}.
-     * @throws ConfigException Shouldn't happen
+     * Test method for {@link SystemConfig#getKeysInt()}.
      */
     @Test
-    void testIsEmptyFalse()
-    throws ConfigException {
-        final Properties props = mock(Properties.class);
-        final SystemConfig config = spy(SystemConfig.class);
-        given(config.getSystemProperties()).willReturn(props);
-        given(props.isEmpty()).willReturn(false);
-        
-        final boolean result = config.isEmpty();
-        assertFalse(result);
-        
-        then(props).should(times(1)).isEmpty();
-        then(props).shouldHaveNoMoreInteractions();
-    }
-
-    /**
-     * Test method for {@link SystemConfig#isEmpty()}.
-     * @throws ConfigException Shouldn't happen
-     */
-    @Test
-    void testIsEmptySecurityException()
-    throws ConfigException {
-        final SecurityException se = new SecurityException("Mock exception");
-        final SystemConfig config = spy(SystemConfig.class);
-        given(config.getSystemProperties()).willThrow(se);
-        
-        final ConfigException result = assertThrows(ConfigException.class, () -> {
-            config.isEmpty();
-        });
-        
-        assertSame(se, result.getCause());
-    }
-
-    /**
-     * Test method for {@link SystemConfig#isEmpty()}.
-     * @throws ConfigException Shouldn't happen
-     */
-    @Test
-    void testGetKeys()
-    throws ConfigException {
-        final Properties props = mock(Properties.class);
-        final SystemConfig config = spy(SystemConfig.class);
-        given(config.getSystemProperties()).willReturn(props);
+    void testGetKeysInt() {
+        final SystemConfig config = spy(Config.ofSystemProperties()
+                .build());
+        given(config.getSystemProperties()).willReturn(mockProperties);
         @SuppressWarnings("unchecked")
-        final Enumeration<Object> mockKeys = mock(Enumeration.class);
-        given(props.keys()).willReturn(mockKeys);
+        final Set<String> mockKeys = mock(Set.class);
+        @SuppressWarnings("unchecked")
+        final Stream<String> mockKeysStream = mock(Stream.class);
+        given(mockProperties.stringPropertyNames()).willReturn(mockKeys);
+        given(mockKeys.stream()).willReturn(mockKeysStream);
         
-        final Iterator<String> result = config.getKeys();
-        assertTrue(result instanceof EnumerationIterator);
-        final EnumerationIterator enumIt = (EnumerationIterator) result;
-        assertSame(mockKeys, enumIt.getEnumeration());
+        final Stream<String> result = config.getKeysInt();
+        assertSame(mockKeysStream, result);
         
-        then(props).should(times(1)).keys();
-        then(props).shouldHaveNoMoreInteractions();
+        then(mockProperties).should().stringPropertyNames();
+        then(mockProperties).shouldHaveNoMoreInteractions();
     }
 
     /**
-     * Test method for {@link SystemConfig#isEmpty()}.
-     * @throws ConfigException Shouldn't happen
+     * Test method for {@link SystemConfig#containsInt(String)} with
+     * non existent property.
      */
     @Test
-    void testGetKeysSecurityException()
-    throws ConfigException {
-        final SecurityException se = new SecurityException("Mock exception");
-        final SystemConfig config = spy(SystemConfig.class);
-        given(config.getSystemProperties()).willThrow(se);
+    void testContainsInt() {
+        final SystemConfig config = spy(Config.ofSystemProperties()
+                .build());
+        given(config.getSystemProperties()).willReturn(mockProperties);
+        given(mockProperties.containsKey(TEST_KEY)).willReturn(true);
         
-        final ConfigException result = assertThrows(ConfigException.class, () -> {
-            config.getKeys();
-        });
+        final boolean result = config.containsInt(TEST_KEY);
+        assertTrue(result);
         
-        assertSame(se, result.getCause());
+        then(mockProperties).should().containsKey(TEST_KEY);
+        then(mockProperties).shouldHaveNoMoreInteractions();
     }
 
     /**
-     * Test method for {@link SystemConfig#containsParameter(String)} with {@code null}
-     * system property.
-     * @throws ConfigException Shouldn't happen
+     * Test method for {@link SystemConfig#getInt(String)} with
+     * non existent property.
      */
     @Test
-    void testContainsParameterFalse()
-    throws ConfigException {
-        System.clearProperty(TEST_KEY);
-        final SystemConfig config = new SystemConfig();
+    void testGetInt() {
+        final SystemConfig config = spy(Config.ofSystemProperties()
+                .build());
+        given(config.getSystemProperties()).willReturn(mockProperties);
+        final String testValue = "mockValue";
+        given(mockProperties.getProperty(TEST_KEY)).willReturn(testValue);
         
-        assertFalse(config.containsParameter(TEST_KEY));
-    }
-
-    /**
-     * Test method for {@link SystemConfig#containsParameter(String)} with non
-     * {@code null} system property.
-     * @throws ConfigException Shouldn't happen
-     */
-    @Test
-    void testContainsParameterTrue()
-    throws ConfigException {
-        System.setProperty(TEST_KEY, "somaValue");
-        final SystemConfig config = new SystemConfig();
+        final String result = config.getInt(TEST_KEY);
+        assertSame(testValue, result);
         
-        assertTrue(config.containsParameter(TEST_KEY));
-    }
-
-    /**
-     * Test method for {@link SystemConfig#containsParameter(String)} when
-     * {@code SecurityException} is thrown by {@code System.getProperty()}.
-     */
-    @Test
-    void testtestContainsParameterSecurityException() {
-        final SecurityException se = new SecurityException("Mock exception");
-        final SystemConfig config = spy(SystemConfig.class);
-        given(config.getSystemProperty(TEST_KEY)).willThrow(se);
-        
-        assertThrows(ConfigException.class, () -> {
-            config.containsParameter(TEST_KEY);
-        });
-    }
-
-    /**
-     * Test method for {@link SystemConfig#getStringParameter(String)} with
-     * {@code null} system property.
-     * @throws ConfigException Shouldn't happen
-     */
-    @Test
-    void testGetStringNull()
-    throws ConfigException {
-        System.clearProperty(TEST_KEY);
-        final SystemConfig config = new SystemConfig();
-        
-        final String result = config.getStringParameter(TEST_KEY);
-        assertNull(result);
-    }
-
-    /**
-     * Test method for {@link SystemConfig#getStringParameter(String)} with non
-     * {@code null} system property.
-     * @throws ConfigException Shouldn't happen
-     */
-    @Test
-    void testGetString()
-    throws ConfigException {
-        final String expectedValue = "customValue";
-        System.setProperty(TEST_KEY, expectedValue);
-        final SystemConfig config = new SystemConfig();
-        
-        final String result = config.getStringParameter(TEST_KEY);
-        assertNotNull(result);
-        assertEquals(expectedValue, result);
-    }
-
-    /**
-     * Test method for {@link SystemConfig#getStringParameter(String)} when
-     * {@code SecurityException} is thrown by {@code System.getProperty()}.
-     */
-    @Test
-    void testGetStringSecurityException() {
-        final SecurityException se = new SecurityException("Mock exception");
-        final SystemConfig config = spy(SystemConfig.class);
-        given(config.getSystemProperty(TEST_KEY)).willThrow(se);
-        
-        assertThrows(ConfigException.class, () -> {
-            config.getStringParameter(TEST_KEY);
-        });
-    }
-
-    /**
-     * Test method for {@link SystemConfig#getSystemProperties()}.
-     */
-    @Test
-    void testGetSystemProperties() {
-        final SystemConfig config = new SystemConfig();
-        
-        final Properties result = config.getSystemProperties();
-        assertNotNull(result);
-        assertSame(System.getProperties(), result);
+        then(mockProperties).should().getProperty(TEST_KEY);
+        then(mockProperties).shouldHaveNoMoreInteractions();
     }
 }

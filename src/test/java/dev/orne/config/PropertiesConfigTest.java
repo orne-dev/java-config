@@ -21,178 +21,504 @@ package dev.orne.config;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
-import java.util.Enumeration;
-import java.util.Iterator;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.stream.Stream;
 
-import org.apache.commons.collections.iterators.EnumerationIterator;
+import javax.validation.constraints.NotNull;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 /**
- * Unit tests for {@code PropertiesConfig}.
+ * Unit tests for {@code MutablePropertiesConfig}.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
  * @since 0.1
  */
 @Tag("ut")
-class PropertiesConfigTest {
+class PropertiesConfigTest
+extends AbstractConfigTest {
 
-    private static final String TEST_KEY = "test.key";
+    private static final String TEST_COMMON_KEY = "test.type";
+    private static final String TEST_VALUES_KEY = "test.values.type";
+    private static final String TEST_RESOURCE_KEY = "test.resource.type";
+    private static final String TEST_FILE_KEY = "test.file.type";
+    private static final String TEST_URL_KEY = "test.url.type";
+    
+    private static final String TEST_VALUES_TYPE = "values";
+    private static final String TEST_RESOURCE_TYPE = "resource";
+    private static final String TEST_FILE_TYPE = "file";
+    private static final String TEST_URL_TYPE = "url";
+    
+    private static Properties testProperties;
+    private static String testResource = "dev/orne/config/test.resource.properties";
+    private static File testFile;
+    private static Path testPath;
+    private static URL testUrl;
+
+    private @Mock ValueDecoder mockDecoder;
+    private @Mock ValueDecorator mockDecorator;
+    private @Mock Properties mockProperties;
 
     /**
-     * Test method for {@link PropertiesConfig#PropertiesConfig(Object...)} with
-     * no sources.
+     * Prepares the data needed by the tests.
+     * @throws IOException Not thrown
+     */
+    @BeforeAll
+    static void prepareTestData()
+    throws IOException {
+        testProperties = new Properties();
+        testProperties.setProperty(TEST_COMMON_KEY, TEST_VALUES_TYPE);
+        testProperties.setProperty(TEST_VALUES_KEY, TEST_VALUES_TYPE);
+        final Properties fileProps = new Properties();
+        fileProps.setProperty(TEST_COMMON_KEY, TEST_FILE_TYPE);
+        fileProps.setProperty(TEST_FILE_KEY, TEST_FILE_TYPE);
+        testFile = File.createTempFile(PropertiesConfigTest.class.getSimpleName(), ".properties");
+        final FileOutputStream fileOS = new FileOutputStream(testFile);
+        fileProps.store(fileOS, null);
+        fileOS.close();
+        testPath = testFile.toPath();
+        testUrl = PropertiesConfigTest.class.getResource("test.url.properties");
+    }
+
+    /**
+     * Releases data resources created for tests.
+     */
+    @AfterAll
+    static void cleanTestData() {
+        testFile.delete();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected ConfigBuilder createBuilder(
+            final @NotNull Map<String, String> properties) {
+        return Config.fromPropertiesFiles()
+                .add(properties);
+    }
+
+    /**
+     * Tests empty instance building.
      */
     @Test
-    void testEmptyConstructor() {
-        final PropertiesConfig config = new PropertiesConfig();
+    void testEmptyBuilder() {
+        final PropertiesConfig config = Config.fromPropertiesFiles()
+                .build();
+        assertNull(config.getParent());
+        assertSame(ValueDecoder.DEFAULT, config.getDecoder());
+        assertSame(ValueDecorator.DEFAULT, config.getDecorator());
+        assertFalse(config.getResolver().isPresent());
         assertNotNull(config.getProperties());
         assertTrue(config.getProperties().isEmpty());
     }
 
     /**
-     * Test method for {@link PropertiesConfig#isEmpty()}.
-     * @throws ConfigException Shouldn't happen
+     * Tests instance building from properties.
      */
     @Test
-    void testIsEmpty()
-    throws ConfigException {
-        final Properties props = mock(Properties.class);
-        final PropertiesConfig config = new PropertiesConfig(props);
+    void testPropertiesBuilder() {
+        final Properties properties = new Properties();
+        properties.setProperty(TEST_KEY, "testValue");
+        final PropertiesConfig config = Config.fromPropertiesFiles()
+                .add(properties)
+                .build();
+        assertNull(config.getParent());
+        assertSame(ValueDecoder.DEFAULT, config.getDecoder());
+        assertSame(ValueDecorator.DEFAULT, config.getDecorator());
+        assertFalse(config.getResolver().isPresent());
+        assertNotNull(config.getProperties());
+        assertFalse(config.getProperties().isEmpty());
+        assertEquals(properties, config.getProperties());
+    }
+
+    /**
+     * Tests instance building from map.
+     */
+    @Test
+    void testMapBuilder() {
+        final Map<String, String> data = new HashMap<>();
+        data.put(TEST_KEY, "testValue");
+        final PropertiesConfig config = Config.fromPropertiesFiles()
+                .add(data)
+                .build();
+        assertNull(config.getParent());
+        assertSame(ValueDecoder.DEFAULT, config.getDecoder());
+        assertSame(ValueDecorator.DEFAULT, config.getDecorator());
+        assertFalse(config.getResolver().isPresent());
+        assertNotNull(config.getProperties());
+        assertFalse(config.getProperties().isEmpty());
+        assertEquals(1, config.getProperties().size());
+        assertEquals("testValue", config.getProperties().getProperty(TEST_KEY));
+    }
+
+    /**
+     * Tests instance building from ClassPath resources.
+     */
+    @Test
+    void testResourceBuilder() {
+        assertThrows(NullPointerException.class, () -> {
+            Config.fromPropertiesFiles()
+                .load((String) null)
+                .build();
+        });
+
+        final PropertiesConfig config = Config.fromPropertiesFiles()
+                .load(testResource)
+                .build();
+        assertNull(config.getParent());
+        assertSame(ValueDecoder.DEFAULT, config.getDecoder());
+        assertSame(ValueDecorator.DEFAULT, config.getDecorator());
+        assertFalse(config.getResolver().isPresent());
+        final Properties properties = config.getProperties();
+        assertNotNull(properties);
+        assertFalse(properties.isEmpty());
+        assertTrue(properties.containsKey(TEST_COMMON_KEY));
+        assertEquals(TEST_RESOURCE_TYPE, properties.getProperty(TEST_COMMON_KEY));
+        assertFalse(properties.containsKey(TEST_VALUES_KEY));
+        assertNull(properties.getProperty(TEST_VALUES_KEY));
+        assertTrue(properties.containsKey(TEST_RESOURCE_KEY));
+        assertNotNull(properties.getProperty(TEST_RESOURCE_KEY));
+        assertEquals(TEST_RESOURCE_TYPE, properties.getProperty(TEST_RESOURCE_KEY));
+        assertFalse(properties.containsKey(TEST_FILE_KEY));
+        assertNull(properties.getProperty(TEST_FILE_KEY));
+        assertFalse(properties.containsKey(TEST_URL_KEY));
+        assertNull(properties.getProperty(TEST_URL_KEY));
+    }
+
+    /**
+     * Tests instance building from missing ClassPath resources.
+     */
+    @Test
+    void testMissingResourceBuilder() {
+        final PropertiesConfig config = Config.fromPropertiesFiles()
+                .load("non/existent/resource.properties")
+                .build();
+        assertNull(config.getParent());
+        assertSame(ValueDecoder.DEFAULT, config.getDecoder());
+        assertSame(ValueDecorator.DEFAULT, config.getDecorator());
+        assertFalse(config.getResolver().isPresent());
+        final Properties properties = config.getProperties();
+        assertNotNull(properties);
+        assertTrue(properties.isEmpty());
+    }
+
+    /**
+     * Tests instance building from file.
+     */
+    @Test
+    void testFileBuilder() {
+        assertThrows(NullPointerException.class, () -> {
+            Config.fromPropertiesFiles()
+                .load((File) null)
+                .build();
+        });
+
+        final PropertiesConfig config = Config.fromPropertiesFiles()
+                .load(testFile)
+                .build();
+        assertNull(config.getParent());
+        assertSame(ValueDecoder.DEFAULT, config.getDecoder());
+        assertSame(ValueDecorator.DEFAULT, config.getDecorator());
+        assertFalse(config.getResolver().isPresent());
+        final Properties properties = config.getProperties();
+        assertNotNull(properties);
+        assertFalse(properties.isEmpty());
+        assertTrue(properties.containsKey(TEST_COMMON_KEY));
+        assertNotNull(properties.getProperty(TEST_COMMON_KEY));
+        assertEquals(TEST_FILE_TYPE, properties.getProperty(TEST_COMMON_KEY));
+        assertFalse(properties.containsKey(TEST_VALUES_KEY));
+        assertNull(properties.getProperty(TEST_VALUES_KEY));
+        assertFalse(properties.containsKey(TEST_RESOURCE_KEY));
+        assertNull(properties.getProperty(TEST_RESOURCE_KEY));
+        assertTrue(properties.containsKey(TEST_FILE_KEY));
+        assertNotNull(properties.getProperty(TEST_FILE_KEY));
+        assertEquals(TEST_FILE_TYPE, properties.getProperty(TEST_FILE_KEY));
+        assertFalse(properties.containsKey(TEST_URL_KEY));
+        assertNull(properties.getProperty(TEST_URL_KEY));
+    }
+
+    /**
+     * Tests instance building from missing file.
+     */
+    @Test
+    void testMissingFileBuilder() {
+        final PropertiesConfig config = Config.fromPropertiesFiles()
+                .load(new File("non/existent/resource.properties"))
+                .build();
+        assertNull(config.getParent());
+        assertSame(ValueDecoder.DEFAULT, config.getDecoder());
+        assertSame(ValueDecorator.DEFAULT, config.getDecorator());
+        assertFalse(config.getResolver().isPresent());
+        final Properties properties = config.getProperties();
+        assertNotNull(properties);
+        assertTrue(properties.isEmpty());
+    }
+
+    /**
+     * Tests instance building from path.
+     */
+    @Test
+    void testPathBuilder() {
+        assertThrows(NullPointerException.class, () -> {
+            Config.fromPropertiesFiles()
+                .load((Path) null)
+                .build();
+        });
+
+        final PropertiesConfig config = Config.fromPropertiesFiles()
+                .load(testPath)
+                .build();
+        assertNull(config.getParent());
+        assertSame(ValueDecoder.DEFAULT, config.getDecoder());
+        assertSame(ValueDecorator.DEFAULT, config.getDecorator());
+        assertFalse(config.getResolver().isPresent());
+        final Properties properties = config.getProperties();
+        assertNotNull(properties);
+        assertFalse(properties.isEmpty());
+        assertTrue(properties.containsKey(TEST_COMMON_KEY));
+        assertNotNull(properties.getProperty(TEST_COMMON_KEY));
+        assertEquals(TEST_FILE_TYPE, properties.getProperty(TEST_COMMON_KEY));
+        assertFalse(properties.containsKey(TEST_VALUES_KEY));
+        assertNull(properties.getProperty(TEST_VALUES_KEY));
+        assertFalse(properties.containsKey(TEST_RESOURCE_KEY));
+        assertNull(properties.getProperty(TEST_RESOURCE_KEY));
+        assertTrue(properties.containsKey(TEST_FILE_KEY));
+        assertNotNull(properties.getProperty(TEST_FILE_KEY));
+        assertEquals(TEST_FILE_TYPE, properties.getProperty(TEST_FILE_KEY));
+        assertFalse(properties.containsKey(TEST_URL_KEY));
+        assertNull(properties.getProperty(TEST_URL_KEY));
+    }
+
+    /**
+     * Tests instance building from missing path.
+     */
+    @Test
+    void testMissingPathBuilder() {
+        final PropertiesConfig config = Config.fromPropertiesFiles()
+                .load(Paths.get("non/existent/path.properties"))
+                .build();
+        assertNull(config.getParent());
+        assertSame(ValueDecoder.DEFAULT, config.getDecoder());
+        assertSame(ValueDecorator.DEFAULT, config.getDecorator());
+        assertFalse(config.getResolver().isPresent());
+        final Properties properties = config.getProperties();
+        assertNotNull(properties);
+        assertTrue(properties.isEmpty());
+    }
+
+    /**
+     * Tests instance building from URL.
+     */
+    @Test
+    void testUrlBuilder() {
+        assertThrows(NullPointerException.class, () -> {
+            Config.fromPropertiesFiles()
+                .load((URL) null)
+                .build();
+        });
         
-        willReturn(true).given(props).isEmpty();
+        final PropertiesConfig config = Config.fromPropertiesFiles()
+                .load(testUrl)
+                .build();
+        assertNull(config.getParent());
+        assertSame(ValueDecoder.DEFAULT, config.getDecoder());
+        assertSame(ValueDecorator.DEFAULT, config.getDecorator());
+        assertFalse(config.getResolver().isPresent());
+        final Properties properties = config.getProperties();
+        assertNotNull(properties);
+        assertFalse(properties.isEmpty());
+        assertTrue(properties.containsKey(TEST_COMMON_KEY));
+        assertNotNull(properties.getProperty(TEST_COMMON_KEY));
+        assertEquals(TEST_URL_TYPE, properties.getProperty(TEST_COMMON_KEY));
+        assertFalse(properties.containsKey(TEST_VALUES_KEY));
+        assertNull(properties.getProperty(TEST_VALUES_KEY));
+        assertFalse(properties.containsKey(TEST_RESOURCE_KEY));
+        assertNull(properties.getProperty(TEST_RESOURCE_KEY));
+        assertFalse(properties.containsKey(TEST_FILE_KEY));
+        assertNull(properties.getProperty(TEST_FILE_KEY));
+        assertTrue(properties.containsKey(TEST_URL_KEY));
+        assertNotNull(properties.getProperty(TEST_URL_KEY));
+        assertEquals(TEST_URL_TYPE, properties.getProperty(TEST_URL_KEY));
+    }
+
+    /**
+     * Tests instance building from missing URL.
+     */
+    @Test
+    void testMissingUrlBuilder() throws IOException {
+        final PropertiesConfig config = Config.fromPropertiesFiles()
+                .load(new URL("http://localhost/non/existent/url.properties"))
+                .build();
+        assertNull(config.getParent());
+        assertSame(ValueDecoder.DEFAULT, config.getDecoder());
+        assertSame(ValueDecorator.DEFAULT, config.getDecorator());
+        assertFalse(config.getResolver().isPresent());
+        final Properties properties = config.getProperties();
+        assertNotNull(properties);
+        assertTrue(properties.isEmpty());
+    }
+
+    /**
+     * Test method for {@link PropertiesConfig#PropertiesConfig(ConfigOptions, PropertiesConfigOptions)}.
+     */
+    @Test
+    void testOptionsConstructor() {
+        final ConfigOptions baseOptions = mock(ConfigOptions.class);
+        final PropertiesConfigOptions propertiesOptions = mock(PropertiesConfigOptions.class);
         
-        final boolean result = config.isEmpty();
+        given(baseOptions.getParent()).willReturn(mockParent);
+        given(baseOptions.getDecoder()).willReturn(mockDecoder);
+        given(baseOptions.getDecorator()).willReturn(mockDecorator);
+        given(propertiesOptions.getProperties()).willReturn(mockProperties);
+        
+        assertThrows(NullPointerException.class, () -> {
+            new PropertiesConfig(null, null);
+        });
+        assertThrows(NullPointerException.class, () -> {
+            new PropertiesConfig(null, propertiesOptions);
+        });
+        assertThrows(NullPointerException.class, () -> {
+            new PropertiesConfig(baseOptions, null);
+        });
+        
+        final PropertiesConfig config = new PropertiesConfig(baseOptions, propertiesOptions);
+        assertSame(mockParent, config.getParent());
+        assertSame(mockDecoder, config.getDecoder());
+        assertSame(mockDecorator, config.getDecorator());
+        assertSame(mockProperties, config.getProperties());
+    }
+
+    /**
+     * Test method for {@link PropertiesConfig#PropertiesConfig(Config, ValueDecoder, ValueDecorator, Properties).
+     */
+    @Test
+    void testComponentsConstructor() {
+        assertThrows(NullPointerException.class, () -> {
+            new PropertiesConfig(null, null, null, null);
+        });
+        assertThrows(NullPointerException.class, () -> {
+            new PropertiesConfig(mockParent, null, mockDecorator, mockProperties);
+        });
+        assertThrows(NullPointerException.class, () -> {
+            new PropertiesConfig(mockParent, mockDecoder, null, mockProperties);
+        });
+        assertThrows(NullPointerException.class, () -> {
+            new PropertiesConfig(mockParent, mockDecoder, mockDecorator, null);
+        });
+        assertDoesNotThrow(() -> {
+            new PropertiesConfig(null, mockDecoder, mockDecorator, mockProperties);
+        });
+        
+        final PropertiesConfig config = new PropertiesConfig(mockParent, mockDecoder, mockDecorator, mockProperties);
+        assertSame(mockParent, config.getParent());
+        assertSame(mockDecoder, config.getDecoder());
+        assertSame(mockDecorator, config.getDecorator());
+        assertSame(mockProperties, config.getProperties());
+    }
+
+    /**
+     * Test method for {@link PropertiesConfig#isEmptyInt()}.
+     */
+    @Test
+    void testIsEmptyInt() {
+        final PropertiesConfig config = new PropertiesConfig(
+                mockParent,
+                mockDecoder,
+                mockDecorator,
+                mockProperties);
+        
+        given(mockProperties.isEmpty()).willReturn(true);
+        
+        final boolean result = config.isEmptyInt();
         assertTrue(result);
         
-        then(props).should(times(1)).isEmpty();
-        then(props).shouldHaveNoMoreInteractions();
+        then(mockProperties).should().isEmpty();
+        then(mockProperties).shouldHaveNoMoreInteractions();
     }
 
     /**
-     * Test method for {@link PropertiesConfig#isEmpty()}.
-     * @throws ConfigException Shouldn't happen
+     * Test method for {@link PropertiesConfig#getKeysInt()}.
      */
     @Test
-    void testGetKeys()
-    throws ConfigException {
-        final Properties props = mock(Properties.class);
-        final PropertiesConfig config = new PropertiesConfig(props);
+    void testGetKeysInt() {
+        final PropertiesConfig config = new PropertiesConfig(
+                mockParent,
+                mockDecoder,
+                mockDecorator,
+                mockProperties);
         
         @SuppressWarnings("unchecked")
-        final Enumeration<Object> mockKeys = mock(Enumeration.class);
-        willReturn(mockKeys).given(props).keys();
+        final Set<String> mockKeys = mock(Set.class);
+        @SuppressWarnings("unchecked")
+        final Stream<String> mockKeysStream = mock(Stream.class);
+        given(mockProperties.stringPropertyNames()).willReturn(mockKeys);
+        given(mockKeys.stream()).willReturn(mockKeysStream);
         
-        final Iterator<String> result = config.getKeys();
-        assertTrue(result instanceof EnumerationIterator);
-        final EnumerationIterator enumIt = (EnumerationIterator) result;
-        assertSame(mockKeys, enumIt.getEnumeration());
+        final Stream<String> result = config.getKeysInt();
+        assertSame(mockKeysStream, result);
         
-        then(props).should(times(1)).keys();
-        then(props).shouldHaveNoMoreInteractions();
+        then(mockProperties).should().stringPropertyNames();
+        then(mockProperties).shouldHaveNoMoreInteractions();
     }
 
     /**
-     * Test method for {@link PropertiesConfig#containsParameter(String)} with
+     * Test method for {@link PropertiesConfig#containsInt(String)} with
      * non existent property.
-     * @throws ConfigException Shouldn't happen
      */
     @Test
-    void testContainsParameterFalse()
-    throws ConfigException {
-        final PropertiesConfig config = new PropertiesConfig();
-        assertFalse(config.containsParameter(TEST_KEY));
+    void testContainsInt() {
+        final PropertiesConfig config = new PropertiesConfig(
+                mockParent,
+                mockDecoder,
+                mockDecorator,
+                mockProperties);
+        
+        given(mockProperties.containsKey(TEST_KEY)).willReturn(true);
+        
+        final boolean result = config.containsInt(TEST_KEY);
+        assertTrue(result);
+        
+        then(mockProperties).should().containsKey(TEST_KEY);
+        then(mockProperties).shouldHaveNoMoreInteractions();
     }
 
     /**
-     * Test method for {@link PropertiesConfig#containsParameter(String)} with
-     * existent property.
-     * @throws ConfigException Shouldn't happen
-     */
-    @Test
-    void testContainsParameterTrue()
-    throws ConfigException {
-        final PropertiesConfig config = new PropertiesConfig();
-        config.getProperties().setProperty(TEST_KEY, "somaValue");
-        assertTrue(config.containsParameter(TEST_KEY));
-    }
-
-    /**
-     * Test method for {@link PropertiesConfig#containsParameter(String)} with
-     * existent {@code null} property.
-     * @throws ConfigException Shouldn't happen
-     */
-    @Test
-    void testContainsParameterTrueNull()
-    throws ConfigException {
-        final PropertiesConfig config = new PropertiesConfig();
-        config.getProperties().setProperty(TEST_KEY, PropertiesConfig.NULL);
-        assertTrue(config.containsParameter(TEST_KEY));
-    }
-
-    /**
-     * Test method for {@link PropertiesConfig#getStringParameter(String)} with
+     * Test method for {@link PropertiesConfig#getInt(String)} with
      * non existent property.
-     * @throws ConfigException Shouldn't happen
      */
     @Test
-    void testGetStringMissing()
-    throws ConfigException {
-        System.clearProperty(TEST_KEY);
-        final PropertiesConfig config = new PropertiesConfig();
-        final String result = config.getStringParameter(TEST_KEY);
-        assertNull(result);
-    }
-
-    /**
-     * Test method for {@link PropertiesConfig#getStringParameter(String)} with
-     * existent {@code null} property.
-     * @throws ConfigException Shouldn't happen
-     */
-    @Test
-    void testGetStringNullPlaceholderDisabled()
-    throws ConfigException {
-        final PropertiesConfig config = new PropertiesConfig();
-        config.getProperties().setProperty(TEST_KEY, PropertiesConfig.NULL);
-        final String result = config.getStringParameter(TEST_KEY);
-        assertNotNull(result);
-        assertEquals(PropertiesConfig.NULL, result);
-    }
-
-    /**
-     * Test method for {@link PropertiesConfig#getStringParameter(String)} with
-     * existent {@code null} property.
-     * @throws ConfigException Shouldn't happen
-     */
-    @Test
-    void testGetStringNullPlaceholderEnabled()
-    throws ConfigException {
-        final PropertiesConfig config = new PropertiesConfig();
-        config.setNullPlaceholderEnabled(true);
-        config.getProperties().setProperty(TEST_KEY, PropertiesConfig.NULL);
-        final String result = config.getStringParameter(TEST_KEY);
-        assertNull(result);
-    }
-
-    /**
-     * Test method for {@link PropertiesConfig#getStringParameter(String)} with
-     * existent non {@code null} property.
-     * @throws ConfigException Shouldn't happen
-     */
-    @Test
-    void testGetString()
-    throws ConfigException {
-        final String expectedValue = "customValue";
-        final PropertiesConfig config = new PropertiesConfig();
-        config.getProperties().setProperty(TEST_KEY, expectedValue);
-        final String result = config.getStringParameter(TEST_KEY);
-        assertNotNull(result);
-        assertEquals(expectedValue, result);
+    void testGetInt() {
+        final PropertiesConfig config = new PropertiesConfig(
+                mockParent,
+                mockDecoder,
+                mockDecorator,
+                mockProperties);
+        
+        final String testValue = "mockValue";
+        given(mockProperties.getProperty(TEST_KEY)).willReturn(testValue);
+        
+        final String result = config.getInt(TEST_KEY);
+        assertSame(testValue, result);
+        
+        then(mockProperties).should().getProperty(TEST_KEY);
+        then(mockProperties).shouldHaveNoMoreInteractions();
     }
 }

@@ -35,7 +35,7 @@ import javax.validation.constraints.NotNull;
 import org.apiguardian.api.API;
 
 /**
- * Watchable mutable Configuration properties provider.
+ * Watchable mutable configuration properties provider.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-04
@@ -99,7 +99,7 @@ extends MutableConfig {
     class EventsHandler {
 
         /** The listeners of configuration property changes. */
-        private final @NotNull List<Listener> listeners =
+        private final @NotNull List<@NotNull Listener> listeners =
                 new ArrayList<>();
 
         /**
@@ -107,6 +107,15 @@ extends MutableConfig {
          */
         public EventsHandler() {
             super();
+        }
+
+        /**
+         * Returns the list of registered configuration changed event listeners.
+         * 
+         * @return The list of registered configuration changed event listeners.
+         */
+        protected @NotNull List<@NotNull Listener> getListeners() {
+            return this.listeners;
         }
 
         /**
@@ -137,7 +146,7 @@ extends MutableConfig {
          * @param instance The modified configuration instance.
          * @param keys The changed properties.
          */
-        protected void notify(
+        public void notify(
                 final @NotNull MutableConfig instance,
                 final @NotNull String... keys) {
             if (!this.listeners.isEmpty()) {
@@ -151,7 +160,7 @@ extends MutableConfig {
          * @param instance The modified configuration instance.
          * @param keys The changed properties.
          */
-        protected synchronized void notify(
+        public synchronized void notify(
                 final @NotNull MutableConfig instance,
                 final @NotNull Set<String> keys) {
             if (!this.listeners.isEmpty()) {

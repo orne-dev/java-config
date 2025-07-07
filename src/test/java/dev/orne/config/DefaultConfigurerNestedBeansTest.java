@@ -31,7 +31,7 @@ import org.mockito.BDDMockito;
 /**
  * Unit tests for {@code DefaultConfigurer.configureNestedBeans()}.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
  * @since 1.0, 2019-07
  */

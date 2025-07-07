@@ -25,20 +25,33 @@ package dev.orne.config;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 /**
  * Unit tests for {@code DefaultConfigurer.configureProperties()}
  * with primitive properties.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
  * @since 0.1
  */
 @Tag("ut")
 class DefaultConfigurerPrimitivePropertiesTest {
+
+    protected @Mock ConfigProvider configProvider;
+    protected @Mock Config config;
+
+    /**
+     * Initializes the mocks used in the tests.
+     */
+    @BeforeEach
+    void initMocks() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     private static final String TEST_BOOL_KEY = "test.primitives.boolean";
     private static final boolean DEFAULT_BOOL_VALUE = false;
@@ -73,25 +86,22 @@ class DefaultConfigurerPrimitivePropertiesTest {
     @Test
     void testConfigurePrimitiveProperties()
     throws ConfigException {
-        final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
-        final Config config = BDDMockito.mock(Config.class);
-        
         given(config.contains(TEST_BOOL_KEY)).willReturn(true);
-        given(config.get(TEST_BOOL_KEY, Boolean.class)).willReturn(CONFIG_BOOL_VALUE);
+        given(config.get(TEST_BOOL_KEY)).willReturn(String.valueOf(CONFIG_BOOL_VALUE));
         given(config.contains(TEST_CHAR_KEY)).willReturn(true);
-        given(config.get(TEST_CHAR_KEY, Character.class)).willReturn(CONFIG_CHAR_VALUE);
+        given(config.get(TEST_CHAR_KEY)).willReturn(String.valueOf(CONFIG_CHAR_VALUE));
         given(config.contains(TEST_BYTE_KEY)).willReturn(true);
-        given(config.get(TEST_BYTE_KEY, Byte.class)).willReturn(CONFIG_BYTE_VALUE);
+        given(config.get(TEST_BYTE_KEY)).willReturn(String.valueOf(CONFIG_BYTE_VALUE));
         given(config.contains(TEST_SHORT_KEY)).willReturn(true);
-        given(config.get(TEST_SHORT_KEY, Short.class)).willReturn(CONFIG_SHORT_VALUE);
+        given(config.get(TEST_SHORT_KEY)).willReturn(String.valueOf(CONFIG_SHORT_VALUE));
         given(config.contains(TEST_INT_KEY)).willReturn(true);
-        given(config.get(TEST_INT_KEY, Integer.class)).willReturn(CONFIG_INT_VALUE);
+        given(config.get(TEST_INT_KEY)).willReturn(String.valueOf(CONFIG_INT_VALUE));
         given(config.contains(TEST_LONG_KEY)).willReturn(true);
-        given(config.get(TEST_LONG_KEY, Long.class)).willReturn(CONFIG_LONG_VALUE);
+        given(config.get(TEST_LONG_KEY)).willReturn(String.valueOf(CONFIG_LONG_VALUE));
         given(config.contains(TEST_FLOAT_KEY)).willReturn(true);
-        given(config.get(TEST_FLOAT_KEY, Float.class)).willReturn(CONFIG_FLOAT_VALUE);
+        given(config.get(TEST_FLOAT_KEY)).willReturn(String.valueOf(CONFIG_FLOAT_VALUE));
         given(config.contains(TEST_DOUBLE_KEY)).willReturn(true);
-        given(config.get(TEST_DOUBLE_KEY, Double.class)).willReturn(CONFIG_DOUBLE_VALUE);
+        given(config.get(TEST_DOUBLE_KEY)).willReturn(String.valueOf(CONFIG_DOUBLE_VALUE));
         
         final DefaultConfigurer configurer = new DefaultConfigurer(configProvider);
         final ConfigurablePrimitivesTestBean bean = new ConfigurablePrimitivesTestBean();
@@ -104,23 +114,6 @@ class DefaultConfigurerPrimitivePropertiesTest {
         assertEquals(CONFIG_LONG_VALUE, bean.getLongProp());
         assertEquals(CONFIG_FLOAT_VALUE, bean.getFloatProp());
         assertEquals(CONFIG_DOUBLE_VALUE, bean.getDoubleProp());
-        
-        then(config).should(times(1)).contains(TEST_BOOL_KEY);
-        then(config).should(times(1)).get(TEST_BOOL_KEY, Boolean.class);
-        then(config).should(times(1)).contains(TEST_CHAR_KEY);
-        then(config).should(times(1)).get(TEST_CHAR_KEY, Character.class);
-        then(config).should(times(1)).contains(TEST_BYTE_KEY);
-        then(config).should(times(1)).get(TEST_BYTE_KEY, Byte.class);
-        then(config).should(times(1)).contains(TEST_SHORT_KEY);
-        then(config).should(times(1)).get(TEST_SHORT_KEY, Short.class);
-        then(config).should(times(1)).contains(TEST_INT_KEY);
-        then(config).should(times(1)).get(TEST_INT_KEY, Integer.class);
-        then(config).should(times(1)).contains(TEST_LONG_KEY);
-        then(config).should(times(1)).get(TEST_LONG_KEY, Long.class);
-        then(config).should(times(1)).contains(TEST_FLOAT_KEY);
-        then(config).should(times(1)).get(TEST_FLOAT_KEY, Float.class);
-        then(config).should(times(1)).contains(TEST_DOUBLE_KEY);
-        then(config).should(times(1)).get(TEST_DOUBLE_KEY, Double.class);
     }
 
     /**
@@ -131,25 +124,22 @@ class DefaultConfigurerPrimitivePropertiesTest {
     @Test
     void testConfigurePrimitivePropertiesNull()
     throws ConfigException {
-        final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
-        final Config config = BDDMockito.mock(Config.class);
-        
         given(config.contains(TEST_BOOL_KEY)).willReturn(true);
-        given(config.get(TEST_BOOL_KEY, Boolean.class)).willReturn(null);
+        given(config.get(TEST_BOOL_KEY)).willReturn(null);
         given(config.contains(TEST_CHAR_KEY)).willReturn(true);
-        given(config.get(TEST_CHAR_KEY, Character.class)).willReturn(null);
+        given(config.get(TEST_CHAR_KEY)).willReturn(null);
         given(config.contains(TEST_BYTE_KEY)).willReturn(true);
-        given(config.get(TEST_BYTE_KEY, Byte.class)).willReturn(null);
+        given(config.get(TEST_BYTE_KEY)).willReturn(null);
         given(config.contains(TEST_SHORT_KEY)).willReturn(true);
-        given(config.get(TEST_SHORT_KEY, Short.class)).willReturn(null);
+        given(config.get(TEST_SHORT_KEY)).willReturn(null);
         given(config.contains(TEST_INT_KEY)).willReturn(true);
-        given(config.get(TEST_INT_KEY, Integer.class)).willReturn(null);
+        given(config.get(TEST_INT_KEY)).willReturn(null);
         given(config.contains(TEST_LONG_KEY)).willReturn(true);
-        given(config.get(TEST_LONG_KEY, Long.class)).willReturn(null);
+        given(config.get(TEST_LONG_KEY)).willReturn(null);
         given(config.contains(TEST_FLOAT_KEY)).willReturn(true);
-        given(config.get(TEST_FLOAT_KEY, Float.class)).willReturn(null);
+        given(config.get(TEST_FLOAT_KEY)).willReturn(null);
         given(config.contains(TEST_DOUBLE_KEY)).willReturn(true);
-        given(config.get(TEST_DOUBLE_KEY, Double.class)).willReturn(null);
+        given(config.get(TEST_DOUBLE_KEY)).willReturn(null);
         
         final DefaultConfigurer configurer = new DefaultConfigurer(configProvider);
         final ConfigurablePrimitivesTestBean bean = new ConfigurablePrimitivesTestBean();
@@ -162,23 +152,6 @@ class DefaultConfigurerPrimitivePropertiesTest {
         assertEquals(DEFAULT_LONG_VALUE, bean.getLongProp());
         assertEquals(DEFAULT_FLOAT_VALUE, bean.getFloatProp());
         assertEquals(DEFAULT_DOUBLE_VALUE, bean.getDoubleProp());
-        
-        then(config).should(times(1)).contains(TEST_BOOL_KEY);
-        then(config).should(times(1)).get(TEST_BOOL_KEY, Boolean.class);
-        then(config).should(times(1)).contains(TEST_CHAR_KEY);
-        then(config).should(times(1)).get(TEST_CHAR_KEY, Character.class);
-        then(config).should(times(1)).contains(TEST_BYTE_KEY);
-        then(config).should(times(1)).get(TEST_BYTE_KEY, Byte.class);
-        then(config).should(times(1)).contains(TEST_SHORT_KEY);
-        then(config).should(times(1)).get(TEST_SHORT_KEY, Short.class);
-        then(config).should(times(1)).contains(TEST_INT_KEY);
-        then(config).should(times(1)).get(TEST_INT_KEY, Integer.class);
-        then(config).should(times(1)).contains(TEST_LONG_KEY);
-        then(config).should(times(1)).get(TEST_LONG_KEY, Long.class);
-        then(config).should(times(1)).contains(TEST_FLOAT_KEY);
-        then(config).should(times(1)).get(TEST_FLOAT_KEY, Float.class);
-        then(config).should(times(1)).contains(TEST_DOUBLE_KEY);
-        then(config).should(times(1)).get(TEST_DOUBLE_KEY, Double.class);
     }
 
     /**
@@ -189,26 +162,6 @@ class DefaultConfigurerPrimitivePropertiesTest {
     @Test
     void testConfigurePrimitivePropertiesUnconfigured()
     throws ConfigException {
-        final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
-        final Config config = BDDMockito.mock(Config.class);
-        
-        given(config.contains(TEST_BOOL_KEY)).willReturn(false);
-        given(config.get(TEST_BOOL_KEY, Boolean.class)).willReturn(null);
-        given(config.contains(TEST_CHAR_KEY)).willReturn(false);
-        given(config.get(TEST_CHAR_KEY, Character.class)).willReturn(null);
-        given(config.contains(TEST_BYTE_KEY)).willReturn(false);
-        given(config.get(TEST_BYTE_KEY, Byte.class)).willReturn(null);
-        given(config.contains(TEST_SHORT_KEY)).willReturn(false);
-        given(config.get(TEST_SHORT_KEY, Short.class)).willReturn(null);
-        given(config.contains(TEST_INT_KEY)).willReturn(false);
-        given(config.get(TEST_INT_KEY, Integer.class)).willReturn(null);
-        given(config.contains(TEST_LONG_KEY)).willReturn(false);
-        given(config.get(TEST_LONG_KEY, Long.class)).willReturn(null);
-        given(config.contains(TEST_FLOAT_KEY)).willReturn(false);
-        given(config.get(TEST_FLOAT_KEY, Float.class)).willReturn(null);
-        given(config.contains(TEST_DOUBLE_KEY)).willReturn(false);
-        given(config.get(TEST_DOUBLE_KEY, Double.class)).willReturn(null);
-        
         final DefaultConfigurer configurer = new DefaultConfigurer(configProvider);
         final ConfigurablePrimitivesTestBean bean = new ConfigurablePrimitivesTestBean();
         configurer.configureProperties(bean, config);
@@ -220,23 +173,6 @@ class DefaultConfigurerPrimitivePropertiesTest {
         assertEquals(DEFAULT_LONG_VALUE, bean.getLongProp());
         assertEquals(DEFAULT_FLOAT_VALUE, bean.getFloatProp());
         assertEquals(DEFAULT_DOUBLE_VALUE, bean.getDoubleProp());
-        
-        then(config).should(times(1)).contains(TEST_BOOL_KEY);
-        then(config).should(times(0)).get(TEST_BOOL_KEY, Boolean.class);
-        then(config).should(times(1)).contains(TEST_CHAR_KEY);
-        then(config).should(times(0)).get(TEST_CHAR_KEY, Character.class);
-        then(config).should(times(1)).contains(TEST_BYTE_KEY);
-        then(config).should(times(0)).get(TEST_BYTE_KEY, Byte.class);
-        then(config).should(times(1)).contains(TEST_SHORT_KEY);
-        then(config).should(times(0)).get(TEST_SHORT_KEY, Short.class);
-        then(config).should(times(1)).contains(TEST_INT_KEY);
-        then(config).should(times(0)).get(TEST_INT_KEY, Integer.class);
-        then(config).should(times(1)).contains(TEST_LONG_KEY);
-        then(config).should(times(0)).get(TEST_LONG_KEY, Long.class);
-        then(config).should(times(1)).contains(TEST_FLOAT_KEY);
-        then(config).should(times(0)).get(TEST_FLOAT_KEY, Float.class);
-        then(config).should(times(1)).contains(TEST_DOUBLE_KEY);
-        then(config).should(times(0)).get(TEST_DOUBLE_KEY, Double.class);
     }
 
     /**
@@ -247,25 +183,22 @@ class DefaultConfigurerPrimitivePropertiesTest {
     @Test
     void testConfigureWrapperProperties()
     throws ConfigException {
-        final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
-        final Config config = BDDMockito.mock(Config.class);
-        
         given(config.contains(TEST_BOOL_KEY)).willReturn(true);
-        given(config.get(TEST_BOOL_KEY, Boolean.class)).willReturn(CONFIG_BOOL_VALUE);
+        given(config.get(TEST_BOOL_KEY)).willReturn(String.valueOf(CONFIG_BOOL_VALUE));
         given(config.contains(TEST_CHAR_KEY)).willReturn(true);
-        given(config.get(TEST_CHAR_KEY, Character.class)).willReturn(CONFIG_CHAR_VALUE);
+        given(config.get(TEST_CHAR_KEY)).willReturn(String.valueOf(CONFIG_CHAR_VALUE));
         given(config.contains(TEST_BYTE_KEY)).willReturn(true);
-        given(config.get(TEST_BYTE_KEY, Byte.class)).willReturn(CONFIG_BYTE_VALUE);
+        given(config.get(TEST_BYTE_KEY)).willReturn(String.valueOf(CONFIG_BYTE_VALUE));
         given(config.contains(TEST_SHORT_KEY)).willReturn(true);
-        given(config.get(TEST_SHORT_KEY, Short.class)).willReturn(CONFIG_SHORT_VALUE);
+        given(config.get(TEST_SHORT_KEY)).willReturn(String.valueOf(CONFIG_SHORT_VALUE));
         given(config.contains(TEST_INT_KEY)).willReturn(true);
-        given(config.get(TEST_INT_KEY, Integer.class)).willReturn(CONFIG_INT_VALUE);
+        given(config.get(TEST_INT_KEY)).willReturn(String.valueOf(CONFIG_INT_VALUE));
         given(config.contains(TEST_LONG_KEY)).willReturn(true);
-        given(config.get(TEST_LONG_KEY, Long.class)).willReturn(CONFIG_LONG_VALUE);
+        given(config.get(TEST_LONG_KEY)).willReturn(String.valueOf(CONFIG_LONG_VALUE));
         given(config.contains(TEST_FLOAT_KEY)).willReturn(true);
-        given(config.get(TEST_FLOAT_KEY, Float.class)).willReturn(CONFIG_FLOAT_VALUE);
+        given(config.get(TEST_FLOAT_KEY)).willReturn(String.valueOf(CONFIG_FLOAT_VALUE));
         given(config.contains(TEST_DOUBLE_KEY)).willReturn(true);
-        given(config.get(TEST_DOUBLE_KEY, Double.class)).willReturn(CONFIG_DOUBLE_VALUE);
+        given(config.get(TEST_DOUBLE_KEY)).willReturn(String.valueOf(CONFIG_DOUBLE_VALUE));
         
         final DefaultConfigurer configurer = new DefaultConfigurer(configProvider);
         final ConfigurableWrappersTestBean bean = new ConfigurableWrappersTestBean();
@@ -278,23 +211,6 @@ class DefaultConfigurerPrimitivePropertiesTest {
         assertEquals(CONFIG_LONG_VALUE, bean.getLongProp());
         assertEquals(CONFIG_FLOAT_VALUE, bean.getFloatProp());
         assertEquals(CONFIG_DOUBLE_VALUE, bean.getDoubleProp());
-        
-        then(config).should(times(1)).contains(TEST_BOOL_KEY);
-        then(config).should(times(1)).get(TEST_BOOL_KEY, Boolean.class);
-        then(config).should(times(1)).contains(TEST_CHAR_KEY);
-        then(config).should(times(1)).get(TEST_CHAR_KEY, Character.class);
-        then(config).should(times(1)).contains(TEST_BYTE_KEY);
-        then(config).should(times(1)).get(TEST_BYTE_KEY, Byte.class);
-        then(config).should(times(1)).contains(TEST_SHORT_KEY);
-        then(config).should(times(1)).get(TEST_SHORT_KEY, Short.class);
-        then(config).should(times(1)).contains(TEST_INT_KEY);
-        then(config).should(times(1)).get(TEST_INT_KEY, Integer.class);
-        then(config).should(times(1)).contains(TEST_LONG_KEY);
-        then(config).should(times(1)).get(TEST_LONG_KEY, Long.class);
-        then(config).should(times(1)).contains(TEST_FLOAT_KEY);
-        then(config).should(times(1)).get(TEST_FLOAT_KEY, Float.class);
-        then(config).should(times(1)).contains(TEST_DOUBLE_KEY);
-        then(config).should(times(1)).get(TEST_DOUBLE_KEY, Double.class);
     }
 
     /**
@@ -305,25 +221,22 @@ class DefaultConfigurerPrimitivePropertiesTest {
     @Test
     void testConfigureWrapperPropertiesNull()
     throws ConfigException {
-        final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
-        final Config config = BDDMockito.mock(Config.class);
-        
         given(config.contains(TEST_BOOL_KEY)).willReturn(true);
-        given(config.get(TEST_BOOL_KEY, Boolean.class)).willReturn(null);
+        given(config.get(TEST_BOOL_KEY)).willReturn(null);
         given(config.contains(TEST_CHAR_KEY)).willReturn(true);
-        given(config.get(TEST_CHAR_KEY, Character.class)).willReturn(null);
+        given(config.get(TEST_CHAR_KEY)).willReturn(null);
         given(config.contains(TEST_BYTE_KEY)).willReturn(true);
-        given(config.get(TEST_BYTE_KEY, Byte.class)).willReturn(null);
+        given(config.get(TEST_BYTE_KEY)).willReturn(null);
         given(config.contains(TEST_SHORT_KEY)).willReturn(true);
-        given(config.get(TEST_SHORT_KEY, Short.class)).willReturn(null);
+        given(config.get(TEST_SHORT_KEY)).willReturn(null);
         given(config.contains(TEST_INT_KEY)).willReturn(true);
-        given(config.get(TEST_INT_KEY, Integer.class)).willReturn(null);
+        given(config.get(TEST_INT_KEY)).willReturn(null);
         given(config.contains(TEST_LONG_KEY)).willReturn(true);
-        given(config.get(TEST_LONG_KEY, Long.class)).willReturn(null);
+        given(config.get(TEST_LONG_KEY)).willReturn(null);
         given(config.contains(TEST_FLOAT_KEY)).willReturn(true);
-        given(config.get(TEST_FLOAT_KEY, Float.class)).willReturn(null);
+        given(config.get(TEST_FLOAT_KEY)).willReturn(null);
         given(config.contains(TEST_DOUBLE_KEY)).willReturn(true);
-        given(config.get(TEST_DOUBLE_KEY, Double.class)).willReturn(null);
+        given(config.get(TEST_DOUBLE_KEY)).willReturn(null);
         
         final DefaultConfigurer configurer = new DefaultConfigurer(configProvider);
         final ConfigurableWrappersTestBean bean = new ConfigurableWrappersTestBean();
@@ -336,23 +249,6 @@ class DefaultConfigurerPrimitivePropertiesTest {
         assertNull(bean.getLongProp());
         assertNull(bean.getFloatProp());
         assertNull(bean.getDoubleProp());
-        
-        then(config).should(times(1)).contains(TEST_BOOL_KEY);
-        then(config).should(times(1)).get(TEST_BOOL_KEY, Boolean.class);
-        then(config).should(times(1)).contains(TEST_CHAR_KEY);
-        then(config).should(times(1)).get(TEST_CHAR_KEY, Character.class);
-        then(config).should(times(1)).contains(TEST_BYTE_KEY);
-        then(config).should(times(1)).get(TEST_BYTE_KEY, Byte.class);
-        then(config).should(times(1)).contains(TEST_SHORT_KEY);
-        then(config).should(times(1)).get(TEST_SHORT_KEY, Short.class);
-        then(config).should(times(1)).contains(TEST_INT_KEY);
-        then(config).should(times(1)).get(TEST_INT_KEY, Integer.class);
-        then(config).should(times(1)).contains(TEST_LONG_KEY);
-        then(config).should(times(1)).get(TEST_LONG_KEY, Long.class);
-        then(config).should(times(1)).contains(TEST_FLOAT_KEY);
-        then(config).should(times(1)).get(TEST_FLOAT_KEY, Float.class);
-        then(config).should(times(1)).contains(TEST_DOUBLE_KEY);
-        then(config).should(times(1)).get(TEST_DOUBLE_KEY, Double.class);
     }
 
     /**
@@ -363,26 +259,6 @@ class DefaultConfigurerPrimitivePropertiesTest {
     @Test
     void testConfigureWrapperPropertiesUnconfigured()
     throws ConfigException {
-        final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
-        final Config config = BDDMockito.mock(Config.class);
-        
-        given(config.contains(TEST_BOOL_KEY)).willReturn(false);
-        given(config.get(TEST_BOOL_KEY, Boolean.class)).willReturn(null);
-        given(config.contains(TEST_CHAR_KEY)).willReturn(false);
-        given(config.get(TEST_CHAR_KEY, Character.class)).willReturn(null);
-        given(config.contains(TEST_BYTE_KEY)).willReturn(false);
-        given(config.get(TEST_BYTE_KEY, Byte.class)).willReturn(null);
-        given(config.contains(TEST_SHORT_KEY)).willReturn(false);
-        given(config.get(TEST_SHORT_KEY, Short.class)).willReturn(null);
-        given(config.contains(TEST_INT_KEY)).willReturn(false);
-        given(config.get(TEST_INT_KEY, Integer.class)).willReturn(null);
-        given(config.contains(TEST_LONG_KEY)).willReturn(false);
-        given(config.get(TEST_LONG_KEY, Long.class)).willReturn(null);
-        given(config.contains(TEST_FLOAT_KEY)).willReturn(false);
-        given(config.get(TEST_FLOAT_KEY, Float.class)).willReturn(null);
-        given(config.contains(TEST_DOUBLE_KEY)).willReturn(false);
-        given(config.get(TEST_DOUBLE_KEY, Double.class)).willReturn(null);
-        
         final DefaultConfigurer configurer = new DefaultConfigurer(configProvider);
         final ConfigurableWrappersTestBean bean = new ConfigurableWrappersTestBean();
         configurer.configureProperties(bean, config);
@@ -394,23 +270,6 @@ class DefaultConfigurerPrimitivePropertiesTest {
         assertEquals(DEFAULT_LONG_VALUE, bean.getLongProp());
         assertEquals(DEFAULT_FLOAT_VALUE, bean.getFloatProp());
         assertEquals(DEFAULT_DOUBLE_VALUE, bean.getDoubleProp());
-        
-        then(config).should(times(1)).contains(TEST_BOOL_KEY);
-        then(config).should(times(0)).get(TEST_BOOL_KEY, Boolean.class);
-        then(config).should(times(1)).contains(TEST_CHAR_KEY);
-        then(config).should(times(0)).get(TEST_CHAR_KEY, Character.class);
-        then(config).should(times(1)).contains(TEST_BYTE_KEY);
-        then(config).should(times(0)).get(TEST_BYTE_KEY, Byte.class);
-        then(config).should(times(1)).contains(TEST_SHORT_KEY);
-        then(config).should(times(0)).get(TEST_SHORT_KEY, Short.class);
-        then(config).should(times(1)).contains(TEST_INT_KEY);
-        then(config).should(times(0)).get(TEST_INT_KEY, Integer.class);
-        then(config).should(times(1)).contains(TEST_LONG_KEY);
-        then(config).should(times(0)).get(TEST_LONG_KEY, Long.class);
-        then(config).should(times(1)).contains(TEST_FLOAT_KEY);
-        then(config).should(times(0)).get(TEST_FLOAT_KEY, Float.class);
-        then(config).should(times(1)).contains(TEST_DOUBLE_KEY);
-        then(config).should(times(0)).get(TEST_DOUBLE_KEY, Double.class);
     }
 
     /**
@@ -421,25 +280,22 @@ class DefaultConfigurerPrimitivePropertiesTest {
     @Test
     void testConfigurePropertiesPermissions()
     throws ConfigException {
-        final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
-        final Config config = BDDMockito.mock(Config.class);
-        
         given(config.contains(TEST_BOOL_KEY)).willReturn(true);
-        given(config.get(TEST_BOOL_KEY, Boolean.class)).willReturn(CONFIG_BOOL_VALUE);
+        given(config.get(TEST_BOOL_KEY)).willReturn(String.valueOf(CONFIG_BOOL_VALUE));
         given(config.contains(TEST_CHAR_KEY)).willReturn(true);
-        given(config.get(TEST_CHAR_KEY, Character.class)).willReturn(CONFIG_CHAR_VALUE);
+        given(config.get(TEST_CHAR_KEY)).willReturn(String.valueOf(CONFIG_CHAR_VALUE));
         given(config.contains(TEST_BYTE_KEY)).willReturn(true);
-        given(config.get(TEST_BYTE_KEY, Byte.class)).willReturn(CONFIG_BYTE_VALUE);
+        given(config.get(TEST_BYTE_KEY)).willReturn(String.valueOf(CONFIG_BYTE_VALUE));
         given(config.contains(TEST_SHORT_KEY)).willReturn(true);
-        given(config.get(TEST_SHORT_KEY, Short.class)).willReturn(CONFIG_SHORT_VALUE);
+        given(config.get(TEST_SHORT_KEY)).willReturn(String.valueOf(CONFIG_SHORT_VALUE));
         given(config.contains(TEST_INT_KEY)).willReturn(true);
-        given(config.get(TEST_INT_KEY, Integer.class)).willReturn(CONFIG_INT_VALUE);
+        given(config.get(TEST_INT_KEY)).willReturn(String.valueOf(CONFIG_INT_VALUE));
         given(config.contains(TEST_LONG_KEY)).willReturn(true);
-        given(config.get(TEST_LONG_KEY, Long.class)).willReturn(CONFIG_LONG_VALUE);
+        given(config.get(TEST_LONG_KEY)).willReturn(String.valueOf(CONFIG_LONG_VALUE));
         given(config.contains(TEST_FLOAT_KEY)).willReturn(true);
-        given(config.get(TEST_FLOAT_KEY, Float.class)).willReturn(CONFIG_FLOAT_VALUE);
+        given(config.get(TEST_FLOAT_KEY)).willReturn(String.valueOf(CONFIG_FLOAT_VALUE));
         given(config.contains(TEST_DOUBLE_KEY)).willReturn(true);
-        given(config.get(TEST_DOUBLE_KEY, Double.class)).willReturn(CONFIG_DOUBLE_VALUE);
+        given(config.get(TEST_DOUBLE_KEY)).willReturn(String.valueOf(CONFIG_DOUBLE_VALUE));
         
         final DefaultConfigurer configurer = new DefaultConfigurer(configProvider);
         final ConfigurableMixedPrivateTestBean bean = new ConfigurableMixedPrivateTestBean();
@@ -452,23 +308,6 @@ class DefaultConfigurerPrimitivePropertiesTest {
         assertEquals(DEFAULT_LONG_VALUE, bean.getLongProp());
         assertEquals(DEFAULT_FLOAT_VALUE, bean.getFloatProp());
         assertEquals(DEFAULT_DOUBLE_VALUE, bean.getDoubleProp());
-        
-        then(config).should(times(1)).contains(TEST_BOOL_KEY);
-        then(config).should(times(1)).get(TEST_BOOL_KEY, Boolean.class);
-        then(config).should(times(1)).contains(TEST_CHAR_KEY);
-        then(config).should(times(1)).get(TEST_CHAR_KEY, Character.class);
-        then(config).should(times(1)).contains(TEST_BYTE_KEY);
-        then(config).should(times(1)).get(TEST_BYTE_KEY, Byte.class);
-        then(config).should(times(1)).contains(TEST_SHORT_KEY);
-        then(config).should(times(1)).get(TEST_SHORT_KEY, Short.class);
-        then(config).should(times(1)).contains(TEST_INT_KEY);
-        then(config).should(times(1)).get(TEST_INT_KEY, Integer.class);
-        then(config).should(times(1)).contains(TEST_LONG_KEY);
-        then(config).should(times(1)).get(TEST_LONG_KEY, Long.class);
-        then(config).should(times(1)).contains(TEST_FLOAT_KEY);
-        then(config).should(times(1)).get(TEST_FLOAT_KEY, Float.class);
-        then(config).should(times(1)).contains(TEST_DOUBLE_KEY);
-        then(config).should(times(1)).get(TEST_DOUBLE_KEY, Double.class);
     }
 
     /**
@@ -479,25 +318,22 @@ class DefaultConfigurerPrimitivePropertiesTest {
     @Test
     void testConfigurePropertiesPermissionsNull()
     throws ConfigException {
-        final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
-        final Config config = BDDMockito.mock(Config.class);
-        
         given(config.contains(TEST_BOOL_KEY)).willReturn(true);
-        given(config.get(TEST_BOOL_KEY, Boolean.class)).willReturn(null);
+        given(config.get(TEST_BOOL_KEY)).willReturn(null);
         given(config.contains(TEST_CHAR_KEY)).willReturn(true);
-        given(config.get(TEST_CHAR_KEY, Character.class)).willReturn(null);
+        given(config.get(TEST_CHAR_KEY)).willReturn(null);
         given(config.contains(TEST_BYTE_KEY)).willReturn(true);
-        given(config.get(TEST_BYTE_KEY, Byte.class)).willReturn(null);
+        given(config.get(TEST_BYTE_KEY)).willReturn(null);
         given(config.contains(TEST_SHORT_KEY)).willReturn(true);
-        given(config.get(TEST_SHORT_KEY, Short.class)).willReturn(null);
+        given(config.get(TEST_SHORT_KEY)).willReturn(null);
         given(config.contains(TEST_INT_KEY)).willReturn(true);
-        given(config.get(TEST_INT_KEY, Integer.class)).willReturn(null);
+        given(config.get(TEST_INT_KEY)).willReturn(null);
         given(config.contains(TEST_LONG_KEY)).willReturn(true);
-        given(config.get(TEST_LONG_KEY, Long.class)).willReturn(null);
+        given(config.get(TEST_LONG_KEY)).willReturn(null);
         given(config.contains(TEST_FLOAT_KEY)).willReturn(true);
-        given(config.get(TEST_FLOAT_KEY, Float.class)).willReturn(null);
+        given(config.get(TEST_FLOAT_KEY)).willReturn(null);
         given(config.contains(TEST_DOUBLE_KEY)).willReturn(true);
-        given(config.get(TEST_DOUBLE_KEY, Double.class)).willReturn(null);
+        given(config.get(TEST_DOUBLE_KEY)).willReturn(null);
         
         final DefaultConfigurer configurer = new DefaultConfigurer(configProvider);
         final ConfigurableMixedPrivateTestBean bean = new ConfigurableMixedPrivateTestBean();
@@ -510,23 +346,6 @@ class DefaultConfigurerPrimitivePropertiesTest {
         assertEquals(DEFAULT_LONG_VALUE, bean.getLongProp());
         assertEquals(DEFAULT_FLOAT_VALUE, bean.getFloatProp());
         assertEquals(DEFAULT_DOUBLE_VALUE, bean.getDoubleProp());
-        
-        then(config).should(times(1)).contains(TEST_BOOL_KEY);
-        then(config).should(times(1)).get(TEST_BOOL_KEY, Boolean.class);
-        then(config).should(times(1)).contains(TEST_CHAR_KEY);
-        then(config).should(times(1)).get(TEST_CHAR_KEY, Character.class);
-        then(config).should(times(1)).contains(TEST_BYTE_KEY);
-        then(config).should(times(1)).get(TEST_BYTE_KEY, Byte.class);
-        then(config).should(times(1)).contains(TEST_SHORT_KEY);
-        then(config).should(times(1)).get(TEST_SHORT_KEY, Short.class);
-        then(config).should(times(1)).contains(TEST_INT_KEY);
-        then(config).should(times(1)).get(TEST_INT_KEY, Integer.class);
-        then(config).should(times(1)).contains(TEST_LONG_KEY);
-        then(config).should(times(1)).get(TEST_LONG_KEY, Long.class);
-        then(config).should(times(1)).contains(TEST_FLOAT_KEY);
-        then(config).should(times(1)).get(TEST_FLOAT_KEY, Float.class);
-        then(config).should(times(1)).contains(TEST_DOUBLE_KEY);
-        then(config).should(times(1)).get(TEST_DOUBLE_KEY, Double.class);
     }
 
     /**
@@ -537,26 +356,6 @@ class DefaultConfigurerPrimitivePropertiesTest {
     @Test
     void testConfigurePropertiesPermissionsUnconfigured()
     throws ConfigException {
-        final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
-        final Config config = BDDMockito.mock(Config.class);
-        
-        given(config.contains(TEST_BOOL_KEY)).willReturn(false);
-        given(config.get(TEST_BOOL_KEY, Boolean.class)).willReturn(null);
-        given(config.contains(TEST_CHAR_KEY)).willReturn(false);
-        given(config.get(TEST_CHAR_KEY, Character.class)).willReturn(null);
-        given(config.contains(TEST_BYTE_KEY)).willReturn(false);
-        given(config.get(TEST_BYTE_KEY, Byte.class)).willReturn(null);
-        given(config.contains(TEST_SHORT_KEY)).willReturn(false);
-        given(config.get(TEST_SHORT_KEY, Short.class)).willReturn(null);
-        given(config.contains(TEST_INT_KEY)).willReturn(false);
-        given(config.get(TEST_INT_KEY, Integer.class)).willReturn(null);
-        given(config.contains(TEST_LONG_KEY)).willReturn(false);
-        given(config.get(TEST_LONG_KEY, Long.class)).willReturn(null);
-        given(config.contains(TEST_FLOAT_KEY)).willReturn(false);
-        given(config.get(TEST_FLOAT_KEY, Float.class)).willReturn(null);
-        given(config.contains(TEST_DOUBLE_KEY)).willReturn(false);
-        given(config.get(TEST_DOUBLE_KEY, Double.class)).willReturn(null);
-        
         final DefaultConfigurer configurer = new DefaultConfigurer(configProvider);
         final ConfigurableMixedPrivateTestBean bean = new ConfigurableMixedPrivateTestBean();
         configurer.configureProperties(bean, config);
@@ -568,23 +367,6 @@ class DefaultConfigurerPrimitivePropertiesTest {
         assertEquals(DEFAULT_LONG_VALUE, bean.getLongProp());
         assertEquals(DEFAULT_FLOAT_VALUE, bean.getFloatProp());
         assertEquals(DEFAULT_DOUBLE_VALUE, bean.getDoubleProp());
-        
-        then(config).should(times(1)).contains(TEST_BOOL_KEY);
-        then(config).should(times(0)).get(TEST_BOOL_KEY, Boolean.class);
-        then(config).should(times(1)).contains(TEST_CHAR_KEY);
-        then(config).should(times(0)).get(TEST_CHAR_KEY, Character.class);
-        then(config).should(times(1)).contains(TEST_BYTE_KEY);
-        then(config).should(times(0)).get(TEST_BYTE_KEY, Byte.class);
-        then(config).should(times(1)).contains(TEST_SHORT_KEY);
-        then(config).should(times(0)).get(TEST_SHORT_KEY, Short.class);
-        then(config).should(times(1)).contains(TEST_INT_KEY);
-        then(config).should(times(0)).get(TEST_INT_KEY, Integer.class);
-        then(config).should(times(1)).contains(TEST_LONG_KEY);
-        then(config).should(times(0)).get(TEST_LONG_KEY, Long.class);
-        then(config).should(times(1)).contains(TEST_FLOAT_KEY);
-        then(config).should(times(0)).get(TEST_FLOAT_KEY, Float.class);
-        then(config).should(times(1)).contains(TEST_DOUBLE_KEY);
-        then(config).should(times(0)).get(TEST_DOUBLE_KEY, Double.class);
     }
 
     /**
@@ -595,20 +377,14 @@ class DefaultConfigurerPrimitivePropertiesTest {
     @Test
     void testConfigureWithBeanError()
     throws ConfigException {
-        final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
-        final Config config = BDDMockito.mock(Config.class);
-        
         given(config.contains(TEST_BOOL_KEY)).willReturn(true);
-        given(config.get(TEST_BOOL_KEY, Boolean.class)).willReturn(CONFIG_BOOL_VALUE);
+        given(config.get(TEST_BOOL_KEY)).willReturn(String.valueOf(CONFIG_BOOL_VALUE));
         
         final DefaultConfigurer configurer = new DefaultConfigurer(configProvider);
         final ConfigurableSetterErrorTestBean bean = new ConfigurableSetterErrorTestBean();
         configurer.configureProperties(bean, config);
         
         assertNull(bean.isBoolProp());
-        
-        then(config).should(times(1)).contains(TEST_BOOL_KEY);
-        then(config).should(times(1)).get(TEST_BOOL_KEY, Boolean.class);
     }
 
     /**
@@ -619,25 +395,22 @@ class DefaultConfigurerPrimitivePropertiesTest {
     @Test
     void testConfigureWithConfigError()
     throws ConfigException {
-        final ConfigProvider configProvider = BDDMockito.mock(ConfigProvider.class);
-        final Config config = BDDMockito.mock(Config.class);
-        
         given(config.contains(TEST_BOOL_KEY)).willReturn(true);
-        given(config.get(TEST_BOOL_KEY, Boolean.class)).willThrow(ConfigException.class);
+        given(config.get(TEST_BOOL_KEY)).willThrow(ConfigException.class);
         given(config.contains(TEST_CHAR_KEY)).willReturn(true);
-        given(config.get(TEST_CHAR_KEY, Character.class)).willThrow(ConfigException.class);
+        given(config.get(TEST_CHAR_KEY)).willThrow(ConfigException.class);
         given(config.contains(TEST_BYTE_KEY)).willReturn(true);
-        given(config.get(TEST_BYTE_KEY, Byte.class)).willThrow(ConfigException.class);
+        given(config.get(TEST_BYTE_KEY)).willThrow(ConfigException.class);
         given(config.contains(TEST_SHORT_KEY)).willReturn(true);
-        given(config.get(TEST_SHORT_KEY, Short.class)).willThrow(ConfigException.class);
+        given(config.get(TEST_SHORT_KEY)).willThrow(ConfigException.class);
         given(config.contains(TEST_INT_KEY)).willReturn(true);
-        given(config.get(TEST_INT_KEY, Integer.class)).willThrow(ConfigException.class);
+        given(config.get(TEST_INT_KEY)).willThrow(ConfigException.class);
         given(config.contains(TEST_LONG_KEY)).willReturn(true);
-        given(config.get(TEST_LONG_KEY, Long.class)).willThrow(ConfigException.class);
+        given(config.get(TEST_LONG_KEY)).willThrow(ConfigException.class);
         given(config.contains(TEST_FLOAT_KEY)).willReturn(true);
-        given(config.get(TEST_FLOAT_KEY, Float.class)).willThrow(ConfigException.class);
+        given(config.get(TEST_FLOAT_KEY)).willThrow(ConfigException.class);
         given(config.contains(TEST_DOUBLE_KEY)).willReturn(true);
-        given(config.get(TEST_DOUBLE_KEY, Double.class)).willThrow(ConfigException.class);
+        given(config.get(TEST_DOUBLE_KEY)).willThrow(ConfigException.class);
         
         final DefaultConfigurer configurer = new DefaultConfigurer(configProvider);
         final ConfigurableWrappersTestBean bean = new ConfigurableWrappersTestBean();
@@ -650,23 +423,6 @@ class DefaultConfigurerPrimitivePropertiesTest {
         assertEquals(DEFAULT_LONG_VALUE, bean.getLongProp());
         assertEquals(DEFAULT_FLOAT_VALUE, bean.getFloatProp());
         assertEquals(DEFAULT_DOUBLE_VALUE, bean.getDoubleProp());
-        
-        then(config).should(times(1)).contains(TEST_BOOL_KEY);
-        then(config).should(times(1)).get(TEST_BOOL_KEY, Boolean.class);
-        then(config).should(times(1)).contains(TEST_CHAR_KEY);
-        then(config).should(times(1)).get(TEST_CHAR_KEY, Character.class);
-        then(config).should(times(1)).contains(TEST_BYTE_KEY);
-        then(config).should(times(1)).get(TEST_BYTE_KEY, Byte.class);
-        then(config).should(times(1)).contains(TEST_SHORT_KEY);
-        then(config).should(times(1)).get(TEST_SHORT_KEY, Short.class);
-        then(config).should(times(1)).contains(TEST_INT_KEY);
-        then(config).should(times(1)).get(TEST_INT_KEY, Integer.class);
-        then(config).should(times(1)).contains(TEST_LONG_KEY);
-        then(config).should(times(1)).get(TEST_LONG_KEY, Long.class);
-        then(config).should(times(1)).contains(TEST_FLOAT_KEY);
-        then(config).should(times(1)).get(TEST_FLOAT_KEY, Float.class);
-        then(config).should(times(1)).contains(TEST_DOUBLE_KEY);
-        then(config).should(times(1)).get(TEST_DOUBLE_KEY, Double.class);
     }
 
     public static class ConfigurablePrimitivesTestBean

@@ -24,9 +24,8 @@ package dev.orne.config.crypto;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
 
+import java.nio.charset.StandardCharsets;
 import java.security.spec.KeySpec;
 
 import javax.crypto.Cipher;
@@ -38,10 +37,6 @@ import javax.crypto.spec.PBEKeySpec;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import dev.orne.config.crypto.ConfigCryptoAesGcmEngine;
-import dev.orne.config.crypto.ConfigCryptoProviderException;
-import dev.orne.config.crypto.ConfigCryptoWrongKeyException;
-
 /**
  * Unit tests for {@code ConfigCryptoAesGcmEngine}.
  * 
@@ -52,7 +47,7 @@ import dev.orne.config.crypto.ConfigCryptoWrongKeyException;
 @Tag("ut")
 class ConfigCryptoAesGcmEngineTest {
 
-    private static final byte[] SALT = "mock salt bytes".getBytes();
+    private static final byte[] SALT = "mock salt bytes".getBytes(StandardCharsets.UTF_8);
 
     /**
      * Test for {@link ConfigCryptoAesGcmEngine#ConfigCryptoAesGcmEngine(byte[])}
@@ -70,10 +65,10 @@ class ConfigCryptoAesGcmEngineTest {
         assertEquals(ConfigCryptoAesGcmEngine.DEFAULT_CIPHER_ALGORITHM, engine.getCipherAlgorithm());
         assertEquals(ConfigCryptoAesGcmEngine.DEFAULT_GCM_IV_LENGTH, engine.getGcmInitVectorLength());
         assertEquals(ConfigCryptoAesGcmEngine.DEFAULT_GCM_TAG_LENGTH, engine.getGcmTagLength());
-        assertThrows(ConfigCryptoProviderException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             new ConfigCryptoAesGcmEngine(null);
         });
-        assertThrows(ConfigCryptoProviderException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             new ConfigCryptoAesGcmEngine(new byte[0]);
         });
     }
@@ -98,11 +93,20 @@ class ConfigCryptoAesGcmEngineTest {
         assertEquals(mockCipherAlg, engine.getCipherAlgorithm());
         assertEquals(ConfigCryptoAesGcmEngine.DEFAULT_GCM_IV_LENGTH, engine.getGcmInitVectorLength());
         assertEquals(ConfigCryptoAesGcmEngine.DEFAULT_GCM_TAG_LENGTH, engine.getGcmTagLength());
-        assertThrows(ConfigCryptoProviderException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
+            new ConfigCryptoAesGcmEngine(null, mockKeyAlg, SALT, mockCipherAlg);
+        });
+        assertThrows(NullPointerException.class, () -> {
+            new ConfigCryptoAesGcmEngine(mockKeyFactoryAlg, null, SALT, mockCipherAlg);
+        });
+        assertThrows(NullPointerException.class, () -> {
             new ConfigCryptoAesGcmEngine(mockKeyFactoryAlg, mockKeyAlg, null, mockCipherAlg);
         });
-        assertThrows(ConfigCryptoProviderException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             new ConfigCryptoAesGcmEngine(mockKeyFactoryAlg, mockKeyAlg, new byte[0], mockCipherAlg);
+        });
+        assertThrows(NullPointerException.class, () -> {
+            new ConfigCryptoAesGcmEngine(mockKeyFactoryAlg, mockKeyAlg, SALT, null);
         });
     }
 

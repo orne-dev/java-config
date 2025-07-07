@@ -4,7 +4,7 @@ package dev.orne.config;
  * #%L
  * Orne Beans
  * %%
- * Copyright (C) 2020 Orne Developments
+ * Copyright (C) 2020 - 2025 Orne Developments
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -29,13 +29,14 @@ import javax.validation.constraints.NotNull;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import dev.orne.config.commons.prefs.PreferencesNodeDeletedException;
+import dev.orne.config.crypto.ConfigCryptoProviderException;
+import dev.orne.config.crypto.ConfigCryptoWrongKeyException;
 
 /**
  * Unit tests for library exceptions.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
- * @version 1.0, 2020-08
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
+ * @version 1.1, 2025-05
  * @since 0.2
  * @see ConfigException
  */
@@ -46,14 +47,6 @@ class ExceptionsTest {
     private static final String TEST_MESSAGE = "Test message";
     /** Cause for exception testing. */
     private static final Throwable TEST_CAUSE = new Exception();
-    /** Message format for exception varargs testing. */
-    private static final String TEST_VARARGS_FORMAT = "Test %s message %s";
-    /** Value #1 for exception varargs testing. */
-    private static final String TEST_VARARGS_VALUE1 = "value1";
-    /** Value #1 for exception varargs testing. */
-    private static final String TEST_VARARGS_VALUE2 = "value2";
-    /** Message for exception varargs testing. */
-    private static final String TEST_VARARGS_MESSAGE = "Test value1 message value2";
 
     /**
      * Test for {@link ConfigException}.
@@ -65,6 +58,18 @@ class ExceptionsTest {
         assertCauseException(new ConfigException(TEST_CAUSE));
         assertFullException(new ConfigException(TEST_MESSAGE, TEST_CAUSE));
         assertFullException(new ConfigException(TEST_MESSAGE, TEST_CAUSE, false, false));
+    }
+
+    /**
+     * Test for {@link NonIterableConfigException}.
+     */
+    @Test
+    void testNonIterableConfigException() {
+        assertEmptyException(new NonIterableConfigException());
+        assertMessageException(new NonIterableConfigException(TEST_MESSAGE));
+        assertCauseException(new NonIterableConfigException(TEST_CAUSE));
+        assertFullException(new NonIterableConfigException(TEST_MESSAGE, TEST_CAUSE));
+        assertFullException(new NonIterableConfigException(TEST_MESSAGE, TEST_CAUSE, false, false));
     }
 
     /**
@@ -92,21 +97,6 @@ class ExceptionsTest {
     }
 
     /**
-     * Test for {@link PreferencesNodeDeletedException}.
-     */
-    @Test
-    void testPreferencesNodeDeletedException() {
-        assertEmptyException(new PreferencesNodeDeletedException());
-        assertMessageException(new PreferencesNodeDeletedException(TEST_MESSAGE));
-        assertStringFormatMessageException(new PreferencesNodeDeletedException(
-                TEST_VARARGS_FORMAT,
-                TEST_VARARGS_VALUE1,
-                TEST_VARARGS_VALUE2));
-        assertCauseException(new PreferencesNodeDeletedException(TEST_CAUSE));
-        assertFullException(new PreferencesNodeDeletedException(TEST_MESSAGE, TEST_CAUSE));
-    }
-
-    /**
      * Asserts that exception has no message and no cause.
      * 
      * @param exception The exception to test
@@ -128,20 +118,6 @@ class ExceptionsTest {
         assertNotNull(exception);
         assertNotNull(exception.getMessage());
         assertEquals(TEST_MESSAGE, exception.getMessage());
-        assertNull(exception.getCause());
-    }
-
-    /**
-     * Asserts that exception has message formatted by
-     * {@link String#format(String, Object...)} but no cause.
-     * 
-     * @param exception The exception to test
-     */
-    private void assertStringFormatMessageException(
-            final @NotNull Exception exception) {
-        assertNotNull(exception);
-        assertNotNull(exception.getMessage());
-        assertEquals(TEST_VARARGS_MESSAGE, exception.getMessage());
         assertNull(exception.getCause());
     }
 

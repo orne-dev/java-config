@@ -30,7 +30,6 @@ import java.util.stream.Stream;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.lang3.Validate;
 import org.apiguardian.api.API;
 
 /**
@@ -45,145 +44,42 @@ import org.apiguardian.api.API;
  */
 @API(status = API.Status.STABLE, since = "1.0")
 public class PreferencesConfig
-implements Config {
+extends AbstractConfig {
 
-    /** Error message for invalid keys. */
-    protected static final String INVALID_KEY_ERROR = "Parameter key must be a non blank string";
-
-    /** The preferences node to use as storage of configuration parameters. */
+    /** The preferences node to use as storage of configuration properties. */
     private final @NotNull Preferences preferences;
 
     /**
-     * Creates a new instance with the configuration parameters of the
-     * specified preferences node.
+     * Creates a new instance.
      * 
-     * @param preferences The preferences node to use as storage of configuration
-     * parameters
+     * @param options The configuration builder options.
+     * @param preferencesOptions The preferences based configuration builder options.
+     */
+    @API(status = API.Status.INTERNAL, since = "1.0")
+    public PreferencesConfig(
+            final @NotNull ConfigOptions options,
+            final @NotNull PreferencesConfigOptions preferencesOptions) {
+        super(options);
+        Objects.requireNonNull(preferencesOptions);
+        this.preferences = Objects.requireNonNull(preferencesOptions.getPreferences());
+    }
+
+    /**
+     * Creates a new instance.
+     * 
+     * @param parent The parent {@code Config} instance.
+     * @param decoder The configuration properties values decoder.
+     * @param decorator The configuration properties values decorator.
+     * @param preferences The preferences node to use as storage of
+     * configuration properties.
      */
     public PreferencesConfig(
+            final Config parent,
+            final @NotNull ValueDecoder decoder,
+            final @NotNull ValueDecorator decorator,
             final @NotNull Preferences preferences) {
-        super();
-        this.preferences = preferences;
-    }
-
-    /**
-     * Creates a new instance based on the user preferences tree root node.
-     * 
-     * @return The created instance.
-     * @see Preferences#userRoot()
-     */
-    public static @NotNull PreferencesConfig ofUser() {
-        return new PreferencesConfig(
-                Preferences.userRoot());
-    }
-
-    /**
-     * Creates a new instance based on the node with the specified path on the
-     * user preferences tree.
-     * 
-     * @param path The path of the configuration's preferences, relative to
-     * user preference tree's root node
-     * @return The created instance.
-     * @see Preferences#userRoot()
-     * @see Preferences#node(String)
-     */
-    public static @NotNull PreferencesConfig ofUser(
-            final @NotNull String path) {
-        return new PreferencesConfig(
-                Preferences.userRoot().node(path));
-    }
-
-    /**
-     * Creates a new instance based on the node for the package of the
-     * specified class on the user preferences tree.
-     * 
-     * @param clazz The class which package use when calculating base node
-     * @return The created instance.
-     * @see Preferences#userNodeForPackage(Class)
-     */
-    public static @NotNull PreferencesConfig ofUser(
-            final @NotNull Class<?> clazz) {
-        return new PreferencesConfig(
-                Preferences.userNodeForPackage(clazz));
-    }
-
-    /**
-     * Creates a new instance based on the node with the specified path
-     * relative to the node for the package of the specified class on the
-     * user preferences tree.
-     * 
-     * @param clazz The class which package use when calculating base node
-     * @param path The path of the configuration's preferences, relative to
-     * base node
-     * @return The created instance.
-     * @see Preferences#userNodeForPackage(Class)
-     * @see Preferences#node(String)
-     */
-    public static @NotNull PreferencesConfig ofUser(
-            final @NotNull Class<?> clazz,
-            final @NotNull String path) {
-        return new PreferencesConfig(
-                Preferences.userNodeForPackage(clazz).node(path));
-    }
-
-    /**
-     * Creates a new instance based on the system preferences tree root node.
-     * 
-     * @return The created instance.
-     * @see Preferences#systemRoot()
-     */
-    public static @NotNull PreferencesConfig ofSystem() {
-        return new PreferencesConfig(
-                Preferences.systemRoot());
-    }
-
-    /**
-     * Creates a new instance based on the node with the specified path on the
-     * system preferences tree.
-     * 
-     * @param path The path of the configuration's preferences, relative to
-     * root node.
-     * @return The created instance.
-     * @see Preferences#systemRoot()
-     * @see Preferences#node(String)
-     */
-    public static @NotNull PreferencesConfig ofSystem(
-            final @NotNull String path) {
-        return new PreferencesConfig(
-                Preferences.systemRoot().node(path));
-    }
-
-    /**
-     * Creates a new instance based on the node for the package of the
-     * specified class on the system preferences tree.
-     * 
-     * @param clazz The class which package use when calculating base node.
-     * @return The created instance.
-     * @see Preferences#systemNodeForPackage(Class)
-     */
-    public static @NotNull PreferencesConfig ofSystem(
-            final @NotNull Class<?> clazz) {
-        return new PreferencesConfig(
-                Preferences.systemNodeForPackage(clazz));
-    }
-
-    /**
-     * Creates a new instance based on the node with the specified path
-     * relative to the node for the package of the specified class on the
-     * system preferences tree.
-     * 
-     * @param clazz The class which package use when calculating base node
-     * @param path The path of the configuration's preferences, relative to
-     * base node
-     * @return The created instance.
-     * @see Preferences#systemNodeForPackage(Class)
-     * @see Preferences#node(String)
-     */
-    public static @NotNull PreferencesConfig ofSystem(
-            final @NotNull Class<?> clazz,
-            final @NotNull String path) {
-        return new PreferencesConfig(
-                Preferences.systemNodeForPackage(clazz).node(path));
+        super(parent, decoder, decorator);
+        this.preferences = Objects.requireNonNull(preferences);
     }
 
     /**
@@ -200,11 +96,11 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull Stream<String> getKeys() {
+    protected boolean isEmptyInt() {
         try {
-            return Stream.of(this.preferences.keys());
-        } catch (final IllegalStateException | BackingStoreException e) {
-            throw new ConfigException("Error accessing configuration", e);
+            return this.preferences.keys().length == 0;
+        } catch (final IllegalStateException | BackingStoreException ise) {
+            throw new ConfigException("Error accessing configuration", ise);
         }
     }
 
@@ -212,9 +108,7 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    public boolean contains(
-            final @NotBlank String key) {
-        Validate.notBlank(key, INVALID_KEY_ERROR);
+    protected boolean containsInt(@NotBlank String key) {
         try {
             return this.preferences.get(key, null) != null;
         } catch (final IllegalStateException ise) {
@@ -226,39 +120,23 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    public String get(
-            final @NotBlank String key) {
-        Validate.notBlank(key, INVALID_KEY_ERROR);
+    protected @NotNull Stream<String> getKeysInt() {
+        try {
+            return Stream.of(this.preferences.keys());
+        } catch (final IllegalStateException | BackingStoreException e) {
+            throw new ConfigException("Error accessing configuration", e);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getInt(@NotBlank String key) {
         try {
             return this.preferences.get(key, null);
         } catch (final IllegalStateException ise) {
             throw new ConfigException("Error retrieving configuration property value", ise);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.preferences);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final PreferencesConfig other = (PreferencesConfig) obj;
-        return Objects.equals(this.preferences, other.preferences);
     }
 }

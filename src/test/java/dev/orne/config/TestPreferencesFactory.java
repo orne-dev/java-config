@@ -34,7 +34,7 @@ import javax.validation.constraints.NotNull;
  * Mock {@code PreferencesFactory} implementation for testing classes
  * that use {@code Preferences}.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2020-08
  * @since 0.2
  * @see Preferences
@@ -213,6 +213,12 @@ implements PreferencesFactory {
             super(parent, name);
             this.attributes = new HashMap<>();
             this.childs = new HashMap<>();
+        }
+
+        protected void setAttributes(
+                final @NotNull Map<String, String> attributes) {
+            this.attributes.clear();
+            this.attributes.putAll(attributes);
         }
 
         /**

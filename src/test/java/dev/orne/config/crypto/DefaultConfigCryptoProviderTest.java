@@ -25,6 +25,7 @@ package dev.orne.config.crypto;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,13 +35,10 @@ import java.util.concurrent.Semaphore;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
+import javax.security.auth.DestroyFailedException;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
-import dev.orne.config.crypto.ConfigCryptoEngine;
-import dev.orne.config.crypto.ConfigCryptoProviderException;
-import dev.orne.config.crypto.DefaultConfigCryptoProvider;
 
 /**
  * Unit tests for {@code DefaultConfigCryptoProvider}.
@@ -52,6 +50,9 @@ import dev.orne.config.crypto.DefaultConfigCryptoProvider;
  */
 @Tag("ut")
 class DefaultConfigCryptoProviderTest {
+
+    private static final byte[] SALT = "mock salt bytes".getBytes(StandardCharsets.UTF_8);
+    private static final char[] MOCK_PASS = "mock pass".toCharArray();
 
     /**
      * Test for {@link DefaultConfigCryptoProvider#DefaultConfigCryptoProvider(ConfigCryptoEngine, boolean, SecretKey)}.
@@ -67,22 +68,95 @@ class DefaultConfigCryptoProviderTest {
                 key);
         assertSame(engine, provider.getEngine());
         assertSame(key, provider.getSecretKey());
+        assertFalse(provider.isDestroyEngine());
+        assertFalse(provider.isDestroyed());
+        then(engine).shouldHaveNoInteractions();
+        then(key).shouldHaveNoInteractions();
     }
 
     /**
-     * Test for {@link DefaultConfigCryptoProvider#DefaultConfigCryptoProvider(ConfigCryptoEngine, SecretKey)}.
+     * Test for {@link DefaultConfigCryptoProvider#DefaultConfigCryptoProvider(CryptoProviderOptions)}.
      */
     @Test
-    void testConstructorKey()
+    void testBuilder()
     throws ConfigCryptoProviderException {
         final ConfigCryptoEngine engine = mock(ConfigCryptoEngine.class);
         final SecretKey key = mock(SecretKey.class);
-        final DefaultConfigCryptoProvider provider = new DefaultConfigCryptoProvider(
-                engine,
-                key);
+        willReturn(key).given(engine).createSecretKey(MOCK_PASS);
+        DefaultConfigCryptoProvider provider = assertInstanceOf(
+                DefaultConfigCryptoProvider.class,
+                ConfigCryptoProvider.builder()
+                    .withEngine(engine)
+                    .withSecretKey(key)
+                    .build());
         assertSame(engine, provider.getEngine());
         assertSame(key, provider.getSecretKey());
-        then(engine).should(never()).createSecretKey(any());
+        assertFalse(provider.isDestroyEngine());
+        assertFalse(provider.isDestroyed());
+        provider = assertInstanceOf(
+                DefaultConfigCryptoProvider.class,
+                ConfigCryptoProvider.builder()
+                    .withEngine(engine, true)
+                    .withSecretKey(key)
+                    .build());
+        assertSame(engine, provider.getEngine());
+        assertSame(key, provider.getSecretKey());
+        assertTrue(provider.isDestroyEngine());
+        assertFalse(provider.isDestroyed());
+        provider = assertInstanceOf(
+                DefaultConfigCryptoProvider.class,
+                ConfigCryptoProvider.builder()
+                    .withEngine(engine)
+                    .withSecretKey(MOCK_PASS)
+                    .build());
+        assertSame(engine, provider.getEngine());
+        assertSame(key, provider.getSecretKey());
+        assertFalse(provider.isDestroyEngine());
+        assertFalse(provider.isDestroyed());
+        then(engine).should().createSecretKey(MOCK_PASS);
+        then(engine).shouldHaveNoMoreInteractions();
+        then(key).shouldHaveNoInteractions();
+    }
+
+    /**
+     * Test for {@link DefaultConfigCryptoProvider#DefaultConfigCryptoProvider(CryptoProviderOptions)}.
+     */
+    @Test
+    void testBuilderNewEngine()
+    throws ConfigCryptoProviderException {
+        final SecretKey key = mock(SecretKey.class);
+        DefaultConfigCryptoProvider provider = assertInstanceOf(
+                DefaultConfigCryptoProvider.class,
+                ConfigCryptoProvider.builder()
+                    .withAesGcmEngine(SALT)
+                    .withSecretKey(key)
+                    .build());
+        assertInstanceOf(ConfigCryptoAesGcmEngine.class, provider.getEngine());
+        assertSame(key, provider.getSecretKey());
+        assertTrue(provider.isDestroyEngine());
+        assertFalse(provider.isDestroyed());
+        then(key).shouldHaveNoInteractions();
+        provider = assertInstanceOf(
+                DefaultConfigCryptoProvider.class,
+                ConfigCryptoProvider.builder()
+                    .withAesGcmEngine(SALT, false)
+                    .withSecretKey(key)
+                    .build());
+        assertInstanceOf(ConfigCryptoAesGcmEngine.class, provider.getEngine());
+        assertSame(key, provider.getSecretKey());
+        assertFalse(provider.isDestroyEngine());
+        assertFalse(provider.isDestroyed());
+        then(key).shouldHaveNoInteractions();
+        provider = assertInstanceOf(
+                DefaultConfigCryptoProvider.class,
+                ConfigCryptoProvider.builder()
+                    .withAesGcmEngine(SALT)
+                    .withSecretKey(MOCK_PASS)
+                    .build());
+        assertInstanceOf(ConfigCryptoAesGcmEngine.class, provider.getEngine());
+        assertEquals(provider.getEngine().createSecretKey(MOCK_PASS), provider.getSecretKey());
+        assertTrue(provider.isDestroyEngine());
+        assertFalse(provider.isDestroyed());
     }
 
     /**
@@ -95,16 +169,19 @@ class DefaultConfigCryptoProviderTest {
         final SecretKey key = mock(SecretKey.class);
         final Cipher cipher = mock(Cipher.class);
         willReturn(cipher).given(engine).createCipher();
-        final DefaultConfigCryptoProvider provider = new DefaultConfigCryptoProvider(
-                engine,
-                key);
+        final DefaultConfigCryptoProvider provider = assertInstanceOf(
+                DefaultConfigCryptoProvider.class,
+                ConfigCryptoProvider.builder()
+                    .withEngine(engine)
+                    .withSecretKey(key)
+                    .build());
         then(engine).should(never()).createCipher();
         Cipher result = provider.getCipher();
         assertSame(cipher, result);
-        then(engine).should(times(1)).createCipher();
+        then(engine).should().createCipher();
         result = provider.getCipher();
         assertSame(cipher, result);
-        then(engine).should(times(1)).createCipher();
+        then(engine).should().createCipher();
     }
 
     /**
@@ -117,9 +194,12 @@ class DefaultConfigCryptoProviderTest {
         final SecretKey key = mock(SecretKey.class);
         final Cipher cipher = mock(Cipher.class);
         willReturn(cipher).given(engine).createCipher();
-        final DefaultConfigCryptoProvider provider = spy(new DefaultConfigCryptoProvider(
-                engine,
-                key));
+        final DefaultConfigCryptoProvider provider = spy(assertInstanceOf(
+                DefaultConfigCryptoProvider.class,
+                ConfigCryptoProvider.builder()
+                    .withEngine(engine)
+                    .withSecretKey(key)
+                    .build()));
         then(engine).should(never()).createCipher();
         
         final int threadCount = 10;
@@ -142,7 +222,7 @@ class DefaultConfigCryptoProviderTest {
         semaphore.release(threadCount);
         mainSemaphore.acquire(threadCount);
         then(provider).should(times(threadCount)).getCipher();
-        then(engine).should(times(1)).createCipher();
+        then(engine).should().createCipher();
         assertEquals(Collections.emptyList(), exceptions);
     }
 
@@ -158,16 +238,19 @@ class DefaultConfigCryptoProviderTest {
         final SecretKey key = mock(SecretKey.class);
         final Cipher cipher = mock(Cipher.class);
         willReturn(cryptText).given(engine).encrypt(plainText, key, cipher);
-        final DefaultConfigCryptoProvider provider = spy(new DefaultConfigCryptoProvider(
-                engine,
-                key));
+        final DefaultConfigCryptoProvider provider = spy(assertInstanceOf(
+                DefaultConfigCryptoProvider.class,
+                ConfigCryptoProvider.builder()
+                    .withEngine(engine)
+                    .withSecretKey(key)
+                    .build()));
         willReturn(cipher).given(provider).getCipher();
         
         final String result = provider.encrypt(plainText);
         
         assertSame(cryptText, result);
-        then(provider).should(times(1)).getCipher();
-        then(engine).should(times(1)).encrypt(plainText, key, cipher);
+        then(provider).should().getCipher();
+        then(engine).should().encrypt(plainText, key, cipher);
     }
 
     /**
@@ -182,9 +265,12 @@ class DefaultConfigCryptoProviderTest {
         final SecretKey key = mock(SecretKey.class);
         final Cipher cipher = mock(Cipher.class);
         willReturn(cryptText).given(engine).encrypt(plainText, key, cipher);
-        final DefaultConfigCryptoProvider provider = spy(new DefaultConfigCryptoProvider(
-                engine,
-                key));
+        final DefaultConfigCryptoProvider provider = spy(assertInstanceOf(
+                DefaultConfigCryptoProvider.class,
+                ConfigCryptoProvider.builder()
+                    .withEngine(engine)
+                    .withSecretKey(key)
+                    .build()));
         willReturn(cipher).given(provider).getCipher();
         
         final int threadCount = 10;
@@ -224,16 +310,19 @@ class DefaultConfigCryptoProviderTest {
         final SecretKey key = mock(SecretKey.class);
         final Cipher cipher = mock(Cipher.class);
         willReturn(plainText).given(engine).decrypt(cryptText, key, cipher);
-        final DefaultConfigCryptoProvider provider = spy(new DefaultConfigCryptoProvider(
-                engine,
-                key));
+        final DefaultConfigCryptoProvider provider = spy(assertInstanceOf(
+                DefaultConfigCryptoProvider.class,
+                ConfigCryptoProvider.builder()
+                    .withEngine(engine)
+                    .withSecretKey(key)
+                    .build()));
         willReturn(cipher).given(provider).getCipher();
         
         final String result = provider.decrypt(cryptText);
         
         assertSame(plainText, result);
-        then(provider).should(times(1)).getCipher();
-        then(engine).should(times(1)).decrypt(cryptText, key, cipher);
+        then(provider).should().getCipher();
+        then(engine).should().decrypt(cryptText, key, cipher);
     }
 
     /**
@@ -248,9 +337,12 @@ class DefaultConfigCryptoProviderTest {
         final SecretKey key = mock(SecretKey.class);
         final Cipher cipher = mock(Cipher.class);
         willReturn(plainText).given(engine).decrypt(cryptText, key, cipher);
-        final DefaultConfigCryptoProvider provider = spy(new DefaultConfigCryptoProvider(
-                engine,
-                key));
+        final DefaultConfigCryptoProvider provider = spy(assertInstanceOf(
+                DefaultConfigCryptoProvider.class,
+                ConfigCryptoProvider.builder()
+                    .withEngine(engine)
+                    .withSecretKey(key)
+                    .build()));
         willReturn(cipher).given(provider).getCipher();
         
         final int threadCount = 10;
@@ -276,5 +368,72 @@ class DefaultConfigCryptoProviderTest {
         then(provider).should(times(threadCount)).getCipher();
         then(engine).should(times(threadCount)).decrypt(cryptText, key, cipher);
         assertEquals(Collections.emptyList(), exceptions);
+    }
+
+    /**
+     * Test for {@link DefaultConfigCryptoProvider#destroy()}.
+     */
+    @Test
+    void testDestroy()
+    throws ConfigCryptoProviderException, DestroyFailedException {
+        final ConfigCryptoEngine engine = mock(ConfigCryptoEngine.class);
+        final SecretKey key = mock(SecretKey.class);
+        final Cipher cipher = mock(Cipher.class);
+        final DefaultConfigCryptoProvider provider = assertInstanceOf(
+                DefaultConfigCryptoProvider.class,
+                ConfigCryptoProvider.builder()
+                    .withEngine(engine)
+                    .withSecretKey(key)
+                    .build());
+        willReturn(cipher).given(engine).createCipher();
+        assertNotNull(provider.getCipher());
+        assertFalse(provider.isDestroyEngine());
+        assertFalse(provider.isDestroyed());
+        then(key).shouldHaveNoInteractions();
+        then(engine).should().createCipher();
+        then(engine).shouldHaveNoMoreInteractions();
+        provider.destroy();
+        assertFalse(provider.isDestroyEngine());
+        assertTrue(provider.isDestroyed());
+        then(key).should().destroy();
+        then(key).shouldHaveNoMoreInteractions();
+        then(engine).should().createCipher();
+        then(engine).shouldHaveNoMoreInteractions();
+        assertThrows(IllegalStateException.class, () -> provider.encrypt("Mock text"));
+        assertThrows(IllegalStateException.class, () -> provider.decrypt("Mock text"));
+    }
+
+    /**
+     * Test for {@link DefaultConfigCryptoProvider#destroy()}.
+     */
+    @Test
+    void testDestroyEngine()
+    throws ConfigCryptoProviderException, DestroyFailedException {
+        final ConfigCryptoEngine engine = mock(ConfigCryptoEngine.class);
+        final SecretKey key = mock(SecretKey.class);
+        final Cipher cipher = mock(Cipher.class);
+        final DefaultConfigCryptoProvider provider = assertInstanceOf(
+                DefaultConfigCryptoProvider.class,
+                ConfigCryptoProvider.builder()
+                    .withEngine(engine, true)
+                    .withSecretKey(key)
+                    .build());
+        willReturn(cipher).given(engine).createCipher();
+        assertNotNull(provider.getCipher());
+        assertTrue(provider.isDestroyEngine());
+        assertFalse(provider.isDestroyed());
+        then(key).shouldHaveNoInteractions();
+        then(engine).should().createCipher();
+        then(engine).shouldHaveNoMoreInteractions();
+        provider.destroy();
+        assertTrue(provider.isDestroyEngine());
+        assertTrue(provider.isDestroyed());
+        then(key).should().destroy();
+        then(key).shouldHaveNoMoreInteractions();
+        then(engine).should().createCipher();
+        then(engine).should().destroy();
+        then(engine).shouldHaveNoMoreInteractions();
+        assertThrows(IllegalStateException.class, () -> provider.encrypt("Mock text"));
+        assertThrows(IllegalStateException.class, () -> provider.decrypt("Mock text"));
     }
 }

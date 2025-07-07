@@ -27,10 +27,10 @@ unimplemented):
 - [ ] XML based configuration provider
 - [ ] YAML based configuration provider
 - [x] Secure configuration values
-- [ ] Fluent setup mechanism
+- [x] Fluent setup mechanism
 - [x] Configurations hierarchy
 - [x] Apache Commons Configuration integration
-- [x] Automatic beans configuration
+- [x] Automatic components configuration
 - [ ] Spring integration
 
 ## Usage

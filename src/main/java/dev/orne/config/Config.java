@@ -44,6 +44,52 @@ import org.apiguardian.api.API;
 public interface Config {
 
     /**
+     * Creates a new system properties based configuration builder.
+     * 
+     * @return The configuration builder.
+     */
+    static @NotNull SystemConfigBuilder ofSystemProperties() {
+        return new SystemConfigBuilderImpl();
+    }
+
+    /**
+     * Creates a new {@code Properties} based configuration builder.
+     * 
+     * @return The configuration builder.
+     */
+    static @NotNull PropertiesConfigBuilder fromPropertiesFiles() {
+        return new PropertiesConfigBuilderImpl();
+    }
+
+    /**
+     * Creates a new {@code Preferences} based configuration builder.
+     * 
+     * @return The configuration builder.
+     */
+    static @NotNull PreferencesConfigNodeBuilder fromJavaPreferences() {
+        return new PreferencesConfigBuilderImpl();
+    }
+
+    /**
+     * Creates a new Apache Commons {@code Configuration} based configuration
+     * builder.
+     * 
+     * @return The configuration builder.
+     */
+    static @NotNull CommonsConfigDelegateBuilder fromApacheCommons() {
+        return new CommonsConfigBuilderImpl();
+    }
+
+    /**
+     * Returns the parent configuration, if any.
+     * 
+     * @return The parent configuration
+     */
+    default Config getParent() {
+        return null;
+    }
+
+    /**
      * Returns {@code true} if the configuration contains no property.
      * 
      * @return Returns {@code true} if the configuration contains no property.
@@ -52,7 +98,7 @@ public interface Config {
      * @throws ConfigException If an error occurs accessing the configuration.
      */
     default boolean isEmpty() {
-        return getKeys().iterator().hasNext();
+        return !getKeys().iterator().hasNext();
     }
 
     /**
@@ -122,6 +168,20 @@ public interface Config {
             @NotBlank String key);
 
     /**
+     * Returns the value of the configuration parameter as {@code String}
+     * without applying any decoration or transformation.
+     * 
+     * @param key The configuration property
+     * @return The configuration parameter value as {@code String}
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
+     */
+    default String getUndecored(
+            @NotBlank String key) {
+        return get(key);
+    }
+
+    /**
      * Returns the value of the configuration parameter as {@code String}.
      * 
      * @param key The key of the configuration parameter
@@ -159,7 +219,8 @@ public interface Config {
      */
     default Boolean getBoolean(
             @NotBlank String key) {
-        return Boolean.parseBoolean(get(key)); 
+        final String value = get(key);
+        return value == null ? null : Boolean.parseBoolean(value); 
     }
 
     /**

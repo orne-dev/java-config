@@ -1,5 +1,7 @@
 package dev.orne.config;
 
+import java.util.Properties;
+
 /*-
  * #%L
  * Orne Config
@@ -26,7 +28,6 @@ import java.util.stream.Stream;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.lang3.Validate;
 import org.apiguardian.api.API;
 
 /**
@@ -41,78 +42,81 @@ import org.apiguardian.api.API;
  */
 @API(status = API.Status.STABLE, since = "1.0")
 public class SystemConfig
-implements Config {
+extends AbstractConfig {
 
     /**
-     * Protected constructor for extension.
-     * Use 
-     */
-    protected SystemConfig() {
-        super();
-    }
-
-    /**
-     * Returns the shared system properties based configuration instance.
+     * Creates a new instance.
      * 
-     * @return The shared instance.
-     */
-    public @NotNull SystemConfig getInstance() {
-        return SingletonHolder.INSTANCE;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean contains(
-            final @NotBlank String key) {
-        return System.getProperties().contains(key);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull Stream<String> getKeys() {
-        return System.getProperties().stringPropertyNames().stream();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isEmpty() {
-        return System.getProperties().isEmpty();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String get(
-            final @NotBlank String key) {
-        return System.getProperty(Validate.notBlank(
-                key,
-                "Parameter key must be a non blank string"));
-    }
-
-    /**
-     * Singleton instance holder for lazy instance creation.
-     * 
-     * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
-     * @version 1.0, 2025-04
+     * @param options The configuration builder options.
      */
     @API(status = API.Status.INTERNAL, since = "1.0")
-    private static final class SingletonHolder {
+    public SystemConfig(
+            final @NotNull ConfigOptions options) {
+        super(options);
+    }
 
-        /** Shared instance. */
-        private static final SystemConfig INSTANCE = new SystemConfig();
+    /**
+     * Creates a new instance.
+     * 
+     * @param parent The parent {@code Config} instance.
+     * @param decoder The configuration properties values decoder.
+     * @param decorator The configuration properties values decorator.
+     */
+    public SystemConfig(
+            final Config parent,
+            final @NotNull ValueDecoder decoder,
+            final @NotNull ValueDecorator decorator) {
+        super(parent, decoder, decorator);
+    }
 
-        /**
-         * No instances allowed.
-         */
-        private SingletonHolder() {
-            // Utility class
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean isEmptyInt() {
+        return getSystemProperties().isEmpty();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean containsInt(
+            final @NotBlank String key) {
+        return getSystemProperties().containsKey(key);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected @NotNull Stream<String> getKeysInt() {
+        return getSystemProperties().stringPropertyNames().stream();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getInt(
+            final @NotBlank String key) {
+        return getSystemProperties().getProperty(key);
+    }
+
+    /**
+     * Returns system properties.
+     * 
+     * @return The system properties
+     * @throws ConfigException If a security manager exists and its
+     * {@code checkPropertyAccess} method doesn't allow access to the
+     * system properties.
+     * @see System#getProperties()
+     */
+    protected Properties getSystemProperties() {
+        try {
+            return System.getProperties();
+        } catch (final SecurityException e) {
+            throw new ConfigException("Cannot access system properties", e);
         }
     }
 }

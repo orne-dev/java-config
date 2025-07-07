@@ -24,11 +24,14 @@ package dev.orne.config.crypto;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
+import static org.mockito.Mockito.mock;
 
+import java.nio.charset.StandardCharsets;
 import java.util.NoSuchElementException;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
+import javax.security.auth.DestroyFailedException;
 
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.PooledObject;
@@ -37,9 +40,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 
-import dev.orne.config.crypto.ConfigCryptoEngine;
-import dev.orne.config.crypto.ConfigCryptoProviderException;
-import dev.orne.config.crypto.PooledConfigCryptoProvider;
 import dev.orne.config.crypto.PooledConfigCryptoProvider.PooledCipherFactory;
 
 /**
@@ -53,75 +53,217 @@ import dev.orne.config.crypto.PooledConfigCryptoProvider.PooledCipherFactory;
 @Tag("ut")
 class PooledConfigCryptoProviderTest {
 
+
+    private static final byte[] SALT = "mock salt bytes".getBytes(StandardCharsets.UTF_8);
+    private static final char[] MOCK_PASS = "mock pass".toCharArray();
+
     /**
-     * Test for {@link PooledConfigCryptoProvider#PooledConfigCryptoProvider(ConfigCryptoEngine, String)}.
+     * Test for {@link PooledConfigCryptoProvider#PooledConfigCryptoProvider(ConfigCryptoEngine, boolean, SecretKey)}.
      */
     @Test
     void testConstructor()
     throws ConfigCryptoProviderException {
         final ConfigCryptoEngine engine = mock(ConfigCryptoEngine.class);
-        final char[] mockPassword = "mock password".toCharArray();
         final SecretKey key = mock(SecretKey.class);
-        willReturn(key).given(engine).createSecretKey(mockPassword);
-        final PooledConfigCryptoProvider provider = new PooledConfigCryptoProvider(
+        PooledConfigCryptoProvider provider = new PooledConfigCryptoProvider(
                 engine,
-                mockPassword);
-        assertSame(engine, provider.getEngine());
-        assertSame(key, provider.getSecretKey());
-        assertNotNull(provider.getCiphersPool());
-        assertTrue(provider.getCiphersPool() instanceof SoftReferenceObjectPool);
-        final SoftReferenceObjectPool<Cipher> mainPool =
-                (SoftReferenceObjectPool<Cipher>) provider.getCiphersPool();
-        assertNotNull(mainPool.getFactory());
-        assertTrue(mainPool.getFactory() instanceof PooledCipherFactory);
-        final PooledCipherFactory factory = (PooledCipherFactory) mainPool.getFactory();
-        assertSame(engine, factory.getEngine());
-        then(engine).should(times(1)).createSecretKey(mockPassword);
-        then(engine).shouldHaveNoMoreInteractions();
-    }
-
-    /**
-     * Test for {@link PooledConfigCryptoProvider#PooledConfigCryptoProvider(ConfigCryptoEngine, SecretKey)}.
-     */
-    @Test
-    void testConstructorKey()
-    throws ConfigCryptoProviderException {
-        final ConfigCryptoEngine engine = mock(ConfigCryptoEngine.class);
-        final SecretKey key = mock(SecretKey.class);
-        final PooledConfigCryptoProvider provider = new PooledConfigCryptoProvider(
-                engine,
+                false,
                 key);
         assertSame(engine, provider.getEngine());
         assertSame(key, provider.getSecretKey());
-        assertNotNull(provider.getCiphersPool());
-        assertTrue(provider.getCiphersPool() instanceof SoftReferenceObjectPool);
-        final SoftReferenceObjectPool<Cipher> mainPool =
-                (SoftReferenceObjectPool<Cipher>) provider.getCiphersPool();
-        assertNotNull(mainPool.getFactory());
-        assertTrue(mainPool.getFactory() instanceof PooledCipherFactory);
-        final PooledCipherFactory factory = (PooledCipherFactory) mainPool.getFactory();
+        assertFalse(provider.isDestroyEngine());
+        assertFalse(provider.isDestroyed());
+        SoftReferenceObjectPool<?> pool = assertInstanceOf(
+                SoftReferenceObjectPool.class,
+                provider.getCiphersPool());
+        PooledCipherFactory factory = assertInstanceOf(
+                PooledCipherFactory.class,
+                pool.getFactory());
+        assertSame(engine, factory.getEngine());
+        then(engine).shouldHaveNoInteractions();
+        provider = new PooledConfigCryptoProvider(
+                engine,
+                true,
+                key);
+        assertSame(engine, provider.getEngine());
+        assertSame(key, provider.getSecretKey());
+        assertTrue(provider.isDestroyEngine());
+        assertFalse(provider.isDestroyed());
+        pool = assertInstanceOf(
+                SoftReferenceObjectPool.class,
+                provider.getCiphersPool());
+        factory = assertInstanceOf(
+                PooledCipherFactory.class,
+                pool.getFactory());
         assertSame(engine, factory.getEngine());
         then(engine).shouldHaveNoInteractions();
     }
 
     /**
-     * Test for {@link PooledConfigCryptoProvider#PooledConfigCryptoProvider(ConfigCryptoEngine, ObjectPool, SecretKey)}.
+     * Test for {@link PooledConfigCryptoProvider#PooledConfigCryptoProvider(ConfigCryptoEngine, boolean, SecretKey, ObjectPool)}.
      */
     @Test
-    void testConstructorKeyPool()
+    void testConstructorWithPool()
     throws ConfigCryptoProviderException {
         final ConfigCryptoEngine engine = mock(ConfigCryptoEngine.class);
         final SecretKey key = mock(SecretKey.class);
         @SuppressWarnings("unchecked")
         final ObjectPool<Cipher> pool = mock(ObjectPool.class);
-        final PooledConfigCryptoProvider provider = new PooledConfigCryptoProvider(
+        PooledConfigCryptoProvider provider = new PooledConfigCryptoProvider(
                 engine,
-                pool,
-                key);
+                false,
+                key,
+                pool);
         assertSame(engine, provider.getEngine());
         assertSame(key, provider.getSecretKey());
         assertSame(pool, provider.getCiphersPool());
+        assertFalse(provider.isDestroyEngine());
+        assertFalse(provider.isDestroyed());
+        provider = new PooledConfigCryptoProvider(
+                engine,
+                true,
+                key,
+                pool);
+        assertSame(engine, provider.getEngine());
+        assertSame(key, provider.getSecretKey());
+        assertSame(pool, provider.getCiphersPool());
+        assertTrue(provider.isDestroyEngine());
+        assertFalse(provider.isDestroyed());
         then(engine).shouldHaveNoInteractions();
+    }
+
+    /**
+     * Test for {@link PooledConfigCryptoProvider#PooledConfigCryptoProvider(CryptoProviderOptions)}.
+     */
+    @Test
+    void testBuilder()
+    throws ConfigCryptoProviderException {
+        final ConfigCryptoEngine engine = mock(ConfigCryptoEngine.class);
+        final SecretKey key = mock(SecretKey.class);
+        willReturn(key).given(engine).createSecretKey(MOCK_PASS);
+        PooledConfigCryptoProvider provider = assertInstanceOf(
+                PooledConfigCryptoProvider.class,
+                ConfigCryptoProvider.builder()
+                    .withEngine(engine)
+                    .withSecretKey(key)
+                    .pooled()
+                    .build());
+        assertSame(engine, provider.getEngine());
+        assertSame(key, provider.getSecretKey());
+        assertFalse(provider.isDestroyEngine());
+        assertFalse(provider.isDestroyed());
+        SoftReferenceObjectPool<?> pool = assertInstanceOf(
+                SoftReferenceObjectPool.class,
+                provider.getCiphersPool());
+        PooledCipherFactory factory = assertInstanceOf(
+                PooledCipherFactory.class,
+                pool.getFactory());
+        assertSame(provider.getEngine(), factory.getEngine());
+        then(engine).shouldHaveNoInteractions();
+        provider = assertInstanceOf(
+                PooledConfigCryptoProvider.class,
+                ConfigCryptoProvider.builder()
+                    .withEngine(engine, true)
+                    .withSecretKey(key)
+                    .pooled()
+                    .build());
+        assertSame(engine, provider.getEngine());
+        assertSame(key, provider.getSecretKey());
+        assertTrue(provider.isDestroyEngine());
+        assertFalse(provider.isDestroyed());
+        pool = assertInstanceOf(
+                SoftReferenceObjectPool.class,
+                provider.getCiphersPool());
+        factory = assertInstanceOf(
+                PooledCipherFactory.class,
+                pool.getFactory());
+        assertSame(provider.getEngine(), factory.getEngine());
+        then(engine).shouldHaveNoInteractions();
+        provider = assertInstanceOf(
+                PooledConfigCryptoProvider.class,
+                ConfigCryptoProvider.builder()
+                    .withEngine(engine)
+                    .withSecretKey(MOCK_PASS)
+                    .pooled()
+                    .build());
+        assertSame(engine, provider.getEngine());
+        assertSame(key, provider.getSecretKey());
+        assertFalse(provider.isDestroyEngine());
+        assertFalse(provider.isDestroyed());
+        pool = assertInstanceOf(
+                SoftReferenceObjectPool.class,
+                provider.getCiphersPool());
+        factory = assertInstanceOf(
+                PooledCipherFactory.class,
+                pool.getFactory());
+        assertSame(provider.getEngine(), factory.getEngine());
+        then(engine).should().createSecretKey(MOCK_PASS);
+        then(engine).shouldHaveNoMoreInteractions();
+        then(key).shouldHaveNoInteractions();
+    }
+
+    /**
+     * Test for {@link PooledConfigCryptoProvider#PooledConfigCryptoProvider(CryptoProviderOptions)}.
+     */
+    @Test
+    void testBuilderNewEngine()
+    throws ConfigCryptoProviderException {
+        final SecretKey key = mock(SecretKey.class);
+        PooledConfigCryptoProvider provider = assertInstanceOf(
+                PooledConfigCryptoProvider.class,
+                ConfigCryptoProvider.builder()
+                    .withAesGcmEngine(SALT)
+                    .withSecretKey(key)
+                    .pooled()
+                    .build());
+        assertInstanceOf(ConfigCryptoAesGcmEngine.class, provider.getEngine());
+        assertSame(key, provider.getSecretKey());
+        assertTrue(provider.isDestroyEngine());
+        assertFalse(provider.isDestroyed());
+        SoftReferenceObjectPool<?> pool = assertInstanceOf(
+                SoftReferenceObjectPool.class,
+                provider.getCiphersPool());
+        PooledCipherFactory factory = assertInstanceOf(
+                PooledCipherFactory.class,
+                pool.getFactory());
+        assertSame(provider.getEngine(), factory.getEngine());
+        provider = assertInstanceOf(
+                PooledConfigCryptoProvider.class,
+                ConfigCryptoProvider.builder()
+                    .withAesGcmEngine(SALT, false)
+                    .withSecretKey(key)
+                    .pooled()
+                    .build());
+        assertInstanceOf(ConfigCryptoAesGcmEngine.class, provider.getEngine());
+        assertSame(key, provider.getSecretKey());
+        assertFalse(provider.isDestroyEngine());
+        assertFalse(provider.isDestroyed());
+        pool = assertInstanceOf(
+                SoftReferenceObjectPool.class,
+                provider.getCiphersPool());
+        factory = assertInstanceOf(
+                PooledCipherFactory.class,
+                pool.getFactory());
+        assertSame(provider.getEngine(), factory.getEngine());
+        provider = assertInstanceOf(
+                PooledConfigCryptoProvider.class,
+                ConfigCryptoProvider.builder()
+                    .withAesGcmEngine(SALT)
+                    .withSecretKey(MOCK_PASS)
+                    .pooled()
+                    .build());
+        assertInstanceOf(ConfigCryptoAesGcmEngine.class, provider.getEngine());
+        assertEquals(provider.getEngine().createSecretKey(MOCK_PASS), provider.getSecretKey());
+        assertTrue(provider.isDestroyEngine());
+        assertFalse(provider.isDestroyed());
+        pool = assertInstanceOf(
+                SoftReferenceObjectPool.class,
+                provider.getCiphersPool());
+        factory = assertInstanceOf(
+                PooledCipherFactory.class,
+                pool.getFactory());
+        assertSame(provider.getEngine(), factory.getEngine());
+        then(key).shouldHaveNoInteractions();
     }
 
     /**
@@ -199,8 +341,9 @@ class PooledConfigCryptoProviderTest {
         willReturn(cryptText).given(engine).encrypt(plainText, key, cipher);
         final PooledConfigCryptoProvider provider = new PooledConfigCryptoProvider(
                 engine,
-                pool,
-                key);
+                false,
+                key,
+                pool);
         willReturn(cipher).given(pool).borrowObject();
         
         final String result = provider.encrypt(plainText);
@@ -228,8 +371,9 @@ class PooledConfigCryptoProviderTest {
         final Cipher cipher = mock(Cipher.class);
         final PooledConfigCryptoProvider provider = new PooledConfigCryptoProvider(
                 engine,
-                pool,
-                key);
+                false,
+                key,
+                pool);
         willThrow(mockException).given(pool).borrowObject();
         
         final IllegalStateException result = assertThrows(IllegalStateException.class, () -> {
@@ -259,8 +403,9 @@ class PooledConfigCryptoProviderTest {
         final Cipher cipher = mock(Cipher.class);
         final PooledConfigCryptoProvider provider = new PooledConfigCryptoProvider(
                 engine,
-                pool,
-                key);
+                false,
+                key,
+                pool);
         willThrow(mockException).given(pool).borrowObject();
         
         final ConfigCryptoProviderException result = assertThrows(ConfigCryptoProviderException.class, () -> {
@@ -290,8 +435,9 @@ class PooledConfigCryptoProviderTest {
         final Cipher cipher = mock(Cipher.class);
         final PooledConfigCryptoProvider provider = new PooledConfigCryptoProvider(
                 engine,
-                pool,
-                key);
+                false,
+                key,
+                pool);
         willThrow(mockException).given(pool).borrowObject();
         
         final ConfigCryptoProviderException result = assertThrows(ConfigCryptoProviderException.class, () -> {
@@ -322,8 +468,9 @@ class PooledConfigCryptoProviderTest {
         willThrow(mockException).given(engine).encrypt(plainText, key, cipher);
         final PooledConfigCryptoProvider provider = new PooledConfigCryptoProvider(
                 engine,
-                pool,
-                key);
+                false,
+                key,
+                pool);
         willReturn(cipher).given(pool).borrowObject();
         
         final ConfigCryptoProviderException result = assertThrows(ConfigCryptoProviderException.class, () -> {
@@ -355,8 +502,9 @@ class PooledConfigCryptoProviderTest {
         willReturn(cryptText).given(engine).encrypt(plainText, key, cipher);
         final PooledConfigCryptoProvider provider = new PooledConfigCryptoProvider(
                 engine,
-                pool,
-                key);
+                false,
+                key,
+                pool);
         willReturn(cipher).given(pool).borrowObject();
         willThrow(mockException).given(pool).returnObject(cipher);
         
@@ -389,8 +537,9 @@ class PooledConfigCryptoProviderTest {
         willThrow(mockException).given(engine).encrypt(plainText, key, cipher);
         final PooledConfigCryptoProvider provider = new PooledConfigCryptoProvider(
                 engine,
-                pool,
-                key);
+                false,
+                key,
+                pool);
         willReturn(cipher).given(pool).borrowObject();
         willThrow(mockException2).given(pool).returnObject(cipher);
         
@@ -424,8 +573,9 @@ class PooledConfigCryptoProviderTest {
         willReturn(plainText).given(engine).decrypt(cryptText, key, cipher);
         final PooledConfigCryptoProvider provider = new PooledConfigCryptoProvider(
                 engine,
-                pool,
-                key);
+                false,
+                key,
+                pool);
         willReturn(cipher).given(pool).borrowObject();
         
         final String result = provider.decrypt(cryptText);
@@ -453,8 +603,9 @@ class PooledConfigCryptoProviderTest {
         final IllegalStateException mockException = new IllegalStateException();
         final PooledConfigCryptoProvider provider = new PooledConfigCryptoProvider(
                 engine,
-                pool,
-                key);
+                false,
+                key,
+                pool);
         willThrow(mockException).given(pool).borrowObject();
         
         final IllegalStateException result = assertThrows(IllegalStateException.class, () -> {
@@ -484,8 +635,9 @@ class PooledConfigCryptoProviderTest {
         final NoSuchElementException mockException = new NoSuchElementException();
         final PooledConfigCryptoProvider provider = new PooledConfigCryptoProvider(
                 engine,
-                pool,
-                key);
+                false,
+                key,
+                pool);
         willThrow(mockException).given(pool).borrowObject();
         
         final ConfigCryptoProviderException result = assertThrows(ConfigCryptoProviderException.class, () -> {
@@ -515,8 +667,9 @@ class PooledConfigCryptoProviderTest {
         final Exception mockException = new Exception();
         final PooledConfigCryptoProvider provider = new PooledConfigCryptoProvider(
                 engine,
-                pool,
-                key);
+                false,
+                key,
+                pool);
         willThrow(mockException).given(pool).borrowObject();
         
         final ConfigCryptoProviderException result = assertThrows(ConfigCryptoProviderException.class, () -> {
@@ -547,8 +700,9 @@ class PooledConfigCryptoProviderTest {
         willThrow(mockException).given(engine).decrypt(cryptText, key, cipher);
         final PooledConfigCryptoProvider provider = new PooledConfigCryptoProvider(
                 engine,
-                pool,
-                key);
+                false,
+                key,
+                pool);
         willReturn(cipher).given(pool).borrowObject();
         
         final ConfigCryptoProviderException result = assertThrows(ConfigCryptoProviderException.class, () -> {
@@ -580,8 +734,9 @@ class PooledConfigCryptoProviderTest {
         willReturn(plainText).given(engine).decrypt(cryptText, key, cipher);
         final PooledConfigCryptoProvider provider = new PooledConfigCryptoProvider(
                 engine,
-                pool,
-                key);
+                false,
+                key,
+                pool);
         willReturn(cipher).given(pool).borrowObject();
         willThrow(mockException).given(pool).returnObject(cipher);
         
@@ -614,8 +769,9 @@ class PooledConfigCryptoProviderTest {
         willThrow(mockException).given(engine).decrypt(cryptText, key, cipher);
         final PooledConfigCryptoProvider provider = new PooledConfigCryptoProvider(
                 engine,
-                pool,
-                key);
+                false,
+                key,
+                pool);
         willReturn(cipher).given(pool).borrowObject();
         willThrow(mockException2).given(pool).returnObject(cipher);
         
@@ -631,5 +787,78 @@ class PooledConfigCryptoProviderTest {
         inOrder.verify(engine, times(1)).decrypt(cryptText, key, cipher);
         inOrder.verify(pool, times(1)).returnObject(cipher);
         inOrder.verifyNoMoreInteractions();
+    }
+
+    /**
+     * Test for {@link PooledConfigCryptoProvider#destroy()}.
+     */
+    @Test
+    void testDestroy()
+    throws ConfigCryptoProviderException, DestroyFailedException {
+        final ConfigCryptoEngine engine = mock(ConfigCryptoEngine.class);
+        final SecretKey key = mock(SecretKey.class);
+        final PooledConfigCryptoProvider provider = assertInstanceOf(
+                PooledConfigCryptoProvider.class,
+                ConfigCryptoProvider.builder()
+                    .withEngine(engine)
+                    .withSecretKey(key)
+                    .pooled()
+                    .build());
+        assertFalse(provider.isDestroyEngine());
+        assertFalse(provider.isDestroyed());
+        SoftReferenceObjectPool<?> pool = assertInstanceOf(
+                SoftReferenceObjectPool.class,
+                provider.getCiphersPool());
+        PooledCipherFactory factory = assertInstanceOf(
+                PooledCipherFactory.class,
+                pool.getFactory());
+        assertSame(provider.getEngine(), factory.getEngine());
+        then(key).shouldHaveNoInteractions();
+        then(engine).shouldHaveNoInteractions();
+        provider.destroy();
+        assertFalse(provider.isDestroyEngine());
+        assertTrue(provider.isDestroyed());
+        then(key).should().destroy();
+        then(key).shouldHaveNoMoreInteractions();
+        then(engine).shouldHaveNoInteractions();
+        assertThrows(IllegalStateException.class, () -> provider.encrypt("Mock text"));
+        assertThrows(IllegalStateException.class, () -> provider.decrypt("Mock text"));
+    }
+
+    /**
+     * Test for {@link PooledConfigCryptoProvider#destroy()}.
+     */
+    @Test
+    void testDestroyEngine()
+    throws ConfigCryptoProviderException, DestroyFailedException {
+        final ConfigCryptoEngine engine = mock(ConfigCryptoEngine.class);
+        final SecretKey key = mock(SecretKey.class);
+        final PooledConfigCryptoProvider provider = assertInstanceOf(
+                PooledConfigCryptoProvider.class,
+                ConfigCryptoProvider.builder()
+                    .withEngine(engine, true)
+                    .withSecretKey(key)
+                    .pooled()
+                    .build());
+        assertTrue(provider.isDestroyEngine());
+        assertFalse(provider.isDestroyed());
+        SoftReferenceObjectPool<?> pool = assertInstanceOf(
+                SoftReferenceObjectPool.class,
+                provider.getCiphersPool());
+        PooledCipherFactory factory = assertInstanceOf(
+                PooledCipherFactory.class,
+                pool.getFactory());
+        assertSame(provider.getEngine(), factory.getEngine());
+        then(key).shouldHaveNoInteractions();
+        then(engine).shouldHaveNoInteractions();
+        provider.destroy();
+        assertTrue(provider.isDestroyEngine());
+        assertTrue(provider.isDestroyed());
+        then(key).should().destroy();
+        then(key).shouldHaveNoMoreInteractions();
+        then(engine).should().destroy();
+        then(engine).shouldHaveNoMoreInteractions();
+        assertThrows(IllegalStateException.class, () -> provider.encrypt("Mock text"));
+        assertThrows(IllegalStateException.class, () -> provider.decrypt("Mock text"));
     }
 }

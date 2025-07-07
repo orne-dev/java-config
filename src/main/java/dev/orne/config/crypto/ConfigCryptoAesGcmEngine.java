@@ -123,10 +123,13 @@ extends AbstractConfigCryptoEngine {
             final @NotNull byte[] secretKeySalt,
             final @NotNull String cipherAlgorithm) {
         super();
-        this.secretKeyFactoryAlgorithm = secretKeyFactoryAlgorithm;
-        this.secretKeyAlgorithm = secretKeyAlgorithm;
-        this.secretKeySalt = secretKeySalt;
-        this.cipherAlgorithm = cipherAlgorithm;
+        this.secretKeyFactoryAlgorithm = Objects.requireNonNull(secretKeyFactoryAlgorithm);
+        this.secretKeyAlgorithm = Objects.requireNonNull(secretKeyAlgorithm);
+        this.secretKeySalt = Objects.requireNonNull(secretKeySalt);
+        this.cipherAlgorithm = Objects.requireNonNull(cipherAlgorithm);
+        if (this.secretKeySalt.length == 0) {
+            throw new IllegalArgumentException("Secret key salt cannot be empty");
+        }
     }
 
     /**

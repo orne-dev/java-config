@@ -119,6 +119,7 @@ extends AbstractConfigCryptoProvider {
     public @NotNull String encrypt(
             final @NotNull String value)
     throws ConfigCryptoProviderException {
+        checkDestroyed();
         ConfigCryptoProviderException encryptException = null;
         try {
             final Cipher cipher = this.ciphersPool.borrowObject();
@@ -153,6 +154,7 @@ extends AbstractConfigCryptoProvider {
     public @NotNull String decrypt(
             final @NotNull String value)
     throws ConfigCryptoProviderException {
+        checkDestroyed();
         ConfigCryptoProviderException decryptException = null;
         try {
             final Cipher cipher = this.ciphersPool.borrowObject();

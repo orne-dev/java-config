@@ -25,15 +25,13 @@ package dev.orne.config;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
-import java.util.Iterator;
-
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for {@code DefaultConfigProvider}.
  * 
- * @author <a href="mailto:wamphiry@orne.dev">(w) Iker Hernaez</a>
+ * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
  * @since 1.0, 2019-07
  */
@@ -240,22 +238,9 @@ class DefaultConfigProviderTest {
     }
 
     public static class Level2ConfigImpl
-    extends AbstractStringConfig
     implements Level2Config {
         @Override
-        public boolean isEmpty() {
-            return false;
-        }
-        @Override
-        public Iterator<String> getKeys() {
-            return null;
-        }
-        @Override
-        protected boolean containsParameter(String key) {
-            return false;
-        }
-        @Override
-        protected String getRawValue(String key) {
+        public String get(String key) {
             return null;
         }
     }
