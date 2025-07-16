@@ -146,30 +146,4 @@ extends AbstractWatchableConfig {
             this.config.remove(key);
         }
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), this.config);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final PropertiesMutableConfig other = (PropertiesMutableConfig) obj;
-        return Objects.equals(this.config, other.config);
-    }
 }

@@ -49,6 +49,13 @@
     - `dev.orne.config.crypto.AbstractConfigCryptoProvider` class.
     - `dev.orne.config.crypto.DefaultConfigCryptoProvider` class.
     - `dev.orne.config.crypto.PooledConfigCryptoProvider` class.
+- Add support for JSON based configuration.
+    - `dev.orne.config.JacksonUtils` class.
+    - `dev.orne.config.JsonConfig` class.
+    - `dev.orne.config.JsonMutableConfig` class.
+- Add support for YAML based configuration.
+    - `dev.orne.config.YamlConfig` class.
+    - `dev.orne.config.YamlMutableConfig` class.
 - Add apache Commons Configuration 2.x interoperability
     - `dev.orne.config.commons.CommonsConfig` class.
     - `dev.orne.config.commons.CommonsMutableConfig` class.
@@ -65,21 +72,42 @@
     - `dev.orne.config.AbstractMutableConfigBuilderImpl` class.
     - `dev.orne.config.SystemConfigBuilder` interface.
     - `dev.orne.config.SystemConfigBuilderImpl` class.
-    - Added `dev.orne.config.Config.ofSystemProperties()` method.
+    - Add `dev.orne.config.Config.ofSystemProperties()` method.
     - `dev.orne.config.PropertiesConfigBaseBuilder` interface.
     - `dev.orne.config.PropertiesConfigBuilder` interface.
     - `dev.orne.config.PropertiesConfigOptions` class.
     - `dev.orne.config.PropertiesConfigBuilderImpl` class.
-    - `dev.orne.config.MutablePropertiesConfigBuilder` interface.
-    - `dev.orne.config.MutablePropertiesConfigBuilderImpl` class.
-    - Added `dev.orne.config.Config.fromPropertiesFiles()` method.
+    - `dev.orne.config.PropertiesMutableConfigBuilder` interface.
+    - `dev.orne.config.PropertiesMutableConfigBuilderImpl` class.
+    - Add `dev.orne.config.Config.fromPropertiesFiles()` method.
+    - `dev.orne.config.JsonConfigBaseBuilder` interface.
+    - `dev.orne.config.JsonConfigBuilder` class.
+    - `dev.orne.config.JsonConfigOptions` class.
+    - `dev.orne.config.JsonConfigBuilderImpl` class.
+    - `dev.orne.config.JsonMutableConfigBuilder` interface.
+    - `dev.orne.config.JsonMutableConfigBuilderImpl` class.
+    - Add `dev.orne.config.Config.fromJson()` method.
+    - `dev.orne.config.YamlConfigBaseBuilder` interface.
+    - `dev.orne.config.YamlConfigBuilder` class.
+    - `dev.orne.config.YamlConfigOptions` class.
+    - `dev.orne.config.YamlConfigBuilderImpl` class.
+    - `dev.orne.config.YamlMutableConfigBuilder` interface.
+    - `dev.orne.config.YamlMutableConfigBuilderImpl` class.
+    - Add `dev.orne.config.Config.fromYaml()` method.
     - `dev.orne.config.PreferencesConfigBuilder` interface.
     - `dev.orne.config.PreferencesConfigNodeBuilder` interface.
     - `dev.orne.config.PreferencesConfigOptions` class.
     - `dev.orne.config.PreferencesConfigBuilderImpl` class.
-    - `dev.orne.config.MutablePreferencesConfigBuilder` interface.
-    - `dev.orne.config.MutablePreferencesConfigBuilderImpl` class.
-    - Added `dev.orne.config.Config.fromJavaPreferences()` method.
+    - `dev.orne.config.PreferencesMutableConfigBuilder` interface.
+    - `dev.orne.config.PreferencesMutableConfigBuilderImpl` class.
+    - Add `dev.orne.config.Config.fromJavaPreferences()` method.
+    - `dev.orne.config.CommonsConfigBuilder` interface.
+    - `dev.orne.config.CommonsConfigNodeBuilder` interface.
+    - `dev.orne.config.CommonsConfigOptions` class.
+    - `dev.orne.config.CommonsConfigBuilderImpl` class.
+    - `dev.orne.config.CommonsMutableConfigBuilder` interface.
+    - `dev.orne.config.CommonsMutableConfigBuilderImpl` class.
+    - Add `dev.orne.config.Config.fromJavaPreferences()` method.
 - Add `Path` based resources support to `dev.orne.config.PropertiesConfig`.
 - Add `DefaultConfigProvider.registerConfig()` method.
 

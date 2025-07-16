@@ -33,8 +33,6 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
-import java.util.stream.Stream;
 
 import javax.validation.constraints.NotNull;
 
@@ -45,7 +43,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 /**
- * Unit tests for {@code MutablePropertiesConfig}.
+ * Unit tests for {@link PropertiesConfig}.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
@@ -135,18 +133,27 @@ extends AbstractConfigTest {
      */
     @Test
     void testPropertiesBuilder() {
-        final Properties properties = new Properties();
-        properties.setProperty(TEST_KEY, "testValue");
         final PropertiesConfig config = Config.fromPropertiesFiles()
-                .add(properties)
+                .add(testProperties)
                 .build();
         assertNull(config.getParent());
         assertSame(ValueDecoder.DEFAULT, config.getDecoder());
         assertSame(ValueDecorator.DEFAULT, config.getDecorator());
         assertFalse(config.getResolver().isPresent());
-        assertNotNull(config.getProperties());
-        assertFalse(config.getProperties().isEmpty());
-        assertEquals(properties, config.getProperties());
+        final Properties properties = config.getProperties();
+        assertNotNull(properties);
+        assertFalse(properties.isEmpty());
+        assertNotSame(testProperties, properties);
+        assertTrue(properties.containsKey(TEST_COMMON_KEY));
+        assertEquals(TEST_VALUES_TYPE, properties.getProperty(TEST_COMMON_KEY));
+        assertTrue(properties.containsKey(TEST_VALUES_KEY));
+        assertEquals(TEST_VALUES_TYPE, properties.getProperty(TEST_VALUES_KEY));
+        assertFalse(properties.containsKey(TEST_RESOURCE_KEY));
+        assertNull(properties.getProperty(TEST_RESOURCE_KEY));
+        assertFalse(properties.containsKey(TEST_FILE_KEY));
+        assertNull(properties.getProperty(TEST_FILE_KEY));
+        assertFalse(properties.containsKey(TEST_URL_KEY));
+        assertNull(properties.getProperty(TEST_URL_KEY));
     }
 
     /**
@@ -365,7 +372,7 @@ extends AbstractConfigTest {
     @Test
     void testMissingUrlBuilder() throws IOException {
         final PropertiesConfig config = Config.fromPropertiesFiles()
-                .load(new URL("http://localhost/non/existent/url.properties"))
+                .load(new URL(testUrl.toString().replace("test.url", "non.existent")))
                 .build();
         assertNull(config.getParent());
         assertSame(ValueDecoder.DEFAULT, config.getDecoder());
@@ -432,93 +439,5 @@ extends AbstractConfigTest {
         assertSame(mockDecoder, config.getDecoder());
         assertSame(mockDecorator, config.getDecorator());
         assertSame(mockProperties, config.getProperties());
-    }
-
-    /**
-     * Test method for {@link PropertiesConfig#isEmptyInt()}.
-     */
-    @Test
-    void testIsEmptyInt() {
-        final PropertiesConfig config = new PropertiesConfig(
-                mockParent,
-                mockDecoder,
-                mockDecorator,
-                mockProperties);
-        
-        given(mockProperties.isEmpty()).willReturn(true);
-        
-        final boolean result = config.isEmptyInt();
-        assertTrue(result);
-        
-        then(mockProperties).should().isEmpty();
-        then(mockProperties).shouldHaveNoMoreInteractions();
-    }
-
-    /**
-     * Test method for {@link PropertiesConfig#getKeysInt()}.
-     */
-    @Test
-    void testGetKeysInt() {
-        final PropertiesConfig config = new PropertiesConfig(
-                mockParent,
-                mockDecoder,
-                mockDecorator,
-                mockProperties);
-        
-        @SuppressWarnings("unchecked")
-        final Set<String> mockKeys = mock(Set.class);
-        @SuppressWarnings("unchecked")
-        final Stream<String> mockKeysStream = mock(Stream.class);
-        given(mockProperties.stringPropertyNames()).willReturn(mockKeys);
-        given(mockKeys.stream()).willReturn(mockKeysStream);
-        
-        final Stream<String> result = config.getKeysInt();
-        assertSame(mockKeysStream, result);
-        
-        then(mockProperties).should().stringPropertyNames();
-        then(mockProperties).shouldHaveNoMoreInteractions();
-    }
-
-    /**
-     * Test method for {@link PropertiesConfig#containsInt(String)} with
-     * non existent property.
-     */
-    @Test
-    void testContainsInt() {
-        final PropertiesConfig config = new PropertiesConfig(
-                mockParent,
-                mockDecoder,
-                mockDecorator,
-                mockProperties);
-        
-        given(mockProperties.containsKey(TEST_KEY)).willReturn(true);
-        
-        final boolean result = config.containsInt(TEST_KEY);
-        assertTrue(result);
-        
-        then(mockProperties).should().containsKey(TEST_KEY);
-        then(mockProperties).shouldHaveNoMoreInteractions();
-    }
-
-    /**
-     * Test method for {@link PropertiesConfig#getInt(String)} with
-     * non existent property.
-     */
-    @Test
-    void testGetInt() {
-        final PropertiesConfig config = new PropertiesConfig(
-                mockParent,
-                mockDecoder,
-                mockDecorator,
-                mockProperties);
-        
-        final String testValue = "mockValue";
-        given(mockProperties.getProperty(TEST_KEY)).willReturn(testValue);
-        
-        final String result = config.getInt(TEST_KEY);
-        assertSame(testValue, result);
-        
-        then(mockProperties).should().getProperty(TEST_KEY);
-        then(mockProperties).shouldHaveNoMoreInteractions();
     }
 }

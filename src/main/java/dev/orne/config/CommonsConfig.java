@@ -51,14 +51,15 @@ extends AbstractConfig {
      * Creates a new instance.
      * 
      * @param options The configuration builder options.
-     * @param config The delegated Apache Commons configuration
+     * @param commonsOptions The Apache Commons based configuration options.
      */
     @API(status = API.Status.INTERNAL, since = "1.0")
     public CommonsConfig(
             final @NotNull ConfigOptions options,
-            final @NotNull ImmutableConfiguration config) {
+            final @NotNull CommonsConfigOptions commonsOptions) {
         super(options);
-        this.config = Objects.requireNonNull(config);
+        Objects.requireNonNull(commonsOptions);
+        this.config = Objects.requireNonNull(commonsOptions.getDelegated());
     }
 
     /**

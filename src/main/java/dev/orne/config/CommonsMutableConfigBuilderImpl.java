@@ -1,12 +1,15 @@
 package dev.orne.config;
 
+import java.util.Objects;
+
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.configuration2.Configuration;
 import org.apiguardian.api.API;
 
 /**
- * Implementation of {@code Configuration} based mutable configuration builder.
+ * Implementation of Apache Commons {@code Configuration} based mutable
+ * configuration builder.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-07
@@ -18,18 +21,15 @@ public class CommonsMutableConfigBuilderImpl
 extends AbstractMutableConfigBuilderImpl<CommonsMutableConfigBuilderImpl>
 implements CommonsMutableConfigBuilder {
 
-    /** The delegated Apache Commons configuration. */
-    protected final @NotNull Configuration delegated;
+    /** The Apache Commons based configuration options. */
+    protected final @NotNull CommonsConfigOptions commonsOptions;
 
     /**
-     * Creates a new instance.
-     * 
-     * @param delegated The delegated Apache Commons configuration.
+     * Empty constructor.
      */
-    public CommonsMutableConfigBuilderImpl(
-            final @NotNull Configuration delegated) {
+    public CommonsMutableConfigBuilderImpl() {
         super();
-        this.delegated = delegated;
+        this.commonsOptions = new CommonsConfigOptions();
     }
 
     /**
@@ -37,14 +37,21 @@ implements CommonsMutableConfigBuilder {
      * 
      * @param options The configuration options to copy.
      * @param mutableOptions The mutable configuration options to copy.
-     * @param delegated The delegated Apache Commons configuration.
+     * @param commonsOptions TThe Apache Commons based configuration options to
+     * copy.
      */
     public CommonsMutableConfigBuilderImpl(
             final @NotNull ConfigOptions options,
             final @NotNull MutableConfigOptions mutableOptions,
-            final @NotNull Configuration delegated) {
+            final @NotNull CommonsConfigOptions commonsOptions) {
         super(options, mutableOptions);
-        this.delegated = delegated;
+        this.commonsOptions = new CommonsConfigOptions(Objects.requireNonNull(commonsOptions));
+        if (this.commonsOptions.getDelegated() != null
+                && !(this.commonsOptions.getDelegated() instanceof Configuration)) {
+            throw new IllegalArgumentException(
+                    "Delegated configuration must be an instance of "
+                            + "org.apache.commons.configuration2.Configuration");
+        }
     }
 
     /**
@@ -57,16 +64,22 @@ implements CommonsMutableConfigBuilder {
             final @NotNull AbstractConfigBuilderImpl<?> copy,
             final @NotNull Configuration delegated) {
         super(copy);
-        this.delegated = delegated;
+        if (copy instanceof CommonsConfigBuilderImpl) {
+            this.commonsOptions = new CommonsConfigOptions(
+                    ((CommonsConfigBuilderImpl) copy).commonsOptions);
+        } else {
+            this.commonsOptions = new CommonsConfigOptions();
+        }
     }
 
     /**
-     * Returns the delegated Apache Commons configuration.
-     * 
-     * @return The delegated Apache Commons configuration.
+     * {@inheritDoc}
      */
-    public @NotNull Configuration getDelegated() {
-        return this.delegated;
+    @Override
+    public @NotNull CommonsMutableConfigBuilderImpl ofDelegate(
+            final @NotNull Configuration delegate) {
+        this.commonsOptions.setDelegated(Objects.requireNonNull(delegate));
+        return thisBuilder();
     }
 
     /**
@@ -77,6 +90,6 @@ implements CommonsMutableConfigBuilder {
         return new CommonsMutableConfig(
                 this.options,
                 this.mutableOptions,
-                this.delegated);
+                this.commonsOptions);
     }
 }

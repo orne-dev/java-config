@@ -3,113 +3,106 @@ package dev.orne.config;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.Map;
-import java.util.Properties;
 
 import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import dev.orne.config.crypto.ConfigCryptoProvider;
 
 /**
- * {@code Properties} based configuration builder.
+ * Jackson {@code ObjectNode} based configuration builder.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
- * @version 1.0, 2025-05
+ * @version 1.0, 2025-07
  * @since 1.0
- * @see Properties
+ * @see ObjectNode
  * @see Config
  */
 @API(status = API.Status.STABLE, since = "1.0")
-public interface PropertiesConfigBuilder
-extends PropertiesConfigBaseBuilder, MutableCapableConfigBuilder {
+public interface JsonConfigBuilder
+extends JsonConfigBaseBuilder, MutableCapableConfigBuilder {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull PropertiesConfigBuilder withParent(
+    @NotNull JsonConfigBuilder withParent(
             Config parent);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull PropertiesConfigBuilder withEncryption(
+    @NotNull JsonConfigBuilder withEncryption(
             ConfigCryptoProvider provider);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull PropertiesConfigBuilder withDecoder(
+    @NotNull JsonConfigBuilder withDecoder(
             ValueDecoder encoder);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull PropertiesConfigBuilder withVariableResolution();
+    @NotNull JsonConfigBuilder withVariableResolution();
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull PropertiesConfigBuilder withDecorator(
+    @NotNull JsonConfigBuilder withDecorator(
             ValueDecorator decorator);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull PropertiesConfigBuilder add(
-            @NotNull Properties values);
+    @NotNull JsonConfigBuilder add(
+            @NotNull ObjectNode values);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull PropertiesConfigBuilder add(
-            @NotNull Map<String, String> values);
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull PropertiesConfigBuilder load(
+    @NotNull JsonConfigBuilder load(
             @NotNull String path);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull PropertiesConfigBuilder load(
+    @NotNull JsonConfigBuilder load(
             @NotNull Path path);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull PropertiesConfigBuilder load(
+    @NotNull JsonConfigBuilder load(
             @NotNull File file);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull PropertiesConfigBuilder load(
+    @NotNull JsonConfigBuilder load(
             @NotNull URL url);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull PropertiesMutableConfigBuilder mutable();
+    @NotNull JsonMutableConfigBuilder mutable();
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull PropertiesConfig build();
+    @NotNull JsonConfig build();
 }

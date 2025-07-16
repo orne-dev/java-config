@@ -45,7 +45,7 @@
     <javax.validation.version>2.0.1.Final</javax.validation.version>
     <commons.pool.version>2.12.1</commons.pool.version>
     <commons.configuration.version>2.12.0</commons.configuration.version>
-    <fasterxml.jackson.version>2.19.0</fasterxml.jackson.version>
+    <fasterxml.jackson.version>2.19.1</fasterxml.jackson.version>
 
     <awaitility.version>4.3.0</awaitility.version>
 

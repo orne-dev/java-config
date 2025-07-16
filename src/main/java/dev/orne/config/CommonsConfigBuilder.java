@@ -55,6 +55,15 @@ extends MutableCapableConfigBuilder {
             ValueDecorator decorator);
 
     /**
+     * Selects the delegated Apache Commons configuration.
+     * 
+     * @param delegate The delegated Apache Commons configuration.
+     * @return Next builder, for method chaining.
+     */
+    @NotNull CommonsConfigBuilder ofDelegate(
+            final @NotNull ImmutableConfiguration delegate);
+
+    /**
      * {@inheritDoc}
      */
     @Override

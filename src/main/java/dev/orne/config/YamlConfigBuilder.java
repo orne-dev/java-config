@@ -3,113 +3,107 @@ package dev.orne.config;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.Map;
-import java.util.Properties;
 
 import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import dev.orne.config.crypto.ConfigCryptoProvider;
 
 /**
- * {@code Properties} based configuration builder.
+ * Jackson {@code ObjectNode} based configuration builder
+ * for YAML files.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
- * @version 1.0, 2025-05
+ * @version 1.0, 2025-07
  * @since 1.0
- * @see Properties
+ * @see ObjectNode
  * @see Config
  */
 @API(status = API.Status.STABLE, since = "1.0")
-public interface PropertiesConfigBuilder
-extends PropertiesConfigBaseBuilder, MutableCapableConfigBuilder {
+public interface YamlConfigBuilder
+extends YamlConfigBaseBuilder, MutableCapableConfigBuilder {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull PropertiesConfigBuilder withParent(
+    @NotNull YamlConfigBuilder withParent(
             Config parent);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull PropertiesConfigBuilder withEncryption(
+    @NotNull YamlConfigBuilder withEncryption(
             ConfigCryptoProvider provider);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull PropertiesConfigBuilder withDecoder(
+    @NotNull YamlConfigBuilder withDecoder(
             ValueDecoder encoder);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull PropertiesConfigBuilder withVariableResolution();
+    @NotNull YamlConfigBuilder withVariableResolution();
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull PropertiesConfigBuilder withDecorator(
+    @NotNull YamlConfigBuilder withDecorator(
             ValueDecorator decorator);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull PropertiesConfigBuilder add(
-            @NotNull Properties values);
+    @NotNull YamlConfigBuilder add(
+            @NotNull ObjectNode values);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull PropertiesConfigBuilder add(
-            @NotNull Map<String, String> values);
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull PropertiesConfigBuilder load(
+    @NotNull YamlConfigBuilder load(
             @NotNull String path);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull PropertiesConfigBuilder load(
+    @NotNull YamlConfigBuilder load(
             @NotNull Path path);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull PropertiesConfigBuilder load(
+    @NotNull YamlConfigBuilder load(
             @NotNull File file);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull PropertiesConfigBuilder load(
+    @NotNull YamlConfigBuilder load(
             @NotNull URL url);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull PropertiesMutableConfigBuilder mutable();
+    @NotNull YamlMutableConfigBuilder mutable();
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull PropertiesConfig build();
+    @NotNull YamlConfig build();
 }

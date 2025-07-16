@@ -58,15 +58,21 @@ extends AbstractWatchableConfig {
      * 
      * @param options The configuration builder options.
      * @param mutableOptions The mutable configuration builder options.
-     * @param config The delegated Apache Commons configuration
+     * @param commonsOptions The Apache Commons based configuration options.
      */
     @API(status = API.Status.INTERNAL, since = "1.0")
     public CommonsMutableConfig(
             final @NotNull ConfigOptions options,
             final @NotNull MutableConfigOptions mutableOptions,
-            final @NotNull Configuration config) {
+            final @NotNull CommonsConfigOptions commonsOptions) {
         super(options, mutableOptions);
-        this.config = Objects.requireNonNull(config);
+        Objects.requireNonNull(commonsOptions);
+        if (!(commonsOptions.getDelegated() instanceof Configuration)) {
+            throw new IllegalArgumentException(
+                    "Delegated configuration must be an instance of "
+                            + "org.apache.commons.configuration2.Configuration");
+        }
+        this.config = (Configuration) commonsOptions.getDelegated();
         if (config instanceof EventSource) {
             this.localEventsSuppressed = true;
             configureCommonsEvents((EventSource) config);

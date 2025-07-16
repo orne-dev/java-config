@@ -62,6 +62,24 @@ public interface Config {
     }
 
     /**
+     * Creates a new JSON based configuration builder.
+     * 
+     * @return The configuration builder.
+     */
+    static @NotNull JsonConfigBuilder fromJsonFiles() {
+        return new JsonConfigBuilderImpl();
+    }
+
+    /**
+     * Creates a new YAML based configuration builder.
+     * 
+     * @return The configuration builder.
+     */
+    static @NotNull YamlConfigBuilder fromYamlFiles() {
+        return new YamlConfigBuilderImpl();
+    }
+
+    /**
      * Creates a new {@code Preferences} based configuration builder.
      * 
      * @return The configuration builder.
@@ -71,12 +89,12 @@ public interface Config {
     }
 
     /**
-     * Creates a new Apache Commons {@code Configuration} based configuration
+     * Creates a new Apache Commons Configuration based configuration
      * builder.
      * 
      * @return The configuration builder.
      */
-    static @NotNull CommonsConfigDelegateBuilder fromApacheCommons() {
+    static @NotNull CommonsConfigBuilder fromApacheCommons() {
         return new CommonsConfigBuilderImpl();
     }
 
