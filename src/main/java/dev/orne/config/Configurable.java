@@ -34,6 +34,8 @@ import org.apiguardian.api.API;
  * @version 1.0, 2019-07
  * @since 0.1
  * @see Config
+ * @see ConfigurationOptions
+ * @see ConfigurableProperty
  */
 @API(status = API.Status.STABLE, since = "1.0")
 public interface Configurable {

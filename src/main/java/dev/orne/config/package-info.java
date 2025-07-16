@@ -20,10 +20,11 @@
  * #L%
  */
 /**
- * <p>Configuration management system. Provides an abstract method to retrieve
- * configuration parameters through the library and applications in a
- * underlying configuration storage method agnostic way.</p>
+ * Configuration management system.
+ * Provides an abstract method to retrieve configuration parameters to the
+ * libraries and applications in a underlying configuration storage agnostic
+ * way.
  * 
- * @since 1.0, 2019-07
+ * @since 1.0
  */
 package dev.orne.config;

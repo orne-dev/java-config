@@ -10,8 +10,6 @@ import org.apiguardian.api.API;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import dev.orne.config.crypto.ConfigCryptoProvider;
-
 /**
  * Jackson {@code ObjectNode} based configuration builder
  * for YAML files.
@@ -100,10 +98,4 @@ extends YamlConfigBaseBuilder, MutableCapableConfigBuilder {
      */
     @Override
     @NotNull YamlMutableConfigBuilder mutable();
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull YamlConfig build();
 }

@@ -4,8 +4,6 @@ import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
 
-import dev.orne.config.crypto.ConfigCryptoProvider;
-
 /**
  * {@code System} properties based configuration builder.
  * 
@@ -52,10 +50,4 @@ extends ConfigBuilder {
     @Override
     @NotNull SystemConfigBuilder withDecorator(
             ValueDecorator decorator);
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull SystemConfig build();
 }

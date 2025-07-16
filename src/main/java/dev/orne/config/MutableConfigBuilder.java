@@ -4,8 +4,6 @@ import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
 
-import dev.orne.config.crypto.ConfigCryptoProvider;
-
 /**
  * Mutable configuration builder.
  * 

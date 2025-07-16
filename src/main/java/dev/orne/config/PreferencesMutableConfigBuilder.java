@@ -4,8 +4,6 @@ import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
 
-import dev.orne.config.crypto.ConfigCryptoProvider;
-
 /**
  * {@code Preferences} based mutable configuration builder.
  * 
@@ -58,5 +56,5 @@ extends MutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    @NotNull PreferencesMutableConfig build();
+    @NotNull WatchableConfig build();
 }

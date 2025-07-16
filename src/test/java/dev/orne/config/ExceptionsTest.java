@@ -29,9 +29,6 @@ import javax.validation.constraints.NotNull;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import dev.orne.config.crypto.ConfigCryptoProviderException;
-import dev.orne.config.crypto.ConfigCryptoWrongKeyException;
-
 /**
  * Unit tests for library exceptions.
  * 

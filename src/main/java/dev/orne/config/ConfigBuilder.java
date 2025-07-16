@@ -4,8 +4,6 @@ import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
 
-import dev.orne.config.crypto.ConfigCryptoProvider;
-
 /**
  * Configuration builder.
  * 
@@ -51,7 +49,6 @@ public interface ConfigBuilder {
      * Enables configuration property values variable resolution.
      * 
      * @return This instance, for method chaining.
-     * @see VariableResolver
      */
     @NotNull ConfigBuilder withVariableResolution();
 

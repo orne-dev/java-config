@@ -29,8 +29,8 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.configuration2.ConfigurationDecoder;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 
-import dev.orne.config.crypto.ConfigCryptoProvider;
-import dev.orne.config.crypto.ConfigCryptoProviderException;
+import dev.orne.config.ConfigCryptoProvider;
+import dev.orne.config.ConfigCryptoProviderException;
 
 /**
  * {@code ConfigCryptoProvider} based implementation of Apache Commons

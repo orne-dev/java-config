@@ -12,8 +12,6 @@ import org.apiguardian.api.API;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import dev.orne.config.crypto.ConfigCryptoProvider;
-
 /**
  * Jackson {@code ObjectNode} based configuration builder.
  * 

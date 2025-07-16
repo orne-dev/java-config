@@ -26,15 +26,30 @@ import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
 
+import dev.orne.config.impl.ConfigProviderBuilderImpl;
+
 /**
  * Generic interface for {@code Config} providers.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2019-07
+ * @version 1.1, 2025-07
  * @since 0.1
  */
 @API(status = API.Status.STABLE, since = "1.0")
 public interface ConfigProvider {
+
+    /**
+     * Creates a new {@code ConfigProviderBuilder} instance using the
+     * specified default configuration.
+     * 
+     * @param defaultConfig The default configuration instance.
+     * @return A new {@code ConfigProviderBuilder} instance
+     */
+    static @NotNull ConfigProviderBuilder builder(
+            final @NotNull Config defaultConfig) {
+        return new ConfigProviderBuilderImpl(defaultConfig);
+    }
 
     /**
      * Returns the default {@code Config} instance.

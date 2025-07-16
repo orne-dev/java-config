@@ -5,8 +5,6 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.configuration2.Configuration;
 import org.apiguardian.api.API;
 
-import dev.orne.config.crypto.ConfigCryptoProvider;
-
 /**
  * Apache Commons {@code Configuration} based mutable configuration builder.
  * 
@@ -68,5 +66,5 @@ extends MutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    @NotNull CommonsMutableConfig build();
+    @NotNull WatchableConfig build();
 }

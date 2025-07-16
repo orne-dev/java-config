@@ -29,8 +29,8 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import dev.orne.config.crypto.ConfigCryptoProvider;
-import dev.orne.config.crypto.ConfigCryptoProviderException;
+import dev.orne.config.ConfigCryptoProvider;
+import dev.orne.config.ConfigCryptoProviderException;
 
 /**
  * Unit tests for {@code DelegatedOrneConfigurationDecoder}.

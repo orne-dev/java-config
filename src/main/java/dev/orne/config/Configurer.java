@@ -26,20 +26,36 @@ import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
 
+import dev.orne.config.impl.ConfigurerImpl;
+
 /**
- * Generic interface for the bean configurator.
+ * Generic interface for configurable components configurer.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2019-07
+ * @version 1.1, 2025-07
  * @since 1.0
+ * @see Configurable
  */
 @API(status = API.Status.STABLE, since = "1.0")
 public interface Configurer {
 
     /**
+     * Creates a new {@code Configurer} instance using the specified
+     * {@code ConfigProvider}.
+     * 
+     * @param provider The {@code ConfigProvider} to use.
+     * @return A new {@code Configurer} instance.
+     */
+    static @NotNull Configurer fromProvider(
+            final @NotNull ConfigProvider provider) {
+        return new ConfigurerImpl(provider);
+    }
+
+    /**
      * Configures the bean passed as argument.
      * 
-     * @param bean The bean to configure
+     * @param bean The bean to configure.
      */
     void configure(
             @NotNull Configurable bean);
