@@ -38,6 +38,11 @@
     <java.version>8</java.version>
     <java.module.name>dev.orne.config</java.module.name>
     <license.licenseName>lgpl_v3</license.licenseName>
+    <license.excludes>
+        test/**/*.properties,
+        test/**/*.json,
+        test/**/*.yaml
+    </license.excludes>
 
     <commons.lang.version>3.17.0</commons.lang.version>
     <commons.beanutils.version>1.11.0</commons.beanutils.version>
