@@ -23,7 +23,7 @@ import dev.orne.config.PropertiesConfigBuilder;
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class PropertiesConfigBuilderImpl
 extends AbstractConfigBuilderImpl<PropertiesConfigBuilderImpl>
-implements PropertiesConfigBuilder {
+implements PropertiesConfigBuilder<PropertiesConfigBuilderImpl> {
 
     /** The properties based configuration options. */
     protected final @NotNull PropertiesConfigOptions propertyOptions;

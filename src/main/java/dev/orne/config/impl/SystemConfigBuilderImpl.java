@@ -17,7 +17,7 @@ import dev.orne.config.SystemConfigBuilder;
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class SystemConfigBuilderImpl
 extends AbstractConfigBuilderImpl<SystemConfigBuilderImpl>
-implements SystemConfigBuilder {
+implements SystemConfigBuilder<SystemConfigBuilderImpl> {
 
     /**
      * Empty constructor.

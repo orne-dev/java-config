@@ -111,7 +111,7 @@ extends AbstractConfigTest {
      * {@inheritDoc}
      */
     @Override
-    protected ConfigBuilder createBuilder(
+    protected ConfigBuilder<?> createBuilder(
             final @NotNull Map<String, String> properties) {
         return Config.fromPropertiesFiles()
                 .add(properties);

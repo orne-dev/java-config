@@ -73,7 +73,7 @@ abstract class AbstractConfigTest {
      * 
      * @return The created builder, with .
      */
-    protected ConfigBuilder createBuilder() {
+    protected ConfigBuilder<?> createBuilder() {
         return createBuilder(new HashMap<>());
     }
 
@@ -85,7 +85,7 @@ abstract class AbstractConfigTest {
      * @return The created builder, with initial configuration properties
      * populated.
      */
-    protected abstract ConfigBuilder createBuilder(
+    protected abstract ConfigBuilder<?> createBuilder(
             @NotNull Map<String, String> properties);
 
     /**

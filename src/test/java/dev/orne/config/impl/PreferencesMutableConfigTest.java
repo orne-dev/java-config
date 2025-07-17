@@ -61,7 +61,7 @@ extends AbstractWatchableConfigTest {
      * {@inheritDoc}
      */
     @Override
-    protected MutableConfigBuilder createBuilder(
+    protected MutableConfigBuilder<?> createBuilder(
             final @NotNull Map<String, String> properties) {
         final TestPreferencesFactory.InMemoryPreferences preferences =
                 new TestPreferencesFactory.InMemoryPreferences();

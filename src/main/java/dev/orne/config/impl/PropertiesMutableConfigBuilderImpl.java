@@ -24,7 +24,7 @@ import dev.orne.config.PropertiesMutableConfigBuilder;
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class PropertiesMutableConfigBuilderImpl
 extends AbstractMutableConfigBuilderImpl<PropertiesMutableConfigBuilderImpl>
-implements PropertiesMutableConfigBuilder {
+implements PropertiesMutableConfigBuilder<PropertiesMutableConfigBuilderImpl> {
 
     /** The properties based configuration options. */
     protected final @NotNull PropertiesConfigOptions propertyOptions;

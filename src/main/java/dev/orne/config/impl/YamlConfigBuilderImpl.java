@@ -26,7 +26,7 @@ import dev.orne.config.YamlConfigBuilder;
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class YamlConfigBuilderImpl
 extends AbstractConfigBuilderImpl<YamlConfigBuilderImpl>
-implements YamlConfigBuilder {
+implements YamlConfigBuilder<YamlConfigBuilderImpl> {
 
     /** The YAML based configuration options. */
     protected final @NotNull YamlConfigOptions yamlOptions;

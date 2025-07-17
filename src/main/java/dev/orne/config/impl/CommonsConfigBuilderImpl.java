@@ -8,7 +8,6 @@ import org.apache.commons.configuration2.ImmutableConfiguration;
 import org.apiguardian.api.API;
 
 import dev.orne.config.CommonsConfigBuilder;
-import dev.orne.config.CommonsMutableConfigBuilder;
 import dev.orne.config.ConfigBuilder;
 
 /**
@@ -23,7 +22,7 @@ import dev.orne.config.ConfigBuilder;
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class CommonsConfigBuilderImpl
 extends AbstractConfigBuilderImpl<CommonsConfigBuilderImpl>
-implements CommonsConfigBuilder {
+implements CommonsConfigBuilder<CommonsConfigBuilderImpl> {
 
     /** The Apache Commons based configuration options. */
     protected final @NotNull CommonsConfigOptions commonsOptions;
@@ -50,7 +49,7 @@ implements CommonsConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull CommonsMutableConfigBuilder mutable() {
+    public @NotNull CommonsMutableConfigBuilderImpl mutable() {
         return new CommonsMutableConfigBuilderImpl(
                 this.options,
                 new MutableConfigOptions(),

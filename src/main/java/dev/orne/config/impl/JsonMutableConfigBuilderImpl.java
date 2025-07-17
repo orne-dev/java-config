@@ -27,7 +27,7 @@ import dev.orne.config.JsonMutableConfigBuilder;
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class JsonMutableConfigBuilderImpl
 extends AbstractMutableConfigBuilderImpl<JsonMutableConfigBuilderImpl>
-implements JsonMutableConfigBuilder {
+implements JsonMutableConfigBuilder<JsonMutableConfigBuilderImpl> {
 
     /** The JSON based configuration options. */
     protected final @NotNull JsonConfigOptions jsonOptions;

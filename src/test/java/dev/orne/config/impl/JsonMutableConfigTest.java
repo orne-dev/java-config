@@ -126,7 +126,7 @@ extends AbstractWatchableConfigTest {
      * {@inheritDoc}
      */
     @Override
-    protected MutableConfigBuilder createBuilder(
+    protected MutableConfigBuilder<?> createBuilder(
             final @NotNull Map<String, String> properties) {
         final ObjectNode data = NODE_FACTORY.objectNode();
         properties.forEach((key, value) -> {

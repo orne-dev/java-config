@@ -59,7 +59,7 @@ extends AbstractConfigTest {
      * @return The created builder, with .
      */
     @Override
-    protected abstract MutableConfigBuilder createBuilder(
+    protected abstract MutableConfigBuilder<?> createBuilder(
             @NotNull Map<String, String> properties);
 
     /**

@@ -69,7 +69,7 @@ extends AbstractConfigTest {
     }
 
     @Override
-    protected ConfigBuilder createBuilder(
+    protected ConfigBuilder<?> createBuilder(
             final @NotNull Map<String, String> properties) {
         System.getProperties().putAll(properties);
         return Config.ofSystemProperties();

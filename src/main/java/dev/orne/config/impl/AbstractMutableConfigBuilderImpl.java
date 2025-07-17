@@ -12,13 +12,14 @@ import dev.orne.config.ValueEncoder;
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-05
+ * @param <S> The concrete type of the builder.
  * @since 1.0
  * @see MutableConfigBuilder
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
-public abstract class AbstractMutableConfigBuilderImpl<T extends AbstractMutableConfigBuilderImpl<T>>
-extends AbstractConfigBuilderImpl<T>
-implements MutableConfigBuilder {
+public abstract class AbstractMutableConfigBuilderImpl<S extends AbstractMutableConfigBuilderImpl<S>>
+extends AbstractConfigBuilderImpl<S>
+implements MutableConfigBuilder<S> {
 
     /** The configuration options. */
     protected final @NotNull MutableConfigOptions mutableOptions;
@@ -40,7 +41,7 @@ implements MutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull T withEncoder(
+    public @NotNull S withEncoder(
             final ValueEncoder encoder) {
         this.mutableOptions.setEncoder(encoder);
         return thisBuilder();

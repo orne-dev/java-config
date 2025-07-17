@@ -20,7 +20,7 @@ import dev.orne.config.PreferencesConfigNodeBuilder;
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class PreferencesConfigBuilderImpl
 extends AbstractConfigBuilderImpl<PreferencesConfigBuilderImpl>
-implements PreferencesConfigNodeBuilder, PreferencesConfigBuilder {
+implements PreferencesConfigNodeBuilder<PreferencesConfigBuilderImpl>, PreferencesConfigBuilder<PreferencesConfigBuilderImpl> {
 
     /** The preferences based configuration options. */
     protected final @NotNull PreferencesConfigOptions preferencesOptions;
@@ -114,7 +114,7 @@ implements PreferencesConfigNodeBuilder, PreferencesConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PreferencesConfigBuilder ofNode(
+    public @NotNull PreferencesConfigBuilderImpl ofNode(
             final @NotNull Preferences preferences) {
         this.preferencesOptions.setPreferences(preferences);
         return thisBuilder();

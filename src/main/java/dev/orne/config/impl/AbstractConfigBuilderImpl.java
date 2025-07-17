@@ -15,12 +15,13 @@ import dev.orne.config.ValueDecorator;
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-05
+ * @param <S> The concrete type of the builder.
  * @since 1.0
  * @see ConfigBuilder
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
-public abstract class AbstractConfigBuilderImpl<T extends AbstractConfigBuilderImpl<T>>
-implements ConfigBuilder {
+public abstract class AbstractConfigBuilderImpl<S extends AbstractConfigBuilderImpl<S>>
+implements ConfigBuilder<S> {
 
     /** The configuration options. */
     protected final @NotNull ConfigOptions options;
@@ -48,7 +49,7 @@ implements ConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull T withParent(
+    public @NotNull S withParent(
             final Config parent) {
         this.options.setParent(parent);
         return thisBuilder();
@@ -58,7 +59,7 @@ implements ConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull T withEncryption(
+    public @NotNull S withEncryption(
             final ConfigCryptoProvider provider) {
         this.options.setCryptoProvider(provider);
         return thisBuilder();
@@ -68,7 +69,7 @@ implements ConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull T withDecoder(
+    public @NotNull S withDecoder(
             final ValueDecoder decoder) {
         this.options.setDecoder(decoder);
         return thisBuilder();
@@ -78,7 +79,7 @@ implements ConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull T withVariableResolution() {
+    public @NotNull S withVariableResolution() {
         this.options.setVariableResolutionEnabled(true);
         return thisBuilder();
     }
@@ -87,7 +88,7 @@ implements ConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull T withDecorator(
+    public @NotNull S withDecorator(
             final ValueDecorator decorator) {
         this.options.setDecorator(decorator);
         return thisBuilder();
@@ -99,7 +100,7 @@ implements ConfigBuilder {
      * @return This builder instance.
      */
     @SuppressWarnings("unchecked")
-    protected @NotNull T thisBuilder() {
-        return (T) this;
+    protected @NotNull S thisBuilder() {
+        return (S) this;
     }
 }

@@ -1,9 +1,5 @@
 package dev.orne.config;
 
-import java.io.File;
-import java.net.URL;
-import java.nio.file.Path;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.validation.constraints.NotNull;
@@ -15,90 +11,15 @@ import org.apiguardian.api.API;
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-05
+ * @param <S> The concrete type of the builder.
  * @since 1.0
  * @see Properties
  * @see MutableConfig
  * @see WatchableConfig
  */
 @API(status = API.Status.STABLE, since = "1.0")
-public interface PropertiesMutableConfigBuilder
-extends PropertiesConfigBaseBuilder, MutableConfigBuilder {
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull PropertiesMutableConfigBuilder withParent(
-            Config parent);
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull PropertiesMutableConfigBuilder withEncryption(
-            ConfigCryptoProvider provider);
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull PropertiesMutableConfigBuilder withDecoder(
-            ValueDecoder encoder);
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull PropertiesMutableConfigBuilder withVariableResolution();
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull PropertiesMutableConfigBuilder withDecorator(
-            ValueDecorator decorator);
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull PropertiesMutableConfigBuilder add(
-            @NotNull Properties values);
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull PropertiesMutableConfigBuilder add(
-            @NotNull Map<String, String> values);
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull PropertiesMutableConfigBuilder load(
-            @NotNull String path);
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull PropertiesMutableConfigBuilder load(
-            @NotNull Path path);
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull PropertiesMutableConfigBuilder load(
-            @NotNull File file);
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull PropertiesMutableConfigBuilder load(
-            @NotNull URL url);
+public interface PropertiesMutableConfigBuilder<S extends PropertiesMutableConfigBuilder<S>>
+extends PropertiesConfigBaseBuilder<S>, MutableConfigBuilder<S> {
 
     /**
      * {@inheritDoc}

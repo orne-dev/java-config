@@ -61,7 +61,7 @@ extends AbstractConfigTest {
      * {@inheritDoc}
      */
     @Override
-    protected ConfigBuilder createBuilder(
+    protected ConfigBuilder<?> createBuilder(
             final @NotNull Map<String, String> properties) {
         final TestPreferencesFactory.InMemoryPreferences preferences =
                 new TestPreferencesFactory.InMemoryPreferences();

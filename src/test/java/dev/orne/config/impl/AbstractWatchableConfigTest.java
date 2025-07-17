@@ -28,11 +28,8 @@ import static org.mockito.BDDMockito.*;
 
 import java.time.Duration;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.validation.constraints.NotNull;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -40,7 +37,6 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 
 import dev.orne.config.MutableConfig;
-import dev.orne.config.MutableConfigBuilder;
 import dev.orne.config.WatchableConfig;
 
 /**
@@ -56,17 +52,6 @@ extends AbstractMutableConfigTest {
     protected @Mock WatchableConfig.Listener mockListener;
     protected final Duration maxDelay = Duration.ofMillis(maxEventsDelay());
     protected @Captor ArgumentCaptor<Set<String>> changedPropertiesCaptor;
-
-    /**
-     * Creates a new configuration builder instance of the tested type
-     * with the specified initial configuration properties.
-     * 
-     * @param properties The initial configuration properties.
-     * @return The created builder, with .
-     */
-    @Override
-    protected abstract MutableConfigBuilder createBuilder(
-            @NotNull Map<String, String> properties);
 
     /**
      * Returns the maximum allowed property change events delay.

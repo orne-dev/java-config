@@ -114,7 +114,7 @@ extends AbstractWatchableConfigTest {
      * {@inheritDoc}
      */
     @Override
-    protected MutableConfigBuilder createBuilder(
+    protected MutableConfigBuilder<?> createBuilder(
             final @NotNull Map<String, String> properties) {
         return Config.fromPropertiesFiles()
                 .add(properties)

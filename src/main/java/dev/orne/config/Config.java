@@ -55,7 +55,7 @@ public interface Config {
      * 
      * @return The configuration builder.
      */
-    static @NotNull SystemConfigBuilder ofSystemProperties() {
+    static @NotNull SystemConfigBuilder<?> ofSystemProperties() {
         return new SystemConfigBuilderImpl();
     }
 
@@ -64,7 +64,7 @@ public interface Config {
      * 
      * @return The configuration builder.
      */
-    static @NotNull PropertiesConfigBuilder fromPropertiesFiles() {
+    static @NotNull PropertiesConfigBuilder<?> fromPropertiesFiles() {
         return new PropertiesConfigBuilderImpl();
     }
 
@@ -73,7 +73,7 @@ public interface Config {
      * 
      * @return The configuration builder.
      */
-    static @NotNull JsonConfigBuilder fromJsonFiles() {
+    static @NotNull JsonConfigBuilder<?> fromJsonFiles() {
         return new JsonConfigBuilderImpl();
     }
 
@@ -82,7 +82,7 @@ public interface Config {
      * 
      * @return The configuration builder.
      */
-    static @NotNull YamlConfigBuilder fromYamlFiles() {
+    static @NotNull YamlConfigBuilder<?> fromYamlFiles() {
         return new YamlConfigBuilderImpl();
     }
 
@@ -91,7 +91,7 @@ public interface Config {
      * 
      * @return The configuration builder.
      */
-    static @NotNull PreferencesConfigNodeBuilder fromJavaPreferences() {
+    static @NotNull PreferencesConfigNodeBuilder<?> fromJavaPreferences() {
         return new PreferencesConfigBuilderImpl();
     }
 
@@ -101,7 +101,7 @@ public interface Config {
      * 
      * @return The configuration builder.
      */
-    static @NotNull CommonsConfigBuilder fromApacheCommons() {
+    static @NotNull CommonsConfigBuilder<?> fromApacheCommons() {
         return new CommonsConfigBuilderImpl();
     }
 

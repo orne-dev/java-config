@@ -15,47 +15,14 @@ import org.apiguardian.api.API;
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-05
+ * @param <S> The concrete type of the builder.
  * @since 1.0
  * @see Properties
  * @see Config
  */
 @API(status = API.Status.STABLE, since = "1.0")
-public interface PropertiesConfigBaseBuilder
-extends ConfigBuilder {
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull PropertiesConfigBaseBuilder withParent(
-            Config parent);
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull PropertiesConfigBaseBuilder withEncryption(
-            ConfigCryptoProvider provider);
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull PropertiesConfigBaseBuilder withDecoder(
-            ValueDecoder encoder);
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull PropertiesConfigBaseBuilder withVariableResolution();
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull PropertiesConfigBaseBuilder withDecorator(
-            ValueDecorator decorator);
+public interface PropertiesConfigBaseBuilder<S extends PropertiesConfigBaseBuilder<S>>
+extends ConfigBuilder<S> {
 
     /**
      * Adds the specified configuration properties to the configuration
@@ -64,7 +31,7 @@ extends ConfigBuilder {
      * @param values The configuration properties.
      * @return This instance, for method chaining.
      */
-    @NotNull PropertiesConfigBaseBuilder add(
+    @NotNull S add(
             @NotNull Properties values);
 
     /**
@@ -74,7 +41,7 @@ extends ConfigBuilder {
      * @param values The configuration properties.
      * @return This instance, for method chaining.
      */
-    @NotNull PropertiesConfigBaseBuilder add(
+    @NotNull S add(
             @NotNull Map<String, String> values);
 
     /**
@@ -84,7 +51,7 @@ extends ConfigBuilder {
      * @param path The ClassLoader resource path.
      * @return This instance, for method chaining.
      */
-    @NotNull PropertiesConfigBaseBuilder load(
+    @NotNull S load(
             @NotNull String path);
 
     /**
@@ -94,7 +61,7 @@ extends ConfigBuilder {
      * @param path The file path.
      * @return This instance, for method chaining.
      */
-    @NotNull PropertiesConfigBaseBuilder load(
+    @NotNull S load(
             @NotNull Path path);
 
     /**
@@ -103,7 +70,7 @@ extends ConfigBuilder {
      * @param file The file to load.
      * @return This instance, for method chaining.
      */
-    @NotNull PropertiesConfigBaseBuilder load(
+    @NotNull S load(
             @NotNull File file);
 
     /**
@@ -112,6 +79,6 @@ extends ConfigBuilder {
      * @param url The URL to load.
      * @return This instance, for method chaining.
      */
-    @NotNull PropertiesConfigBaseBuilder load(
+    @NotNull S load(
             @NotNull URL url);
 }

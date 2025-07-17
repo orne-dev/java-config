@@ -9,46 +9,13 @@ import org.apiguardian.api.API;
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-05
+ * @param <S> The concrete type of the builder.
  * @since 1.0
  * @see MutableConfig
  */
 @API(status = API.Status.STABLE, since = "1.0")
-public interface MutableConfigBuilder
-extends ConfigBuilder {
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull MutableConfigBuilder withParent(
-            Config parent);
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull MutableConfigBuilder withEncryption(
-            ConfigCryptoProvider provider);
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull MutableConfigBuilder withDecoder(
-            ValueDecoder encoder);
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull MutableConfigBuilder withVariableResolution();
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull MutableConfigBuilder withDecorator(
-            ValueDecorator decorator);
+public interface MutableConfigBuilder<S extends MutableConfigBuilder<S>>
+extends ConfigBuilder<S> {
 
     /**
      * Sets the configuration properties values encoder.
@@ -57,7 +24,7 @@ extends ConfigBuilder {
      * @param encoder The configuration properties values encoder.
      * @return This instance, for method chaining.
      */
-    @NotNull MutableConfigBuilder withEncoder(
+    @NotNull S withEncoder(
             ValueEncoder encoder);
 
     /**

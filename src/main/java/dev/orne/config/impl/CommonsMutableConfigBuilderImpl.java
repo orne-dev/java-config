@@ -22,7 +22,7 @@ import dev.orne.config.MutableConfigBuilder;
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class CommonsMutableConfigBuilderImpl
 extends AbstractMutableConfigBuilderImpl<CommonsMutableConfigBuilderImpl>
-implements CommonsMutableConfigBuilder {
+implements CommonsMutableConfigBuilder<CommonsMutableConfigBuilderImpl> {
 
     /** The Apache Commons based configuration options. */
     protected final @NotNull CommonsConfigOptions commonsOptions;

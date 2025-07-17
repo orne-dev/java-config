@@ -18,47 +18,14 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-07
+ * @param <S> The concrete type of the builder.
  * @since 1.0
  * @see ObjectNode
  * @see Config
  */
 @API(status = API.Status.STABLE, since = "1.0")
-public interface YamlConfigBaseBuilder
-extends ConfigBuilder {
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull YamlConfigBaseBuilder withParent(
-            Config parent);
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull YamlConfigBaseBuilder withEncryption(
-            ConfigCryptoProvider provider);
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull YamlConfigBaseBuilder withDecoder(
-            ValueDecoder encoder);
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull YamlConfigBaseBuilder withVariableResolution();
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull YamlConfigBaseBuilder withDecorator(
-            ValueDecorator decorator);
+public interface YamlConfigBaseBuilder<S extends YamlConfigBaseBuilder<S>>
+extends ConfigBuilder<S> {
 
     /**
      * Sets the {@code ObjectMapper} instance used for YAML parsing.
@@ -69,7 +36,7 @@ extends ConfigBuilder {
      * @param mapper The {@code ObjectMapper} instance used for YAML parsing.
      * @return This instance, for method chaining.
      */
-    @NotNull YamlConfigBaseBuilder withMapper(
+    @NotNull S withMapper(
             @NotNull ObjectMapper mapper);
 
     /**
@@ -78,7 +45,7 @@ extends ConfigBuilder {
      * @param separator The configuration nested properties separator.
      * @return This instance, for method chaining.
      */
-    @NotNull YamlConfigBaseBuilder setPropertySeparator(
+    @NotNull S setPropertySeparator(
             @NotEmpty String separator);
 
     /**
@@ -88,7 +55,7 @@ extends ConfigBuilder {
      * @param values The configuration properties.
      * @return This instance, for method chaining.
      */
-    @NotNull YamlConfigBaseBuilder add(
+    @NotNull S add(
             @NotNull ObjectNode values);
 
     /**
@@ -98,7 +65,7 @@ extends ConfigBuilder {
      * @param path The ClassLoader resource path.
      * @return This instance, for method chaining.
      */
-    @NotNull YamlConfigBaseBuilder load(
+    @NotNull S load(
             @NotNull String path);
 
     /**
@@ -108,7 +75,7 @@ extends ConfigBuilder {
      * @param path The file path.
      * @return This instance, for method chaining.
      */
-    @NotNull YamlConfigBaseBuilder load(
+    @NotNull S load(
             @NotNull Path path);
 
     /**
@@ -117,7 +84,7 @@ extends ConfigBuilder {
      * @param file The file to load.
      * @return This instance, for method chaining.
      */
-    @NotNull YamlConfigBaseBuilder load(
+    @NotNull S load(
             @NotNull File file);
 
     /**
@@ -126,6 +93,6 @@ extends ConfigBuilder {
      * @param url The URL to load.
      * @return This instance, for method chaining.
      */
-    @NotNull YamlConfigBaseBuilder load(
+    @NotNull S load(
             @NotNull URL url);
 }

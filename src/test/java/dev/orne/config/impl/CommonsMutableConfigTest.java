@@ -53,7 +53,7 @@ extends AbstractWatchableConfigTest {
      * {@inheritDoc}
      */
     @Override
-    protected MutableConfigBuilder createBuilder(
+    protected MutableConfigBuilder<?> createBuilder(
             final @NotNull Map<String, String> properties) {
         final PropertiesConfiguration delegated;
         try {

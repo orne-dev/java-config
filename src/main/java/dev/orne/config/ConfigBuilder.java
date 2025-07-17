@@ -9,11 +9,12 @@ import org.apiguardian.api.API;
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-05
+ * @param <S> The concrete type of the builder.
  * @since 1.0
  * @see Config
  */
 @API(status = API.Status.STABLE, since = "1.0")
-public interface ConfigBuilder {
+public interface ConfigBuilder<S extends ConfigBuilder<S>> {
 
     /**
      * Sets the parent configuration.
@@ -21,7 +22,7 @@ public interface ConfigBuilder {
      * @param parent The parent configuration.
      * @return This instance, for method chaining.
      */
-    @NotNull ConfigBuilder withParent(
+    @NotNull S withParent(
             Config parent);
 
     /**
@@ -31,7 +32,7 @@ public interface ConfigBuilder {
      * @param provider The cryptography transformations provider.
      * @return This instance, for method chaining.
      */
-    @NotNull ConfigBuilder withEncryption(
+    @NotNull S withEncryption(
             ConfigCryptoProvider provider);
 
     /**
@@ -42,7 +43,7 @@ public interface ConfigBuilder {
      * @param encoder The configuration properties values decoder.
      * @return This instance, for method chaining.
      */
-    @NotNull ConfigBuilder withDecoder(
+    @NotNull S withDecoder(
             ValueDecoder encoder);
 
     /**
@@ -50,7 +51,7 @@ public interface ConfigBuilder {
      * 
      * @return This instance, for method chaining.
      */
-    @NotNull ConfigBuilder withVariableResolution();
+    @NotNull S withVariableResolution();
 
     /**
      * Sets the configuration properties values decorator.
@@ -60,7 +61,7 @@ public interface ConfigBuilder {
      * @param decorator The configuration properties values decorator.
      * @return This instance, for method chaining.
      */
-    @NotNull ConfigBuilder withDecorator(
+    @NotNull S withDecorator(
             ValueDecorator decorator);
 
     /**
