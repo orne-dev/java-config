@@ -104,7 +104,7 @@ class AbstractConfigCryptoEngineTest {
      */
     @Test
     void testGetSecureRandom() {
-        final SecureRandom expectedResult = mock(SecureRandom.class);
+        final SecureRandom expectedResult = new SecureRandom();
         final AbstractConfigCryptoEngine engine = spy(AbstractConfigCryptoEngine.class);
         
         willReturn(expectedResult).given(engine).createSecureRandom();
@@ -123,7 +123,7 @@ class AbstractConfigCryptoEngineTest {
      */
     @Test
     void testSetSecureRandom() {
-        final SecureRandom expectedResult = mock(SecureRandom.class);
+        final SecureRandom expectedResult = new SecureRandom();
         final AbstractConfigCryptoEngine engine = spy(AbstractConfigCryptoEngine.class);
         engine.setSecureRandom(expectedResult);
         

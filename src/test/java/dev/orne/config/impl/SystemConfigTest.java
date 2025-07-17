@@ -33,6 +33,8 @@ import javax.validation.constraints.NotNull;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledForJreRange;
+import org.junit.jupiter.api.condition.JRE;
 import org.mockito.Mock;
 
 import dev.orne.config.Config;
@@ -80,6 +82,7 @@ extends AbstractConfigTest {
      * {@code SecurityException} is thrown by {@code System.getProperty()}.
      */
     @Test
+    @DisabledForJreRange(min = JRE.JAVA_17)
     void testGetSystemPropertiesSecurityException() {
         final SystemConfigImpl config = assertInstanceOf(
                 SystemConfigImpl.class,
