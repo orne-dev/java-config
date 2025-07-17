@@ -3,7 +3,6 @@ package dev.orne.config.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -23,8 +22,7 @@ import dev.orne.config.WatchableConfig.Listener;
  * @since 1.0
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
-public
-class EventsHandler {
+public class EventsHandler {
 
     /** The listeners of configuration property changes. */
     private final @NotNull List<@NotNull Listener> listeners =
@@ -97,32 +95,5 @@ class EventsHandler {
                 listener.configurationChanged(instance, unmodif);
             }
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.listeners);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final EventsHandler other = (EventsHandler) obj;
-        return super.equals(obj)
-                && Objects.equals(this.listeners, other.listeners);
     }
 }

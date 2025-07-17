@@ -38,7 +38,7 @@ implements WatchableConfig {
         this.events = new EventsHandler();
         if (getParent() instanceof WatchableConfig) {
             ((WatchableConfig) getParent()).addListener(
-                    (config, keys) -> this.events.notify(this, keys));
+                    (config, keys) -> notifyParentChanges(keys));
         }
     }
 

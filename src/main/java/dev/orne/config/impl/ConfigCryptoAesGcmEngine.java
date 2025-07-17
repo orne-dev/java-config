@@ -353,47 +353,4 @@ extends AbstractConfigCryptoEngine {
         Arrays.fill(this.secretKeySalt, (byte) 0);
         super.destroy();
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                super.hashCode(),
-                this.secretKeyFactoryAlgorithm,
-                this.secretKeyIterations,
-                this.secretKeyLength,
-                this.secretKeyAlgorithm,
-                this.secretKeySalt,
-                this.cipherAlgorithm,
-                this.gcmInitVectorLength,
-                this.gcmTagLength);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final ConfigCryptoAesGcmEngine other = (ConfigCryptoAesGcmEngine) obj;
-        return super.equals(obj)
-                && Objects.equals(this.secretKeyFactoryAlgorithm, other.secretKeyFactoryAlgorithm)
-                && Objects.equals(this.secretKeyIterations, other.secretKeyIterations)
-                && Objects.equals(this.secretKeyLength, other.secretKeyLength)
-                && Objects.equals(this.secretKeyAlgorithm, other.secretKeyAlgorithm)
-                && Objects.equals(this.secretKeySalt, other.secretKeySalt)
-                && Objects.equals(this.cipherAlgorithm, other.cipherAlgorithm)
-                && Objects.equals(this.gcmInitVectorLength, other.gcmInitVectorLength)
-                && Objects.equals(this.gcmTagLength, other.gcmTagLength);
-    }
 }

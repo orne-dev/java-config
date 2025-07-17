@@ -143,6 +143,39 @@ extends AbstractConfigTest {
     }
 
     /**
+     * Tests instance building with custom encoder and value encryption.
+     */
+    @Test
+    void testEncoderEncryption() {
+        final ValueEncoder encoder = s -> "Encoded: " + s;
+        final ConfigCryptoProvider crypto = ConfigCryptoProvider.builder()
+                .withAesGcmEngine("secretSalt".getBytes(StandardCharsets.UTF_8))
+                .withSecretKey("secretKey".toCharArray())
+                .build();
+        final HashMap<String, String> properties = new HashMap<>();
+        final AbstractMutableConfig config = assertInstanceOf(AbstractMutableConfig.class,
+                createBuilder(properties)
+                    .withEncoder(encoder)
+                    .withEncryption(crypto)
+                    .build());
+        assertNotSame(ValueEncoder.DEFAULT, config.getEncoder());
+        final String testValue = "testValue";
+        config.set(TEST_KEY, testValue);
+        assertFalse(config.isEmptyInt());
+        assertFalse(config.isEmpty());
+        assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
+        assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_KEY));
+        assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
+        assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
+        assertTrue(config.containsInt(TEST_KEY));
+        assertTrue(config.contains(TEST_KEY));
+        assertEquals("Encoded: " + testValue, crypto.decrypt(config.getInt(TEST_KEY)));
+        assertEquals("Encoded: " + testValue, config.getUndecored(TEST_KEY));
+        assertEquals("Encoded: " + testValue, config.get(TEST_KEY));
+        assertNull(config.getParent());
+    }
+
+    /**
      * Tests properties setting.
      */
     @Test

@@ -22,8 +22,6 @@ package dev.orne.config.impl;
  * #L%
  */
 
-import java.util.Objects;
-
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.security.auth.DestroyFailedException;
@@ -187,34 +185,5 @@ implements ConfigCryptoProvider {
         if (this.destroyed) {
             throw new IllegalStateException("The cryptographic engine has been destroyed.");
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.engine, this.destroyEngine, this.secretKey, this.destroyed);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final AbstractConfigCryptoProvider other = (AbstractConfigCryptoProvider) obj;
-        return Objects.equals(this.engine, other.engine)
-                && Objects.equals(this.destroyEngine, other.destroyEngine)
-                && Objects.equals(this.secretKey, other.secretKey)
-                && Objects.equals(this.destroyed, other.destroyed);
     }
 }

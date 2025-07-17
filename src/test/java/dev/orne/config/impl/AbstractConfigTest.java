@@ -237,6 +237,45 @@ abstract class AbstractConfigTest {
     }
 
     /**
+     * Tests instance building with custom decoder and value encryption.
+     */
+    @Test
+    void testDecoderEncryption() {
+        final ValueDecoder decoder = s -> "Decoded: " + s;
+        final ConfigCryptoProvider crypto = ConfigCryptoProvider.builder()
+                .withAesGcmEngine("secretSalt".getBytes(StandardCharsets.UTF_8))
+                .withSecretKey("secretKey".toCharArray())
+                .build();
+        final HashMap<String, String> properties = new HashMap<>();
+        final String unencryptedValue = "testValue";
+        final String encryptedValue = crypto.encrypt(unencryptedValue);
+        properties.put(TEST_KEY, encryptedValue);
+        final AbstractConfig config = assertInstanceOf(AbstractConfig.class,
+                createBuilder(properties)
+                    .withDecoder(decoder)
+                    .withEncryption(crypto)
+                    .build());
+        assertNull(config.getParent());
+        assertNotSame(ValueDecoder.DEFAULT, config.getDecoder());
+        assertSame(ValueDecorator.DEFAULT, config.getDecorator());
+        assertFalse(config.getResolver().isPresent());
+        assertFalse(config.isEmptyInt());
+        assertFalse(config.isEmpty());
+        assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
+        assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_KEY));
+        assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
+        assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
+        assertTrue(config.containsInt(TEST_KEY));
+        assertTrue(config.contains(TEST_KEY));
+        assertEquals(encryptedValue, config.getInt(TEST_KEY));
+        assertEquals("Decoded: " + unencryptedValue, config.getUndecored(TEST_KEY));
+        assertEquals("Decoded: " + unencryptedValue, config.get(TEST_KEY));
+        assertEquals("Decoded: " + unencryptedValue, config.getUndecored(TEST_KEY));
+        assertEquals("Decoded: " + unencryptedValue, config.get(TEST_KEY));
+        assertNull(config.getParent());
+    }
+
+    /**
      * Tests instance building with value encryption.
      */
     @Test
@@ -382,6 +421,44 @@ abstract class AbstractConfigTest {
         assertEquals("Derived value: ${" + TEST_KEY + "}", config.getUndecored(TEST_DERIVED_KEY));
         assertEquals("testValue", config.get(TEST_KEY));
         assertEquals("Derived value: testValue", config.get(TEST_DERIVED_KEY));
+    }
+
+    /**
+     * Tests instance building with variable resolution.
+     */
+    @Test
+    void testDecoratorVariableResolution() {
+        final ValueDecorator decorator = s -> "Decorated: " + s;
+        final HashMap<String, String> properties = new HashMap<>();
+        properties.put(TEST_KEY, "testValue");
+        properties.put(TEST_DERIVED_KEY, "Derived value: ${" + TEST_KEY + "}");
+        final AbstractConfig config = assertInstanceOf(AbstractConfig.class,
+                createBuilder(properties)
+                    .withDecorator(decorator)
+                    .withVariableResolution()
+                    .build());
+        assertNull(config.getParent());
+        assertSame(ValueDecoder.DEFAULT, config.getDecoder());
+        assertNotSame(ValueDecorator.DEFAULT, config.getDecorator());
+        assertTrue(config.getResolver().isPresent());
+        assertFalse(config.isEmptyInt());
+        assertFalse(config.isEmpty());
+        assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
+        assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_KEY));
+        assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_DERIVED_KEY));
+        assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
+        assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
+        assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_DERIVED_KEY));
+        assertTrue(config.containsInt(TEST_KEY));
+        assertTrue(config.containsInt(TEST_DERIVED_KEY));
+        assertTrue(config.contains(TEST_KEY));
+        assertTrue(config.contains(TEST_DERIVED_KEY));
+        assertEquals("testValue", config.getInt(TEST_KEY));
+        assertEquals("Derived value: ${" + TEST_KEY + "}", config.getInt(TEST_DERIVED_KEY));
+        assertEquals("testValue", config.getUndecored(TEST_KEY));
+        assertEquals("Derived value: ${" + TEST_KEY + "}", config.getUndecored(TEST_DERIVED_KEY));
+        assertEquals("Decorated: testValue", config.get(TEST_KEY));
+        assertEquals("Decorated: Derived value: Decorated: testValue", config.get(TEST_DERIVED_KEY));
     }
 
     /**

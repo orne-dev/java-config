@@ -167,25 +167,6 @@ extends AbstractConfigCryptoProvider {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int hashCode() {
-        // Ignore cipher pool
-        return super.hashCode();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(
-            final Object obj) {
-        // Ignore cipher pool
-        return super.equals(obj);
-    }
-
-    /**
      * Implementation of {@code PooledObjectFactory} that creates new instances
      * of {@code Cipher} using an instance of {@code ConfigCryptoEngine}.
      * 

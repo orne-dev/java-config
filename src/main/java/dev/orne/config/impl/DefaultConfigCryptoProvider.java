@@ -116,23 +116,4 @@ extends AbstractConfigCryptoProvider {
         super.destroy();
         this.cipher = null;
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int hashCode() {
-        // Ignore cipher
-        return super.hashCode();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(
-            final Object obj) {
-        // Ignore cipher
-        return super.equals(obj);
-    }
 }

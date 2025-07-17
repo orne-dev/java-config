@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import java.security.AccessController;
+import java.security.GeneralSecurityException;
 import java.security.PrivilegedAction;
 import java.security.SecureRandom;
 import java.security.Security;
@@ -50,11 +51,11 @@ class AbstractConfigCryptoEngineTest {
 
     /**
      * Test for {@link AbstractConfigCryptoEngine#createSecureRandom()}
-     * @throws Exception Should not happen
+     * @throws GeneralSecurityException Should not happen
      */
     @Test
     void testCreateSecureRandom()
-    throws Exception {
+    throws GeneralSecurityException {
         final AbstractConfigCryptoEngine engine = spy(AbstractConfigCryptoEngine.class);
         final SecureRandom expectedResult = SecureRandom.getInstanceStrong();
         final SecureRandom result = engine.createSecureRandom();
@@ -64,11 +65,9 @@ class AbstractConfigCryptoEngineTest {
 
     /**
      * Test for {@link AbstractConfigCryptoEngine#createSecureRandom()}
-     * @throws Exception Should not happen
      */
     @Test
-    void testCreateSecureRandomError()
-    throws Exception {
+    void testCreateSecureRandomError() {
         final String strongAlgorithmsBackup = AccessController.doPrivileged(
                 new PrivilegedAction<String>() {
                     @Override
@@ -102,11 +101,9 @@ class AbstractConfigCryptoEngineTest {
 
     /**
      * Test for {@link AbstractConfigCryptoEngine#getSecureRandom()}
-     * @throws Exception Should not happen
      */
     @Test
-    void testGetSecureRandom()
-    throws Exception {
+    void testGetSecureRandom() {
         final SecureRandom expectedResult = mock(SecureRandom.class);
         final AbstractConfigCryptoEngine engine = spy(AbstractConfigCryptoEngine.class);
         
@@ -123,11 +120,9 @@ class AbstractConfigCryptoEngineTest {
 
     /**
      * Test for {@link AbstractConfigCryptoEngine#setSecureRandom()}
-     * @throws Exception Should not happen
      */
     @Test
-    void testSetSecureRandom()
-    throws Exception {
+    void testSetSecureRandom() {
         final SecureRandom expectedResult = mock(SecureRandom.class);
         final AbstractConfigCryptoEngine engine = spy(AbstractConfigCryptoEngine.class);
         engine.setSecureRandom(expectedResult);
@@ -143,11 +138,11 @@ class AbstractConfigCryptoEngineTest {
 
     /**
      * Test for {@link AbstractConfigCryptoEngine#getSecretKeyFactory(String)}
-     * @throws Exception Should not happen
+     * @throws GeneralSecurityException Should not happen
      */
     @Test
     void testGetSecretKeyFactoryAlgorithm()
-    throws Exception {
+    throws GeneralSecurityException {
         final String algorithm = "PBEWITHHMACSHA384ANDAES_128";
         final SecretKeyFactory expectedResult = SecretKeyFactory.getInstance(algorithm);
         final AbstractConfigCryptoEngine engine = spy(AbstractConfigCryptoEngine.class);
@@ -158,11 +153,9 @@ class AbstractConfigCryptoEngineTest {
 
     /**
      * Test for {@link AbstractConfigCryptoEngine#getSecretKeyFactory(String)}
-     * @throws Exception Should not happen
      */
     @Test
-    void testGetSecretKeyFactoryUnknownAlgorithm()
-    throws Exception {
+    void testGetSecretKeyFactoryUnknownAlgorithm() {
         final AbstractConfigCryptoEngine engine = spy(AbstractConfigCryptoEngine.class);
         assertThrows(ConfigCryptoProviderException.class, () -> {
             engine.getSecretKeyFactory("mock algorithm");
@@ -171,11 +164,11 @@ class AbstractConfigCryptoEngineTest {
 
     /**
      * Test for {@link AbstractConfigCryptoEngine#createCipher(String)}
-     * @throws Exception Should not happen
+     * @throws GeneralSecurityException Should not happen
      */
     @Test
     void testCreateCipherAlgorithm()
-    throws Exception {
+    throws GeneralSecurityException {
         final String algorithm = "AES";
         final Cipher expectedResult = Cipher.getInstance(algorithm);
         final AbstractConfigCryptoEngine engine = spy(AbstractConfigCryptoEngine.class);
@@ -186,11 +179,9 @@ class AbstractConfigCryptoEngineTest {
 
     /**
      * Test for {@link AbstractConfigCryptoEngine#createCipher(String)}
-     * @throws Exception Should not happen
      */
     @Test
-    void testCreateCipherUnknownAlgorithm()
-    throws Exception {
+    void testCreateCipherUnknownAlgorithm() {
         final AbstractConfigCryptoEngine engine = spy(AbstractConfigCryptoEngine.class);
         assertThrows(ConfigCryptoProviderException.class, () -> {
             engine.createCipher("mock algorithm");

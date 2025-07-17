@@ -25,7 +25,6 @@ package dev.orne.config.impl;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Objects;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKeyFactory;
@@ -185,31 +184,5 @@ implements ConfigCryptoEngine {
         if (this.destroyed) {
             throw new IllegalStateException("The cryptographic engine has been destroyed.");
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.secureRandom);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final AbstractConfigCryptoEngine other = (AbstractConfigCryptoEngine) obj;
-        return Objects.equals(this.secureRandom, other.secureRandom);
     }
 }
