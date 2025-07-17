@@ -32,13 +32,6 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apiguardian.api.API;
 
-import dev.orne.config.impl.CommonsConfigBuilderImpl;
-import dev.orne.config.impl.JsonConfigBuilderImpl;
-import dev.orne.config.impl.PreferencesConfigBuilderImpl;
-import dev.orne.config.impl.PropertiesConfigBuilderImpl;
-import dev.orne.config.impl.SystemConfigBuilderImpl;
-import dev.orne.config.impl.YamlConfigBuilderImpl;
-
 /**
  * Configuration properties provider.
  * 
@@ -49,61 +42,6 @@ import dev.orne.config.impl.YamlConfigBuilderImpl;
  */
 @API(status = API.Status.STABLE, since = "1.0")
 public interface Config {
-
-    /**
-     * Creates a new system properties based configuration builder.
-     * 
-     * @return The configuration builder.
-     */
-    static @NotNull SystemConfigBuilder<?> ofSystemProperties() {
-        return new SystemConfigBuilderImpl();
-    }
-
-    /**
-     * Creates a new {@code Properties} based configuration builder.
-     * 
-     * @return The configuration builder.
-     */
-    static @NotNull PropertiesConfigBuilder<?> fromPropertiesFiles() {
-        return new PropertiesConfigBuilderImpl();
-    }
-
-    /**
-     * Creates a new JSON based configuration builder.
-     * 
-     * @return The configuration builder.
-     */
-    static @NotNull JsonConfigBuilder<?> fromJsonFiles() {
-        return new JsonConfigBuilderImpl();
-    }
-
-    /**
-     * Creates a new YAML based configuration builder.
-     * 
-     * @return The configuration builder.
-     */
-    static @NotNull YamlConfigBuilder<?> fromYamlFiles() {
-        return new YamlConfigBuilderImpl();
-    }
-
-    /**
-     * Creates a new {@code Preferences} based configuration builder.
-     * 
-     * @return The configuration builder.
-     */
-    static @NotNull PreferencesConfigNodeBuilder<?> fromJavaPreferences() {
-        return new PreferencesConfigBuilderImpl();
-    }
-
-    /**
-     * Creates a new Apache Commons Configuration based configuration
-     * builder.
-     * 
-     * @return The configuration builder.
-     */
-    static @NotNull CommonsConfigBuilder<?> fromApacheCommons() {
-        return new CommonsConfigBuilderImpl();
-    }
 
     /**
      * Returns the parent configuration, if any.

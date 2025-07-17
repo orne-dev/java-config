@@ -42,7 +42,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import dev.orne.config.Config;
+import dev.orne.config.ConfigBuilder;
 import dev.orne.config.MutableConfigBuilder;
 import dev.orne.config.ValueDecoder;
 import dev.orne.config.ValueDecorator;
@@ -116,7 +116,7 @@ extends AbstractWatchableConfigTest {
     @Override
     protected MutableConfigBuilder<?> createBuilder(
             final @NotNull Map<String, String> properties) {
-        return Config.fromPropertiesFiles()
+        return ConfigBuilder.fromPropertiesFiles()
                 .add(properties)
                 .mutable();
     }
@@ -128,7 +128,7 @@ extends AbstractWatchableConfigTest {
     void testEmptyBuilder() {
         final PropertiesMutableConfigImpl config = assertInstanceOf(
                 PropertiesMutableConfigImpl.class,
-                Config.fromPropertiesFiles()
+                ConfigBuilder.fromPropertiesFiles()
                     .mutable()
                     .build());
         assertNull(config.getParent());
@@ -146,7 +146,7 @@ extends AbstractWatchableConfigTest {
     void testPropertiesBuilder() {
         final PropertiesMutableConfigImpl config = assertInstanceOf(
                 PropertiesMutableConfigImpl.class,
-                Config.fromPropertiesFiles()
+                ConfigBuilder.fromPropertiesFiles()
                     .mutable()
                     .add(testProperties)
                     .build());
@@ -179,7 +179,7 @@ extends AbstractWatchableConfigTest {
         data.put(TEST_KEY, "testValue");
         final PropertiesMutableConfigImpl config = assertInstanceOf(
                 PropertiesMutableConfigImpl.class,
-                Config.fromPropertiesFiles()
+                ConfigBuilder.fromPropertiesFiles()
                     .mutable()
                     .add(data)
                     .build());
@@ -199,14 +199,14 @@ extends AbstractWatchableConfigTest {
     @Test
     void testResourceBuilder() {
         assertThrows(NullPointerException.class, () -> {
-            Config.fromPropertiesFiles()
+            ConfigBuilder.fromPropertiesFiles()
                 .load((String) null)
                 .build();
         });
 
         final PropertiesMutableConfigImpl config = assertInstanceOf(
                 PropertiesMutableConfigImpl.class,
-                Config.fromPropertiesFiles()
+                ConfigBuilder.fromPropertiesFiles()
                     .mutable()
                     .load(testResource)
                     .build());
@@ -237,7 +237,7 @@ extends AbstractWatchableConfigTest {
     void testMissingResourceBuilder() {
         final PropertiesMutableConfigImpl config = assertInstanceOf(
                 PropertiesMutableConfigImpl.class,
-                Config.fromPropertiesFiles()
+                ConfigBuilder.fromPropertiesFiles()
                     .mutable()
                     .load("non/existent/resource.properties")
                     .build());
@@ -256,14 +256,14 @@ extends AbstractWatchableConfigTest {
     @Test
     void testFileBuilder() {
         assertThrows(NullPointerException.class, () -> {
-            Config.fromPropertiesFiles()
+            ConfigBuilder.fromPropertiesFiles()
                 .load((File) null)
                 .build();
         });
 
         final PropertiesMutableConfigImpl config = assertInstanceOf(
                 PropertiesMutableConfigImpl.class,
-                Config.fromPropertiesFiles()
+                ConfigBuilder.fromPropertiesFiles()
                     .mutable()
                     .load(testFile)
                     .build());
@@ -295,7 +295,7 @@ extends AbstractWatchableConfigTest {
     void testMissingFileBuilder() {
         final PropertiesMutableConfigImpl config = assertInstanceOf(
                 PropertiesMutableConfigImpl.class,
-                Config.fromPropertiesFiles()
+                ConfigBuilder.fromPropertiesFiles()
                     .mutable()
                     .load(new File("non/existent/resource.properties"))
                     .build());
@@ -314,14 +314,14 @@ extends AbstractWatchableConfigTest {
     @Test
     void testPathBuilder() {
         assertThrows(NullPointerException.class, () -> {
-            Config.fromPropertiesFiles()
+            ConfigBuilder.fromPropertiesFiles()
                 .load((Path) null)
                 .build();
         });
 
         final PropertiesMutableConfigImpl config = assertInstanceOf(
                 PropertiesMutableConfigImpl.class,
-                Config.fromPropertiesFiles()
+                ConfigBuilder.fromPropertiesFiles()
                     .mutable()
                     .load(testPath)
                     .build());
@@ -353,7 +353,7 @@ extends AbstractWatchableConfigTest {
     void testMissingPathBuilder() {
         final PropertiesMutableConfigImpl config = assertInstanceOf(
                 PropertiesMutableConfigImpl.class,
-                Config.fromPropertiesFiles()
+                ConfigBuilder.fromPropertiesFiles()
                     .mutable()
                     .load(Paths.get("non/existent/path.properties"))
                     .build());
@@ -372,14 +372,14 @@ extends AbstractWatchableConfigTest {
     @Test
     void testUrlBuilder() {
         assertThrows(NullPointerException.class, () -> {
-            Config.fromPropertiesFiles()
+            ConfigBuilder.fromPropertiesFiles()
                 .load((URL) null)
                 .build();
         });
         
         final PropertiesMutableConfigImpl config = assertInstanceOf(
                 PropertiesMutableConfigImpl.class,
-                Config.fromPropertiesFiles()
+                ConfigBuilder.fromPropertiesFiles()
                     .mutable()
                     .load(testUrl)
                     .build());
@@ -411,7 +411,7 @@ extends AbstractWatchableConfigTest {
     void testMissingUrlBuilder() throws IOException {
         final PropertiesMutableConfigImpl config = assertInstanceOf(
                 PropertiesMutableConfigImpl.class,
-                Config.fromPropertiesFiles()
+                ConfigBuilder.fromPropertiesFiles()
                     .mutable()
                     .load(new URL(testUrl.toString().replace("test.url", "non.existent")))
                     .build());

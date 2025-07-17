@@ -34,7 +34,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import dev.orne.config.Config;
 import dev.orne.config.ConfigBuilder;
 
 /**
@@ -66,7 +65,7 @@ extends AbstractConfigTest {
         final TestPreferencesFactory.InMemoryPreferences preferences =
                 new TestPreferencesFactory.InMemoryPreferences();
         preferences.setAttributes(properties);
-        return Config.fromJavaPreferences()
+        return ConfigBuilder.fromJavaPreferences()
                 .ofNode(preferences);
     }
 
@@ -78,7 +77,7 @@ extends AbstractConfigTest {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesConfigImpl config = assertInstanceOf(
                 PreferencesConfigImpl.class,
-                Config.fromJavaPreferences()
+                ConfigBuilder.fromJavaPreferences()
                     .ofNode(preferences)
                     .build());
         assertSame(preferences, config.getPreferences());
@@ -93,7 +92,7 @@ extends AbstractConfigTest {
         TestPreferencesFactory.setUserRoot(preferences);
         final PreferencesConfigImpl config = assertInstanceOf(
                 PreferencesConfigImpl.class,
-                Config.fromJavaPreferences()
+                ConfigBuilder.fromJavaPreferences()
                     .ofUserRoot()
                     .build());
         assertSame(preferences, config.getPreferences());
@@ -110,7 +109,7 @@ extends AbstractConfigTest {
         willReturn(preferences).given(rootPreferences).node("/dev/orne/config/impl");
         final PreferencesConfigImpl config = assertInstanceOf(
                 PreferencesConfigImpl.class,
-                Config.fromJavaPreferences()
+                ConfigBuilder.fromJavaPreferences()
                     .ofUser(PreferencesConfigTest.class)
                     .build());
         assertSame(preferences, config.getPreferences());
@@ -128,7 +127,7 @@ extends AbstractConfigTest {
         willReturn(preferences).given(rootPreferences).node(path);
         final PreferencesConfigImpl config = assertInstanceOf(
                 PreferencesConfigImpl.class,
-                Config.fromJavaPreferences()
+                ConfigBuilder.fromJavaPreferences()
                     .ofUser(path)
                     .build());
         assertSame(preferences, config.getPreferences());
@@ -149,7 +148,7 @@ extends AbstractConfigTest {
         willReturn(preferences).given(classPreferences).node(path);
         final PreferencesConfigImpl config = assertInstanceOf(
                 PreferencesConfigImpl.class,
-                Config.fromJavaPreferences()
+                ConfigBuilder.fromJavaPreferences()
                     .ofUser(PreferencesConfigTest.class, path)
                     .build());
         assertSame(preferences, config.getPreferences());
@@ -164,7 +163,7 @@ extends AbstractConfigTest {
         TestPreferencesFactory.setSystemRoot(preferences);
         final PreferencesConfigImpl config = assertInstanceOf(
                 PreferencesConfigImpl.class,
-                Config.fromJavaPreferences()
+                ConfigBuilder.fromJavaPreferences()
                     .ofSystemRoot()
                     .build());
         assertSame(preferences, config.getPreferences());
@@ -181,7 +180,7 @@ extends AbstractConfigTest {
         willReturn(preferences).given(rootPreferences).node("/dev/orne/config/impl");
         final PreferencesConfigImpl config = assertInstanceOf(
                 PreferencesConfigImpl.class,
-                Config.fromJavaPreferences()
+                ConfigBuilder.fromJavaPreferences()
                     .ofSystem(PreferencesConfigTest.class)
                     .build());
         assertSame(preferences, config.getPreferences());
@@ -199,7 +198,7 @@ extends AbstractConfigTest {
         willReturn(preferences).given(rootPreferences).node(path);
         final PreferencesConfigImpl config = assertInstanceOf(
                 PreferencesConfigImpl.class,
-                Config.fromJavaPreferences()
+                ConfigBuilder.fromJavaPreferences()
                     .ofSystem(path)
                     .build());
         assertSame(preferences, config.getPreferences());
@@ -220,7 +219,7 @@ extends AbstractConfigTest {
         willReturn(preferences).given(classPreferences).node(path);
         final PreferencesConfigImpl config = assertInstanceOf(
                 PreferencesConfigImpl.class,
-                Config.fromJavaPreferences()
+                ConfigBuilder.fromJavaPreferences()
                     .ofSystem(PreferencesConfigTest.class, path)
                     .build());
         assertSame(preferences, config.getPreferences());

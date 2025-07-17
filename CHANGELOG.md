@@ -42,32 +42,32 @@
     - Add `dev.orne.config.ConfigBuilder.withVariableResolution()` method.
 - Add fluent configuration API for System properties based configuration.
     - `dev.orne.config.SystemConfigBuilder` interface.
-    - Add `dev.orne.config.Config.ofSystemProperties()` method.
+    - Add `dev.orne.config.ConfigBuilder.fromSystemProperties()` method.
 - Add fluent configuration API for Java `Properties` based configuration.
     - `dev.orne.config.PropertiesConfigBaseBuilder` interface.
     - `dev.orne.config.PropertiesConfigBuilder` interface.
     - `dev.orne.config.PropertiesMutableConfigBuilder` interface.
-    - Add `dev.orne.config.Config.fromPropertiesFiles()` method.
+    - Add `dev.orne.config.ConfigBuilder.fromPropertiesFiles()` method.
 - Add fluent configuration API for Java `Preferences` based configuration.
     - `dev.orne.config.PreferencesConfigBuilder` interface.
     - `dev.orne.config.PreferencesConfigNodeBuilder` interface.
     - `dev.orne.config.PreferencesMutableConfigBuilder` interface.
-    - Add `dev.orne.config.Config.fromJavaPreferences()` method.
+    - Add `dev.orne.config.ConfigBuilder.fromJavaPreferences()` method.
 - Add support and fluent configuration API for JSON based configuration based on Jackson.
     - `dev.orne.config.JsonConfigBaseBuilder` interface.
     - `dev.orne.config.JsonConfigBuilder` class.
     - `dev.orne.config.JsonMutableConfigBuilder` interface.
-    - Add `dev.orne.config.Config.fromJson()` method.
+    - Add `dev.orne.config.ConfigBuilder.fromJson()` method.
 - Add support and fluent configuration API for YAML based configuration based on Jackson.
     - `dev.orne.config.YamlConfigBaseBuilder` interface.
     - `dev.orne.config.YamlConfigBuilder` class.
     - `dev.orne.config.YamlMutableConfigBuilder` interface.
-    - Add `dev.orne.config.Config.fromYaml()` method.
+    - Add `dev.orne.config.ConfigBuilder.fromYaml()` method.
 - Add support and fluent configuration API for Commons Configuration 2.x based configuration.
     - `dev.orne.config.CommonsConfigBuilder` interface.
     - `dev.orne.config.CommonsConfigNodeBuilder` interface.
     - `dev.orne.config.CommonsMutableConfigBuilder` interface.
-    - Add `dev.orne.config.Config.fromJavaPreferences()` method.
+    - Add `dev.orne.config.ConfigBuilder.fromJavaPreferences()` method.
 - Add support to use `Config` as Apache Commons Configuration 2.x `ImmutableConfiguration`.
     - `dev.orne.config.commons.DelegatedOrneConfiguration` class.
 - Add support to use `MutableConfig` as Apache Commons Configuration 2.x `Configuration`.

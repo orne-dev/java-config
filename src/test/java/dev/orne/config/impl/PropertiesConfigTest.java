@@ -41,7 +41,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import dev.orne.config.Config;
 import dev.orne.config.ConfigBuilder;
 import dev.orne.config.ValueDecoder;
 import dev.orne.config.ValueDecorator;
@@ -113,7 +112,7 @@ extends AbstractConfigTest {
     @Override
     protected ConfigBuilder<?> createBuilder(
             final @NotNull Map<String, String> properties) {
-        return Config.fromPropertiesFiles()
+        return ConfigBuilder.fromPropertiesFiles()
                 .add(properties);
     }
 
@@ -124,7 +123,7 @@ extends AbstractConfigTest {
     void testEmptyBuilder() {
         final PropertiesConfigImpl config = assertInstanceOf(
                 PropertiesConfigImpl.class,
-                Config.fromPropertiesFiles()
+                ConfigBuilder.fromPropertiesFiles()
                     .build());
         assertNull(config.getParent());
         assertSame(ValueDecoder.DEFAULT, config.getDecoder());
@@ -141,7 +140,7 @@ extends AbstractConfigTest {
     void testPropertiesBuilder() {
         final PropertiesConfigImpl config = assertInstanceOf(
                 PropertiesConfigImpl.class,
-                Config.fromPropertiesFiles()
+                ConfigBuilder.fromPropertiesFiles()
                     .add(testProperties)
                     .build());
         assertNull(config.getParent());
@@ -173,7 +172,7 @@ extends AbstractConfigTest {
         data.put(TEST_KEY, "testValue");
         final PropertiesConfigImpl config = assertInstanceOf(
                 PropertiesConfigImpl.class,
-                Config.fromPropertiesFiles()
+                ConfigBuilder.fromPropertiesFiles()
                     .add(data)
                     .build());
         assertNull(config.getParent());
@@ -192,14 +191,14 @@ extends AbstractConfigTest {
     @Test
     void testResourceBuilder() {
         assertThrows(NullPointerException.class, () -> {
-            Config.fromPropertiesFiles()
+            ConfigBuilder.fromPropertiesFiles()
                 .load((String) null)
                 .build();
         });
 
         final PropertiesConfigImpl config = assertInstanceOf(
                 PropertiesConfigImpl.class,
-                Config.fromPropertiesFiles()
+                ConfigBuilder.fromPropertiesFiles()
                     .load(testResource)
                     .build());
         assertNull(config.getParent());
@@ -229,7 +228,7 @@ extends AbstractConfigTest {
     void testMissingResourceBuilder() {
         final PropertiesConfigImpl config = assertInstanceOf(
                 PropertiesConfigImpl.class,
-                Config.fromPropertiesFiles()
+                ConfigBuilder.fromPropertiesFiles()
                     .load("non/existent/resource.properties")
                     .build());
         assertNull(config.getParent());
@@ -247,14 +246,14 @@ extends AbstractConfigTest {
     @Test
     void testFileBuilder() {
         assertThrows(NullPointerException.class, () -> {
-            Config.fromPropertiesFiles()
+            ConfigBuilder.fromPropertiesFiles()
                 .load((File) null)
                 .build();
         });
 
         final PropertiesConfigImpl config = assertInstanceOf(
                 PropertiesConfigImpl.class,
-                Config.fromPropertiesFiles()
+                ConfigBuilder.fromPropertiesFiles()
                     .load(testFile)
                     .build());
         assertNull(config.getParent());
@@ -285,7 +284,7 @@ extends AbstractConfigTest {
     void testMissingFileBuilder() {
         final PropertiesConfigImpl config = assertInstanceOf(
                 PropertiesConfigImpl.class,
-                Config.fromPropertiesFiles()
+                ConfigBuilder.fromPropertiesFiles()
                     .load(new File("non/existent/resource.properties"))
                     .build());
         assertNull(config.getParent());
@@ -303,14 +302,14 @@ extends AbstractConfigTest {
     @Test
     void testPathBuilder() {
         assertThrows(NullPointerException.class, () -> {
-            Config.fromPropertiesFiles()
+            ConfigBuilder.fromPropertiesFiles()
                 .load((Path) null)
                 .build();
         });
 
         final PropertiesConfigImpl config = assertInstanceOf(
                 PropertiesConfigImpl.class,
-                Config.fromPropertiesFiles()
+                ConfigBuilder.fromPropertiesFiles()
                     .load(testPath)
                     .build());
         assertNull(config.getParent());
@@ -341,7 +340,7 @@ extends AbstractConfigTest {
     void testMissingPathBuilder() {
         final PropertiesConfigImpl config = assertInstanceOf(
                 PropertiesConfigImpl.class,
-                Config.fromPropertiesFiles()
+                ConfigBuilder.fromPropertiesFiles()
                     .load(Paths.get("non/existent/path.properties"))
                     .build());
         assertNull(config.getParent());
@@ -359,14 +358,14 @@ extends AbstractConfigTest {
     @Test
     void testUrlBuilder() {
         assertThrows(NullPointerException.class, () -> {
-            Config.fromPropertiesFiles()
+            ConfigBuilder.fromPropertiesFiles()
                 .load((URL) null)
                 .build();
         });
         
         final PropertiesConfigImpl config = assertInstanceOf(
                 PropertiesConfigImpl.class,
-                Config.fromPropertiesFiles()
+                ConfigBuilder.fromPropertiesFiles()
                     .load(testUrl)
                     .build());
         assertNull(config.getParent());
@@ -397,7 +396,7 @@ extends AbstractConfigTest {
     void testMissingUrlBuilder() throws IOException {
         final PropertiesConfigImpl config = assertInstanceOf(
                 PropertiesConfigImpl.class,
-                Config.fromPropertiesFiles()
+                ConfigBuilder.fromPropertiesFiles()
                     .load(new URL(testUrl.toString().replace("test.url", "non.existent")))
                     .build());
         assertNull(config.getParent());
