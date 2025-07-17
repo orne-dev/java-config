@@ -6,7 +6,7 @@
 
 ### Changed
 
-- Bump `org.apache.commons:commons-lang3` to 3.17.0.
+- Bump `org.apache.commons:commons-lang3` to 3.18.0.
 - Bump `commons-beanutils:commons-beanutils` to 1.10.1.
 - **Breaking:** Simplify base configuration API.
     - Make `Config` a functional interface with a `String get(String)` method.

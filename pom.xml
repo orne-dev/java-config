@@ -44,7 +44,7 @@
         test/**/*.yaml
     </license.excludes>
 
-    <commons.lang.version>3.17.0</commons.lang.version>
+    <commons.lang.version>3.18.0</commons.lang.version>
     <commons.beanutils.version>1.11.0</commons.beanutils.version>
 
     <javax.validation.version>2.0.1.Final</javax.validation.version>
