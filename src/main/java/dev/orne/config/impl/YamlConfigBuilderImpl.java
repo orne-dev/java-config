@@ -37,8 +37,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import dev.orne.config.YamlConfigBuilder;
 
 /**
- * Implementation of Jackson {@code ObjectNode} based immutable configuration
- * builder for YAML files.
+ * Implementation of YAML files based configuration builder.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-07

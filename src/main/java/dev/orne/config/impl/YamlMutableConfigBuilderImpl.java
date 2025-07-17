@@ -37,13 +37,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import dev.orne.config.YamlMutableConfigBuilder;
 
 /**
- * Implementation of Jackson {@code ObjectNode} based mutable configuration
- * builder for YAML files.
+ * Implementation of YAML files based mutable configuration builder.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-07
  * @since 1.0
- * @see JsonMutableConfigBuilder
+ * @see YamlMutableConfigBuilder
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class YamlMutableConfigBuilderImpl

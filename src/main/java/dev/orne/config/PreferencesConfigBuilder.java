@@ -1,5 +1,7 @@
 package dev.orne.config;
 
+import java.util.prefs.Preferences;
+
 /*-
  * #%L
  * Orne Config

@@ -171,7 +171,6 @@ public class JsonConfigOptions {
      * resource.
      * 
      * @param path The ClassLoader resource path.
-     * @return This instance, for method chaining.
      */
     public void load(
             final @NotNull String path) {
@@ -196,7 +195,6 @@ public class JsonConfigOptions {
      * path.
      * 
      * @param path The file path.
-     * @return This instance, for method chaining.
      */
     public void load(
             final @NotNull Path path) {
@@ -215,7 +213,6 @@ public class JsonConfigOptions {
      * Loads the configuration properties from the specified file.
      * 
      * @param file The file to load.
-     * @return This instance, for method chaining.
      */
     public void load(
             final @NotNull File file) {
@@ -233,7 +230,6 @@ public class JsonConfigOptions {
      * Loads the configuration properties from the specified URL.
      * 
      * @param url The URL to load.
-     * @return This instance, for method chaining.
      */
     public void load(
             final @NotNull URL url) {

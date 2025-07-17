@@ -47,6 +47,9 @@ implements PreferencesConfigNodeBuilder<PreferencesConfigBuilderImpl>, Preferenc
     /** The preferences based configuration options. */
     protected final @NotNull PreferencesConfigOptions preferencesOptions;
 
+    /**
+     * Creates a new instance.
+     */
     public PreferencesConfigBuilderImpl() {
         super();
         this.preferencesOptions = new PreferencesConfigOptions();

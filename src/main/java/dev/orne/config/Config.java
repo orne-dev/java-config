@@ -210,6 +210,8 @@ public interface Config {
      * Returns the value of the configuration parameter as {@code String}.
      * 
      * @param key The key of the configuration parameter
+     * @param defaultValue The default value to return if the configuration
+     * parameter is not set or is {@code null}.
      * @return The configuration parameter value as {@code String}
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value
@@ -224,6 +226,8 @@ public interface Config {
      * Returns the value of the configuration parameter as {@code String}.
      * 
      * @param key The key of the configuration parameter
+     * @param defaultValue The default value supplier if the configuration
+     * parameter is not set or is {@code null}.
      * @return The configuration parameter value as {@code String}
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value
@@ -252,6 +256,8 @@ public interface Config {
      * Returns the value of the configuration parameter as {@code Boolean}.
      * 
      * @param key The key of the configuration parameter
+     * @param defaultValue The default value to return if the configuration
+     * parameter is not set or is {@code null}.
      * @return The configuration parameter value as {@code Boolean}
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value
@@ -266,6 +272,8 @@ public interface Config {
      * Returns the value of the configuration parameter as {@code Boolean}.
      * 
      * @param key The key of the configuration parameter
+     * @param defaultValue The default value supplier if the configuration
+     * parameter is not set or is {@code null}.
      * @return The configuration parameter value as {@code Boolean}
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value
@@ -296,7 +304,8 @@ public interface Config {
      * with variable substitution.
      * 
      * @param key The configuration property.
-     * @param defaultValue The default value if 
+     * @param defaultValue The default value to return if the configuration
+     * parameter is not set or is {@code null}.
      * @return The value configuration property, if any.
      * @throws NumberFormatException If the configuration value cannot be
      * parsed as an integer.
@@ -311,6 +320,8 @@ public interface Config {
      * Returns the value of the configuration parameter as {@code Boolean}.
      * 
      * @param key The key of the configuration parameter
+     * @param defaultValue The default value supplier if the configuration
+     * parameter is not set or is {@code null}.
      * @return The configuration parameter value as {@code Boolean}
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value
@@ -341,7 +352,8 @@ public interface Config {
      * with variable substitution.
      * 
      * @param key The configuration property.
-     * @param defaultValue The default value if 
+     * @param defaultValue The default value to return if the configuration
+     * parameter is not set or is {@code null}.
      * @return The value configuration property, if any.
      * @throws NumberFormatException If the configuration value cannot be
      * parsed as an long.
@@ -356,6 +368,8 @@ public interface Config {
      * Returns the value of the configuration parameter as {@code Boolean}.
      * 
      * @param key The key of the configuration parameter
+     * @param defaultValue The default value supplier if the configuration
+     * parameter is not set or is {@code null}.
      * @return The configuration parameter value as {@code Boolean}
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value

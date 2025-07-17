@@ -137,6 +137,7 @@ extends ConfigBuilder<S> {
     /**
      * Selects the specified preferences node.
      * 
+     * @param preferences The {@code Preferences} node to use.
      * @return Next builder, for method chaining.
      */
     @NotNull PreferencesConfigBuilder<?> ofNode(

@@ -66,6 +66,13 @@ implements ConfigCryptoEngine {
     private boolean destroyed;
 
     /**
+     * Creates new instance.
+     */
+    protected AbstractConfigCryptoEngine() {
+        super();
+    }
+
+    /**
      * Returns the {@code SecureRandom} instance of this instance.
      * 
      * @return The {@code SecureRandom} instance

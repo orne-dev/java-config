@@ -46,23 +46,33 @@ import org.apiguardian.api.API;
 public @interface ConfigurationOptions {
 
     /**
+     * Sets the preferred configuration classes.M
+     * 
      * @return The preferred configuration classes.
      */
     Class<? extends Config>[] preferredConfigs() default {};
 
     /**
-     * @return {@code true} if the default configuration should be used if one of the
+     * Sets if the default configuration should be used if one of the
      * preferred ones is not found.
+     * 
+     * @return {@code true} if the default configuration should be used.
      */
     boolean fallbackToDefaultConfig() default true;
 
     /**
+     * Sets if the class properties should be configured
+     * automatically.
+     * 
      * @return {@code true} if the class properties should be configured
      * automatically.
      */
     boolean configureProperties() default true;
 
     /**
+     * Sets if the class properties that implement {@code Configurable}
+     * should be configured automatically.
+     * 
      * @return {@code true} if the class properties that implement {@code Configurable}
      * should be configured automatically.
      */

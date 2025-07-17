@@ -111,7 +111,6 @@ public class PropertiesConfigOptions {
      * properties.
      * 
      * @param values The configuration properties.
-     * @return This instance, for method chaining.
      */
     public void add(
             final @NotNull Map<@NotEmpty String, @NotNull String> values) {
@@ -123,7 +122,6 @@ public class PropertiesConfigOptions {
      * resource.
      * 
      * @param path The ClassLoader resource path.
-     * @return This instance, for method chaining.
      */
     public void load(
             final @NotNull String path) {
@@ -148,7 +146,6 @@ public class PropertiesConfigOptions {
      * path.
      * 
      * @param path The file path.
-     * @return This instance, for method chaining.
      */
     public void load(
             final @NotNull Path path) {
@@ -166,7 +163,6 @@ public class PropertiesConfigOptions {
      * Loads the configuration properties from the specified file.
      * 
      * @param file The file to load.
-     * @return This instance, for method chaining.
      */
     public void load(
             final @NotNull File file) {
@@ -183,7 +179,6 @@ public class PropertiesConfigOptions {
      * Loads the configuration properties from the specified URL.
      * 
      * @param url The URL to load.
-     * @return This instance, for method chaining.
      */
     public void load(
             final @NotNull URL url) {

@@ -44,6 +44,10 @@ import org.apiguardian.api.API;
 @API(status = API.Status.STABLE, since = "1.0")
 public @interface ConfigurableProperty {
 
-    /** @return The configuration key to apply to the property. */
+    /**
+     * Sets the configuration key to apply to the property.
+     * 
+     * @return The configuration key to apply to the property.
+     */
     String value();
 }

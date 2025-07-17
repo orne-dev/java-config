@@ -158,6 +158,7 @@ extends AbstractConfig {
      * 
      * @param separator The properties separator to use.
      * @param prefix The prefix for the keys.
+     * @param key The current key being processed.
      * @param node The JSON object node entry.
      * @return A stream of flattened keys.
      */

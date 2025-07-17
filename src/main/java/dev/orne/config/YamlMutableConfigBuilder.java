@@ -33,7 +33,6 @@ import org.apiguardian.api.API;
  * @version 1.0, 2025-07
  * @param <S> The concrete type of the builder.
  * @since 1.0
- * @see ObjectNode
  * @see MutableConfig
  * @see WatchableConfig
  */
