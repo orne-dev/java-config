@@ -3,13 +3,13 @@ package dev.orne.config.impl;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Map;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import dev.orne.config.JsonConfigBuilder;
@@ -43,17 +43,7 @@ implements JsonConfigBuilder<JsonConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonConfigBuilderImpl withMapper(
-            final @NotNull ObjectMapper mapper) {
-        this.jsonOptions.setMapper(mapper);
-        return thisBuilder();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull JsonConfigBuilderImpl setPropertySeparator(
+    public @NotNull JsonConfigBuilderImpl withSeparator(
             final @NotEmpty String separator) {
         this.jsonOptions.setPropertySeparator(separator);
         return thisBuilder();
@@ -64,8 +54,16 @@ implements JsonConfigBuilder<JsonConfigBuilderImpl> {
      */
     @Override
     public @NotNull JsonConfigBuilderImpl add(
-            final @NotNull ObjectNode values) {
-        this.jsonOptions.add(values);
+            final @NotNull Map<String, String> values) {
+        if (!values.isEmpty()) {
+            final ObjectNode data = JacksonUtils.NODE_FACTORY.objectNode();
+            values.forEach((key, value) -> JacksonUtils.setNodeValue(
+                    data,
+                    this.jsonOptions.getPropertySeparator(),
+                    key,
+                    value));
+            this.jsonOptions.add(data);
+        }
         return thisBuilder();
     }
 

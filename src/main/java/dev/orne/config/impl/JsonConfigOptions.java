@@ -23,6 +23,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import dev.orne.config.JsonConfigBaseBuilder;
+
 /**
  * Options of Jackson {@code ObjectNode} based configuration builder.
  * 
@@ -63,7 +65,7 @@ public class JsonConfigOptions {
         this.mapper = new ObjectMapper();
         this.mapper.setDefaultMergeable(true);
         this.jsonObject = JacksonUtils.NODE_FACTORY.objectNode();
-        this.propertySeparator = JsonConfigImpl.DEFAULT_PROPERTY_SEPARATOR;
+        this.propertySeparator = JsonConfigBaseBuilder.DEFAULT_SEPARATOR;
     }
 
     /**

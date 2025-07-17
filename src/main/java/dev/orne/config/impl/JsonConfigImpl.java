@@ -53,9 +53,6 @@ import dev.orne.config.Config;
 public class JsonConfigImpl
 extends AbstractConfig {
 
-    /** The default configuration nested properties separator. */
-    public static final String DEFAULT_PROPERTY_SEPARATOR = ".";
-
     /** The JSON object with the configuration properties. */
     private final @NotNull ObjectNode jsonObject;
     /** The configuration nested properties separator. */

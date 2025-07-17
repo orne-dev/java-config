@@ -3,18 +3,16 @@ package dev.orne.config.impl;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Map;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import dev.orne.config.JsonMutableConfigBuilder;
 import dev.orne.config.YamlMutableConfigBuilder;
-
 
 /**
  * Implementation of Jackson {@code ObjectNode} based mutable configuration
@@ -52,17 +50,7 @@ implements YamlMutableConfigBuilder<YamlMutableConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull YamlMutableConfigBuilderImpl withMapper(
-            final @NotNull ObjectMapper mapper) {
-        this.yamlOptions.setMapper(mapper);
-        return thisBuilder();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull YamlMutableConfigBuilderImpl setPropertySeparator(
+    public @NotNull YamlMutableConfigBuilderImpl withSeparator(
             final @NotEmpty String separator) {
         this.yamlOptions.setPropertySeparator(separator);
         return thisBuilder();
@@ -73,8 +61,16 @@ implements YamlMutableConfigBuilder<YamlMutableConfigBuilderImpl> {
      */
     @Override
     public @NotNull YamlMutableConfigBuilderImpl add(
-            final @NotNull ObjectNode values) {
-        this.yamlOptions.add(values);
+            final @NotNull Map<String, String> values) {
+        if (!values.isEmpty()) {
+            final ObjectNode data = JacksonUtils.NODE_FACTORY.objectNode();
+            values.forEach((key, value) -> JacksonUtils.setNodeValue(
+                    data,
+                    this.yamlOptions.getPropertySeparator(),
+                    key,
+                    value));
+            this.yamlOptions.add(data);
+        }
         return thisBuilder();
     }
 

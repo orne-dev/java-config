@@ -4,16 +4,13 @@ import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 /**
- * Jackson {@code ObjectNode} based mutable configuration builder.
+ * JSON files based mutable configuration builder.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-07
  * @param <S> The concrete type of the builder.
  * @since 1.0
- * @see ObjectNode
  * @see MutableConfig
  * @see WatchableConfig
  */

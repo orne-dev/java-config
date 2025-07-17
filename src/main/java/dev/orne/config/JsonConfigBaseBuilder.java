@@ -3,40 +3,28 @@ package dev.orne.config;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Map;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 /**
- * Jackson {@code ObjectNode} based configuration builder.
+ * JSON files based configuration base builder.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-07
  * @param <S> The concrete type of the builder.
  * @since 1.0
- * @see ObjectNode
  * @see Config
  */
 @API(status = API.Status.STABLE, since = "1.0")
 public interface JsonConfigBaseBuilder<S extends JsonConfigBaseBuilder<S>>
 extends ConfigBuilder<S> {
 
-    /**
-     * Sets the {@code ObjectMapper} instance used for JSON parsing.
-     * <p>
-     * Nota that this method must be called before any {@code load()} method
-     * to ensure the correct parsing of the configuration files.
-     * 
-     * @param mapper The {@code ObjectMapper} instance used for JSON parsing.
-     * @return This instance, for method chaining.
-     */
-    @NotNull S withMapper(
-            @NotNull ObjectMapper mapper);
+    /** The default configuration nested properties separator. */
+    public static final String DEFAULT_SEPARATOR = ".";
 
     /**
      * Sets the configuration nested properties separator.
@@ -44,18 +32,21 @@ extends ConfigBuilder<S> {
      * @param separator The configuration nested properties separator.
      * @return This instance, for method chaining.
      */
-    @NotNull S setPropertySeparator(
+    @NotNull S withSeparator(
             @NotEmpty String separator);
 
     /**
-     * Adds the specified configuration properties to the configuration
+     * Adds the specified custom properties to the configuration
      * properties.
+     * <p>
+     * Note that property keys will be processed with the configured
+     * nested properties separator.
      * 
      * @param values The configuration properties.
      * @return This instance, for method chaining.
      */
     @NotNull S add(
-            @NotNull ObjectNode values);
+            @NotNull Map<String, String> values);
 
     /**
      * Loads the configuration properties from the specified ClassLoader

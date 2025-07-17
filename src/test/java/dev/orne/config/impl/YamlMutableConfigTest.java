@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.validation.constraints.NotNull;
@@ -77,7 +78,7 @@ extends AbstractWatchableConfigTest {
     /** The JSON node factory. */
     private static final JsonNodeFactory NODE_FACTORY =
             JacksonUtils.NODE_FACTORY;
-    private static ObjectNode testObject;
+    private static Map<String, String> testValues;
     private static String testResource = "dev/orne/config/impl/test.resource.yaml";
     private static File testFile;
     private static Path testPath;
@@ -95,11 +96,9 @@ extends AbstractWatchableConfigTest {
     @BeforeAll
     static void prepareTestData()
     throws IOException {
-        testObject = NODE_FACTORY.objectNode()
-                .set("test", NODE_FACTORY.objectNode()
-                    .put("type", TEST_VALUES_TYPE)
-                    .set("values", NODE_FACTORY.objectNode()
-                        .put("type", TEST_VALUES_TYPE)));
+        testValues = new HashMap<>();
+        testValues.put(TEST_COMMON_KEY, TEST_VALUES_TYPE);
+        testValues.put(TEST_VALUES_KEY, TEST_VALUES_TYPE);
         final ObjectNode fileProps = NODE_FACTORY.objectNode()
                 .set("test", NODE_FACTORY.objectNode()
                         .put("type", TEST_FILE_TYPE)
@@ -125,19 +124,11 @@ extends AbstractWatchableConfigTest {
      * {@inheritDoc}
      */
     @Override
-    protected MutableConfigBuilder createBuilder(
+    protected MutableConfigBuilder<?> createBuilder(
             final @NotNull Map<String, String> properties) {
-        final ObjectNode data = NODE_FACTORY.objectNode();
-        properties.forEach((key, value) -> {
-            JacksonUtils.setNodeValue(
-                    data,
-                    JsonConfigImpl.DEFAULT_PROPERTY_SEPARATOR,
-                    key,
-                    value);
-        });
         return Config.fromYamlFiles()
                 .mutable()
-                .add(data);
+                .add(properties);
     }
 
     /**
@@ -159,15 +150,15 @@ extends AbstractWatchableConfigTest {
     }
 
     /**
-     * Tests instance building from properties.
+     * Tests instance building from from custom properties map.
      */
     @Test
-    void testObjectNodeBuilder() {
+    void testMapBuilder() {
         final YamlMutableConfigImpl config = assertInstanceOf(
                 YamlMutableConfigImpl.class,
                 Config.fromYamlFiles()
                     .mutable()
-                    .add(testObject)
+                    .add(testValues)
                     .build());
         assertNull(config.getParent());
         assertSame(ValueDecoder.DEFAULT, config.getDecoder());
@@ -175,7 +166,7 @@ extends AbstractWatchableConfigTest {
         assertFalse(config.getResolver().isPresent());
         assertNotNull(config.getJsonObject());
         assertFalse(config.getJsonObject().isEmpty());
-        assertNotSame(testObject, config.getJsonObject());
+        assertNotSame(testValues, config.getJsonObject());
         assertTrue(config.contains(TEST_COMMON_KEY));
         assertEquals(TEST_VALUES_TYPE, config.get(TEST_COMMON_KEY));
         assertTrue(config.contains(TEST_VALUES_KEY));
@@ -410,5 +401,41 @@ extends AbstractWatchableConfigTest {
         final ObjectNode properties = config.getJsonObject();
         assertNotNull(properties);
         assertTrue(properties.isEmpty());
+    }
+
+    /**
+     * Tests instance building with custom property levels separator.
+     */
+    @Test
+    void testCustomSeparatorBuilder() {
+        final String defaultSeparatorKey = "test.default.value";
+        final String defaultSeparatorValue = "Default separator value";
+        final HashMap<String, String> defaultSeparatorValues = new HashMap<>();
+        defaultSeparatorValues.put(defaultSeparatorKey, defaultSeparatorValue);
+        final String customSeparator = "/";
+        final String defaultSeparatorNewKey = "test/default/value";
+        final String customSeparatorKey = "test/custom/value";
+        final String customSeparatorValue = "Custom separator value";
+        final HashMap<String, String> customSeparatorValues = new HashMap<>();
+        customSeparatorValues.put(customSeparatorKey, customSeparatorValue);
+        final YamlMutableConfigImpl config = assertInstanceOf(
+                YamlMutableConfigImpl.class,
+                Config.fromYamlFiles()
+                    .mutable()
+                    .add(defaultSeparatorValues)
+                    .withSeparator(customSeparator)
+                    .add(customSeparatorValues)
+                    .build());
+        assertNull(config.getParent());
+        assertSame(ValueDecoder.DEFAULT, config.getDecoder());
+        assertSame(ValueDecorator.DEFAULT, config.getDecorator());
+        assertFalse(config.getResolver().isPresent());
+        assertNotNull(config.getJsonObject());
+        assertFalse(config.getJsonObject().isEmpty());
+        assertEquals(customSeparator, config.getPropertySeparator());
+        assertTrue(config.contains(defaultSeparatorNewKey));
+        assertEquals(defaultSeparatorValue, config.get(defaultSeparatorNewKey));
+        assertTrue(config.contains(customSeparatorKey));
+        assertEquals(customSeparatorValue, config.get(customSeparatorKey));
     }
 }
