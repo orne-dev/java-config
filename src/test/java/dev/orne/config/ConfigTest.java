@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests of {@code Config} as functional interface.
+ * Unit tests of {@link Config} default methods.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
