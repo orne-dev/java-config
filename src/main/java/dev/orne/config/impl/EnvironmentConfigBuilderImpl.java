@@ -26,25 +26,25 @@ import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
 
-import dev.orne.config.SystemConfigBuilder;
+import dev.orne.config.EnvironmentConfigBuilder;
 
 /**
- * Implementation of {@code System} properties based configuration builder.
+ * Implementation of environment variables based configuration builder.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
- * @version 1.0, 2025-05
+ * @version 1.0, 2025-07
  * @since 1.0
- * @see SystemConfigImpl
+ * @see EnvironmentConfigImpl
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
-public class SystemConfigBuilderImpl
-extends AbstractConfigBuilderImpl<SystemConfigBuilderImpl>
-implements SystemConfigBuilder<SystemConfigBuilderImpl> {
+public class EnvironmentConfigBuilderImpl
+extends AbstractConfigBuilderImpl<EnvironmentConfigBuilderImpl>
+implements EnvironmentConfigBuilder<EnvironmentConfigBuilderImpl> {
 
     /**
      * Empty constructor.
      */
-    public SystemConfigBuilderImpl() {
+    public EnvironmentConfigBuilderImpl() {
         super();
     }
 
@@ -52,7 +52,7 @@ implements SystemConfigBuilder<SystemConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull SystemConfigImpl build() {
-        return new SystemConfigImpl(this.options);
+    public @NotNull EnvironmentConfigImpl build() {
+        return new EnvironmentConfigImpl(this.options);
     }
 }

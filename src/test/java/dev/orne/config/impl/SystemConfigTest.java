@@ -43,7 +43,7 @@ import dev.orne.config.ValueDecoder;
 import dev.orne.config.ValueDecorator;
 
 /**
- * Unit tests for {@code SystemConfig}.
+ * Unit tests for {@link SystemConfigImpl}.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
@@ -69,6 +69,9 @@ extends AbstractConfigTest {
         System.clearProperty(TEST_PARENT_DERIVED_KEY);
     }
 
+    /**
+     * {@{inheritDoc}
+     */
     @Override
     protected ConfigBuilder<?> createBuilder(
             final @NotNull Map<String, String> properties) {
@@ -78,7 +81,8 @@ extends AbstractConfigTest {
 
     /**
      * Test method for {@link SystemConfigImpl#getSystemProperties()} when
-     * {@code SecurityException} is thrown by {@code System.getProperty()}.
+     * {@code SecurityException} is thrown by {@code System.getProperties()}
+     * and {@code System.getProperty()}.
      */
     @Test
     @DisabledForJreRange(min = JRE.JAVA_17)
@@ -97,7 +101,7 @@ extends AbstractConfigTest {
             public void checkPermission(Permission perm) {
                 if (!"setSecurityManager".equals(perm.getName())) {
                     super.checkPermission(perm);
-                } 
+                }
             }
             
         };

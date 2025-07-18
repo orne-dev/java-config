@@ -40,6 +40,9 @@
     - `dev.orne.config.MutableConfigBuilder` interface.
 - Add variable resolution support.
     - Add `dev.orne.config.ConfigBuilder.withVariableResolution()` method.
+- Add fluent configuration API for environment variables based configuration.
+    - `dev.orne.config.EnvironmentConfigBuilder` interface.
+    - Add `dev.orne.config.ConfigBuilder.fromEnvironmentVariables()` method.
 - Add fluent configuration API for System properties based configuration.
     - `dev.orne.config.SystemConfigBuilder` interface.
     - Add `dev.orne.config.ConfigBuilder.fromSystemProperties()` method.

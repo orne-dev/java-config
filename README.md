@@ -20,6 +20,7 @@ The library provides the following features (unchecked features are planned and
 unimplemented):
 
 - [x] Simple usage API
+- [x] Environment variables based configuration provider
 - [x] System properties based configuration provider
 - [x] Java `Properties` based configuration provider
 - [x] Java `Preferences` based configuration provider

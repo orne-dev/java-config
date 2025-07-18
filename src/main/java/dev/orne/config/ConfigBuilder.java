@@ -27,6 +27,7 @@ import javax.validation.constraints.NotNull;
 import org.apiguardian.api.API;
 
 import dev.orne.config.impl.CommonsConfigBuilderImpl;
+import dev.orne.config.impl.EnvironmentConfigBuilderImpl;
 import dev.orne.config.impl.JsonConfigBuilderImpl;
 import dev.orne.config.impl.PreferencesConfigBuilderImpl;
 import dev.orne.config.impl.PropertiesConfigBuilderImpl;
@@ -44,6 +45,15 @@ import dev.orne.config.impl.YamlConfigBuilderImpl;
  */
 @API(status = API.Status.STABLE, since = "1.0")
 public interface ConfigBuilder<S extends ConfigBuilder<S>> {
+
+    /**
+     * Creates a new environment variables based configuration builder.
+     * 
+     * @return The configuration builder.
+     */
+    static @NotNull EnvironmentConfigBuilder<?> fromEnvironmentVariables() {
+        return new EnvironmentConfigBuilderImpl();
+    }
 
     /**
      * Creates a new system properties based configuration builder.

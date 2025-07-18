@@ -24,7 +24,6 @@ package dev.orne.config.impl;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
-import static org.mockito.Mockito.mock;
 
 import java.nio.charset.StandardCharsets;
 import java.util.NoSuchElementException;
