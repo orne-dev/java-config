@@ -82,9 +82,7 @@ class AbstractConfigCryptoEngineTest {
                 });
         try {
             final AbstractConfigCryptoEngine engine = spy(AbstractConfigCryptoEngine.class);
-            assertThrows(ConfigCryptoProviderException.class, () -> {
-                engine.createSecureRandom();
-            });
+            assertThrows(ConfigCryptoProviderException.class, engine::createSecureRandom);
         } finally {
             AccessController.doPrivileged(
                     new PrivilegedAction<Void>() {

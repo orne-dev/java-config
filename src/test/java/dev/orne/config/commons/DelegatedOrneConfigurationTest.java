@@ -99,9 +99,9 @@ class DelegatedOrneConfigurationTest {
         final ConfigException mockException = new ConfigException("mock");
         willThrow(mockException).given(delegated).isEmpty();
         
-        final ConfigurationRuntimeException result = assertThrows(ConfigurationRuntimeException.class, () -> {
-            config.isEmpty();
-        });
+        final ConfigurationRuntimeException result = assertThrows(
+                ConfigurationRuntimeException.class,
+                config::isEmpty);
         assertSame(mockException, result.getCause());
         
         then(delegated).should(times(1)).isEmpty();
@@ -141,9 +141,9 @@ class DelegatedOrneConfigurationTest {
         final ConfigException mockException = new ConfigException("mock");
         willThrow(mockException).given(delegated).getKeys();
         
-        final ConfigurationRuntimeException result = assertThrows(ConfigurationRuntimeException.class, () -> {
-            config.getKeys();
-        });
+        final ConfigurationRuntimeException result = assertThrows(
+                ConfigurationRuntimeException.class,
+                config::getKeys);
         assertSame(mockException, result.getCause());
         
         then(delegated).should(times(1)).getKeys();

@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -45,6 +46,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import dev.orne.config.ConfigBuilder;
+import dev.orne.config.JsonConfigBuilder;
 import dev.orne.config.ValueDecoder;
 import dev.orne.config.ValueDecorator;
 
@@ -178,12 +180,6 @@ extends AbstractConfigTest {
      */
     @Test
     void testResourceBuilder() {
-        assertThrows(NullPointerException.class, () -> {
-            ConfigBuilder.fromJsonFiles()
-                .load((String) null)
-                .build();
-        });
-
         final JsonConfigImpl config = assertInstanceOf(
                 JsonConfigImpl.class,
                 ConfigBuilder.fromJsonFiles()
@@ -205,6 +201,15 @@ extends AbstractConfigTest {
         assertNull(config.get(TEST_FILE_KEY));
         assertFalse(config.contains(TEST_URL_KEY));
         assertNull(config.get(TEST_URL_KEY));
+    }
+
+    /**
+     * Tests instance building from null ClassPath resources.
+     */
+    @Test
+    void testNullResourceBuilder() {
+        final JsonConfigBuilder<?> builder = ConfigBuilder.fromJsonFiles();
+        assertThrows(NullPointerException.class, () -> builder.load((String) null));
     }
 
     /**
@@ -231,12 +236,6 @@ extends AbstractConfigTest {
      */
     @Test
     void testFileBuilder() {
-        assertThrows(NullPointerException.class, () -> {
-            ConfigBuilder.fromJsonFiles()
-                .load((File) null)
-                .build();
-        });
-
         final JsonConfigImpl config = assertInstanceOf(
                 JsonConfigImpl.class,
                 ConfigBuilder.fromJsonFiles()
@@ -258,6 +257,15 @@ extends AbstractConfigTest {
         assertEquals(TEST_FILE_TYPE, config.get(TEST_FILE_KEY));
         assertFalse(config.contains(TEST_URL_KEY));
         assertNull(config.get(TEST_URL_KEY));
+    }
+
+    /**
+     * Tests instance building from null file.
+     */
+    @Test
+    void testNullFileBuilder() {
+        final JsonConfigBuilder<?> builder = ConfigBuilder.fromJsonFiles();
+        assertThrows(NullPointerException.class, () -> builder.load((File) null));
     }
 
     /**
@@ -284,12 +292,6 @@ extends AbstractConfigTest {
      */
     @Test
     void testPathBuilder() {
-        assertThrows(NullPointerException.class, () -> {
-            ConfigBuilder.fromJsonFiles()
-                .load((Path) null)
-                .build();
-        });
-
         final JsonConfigImpl config = assertInstanceOf(
                 JsonConfigImpl.class,
                 ConfigBuilder.fromJsonFiles()
@@ -311,6 +313,15 @@ extends AbstractConfigTest {
         assertEquals(TEST_FILE_TYPE, config.get(TEST_FILE_KEY));
         assertFalse(config.contains(TEST_URL_KEY));
         assertNull(config.get(TEST_URL_KEY));
+    }
+
+    /**
+     * Tests instance building from null path.
+     */
+    @Test
+    void testNullPathBuilder() {
+        final JsonConfigBuilder<?> builder = ConfigBuilder.fromJsonFiles();
+        assertThrows(NullPointerException.class, () -> builder.load((Path) null));
     }
 
     /**
@@ -337,12 +348,6 @@ extends AbstractConfigTest {
      */
     @Test
     void testUrlBuilder() {
-        assertThrows(NullPointerException.class, () -> {
-            ConfigBuilder.fromJsonFiles()
-                .load((URL) null)
-                .build();
-        });
-        
         final JsonConfigImpl config = assertInstanceOf(
                 JsonConfigImpl.class,
                 ConfigBuilder.fromJsonFiles()
@@ -367,14 +372,28 @@ extends AbstractConfigTest {
     }
 
     /**
+     * Tests instance building from null URL.
+     */
+    @Test
+    void testNullUrlBuilder() {
+        final JsonConfigBuilder<?> builder = ConfigBuilder.fromJsonFiles();
+        assertThrows(NullPointerException.class, () -> builder.load((URL) null));
+    }
+
+    /**
      * Tests instance building from missing URL.
      */
     @Test
     void testMissingUrlBuilder() throws IOException {
+        final URL missingUrl = URI
+                .create(
+                    testUrl.toString()
+                        .replace("test.url", "non.existent"))
+                .toURL();
         final JsonConfigImpl config = assertInstanceOf(
                 JsonConfigImpl.class,
                 ConfigBuilder.fromJsonFiles()
-                    .load(new URL(testUrl.toString().replace("test.url", "non.existent")))
+                    .load(missingUrl)
                     .build());
         assertNull(config.getParent());
         assertSame(ValueDecoder.DEFAULT, config.getDecoder());

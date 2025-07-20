@@ -422,9 +422,7 @@ class ConfigCryptoAesGcmEngineTest {
         assertThrows(IllegalStateException.class, () -> {
             engine.createSecretKey(password);
         });
-        assertThrows(IllegalStateException.class, () -> {
-            engine.createCipher();
-        });
+        assertThrows(IllegalStateException.class, engine::createCipher);
         assertThrows(IllegalStateException.class, () -> {
             engine.decrypt(encryptedText, key, cipher);
         });

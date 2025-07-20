@@ -63,7 +63,7 @@ class ConfigurerImplNestedBeansTest {
      * null nested beans.
      */
     @Test
-    public void testConfigureNullNestedBeans() {
+    void testConfigureNullNestedBeans() {
         final ConfigurerImpl configurer = spy(assertInstanceOf(
                 ConfigurerImpl.class,
                 Configurer.fromProvider(configProvider)));
@@ -79,7 +79,7 @@ class ConfigurerImplNestedBeansTest {
      * unconfigured nested beans.
      */
     @Test
-    public void testConfigureNestedBeansUnconfigured() {
+    void testConfigureNestedBeansUnconfigured() {
         final Configurable nestedBean1 = mock(Configurable.class, "bean1");
         final Configurable nestedBean2 = mock(Configurable.class, "bean2");
         final ConfigurerImpl configurer = spy(assertInstanceOf(
@@ -105,7 +105,7 @@ class ConfigurerImplNestedBeansTest {
      * configured nested beans.
      */
     @Test
-    public void testConfigureNestedBeansConfigured() {
+    void testConfigureNestedBeansConfigured() {
         final Configurable nestedBean1 = mock(Configurable.class, "bean1");
         final Configurable nestedBean2 = mock(Configurable.class, "bean2");
         final ConfigurerImpl configurer = spy(assertInstanceOf(
@@ -131,7 +131,7 @@ class ConfigurerImplNestedBeansTest {
      * mixed nested beans.
      */
     @Test
-    public void testConfigureNestedBeansMixed() {
+    void testConfigureNestedBeansMixed() {
         final Configurable nestedBean1 = mock(Configurable.class, "bean1");
         final Configurable nestedBean2 = mock(Configurable.class, "bean2");
         final ConfigurerImpl configurer = spy(assertInstanceOf(
