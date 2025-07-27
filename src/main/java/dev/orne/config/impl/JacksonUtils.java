@@ -47,10 +47,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public final class JacksonUtils {
 
     /** The JSON node factory. */
-    public static final JsonNodeFactory NODE_FACTORY =
+    static final JsonNodeFactory NODE_FACTORY =
             new JsonNodeFactory(false);
     /** JSON pointer segments separator as string. */
-    protected static final String POINTER_SEPARATOR = String.valueOf(JsonPointer.SEPARATOR);
+    static final String POINTER_SEPARATOR = String.valueOf(JsonPointer.SEPARATOR);
 
     /**
      * Private constructor to prevent instantiation of this utility class.
@@ -67,7 +67,7 @@ public final class JacksonUtils {
      * @param separator The properties separator to use.
      * @return The JSON pointer expression.
      */
-    public static @NotNull JsonPointer propertyToPointer(
+    static @NotNull JsonPointer propertyToPointer(
             final @NotBlank String key,
             final @NotBlank String separator) {
         Objects.requireNonNull(key);
@@ -84,7 +84,7 @@ public final class JacksonUtils {
      * @param key The configuration key.
      * @param value The value to set.
      */
-    public static void setNodeValue(
+    static void setNodeValue(
             final @NotNull ObjectNode jsonObject,
             final @NotBlank String separator,
             final @NotBlank String key,
@@ -100,7 +100,7 @@ public final class JacksonUtils {
      * @param pointer The JSON pointer to the node.
      * @param value The value to set.
      */
-    public static void setNodeValue(
+    static void setNodeValue(
             final @NotNull ObjectNode jsonObject,
             final @NotNull JsonPointer pointer,
             final String value) {
@@ -128,7 +128,7 @@ public final class JacksonUtils {
      * @param separator The properties separator.
      * @param key The configuration key.
      */
-    public static void removeNode(
+    static void removeNode(
             final @NotNull ObjectNode jsonObject,
             final @NotBlank String separator,
             final @NotBlank String key) {
@@ -142,7 +142,7 @@ public final class JacksonUtils {
      * @param jsonObject The JSON object to modify.
      * @param pointer The JSON pointer to the node to remove.
      */
-    public static void removeNode(
+    static void removeNode(
             final @NotNull ObjectNode jsonObject,
             final @NotNull JsonPointer pointer) {
         final JsonNode parent = jsonObject.at(pointer.head());

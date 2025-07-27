@@ -25,7 +25,7 @@ unimplemented):
 - [x] Java `Properties` based configuration provider
 - [x] Java `Preferences` based configuration provider
 - [x] JSON based configuration provider
-- [ ] XML based configuration provider
+- [x] XML based configuration provider
 - [x] YAML based configuration provider
 - [x] Secure configuration values
 - [x] Fluent setup mechanism

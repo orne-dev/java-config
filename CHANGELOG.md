@@ -66,6 +66,11 @@
     - `dev.orne.config.YamlConfigBuilder` class.
     - `dev.orne.config.YamlMutableConfigBuilder` interface.
     - Add `dev.orne.config.ConfigBuilder.fromYaml()` method.
+- Add support and fluent configuration API for XML based configuration based on Jackson.
+    - `dev.orne.config.XmlConfigBaseBuilder` interface.
+    - `dev.orne.config.XmlConfigBuilder` class.
+    - `dev.orne.config.XmlMutableConfigBuilder` interface.
+    - Add `dev.orne.config.ConfigBuilder.fromXml()` method.
 - Add support and fluent configuration API for Commons Configuration 2.x based configuration.
     - `dev.orne.config.CommonsConfigBuilder` interface.
     - `dev.orne.config.CommonsConfigNodeBuilder` interface.

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <test>
+        <type>url</type>
+        <url>
+            <type>url</type>
+        </url>
+        <prop>ssss</prop>
+        <prop1>\u0000</prop1>
+    </test>
+</config>

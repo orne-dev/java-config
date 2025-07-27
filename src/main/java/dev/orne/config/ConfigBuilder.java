@@ -32,6 +32,7 @@ import dev.orne.config.impl.JsonConfigBuilderImpl;
 import dev.orne.config.impl.PreferencesConfigBuilderImpl;
 import dev.orne.config.impl.PropertiesConfigBuilderImpl;
 import dev.orne.config.impl.SystemConfigBuilderImpl;
+import dev.orne.config.impl.XmlConfigBuilderImpl;
 import dev.orne.config.impl.YamlConfigBuilderImpl;
 
 /**
@@ -89,6 +90,15 @@ public interface ConfigBuilder<S extends ConfigBuilder<S>> {
      */
     static @NotNull YamlConfigBuilder<?> fromYamlFiles() {
         return new YamlConfigBuilderImpl();
+    }
+
+    /**
+     * Creates a new XML based configuration builder.
+     * 
+     * @return The configuration builder.
+     */
+    static @NotNull XmlConfigBuilder<?> fromXmlFiles() {
+        return new XmlConfigBuilderImpl();
     }
 
     /**
