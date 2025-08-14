@@ -32,6 +32,8 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apiguardian.api.API;
 
+import dev.orne.config.impl.ConfigProxy;
+
 /**
  * Configuration properties provider.
  * 
@@ -42,6 +44,25 @@ import org.apiguardian.api.API;
  */
 @API(status = API.Status.STABLE, since = "1.0")
 public interface Config {
+
+    /**
+     * Creates a configuration proxy of the specified type.
+     * <p>
+     * The configuration proxy will delegate all method calls to the
+     * underlying configuration instance, except for the default methods
+     * defined in the specified type interface, which will be invoked directly
+     * on the interface.
+     * 
+     * @param <T> The configuration type.
+     * @param config The proxied configuration instance.
+     * @param type The configuration type interface to create a proxy for.
+     * @return The proxy of the specified configuration type.
+     */
+    static <T extends Config> T as(
+            final @NotNull Config config,
+            final @NotNull Class<T> type) {
+        return ConfigProxy.create(config, type);
+    }
 
     /**
      * Returns the parent configuration, if any.

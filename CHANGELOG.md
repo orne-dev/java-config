@@ -82,6 +82,11 @@
     - `dev.orne.config.commons.DelegatedOrneMutableConfiguration` class.
 - Add support to use `ConfigCryptoProvider` as Apache Commons Configuration 2.x `ConfigurationDecoder`.
     - `dev.orne.config.commons.DelegatedOrneConfigurationDecoder` class.
+- Add support for configuration subtypes and proxies.
+    - Add `dev.orne.config.Config.as()` method.
+    - `dev.orne.config.DelegatedConfig` class.
+    - `dev.orne.config.DelegatedMutableConfig` class.
+    - `dev.orne.config.DelegatedWatchableConfig` class.
 - Add fluent configuration API for configurable componentes management.
     - `dev.orne.config.ConfigProviderBuilder` interface.
     - Add `dev.orne.config.ConfigProvider.builder(Config)` method.
