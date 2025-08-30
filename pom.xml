@@ -35,7 +35,7 @@
   </developers>
 
   <properties>
-    <java.version>8</java.version>
+    <java.version>11</java.version>
     <java.module.name>dev.orne.config</java.module.name>
     <license.licenseName>lgpl_v3</license.licenseName>
     <license.excludes>

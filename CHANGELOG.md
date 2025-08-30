@@ -2,7 +2,8 @@
 
 ## 1.0.0 - [Unreleased]
 
-**Major API compatibility break.**
+- **Requires Java 11 or newer.**
+- **Major API compatibility break.**
 
 ### Changed
 
