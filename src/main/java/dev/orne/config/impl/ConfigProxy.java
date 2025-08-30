@@ -23,11 +23,13 @@ package dev.orne.config.impl;
  */
 
 import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
+import java.util.List;
 import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
@@ -53,6 +55,13 @@ import dev.orne.config.WatchableConfig;
 public class ConfigProxy
 implements InvocationHandler {
 
+    /** The list of classes proxied to the configuration instance. */
+    private static final List<Class<?>> PROXYED_TYPES = List.of(
+            Object.class,
+            Config.class,
+            MutableConfig.class,
+            WatchableConfig.class);
+
     /** The configuration instance. */
     private final @NotNull Config instance;
     /** The type of the extended configuration interface. */
@@ -71,7 +80,13 @@ implements InvocationHandler {
             final @NotNull Class<? extends Config> extendedType) {
         this.instance = instance;
         this.extendedType = extendedType;
-        this.lookup = MethodHandles.lookup();
+        MethodHandles.Lookup lookup;
+        try {
+            lookup = MethodHandles.privateLookupIn(extendedType, MethodHandles.lookup());
+        } catch (final IllegalAccessException e) {
+            lookup = MethodHandles.lookup();
+        }
+        this.lookup = lookup;
     }
 
     /**
@@ -84,11 +99,15 @@ implements InvocationHandler {
             final @NotNull Object[] args)
     throws Throwable {
         final Class<?> declaringClass = method.getDeclaringClass();
-        if (!Config.class.equals(declaringClass)
-                && !MutableConfig.class.equals(declaringClass)
-                && !WatchableConfig.class.equals(declaringClass)) {
+        if (!PROXYED_TYPES.contains(declaringClass)) {
             return this.lookup
-                    .unreflectSpecial(method, this.extendedType)
+                    .findSpecial(
+                            declaringClass,
+                            method.getName(),
+                            MethodType.methodType(
+                                method.getReturnType(),
+                                method.getParameterTypes()),
+                            this.extendedType)
                     .bindTo(proxy)
                     .invokeWithArguments(args);
         }
