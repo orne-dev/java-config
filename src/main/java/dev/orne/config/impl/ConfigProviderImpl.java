@@ -22,6 +22,7 @@ package dev.orne.config.impl;
  * #L%
  */
 
+import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -97,12 +98,21 @@ implements ConfigProvider {
     protected void mapConfigType(
             final @NotNull Class<?> type,
             final @NotNull Config config) {
-        if (this.mappings.putIfAbsent(type, config) == null) {
+        if (Proxy.isProxyClass(type)) {
             for (final Class<?> iface : type.getInterfaces()) {
-                mapConfigType(iface, config);
+                if (Config.class.isAssignableFrom(iface)) {
+                    mapConfigType(iface, config);
+                }
+            }
+        } else if (this.mappings.putIfAbsent(type, config) == null) {
+            for (final Class<?> iface : type.getInterfaces()) {
+                if (Config.class.isAssignableFrom(iface)) {
+                    mapConfigType(iface, config);
+                }
             }
             final Class<?> superType = type.getSuperclass();
-            if (superType != null && !Object.class.equals(superType)) {
+            if (superType != null
+                    && Config.class.isAssignableFrom(superType)) {
                 mapConfigType(superType, config);
             }
         }
