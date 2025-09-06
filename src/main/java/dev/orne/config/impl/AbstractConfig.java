@@ -193,7 +193,11 @@ implements Config {
         if (this.parent == null) {
             return getKeysInt();
         } else {
-            return Stream.concat(getKeysInt(), this.parent.getKeys());
+            try {
+                return Stream.concat(getKeysInt(), this.parent.getKeys());
+            } catch (final NonIterableConfigException e) {
+                return getKeysInt();
+            }
         }
     }
 
