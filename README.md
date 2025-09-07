@@ -32,7 +32,7 @@ unimplemented):
 - [x] Configurations hierarchy
 - [x] Apache Commons Configuration integration
 - [x] Automatic components configuration
-- [ ] Spring integration
+- [x] Spring integration
 
 ## Usage
 

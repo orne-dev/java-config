@@ -22,9 +22,12 @@
 /**
  * Spring framework support for configuration management system.
  * Provides annotations for expose configuration properties of
- * {@code Config} instances to Spring environment.
+ * {@code Config} instances to Spring environment and automatic
+ * configuration of components implementing {@code Configurable}.
  * 
  * @since 1.0
  * @see ConfigPropertySource
+ * @see EnableConfigurableComponents
+ * @see dev.orne.config.Configurable
  */
 package dev.orne.config.spring;
