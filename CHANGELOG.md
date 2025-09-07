@@ -92,6 +92,9 @@
     - `dev.orne.config.ConfigProviderBuilder` interface.
     - Add `dev.orne.config.ConfigProvider.builder(Config)` method.
     - Add `dev.orne.config.Configurer.fromProvider(ConfigProvider)` method.
+- Add support of usage of `Config` beans as `PropertySource`s on Spring applications.
+    - `dev.orne.config.spring.ConfigPropertySource` annotation.
+    - `dev.orne.config.spring.ConfigPropertySources` annotation.
 
 ### Removed
 
