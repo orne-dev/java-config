@@ -22,29 +22,30 @@ package dev.orne.config.spring;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.apiguardian.api.API;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
-import org.springframework.context.annotation.Bean;
 
 /**
- * Interface to be added to {@code @Configuration} classes to enable
- * processing of {@code @ConfigPropertySource} annotations during bean
- * factory post processing.
+ * Unit tests for {@link ConfigPropertySourcesConfigurer}.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
- * @version 1.0, 2025-08
- * @since 1.0
- * @see ConfigPropertySource
+ * @version 1.0
+ * @since 0.1
  */
-@API(status = API.Status.STABLE, since = "1.0")
-public interface ConfigPropertySourcesConfigurer {
+@Tag("ut")
+class ConfigPropertySourcesConfigurerTest {
 
-    public static final String POST_PROCESSOR = "orneConfigPropertySourcesPostProcessor";
-
-    @Bean(POST_PROCESSOR)
-    public default @NotNull BeanFactoryPostProcessor configPropertySourcesPostProcessor() {
-        return new ConfigPropertySourcePostProcessor();
+    /**
+     * Tests that {@link ConfigPropertySourcesConfigurer#configPropertySourcesPostProcessor()}
+     * creates a non-null {@link BeanFactoryPostProcessor}.
+     */
+    @Test
+    void testConfigPropertySourcesPostProcessor_createsBeanFactoryPostProcessor() {
+        final ConfigPropertySourcesConfigurer configurer = new ConfigPropertySourcesConfigurer() {};
+        final BeanFactoryPostProcessor result = configurer.configPropertySourcesPostProcessor();
+        assertNotNull(result);
     }
 }

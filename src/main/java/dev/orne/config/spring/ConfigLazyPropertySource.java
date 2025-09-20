@@ -32,6 +32,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.core.env.PropertySource;
 
 import dev.orne.config.Config;
+import dev.orne.config.ConfigException;
 
 /**
  * Spring {@code PropertySource} that uses a {@code Config} bean lazily loaded
@@ -87,6 +88,15 @@ extends PropertySource<String> {
     }
 
     /**
+     * Returns the bean factory.
+     * 
+     * @return The bean factory.
+     */
+    protected @NotNull BeanFactory getBeanFactory() {
+        return this.beanFactory;
+    }
+
+    /**
      * Gets the configuration instance.
      * <p>
      * The configuration instance is retrieved lazily from the bean factory
@@ -100,7 +110,7 @@ extends PropertySource<String> {
             try {
                 this.config = this.beanFactory.getBean(getSource(), Config.class);
             } catch (final NoSuchBeanDefinitionException e) {
-                throw new IllegalStateException(
+                throw new ConfigException(
                         "Failed to get configuration bean '" + getSource() + "' for property source '" + getName() + "'", e);
             }
         }

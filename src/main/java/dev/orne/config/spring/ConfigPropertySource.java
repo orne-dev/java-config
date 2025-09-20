@@ -73,14 +73,17 @@ import dev.orne.config.Config;
 @API(status = API.Status.STABLE, since = "1.0")
 public @interface ConfigPropertySource {
 
+    /** The prefix for the names of the property sources. */
+    public static final String SOURCE_PREFIX = "orneConfigPropertySource.";
+
     /**
-     * The type of the configuration to use as property source.
+     * The bean name of the configuration to use as property source.
      * <p>
-     * Alias for {@link #type()}.
+     * Alias for {@link #name()}.
      * 
      * @return The configuration type.
      */
-    Class<? extends Config> value() default Config.class;
+    String value() default "";
 
     /**
      * The bean name of the configuration to use as property source.
@@ -94,7 +97,7 @@ public @interface ConfigPropertySource {
      * 
      * @return The configuration type.
      */
-    Class<? extends Config> type() default Config.class;
+    Class<? extends Config> type() default Unconfigured.class;
 
     /**
      * Whether to ignore if no bean of the specified type or name is found.
@@ -107,5 +110,16 @@ public @interface ConfigPropertySource {
      * 
      * @return Whether to ignore if no matching bean is found.
      */
-    boolean ignoreConfigNotFound() default false;
+    boolean optional() default false;
+
+    /**
+     * Extension of {@link Config} used to signal that no specific configuration
+     * type has been configured.
+     * 
+     * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
+     * @version 1.0, 2025-08
+     * @since 1.0
+     */
+    @API(status = API.Status.INTERNAL, since = "1.0")
+    interface Unconfigured extends Config {}
 }

@@ -71,7 +71,7 @@ implements ImportAware, BeanFactoryAware, InitializingBean {
     public static final String POST_PROCESSOR = "orneConfigConfigurableComponentsPostProcessor";
 
     /** The bean factory. */
-    protected ListableBeanFactory beanFactorty;
+    protected ListableBeanFactory beanFactory;
     /** The annotation data for the configuration. */
     protected AnnotationAttributes annotationData;
     /** The application provided configuration provider. */
@@ -84,7 +84,11 @@ implements ImportAware, BeanFactoryAware, InitializingBean {
     public void setBeanFactory(
             final @NotNull BeanFactory beanFactory)
     throws BeansException {
-        this.beanFactorty = (ListableBeanFactory) beanFactory;
+        if (!(beanFactory instanceof ListableBeanFactory)) {
+            throw new BeanInitializationException(
+                    "@EnableConfigurableComponents requires a ListableBeanFactory");
+        }
+        this.beanFactory = (ListableBeanFactory) beanFactory;
     }
 
     /**
@@ -96,7 +100,7 @@ implements ImportAware, BeanFactoryAware, InitializingBean {
         annotationData = AnnotationAttributes.fromMap(
                 importMetadata.getAnnotationAttributes(EnableConfigurableComponents.class.getName()));
         if (annotationData == null) {
-            throw new IllegalArgumentException(
+            throw new BeanInitializationException(
                     "@EnableConfigurableComponents is not present on importing class " + importMetadata.getClassName());
         }
     }
@@ -136,7 +140,7 @@ implements ImportAware, BeanFactoryAware, InitializingBean {
                         "Annotation data is not set. Ensure that this class is used with @EnableOrneConfig.");
             }
             final Map<String, Config> configs = BeanFactoryUtils.beansOfTypeIncludingAncestors(
-                    beanFactorty,
+                    beanFactory,
                     Config.class);
             if (configs.isEmpty()) {
                 throw new BeanInitializationException(
@@ -168,7 +172,7 @@ implements ImportAware, BeanFactoryAware, InitializingBean {
                 configType = annotationData.getClass("value");
             }
             try {
-                defaultConfig = this.beanFactorty.getBean(configType);
+                defaultConfig = this.beanFactory.getBean(configType);
             } catch (final NoUniqueBeanDefinitionException e) {
                 throw new BeanInitializationException(
                         "Multiple Config beans found of type '" + configType.getName() + "'. " +

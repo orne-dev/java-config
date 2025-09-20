@@ -62,9 +62,6 @@ implements EnvironmentAware, BeanFactoryPostProcessor {
     /** The class logger. */
     private static final Logger LOG = LoggerFactory.getLogger(ConfigPropertySourcePostProcessor.class);
 
-    /** The prefix for the names of the property sources. */
-    public static final String SOURCE_PREFIX = "orneConfigPropertySource.";
-
     /** The Spring environment. */
     protected ConfigurableEnvironment environment;
 
@@ -119,7 +116,7 @@ implements EnvironmentAware, BeanFactoryPostProcessor {
      * @param annotations The {@code Configuration} bean annotation metadata
      *                    to process.
      * @throws BeanInitializationException If the configuration bean cannot be
-     *         found and {@code ignoreConfigNotFound} is {@code false}, or if
+     *         found and {@code optional} is {@code false}, or if
      *         multiple configuration beans of the specified type are found.
      */
     protected void processConfigurationBean(
@@ -137,7 +134,7 @@ implements EnvironmentAware, BeanFactoryPostProcessor {
      * @param beanFactory The bean factory to retrieve configuration beans from.
      * @param amd The {@code Configuration} bean annotation metadata to process.
      * @throws BeanInitializationException If the configuration bean cannot be
-     *         found and {@code ignoreConfigNotFound} is {@code false}, or if
+     *         found and {@code optional} is {@code false}, or if
      *         multiple configuration beans of the specified type are found.
      */
     protected void processSingleAnnotations(
@@ -159,7 +156,7 @@ implements EnvironmentAware, BeanFactoryPostProcessor {
      * @param beanFactory The bean factory to retrieve configuration beans from.
      * @param amd The {@code Configuration} bean annotation metadata to process.
      * @throws BeanInitializationException If the configuration bean cannot be
-     *         found and {@code ignoreConfigNotFound} is {@code false}, or if
+     *         found and {@code optional} is {@code false}, or if
      *         multiple configuration beans of the specified type are found.
      */
     protected void processAggregateAnnotations(
@@ -185,42 +182,51 @@ implements EnvironmentAware, BeanFactoryPostProcessor {
      * @param annotation The {@code ConfigPropertySource} annotation data
      *                   to process.
      * @throws BeanInitializationException If the configuration bean cannot be
-     *         found and {@code ignoreConfigNotFound} is {@code false}, or if
+     *         found and {@code optional} is {@code false}, or if
      *         multiple configuration beans of the specified type are found.
      */
     protected void processSource(
             final @NotNull ConfigurableListableBeanFactory beanFactory,
             final @NotNull String configurationBean,
             final @NotNull AnnotationAttributes annotation) {
-        final String configName = annotation.getString("name");
-        final boolean ignoreMissing = annotation.getBoolean("ignoreConfigNotFound");
-        Class<? extends Config> configType = annotation.getClass("type");
-        if (Config.class.equals(configType)) {
-            configType = annotation.getClass("value");
+        String configName = annotation.getString("name");
+        if (configName.isEmpty()) {
+            configName = annotation.getString("value");
         }
-        final String sourceName;
+        final boolean ignoreMissing = annotation.getBoolean("optional");
+        final Class<? extends Config> configType = annotation.getClass("type");
         final String beanName;
         if (configName.isEmpty()) {
-            if (Config.class.equals(configType)) {
+            if (ConfigPropertySource.Unconfigured.class.equals(configType)) {
                 throw new BeanInitializationException(String.format(
                         "No Config type or name specified in @ConfigPropertySource on '%s'. "
                         + "Either specify a unique Config bean name with \"name\", "
                         + "or a Config bean type with \"type\" or \"value\".",
                         configurationBean));
             }
-            sourceName = SOURCE_PREFIX + configType.getName();
             beanName = findBeanByType(beanFactory, configType, ignoreMissing);
         } else {
-            sourceName = SOURCE_PREFIX + configName;
+            if (!ConfigPropertySource.Unconfigured.class.equals(configType)) {
+                throw new BeanInitializationException(String.format(
+                        "Both Config type or name specified in @ConfigPropertySource on '%s'. "
+                        + "Either specify a unique Config bean name with \"name\", "
+                        + "or a Config bean type with \"type\" or \"value\".",
+                        configurationBean));
+            }
             beanName = validateConfigName(beanFactory, configName, ignoreMissing);
         }
         if (beanName != null) {
+            final String sourceName = ConfigPropertySource.SOURCE_PREFIX + beanName;
+            final ConfigLazyPropertySource propertySource = new ConfigLazyPropertySource(
+                    sourceName, beanFactory, beanName);
             if (this.environment.getPropertySources().contains(sourceName)) {
-                LOG.debug("Property source '{}' already exists, skipping addition.",
+                LOG.debug("Replacing '{}' property source...",
                         sourceName);
+                this.environment.getPropertySources().remove(sourceName);
+                this.environment.getPropertySources().addFirst(propertySource);
             } else {
-                final ConfigLazyPropertySource propertySource = new ConfigLazyPropertySource(
-                        sourceName, beanFactory, beanName);
+                LOG.debug("Adding '{}' property source...",
+                        sourceName);
                 this.environment.getPropertySources().addFirst(propertySource);
             }
         }
@@ -243,7 +249,7 @@ implements EnvironmentAware, BeanFactoryPostProcessor {
             final @NotNull String configName,
             final boolean ignoreMissing) {
         try {
-            final BeanDefinition configDef = beanFactory.getBeanDefinition(configName);
+            final BeanDefinition configDef = beanFactory.getMergedBeanDefinition(configName);
             final ResolvableType beanType = configDef.getResolvableType();
             if (beanType.as(Config.class) != ResolvableType.NONE) {
                 return configName;
