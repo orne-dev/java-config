@@ -1,7 +1,5 @@
 package dev.orne.config;
 
-import java.util.prefs.Preferences;
-
 /*-
  * #%L
  * Orne Config
@@ -23,6 +21,8 @@ import java.util.prefs.Preferences;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
+
+import java.util.prefs.Preferences;
 
 import javax.validation.constraints.NotNull;
 
