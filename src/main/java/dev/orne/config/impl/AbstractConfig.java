@@ -56,6 +56,8 @@ implements Config {
 
     /** The parent configuration. */
     private final Config parent;
+    /** If parent configuration property values are overridden values of this instance. */
+    private final boolean overrideParentProperties;
     /** The configuration properties values decoder. */
     private final @NotNull ValueDecoder decoder;
     /** The configuration properties values decorator. */
@@ -97,6 +99,7 @@ implements Config {
             options.setDecorator(ValueDecorator.DEFAULT);
         }
         this.parent = options.getParent();
+        this.overrideParentProperties = options.isOverrideParentProperties();
         this.decoder = options.getDecoder();
         this.decorator = options.getDecorator();
         if (getParent() instanceof WatchableConfig && this.resolver != null) {
@@ -113,6 +116,19 @@ implements Config {
     @Override
     public Config getParent() {
         return this.parent;
+    }
+
+    /**
+     * Returns {@code true} if the properties values from the parent
+     * configuration (if any) are overridden by the properties values
+     * from this instance.
+     * 
+     * @return {@code true} if the properties values from the parent
+     * configuration are overridden by the properties values from this
+     * instance.
+     */
+    public boolean isOverrideParentProperties() {
+        return this.overrideParentProperties;
     }
 
     /**
@@ -229,12 +245,20 @@ implements Config {
     public String getUndecored(
             final @NotBlank String key) {
         final String value;
-        if (containsInt(key)) {
-            value = this.decoder.decode(getInt(key));
-        } else if (this.parent != null) {
-            value = this.parent.getUndecored(key);
+        if (this.overrideParentProperties) {
+            if (containsInt(key)) {
+                value = this.decoder.decode(getInt(key));
+            } else if (this.parent != null) {
+                value = this.parent.getUndecored(key);
+            } else {
+                value = null;
+            }
         } else {
-            value = null;
+            if (this.parent != null && this.parent.contains(key)) {
+                value = this.parent.getUndecored(key);
+            } else {
+                value = this.decoder.decode(getInt(key));
+            }
         }
         return value;
     }

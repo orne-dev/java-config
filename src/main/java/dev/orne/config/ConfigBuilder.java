@@ -155,6 +155,20 @@ public interface ConfigBuilder<S extends ConfigBuilder<S>> {
     }
 
     /**
+     * Sets whether the configuration properties values from the parent
+     * configuration (if any) must be overridden by the properties values
+     * from this configuration.
+     * <p>
+     * By default, parent configuration properties values are not overridden.
+     * Thus, if a property is defined both in current configuration and in
+     * the parent configuration, the value from the parent configuration
+     * will be returned.
+     * 
+     * @return This instance, for method chaining.
+     */
+    @NotNull S withOverrideParentProperties();
+
+    /**
      * Sets the configuration properties values cryptography
      * transformations provider.
      * 

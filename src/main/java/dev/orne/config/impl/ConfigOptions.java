@@ -44,6 +44,8 @@ public class ConfigOptions {
 
     /** The parent configuration. */
     private Config parent;
+    /** If parent configuration property values are overridden values of this instance. */
+    private boolean overrideParentProperties;
     /** The cryptography transformations provider. */
     private ConfigCryptoProvider cryptoProvider;
     /** The configuration values decoder. */
@@ -69,6 +71,7 @@ public class ConfigOptions {
             final @NotNull ConfigOptions copy) {
         super();
         this.parent = copy.parent;
+        this.overrideParentProperties = copy.overrideParentProperties;
         this.cryptoProvider = copy.cryptoProvider;
         this.decoder = copy.decoder;
         this.variableResolutionEnabled = copy.variableResolutionEnabled;
@@ -92,6 +95,33 @@ public class ConfigOptions {
     public void setParent(
             final Config parent) {
         this.parent = parent;
+    }
+
+    /**
+     * Returns {@code true} if the configuration properties values from
+     * the parent configuration (if any) are overridden by the properties
+     * values from this configuration.
+     * 
+     * @return If the configuration properties values from the parent
+     * configuration are overridden by the properties values from this
+     * configuration.
+     */
+    public boolean isOverrideParentProperties() {
+        return this.overrideParentProperties;
+    }
+
+    /**
+     * Sets if the configuration properties values from the parent
+     * configuration (if any) are overridden by the properties values
+     * from this configuration.
+     * 
+     * @param override If the configuration properties
+     * values from the parent configuration are overridden by the
+     * properties values from this configuration.
+     */
+    public void setOverrideParentProperties(
+            final boolean override) {
+        this.overrideParentProperties = override;
     }
 
     /**

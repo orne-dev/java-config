@@ -790,6 +790,7 @@ class SpringConfigTest {
             return Config.as(
                     ConfigBuilder.fromPropertiesFiles()
                         .withParent(parent)
+                        .withOverrideParentProperties()
                         .add(props)
                         .build(),
                     ChildConfig.class);

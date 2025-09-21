@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
 import dev.orne.config.ConfigBuilder;
 
 /**
- * Unit tests for {@code PreferencesConfig}.
+ * Unit tests for {@link PreferencesConfigImpl}.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0

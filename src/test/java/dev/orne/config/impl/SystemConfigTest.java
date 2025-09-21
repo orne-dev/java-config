@@ -30,7 +30,7 @@ import java.util.Properties;
 
 import javax.validation.constraints.NotNull;
 
-import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledForJreRange;
@@ -61,8 +61,8 @@ extends AbstractConfigTest {
      * Restores the original value of the test property or
      * removes it if not set.
      */
-    @AfterAll
-    static void restoreSystemPropertyValue() {
+    @AfterEach
+    void restoreSystemPropertyValue() {
         System.clearProperty(TEST_KEY);
         System.clearProperty(TEST_DERIVED_KEY);
         System.clearProperty(TEST_PARENT_KEY);

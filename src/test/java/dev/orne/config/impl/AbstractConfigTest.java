@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.validation.constraints.NotNull;
 
@@ -128,7 +129,9 @@ abstract class AbstractConfigTest {
      */
     @Test
     void testParent() {
-        final AbstractConfig config = assertInstanceOf(AbstractConfig.class, createBuilder()
+        final Map<String, String> properties = new HashMap<>();
+        properties.put(TEST_KEY, "testValue");
+        final AbstractConfig config = assertInstanceOf(AbstractConfig.class, createBuilder(properties)
                 .withParent(mockParent)
                 .build());
         assertSame(mockParent, config.getParent());
@@ -136,9 +139,11 @@ abstract class AbstractConfigTest {
         assertSame(ValueDecorator.DEFAULT, config.getDecorator());
         assertFalse(config.getResolver().isPresent());
         given(mockParent.isEmpty()).willReturn(false);
-        given(mockParent.getKeys()).will(mock -> Arrays.asList(TEST_PARENT_KEY).stream());
+        given(mockParent.getKeys()).will(mock -> Stream.of(TEST_PARENT_KEY, TEST_KEY));
         given(mockParent.contains(TEST_PARENT_KEY)).willReturn(true);
         given(mockParent.getUndecored(TEST_PARENT_KEY)).willReturn("testParentValue");
+        given(mockParent.contains(TEST_KEY)).willReturn(true);
+        given(mockParent.getUndecored(TEST_KEY)).willReturn("testParentValue");
         if (isIterable()) {
             assertFalse(config.isEmpty());
             assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
@@ -151,6 +156,11 @@ abstract class AbstractConfigTest {
         assertNull(config.getInt(TEST_PARENT_KEY));
         assertEquals("testParentValue", config.getUndecored(TEST_PARENT_KEY));
         assertEquals("testParentValue", config.get(TEST_PARENT_KEY));
+        assertTrue(config.containsInt(TEST_KEY));
+        assertTrue(config.contains(TEST_KEY));
+        assertEquals("testValue", config.getInt(TEST_KEY));
+        assertEquals("testParentValue", config.getUndecored(TEST_KEY));
+        assertEquals("testParentValue", config.get(TEST_KEY));
     }
 
     /**
@@ -158,9 +168,11 @@ abstract class AbstractConfigTest {
      */
     @Test
     void testParentBuilder() {
+        final Map<String, String> properties = new HashMap<>();
+        properties.put(TEST_KEY, "testValue");
         final ConfigBuilder<?> parentBuilder = mock(ConfigBuilder.class);
         given(parentBuilder.build()).willReturn(mockParent);
-        final AbstractConfig config = assertInstanceOf(AbstractConfig.class, createBuilder()
+        final AbstractConfig config = assertInstanceOf(AbstractConfig.class, createBuilder(properties)
                 .withParent(parentBuilder)
                 .build());
         assertSame(mockParent, config.getParent());
@@ -168,9 +180,11 @@ abstract class AbstractConfigTest {
         assertSame(ValueDecorator.DEFAULT, config.getDecorator());
         assertFalse(config.getResolver().isPresent());
         given(mockParent.isEmpty()).willReturn(false);
-        given(mockParent.getKeys()).will(mock -> Arrays.asList(TEST_PARENT_KEY).stream());
+        given(mockParent.getKeys()).will(mock -> Stream.of(TEST_PARENT_KEY, TEST_KEY));
         given(mockParent.contains(TEST_PARENT_KEY)).willReturn(true);
         given(mockParent.getUndecored(TEST_PARENT_KEY)).willReturn("testParentValue");
+        given(mockParent.contains(TEST_KEY)).willReturn(true);
+        given(mockParent.getUndecored(TEST_KEY)).willReturn("testParentValue");
         if (isIterable()) {
             assertFalse(config.isEmpty());
             assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
@@ -183,6 +197,11 @@ abstract class AbstractConfigTest {
         assertNull(config.getInt(TEST_PARENT_KEY));
         assertEquals("testParentValue", config.getUndecored(TEST_PARENT_KEY));
         assertEquals("testParentValue", config.get(TEST_PARENT_KEY));
+        assertTrue(config.containsInt(TEST_KEY));
+        assertTrue(config.contains(TEST_KEY));
+        assertEquals("testValue", config.getInt(TEST_KEY));
+        assertEquals("testParentValue", config.getUndecored(TEST_KEY));
+        assertEquals("testParentValue", config.get(TEST_KEY));
     }
 
     /**
@@ -203,6 +222,8 @@ abstract class AbstractConfigTest {
         given(mockParent.getKeys()).willThrow(new NonIterableConfigException());
         given(mockParent.contains(TEST_PARENT_KEY)).willReturn(true);
         given(mockParent.getUndecored(TEST_PARENT_KEY)).willReturn("testParentValue");
+        given(mockParent.contains(TEST_KEY)).willReturn(true);
+        given(mockParent.getUndecored(TEST_KEY)).willReturn("testParentValue");
         if (isIterable()) {
             assertFalse(config.isEmptyInt());
             assertFalse(config.isEmpty());
@@ -211,6 +232,46 @@ abstract class AbstractConfigTest {
             assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
             assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
             assertFalse(config.getKeys().collect(Collectors.toSet()).contains(TEST_PARENT_KEY));
+        } else {
+            assertThrows(NonIterableConfigException.class, config::getKeysInt);
+        }
+        assertFalse(config.containsInt(TEST_PARENT_KEY));
+        assertTrue(config.contains(TEST_PARENT_KEY));
+        assertNull(config.getInt(TEST_PARENT_KEY));
+        assertEquals("testParentValue", config.getUndecored(TEST_PARENT_KEY));
+        assertEquals("testParentValue", config.get(TEST_PARENT_KEY));
+        assertTrue(config.containsInt(TEST_KEY));
+        assertTrue(config.contains(TEST_KEY));
+        assertEquals("testValue", config.getInt(TEST_KEY));
+        assertEquals("testParentValue", config.getUndecored(TEST_KEY));
+        assertEquals("testParentValue", config.get(TEST_KEY));
+    }
+
+    /**
+     * Tests instance building with parent and parent properties override.
+     */
+    @Test
+    void testParentOverrideProperties() {
+        final Map<String, String> properties = new HashMap<>();
+        properties.put(TEST_KEY, "testValue");
+        final AbstractConfig config = assertInstanceOf(AbstractConfig.class, createBuilder(properties)
+                .withParent(mockParent)
+                .withOverrideParentProperties()
+                .build());
+        assertSame(mockParent, config.getParent());
+        assertSame(ValueDecoder.DEFAULT, config.getDecoder());
+        assertSame(ValueDecorator.DEFAULT, config.getDecorator());
+        assertFalse(config.getResolver().isPresent());
+        given(mockParent.isEmpty()).willReturn(false);
+        given(mockParent.getKeys()).will(mock -> Stream.of(TEST_PARENT_KEY, TEST_KEY));
+        given(mockParent.contains(TEST_PARENT_KEY)).willReturn(true);
+        given(mockParent.getUndecored(TEST_PARENT_KEY)).willReturn("testParentValue");
+        given(mockParent.contains(TEST_KEY)).willReturn(true);
+        given(mockParent.getUndecored(TEST_KEY)).willReturn("testParentValue");
+        if (isIterable()) {
+            assertFalse(config.isEmpty());
+            assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
+            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
         } else {
             assertThrows(NonIterableConfigException.class, config::getKeysInt);
         }
@@ -267,7 +328,7 @@ abstract class AbstractConfigTest {
         final HashMap<String, String> properties = new HashMap<>();
         properties.put(TEST_KEY, "testValue");
         given(mockParent.isEmpty()).willReturn(false);
-        given(mockParent.getKeys()).will(mock -> Arrays.asList(TEST_PARENT_KEY).stream());
+        given(mockParent.getKeys()).will(mock -> Stream.of(TEST_PARENT_KEY));
         given(mockParent.contains(TEST_PARENT_KEY)).willReturn(true);
         given(mockParent.getUndecored(TEST_PARENT_KEY)).willReturn("testParentValue");
         final ValueDecoder decoder = s -> "Decoded: " + s;

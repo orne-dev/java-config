@@ -81,6 +81,15 @@ implements ConfigBuilder<S> {
      * {@inheritDoc}
      */
     @Override
+    public @NotNull S withOverrideParentProperties() {
+        this.options.setOverrideParentProperties(true);
+        return thisBuilder();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public @NotNull S withEncryption(
             final ConfigCryptoProvider provider) {
         this.options.setCryptoProvider(provider);
