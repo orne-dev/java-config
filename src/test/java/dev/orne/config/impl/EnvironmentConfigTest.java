@@ -31,8 +31,6 @@ import javax.validation.constraints.NotNull;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledForJreRange;
-import org.junit.jupiter.api.condition.JRE;
 import org.mockito.Mock;
 
 import dev.orne.config.ConfigBuilder;
@@ -72,7 +70,6 @@ extends AbstractConfigTest {
      * real result.
      */
     @Test
-    @DisabledForJreRange(min = JRE.JAVA_17)
     void testGetEnvironmentVariables() {
         final EnvironmentConfigImpl config = assertInstanceOf(
                 EnvironmentConfigImpl.class,

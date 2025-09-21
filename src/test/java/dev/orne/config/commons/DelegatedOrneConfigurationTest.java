@@ -188,6 +188,23 @@ class DelegatedOrneConfigurationTest {
     }
 
     /**
+     * Test method for {@link DelegatedOrneConfiguration#containsValue(Object)}.
+     * @throws ConfigException Shouldn't happen
+     */
+    @Test
+    void testContainsValue() throws ConfigException {
+        final Config delegated = mock(Config.class);
+        final DelegatedOrneConfiguration config = new DelegatedOrneConfiguration(delegated);
+        
+        final String value = "mock value";
+        given(delegated.getKeys()).willAnswer(invocation -> Stream.of(TEST_KEY));
+        given(delegated.get(TEST_KEY)).willReturn(value);
+        
+        assertTrue(config.containsValue(value));
+        assertFalse(config.containsValue("missing value"));
+    }
+
+    /**
      * Test method for {@link DelegatedOrneConfiguration#getProperty(String)}.
      * @throws ConfigException Shouldn't happen
      */

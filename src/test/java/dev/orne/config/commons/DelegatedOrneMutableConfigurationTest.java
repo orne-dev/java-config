@@ -24,7 +24,6 @@ package dev.orne.config.commons;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
-import static org.mockito.Mockito.mock;
 
 import java.util.Iterator;
 import java.util.stream.Stream;
@@ -228,7 +227,7 @@ class DelegatedOrneMutableConfigurationTest {
         final MutableConfig delegated = mock(MutableConfig.class);
         final DelegatedOrneMutableConfiguration config = new DelegatedOrneMutableConfiguration(delegated);
         
-        final String value = "Mock vauue";
+        final String value = "mockValue";
         config.addProperty(TEST_KEY, value);
         
         then(delegated).should(times(1)).set(TEST_KEY, value);

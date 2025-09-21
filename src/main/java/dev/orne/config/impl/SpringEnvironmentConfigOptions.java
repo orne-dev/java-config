@@ -41,7 +41,7 @@ public class SpringEnvironmentConfigOptions {
     /** The Spring environment. */
     private @NotNull Environment environment;
     /** If the configuration instance must support property keys iteration. */
-    private boolean iterableKeys = false;
+    private boolean iterableKeys;
 
     /**
      * Empty constructor.

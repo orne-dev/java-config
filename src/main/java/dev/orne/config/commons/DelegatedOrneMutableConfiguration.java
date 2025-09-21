@@ -69,7 +69,7 @@ extends DelegatedOrneConfiguration {
             final String key,
             final Object value) {
         try {
-            getConfig().set(key, value == null ? null : String.valueOf(value));
+            getConfig().set(key, String.valueOf(value));
         } catch (final ConfigException ce) {
             throw new ConfigurationRuntimeException(ce);
         }
