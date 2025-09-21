@@ -31,7 +31,6 @@ import javax.validation.constraints.NotNull;
 import org.apiguardian.api.API;
 
 import dev.orne.config.Config;
-import dev.orne.config.ConfigException;
 
 /**
  * Implementation of {@code Config} based on the environment variables.
@@ -95,16 +94,9 @@ extends AbstractConfig {
      * Returns the environment variables.
      * 
      * @return The environment variables.
-     * @throws ConfigException If a security manager exists and its
-     * {@code checkPermission} method doesn't allow access to the
-     * process environment.
      * @see System#getenv()
      */
     protected @NotNull Map<String, String> getEnvironmentVariables() {
-        try {
-            return System.getenv();
-        } catch (final SecurityException e) {
-            throw new ConfigException("Cannot access environment variables", e);
-        }
+        return System.getenv();
     }
 }

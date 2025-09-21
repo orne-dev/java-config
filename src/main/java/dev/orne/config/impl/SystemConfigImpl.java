@@ -1,7 +1,5 @@
 package dev.orne.config.impl;
 
-import java.util.Properties;
-
 /*-
  * #%L
  * Orne Config
@@ -24,6 +22,7 @@ import java.util.Properties;
  * #L%
  */
 
+import java.util.Properties;
 import java.util.stream.Stream;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -31,7 +30,6 @@ import javax.validation.constraints.NotNull;
 import org.apiguardian.api.API;
 
 import dev.orne.config.Config;
-import dev.orne.config.ConfigException;
 
 /**
  * Implementation of {@code Config} based on the system properties.
@@ -95,16 +93,9 @@ extends AbstractConfig {
      * Returns system properties.
      * 
      * @return The system properties
-     * @throws ConfigException If a security manager exists and its
-     * {@code checkPropertyAccess} method doesn't allow access to the
-     * system properties.
      * @see System#getProperties()
      */
     protected Properties getSystemProperties() {
-        try {
-            return System.getProperties();
-        } catch (final SecurityException e) {
-            throw new ConfigException("Cannot access system properties", e);
-        }
+        return System.getProperties();
     }
 }

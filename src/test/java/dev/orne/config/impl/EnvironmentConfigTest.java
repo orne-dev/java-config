@@ -24,7 +24,6 @@ package dev.orne.config.impl;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.security.Permission;
 import java.util.Collections;
 import java.util.Map;
 
@@ -37,7 +36,6 @@ import org.junit.jupiter.api.condition.JRE;
 import org.mockito.Mock;
 
 import dev.orne.config.ConfigBuilder;
-import dev.orne.config.ConfigException;
 import dev.orne.config.ValueDecoder;
 import dev.orne.config.ValueDecorator;
 
@@ -81,39 +79,6 @@ extends AbstractConfigTest {
                 ConfigBuilder.fromEnvironmentVariables()
                     .build());
         assertSame(System.getenv(), config.getEnvironmentVariables());
-    }
-
-    /**
-     * Test method for {@link EnvironmentConfigImpl#getEnvironmentVariables()} when
-     * {@code SecurityException} is thrown by {@code System.getenv()} and
-     * {@code System.getenv(String)}.
-     */
-    @Test
-    @DisabledForJreRange(min = JRE.JAVA_17)
-    void testGetEnvironmentVariablesSecurityException() {
-        final EnvironmentConfigImpl config = assertInstanceOf(
-                EnvironmentConfigImpl.class,
-                ConfigBuilder.fromEnvironmentVariables()
-                    .build());
-        assertSame(System.getenv(), config.getEnvironmentVariables());
-        final SecurityManager sm = new SecurityManager() {
-            @Override
-            public void checkPermission(Permission perm) {
-                if (perm.getName().startsWith("getenv.")) {
-                    
-                    throw new SecurityException("Mock exception");
-                } else if (!"setSecurityManager".equals(perm.getName())) {
-                    super.checkPermission(perm);
-                } 
-            }
-            
-        };
-        try {
-            System.setSecurityManager(sm);
-            assertThrows(ConfigException.class, config::getEnvironmentVariables);
-        } finally {
-            System.setSecurityManager(null);
-        }
     }
 
     /**
