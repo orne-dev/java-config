@@ -1,5 +1,27 @@
 package dev.orne.config.impl;
 
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/lgpl-3.0.html>.
+ * #L%
+ */
+
 import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
@@ -11,6 +33,7 @@ import java.util.stream.Stream;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.xml.XMLConstants;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -125,7 +148,7 @@ public final class XmlUtils {
         final NamedNodeMap attributes = element.getAttributes();
         final Stream<String> attrKeys = IntStream.range(0, attributes.getLength())
                 .mapToObj(attributes::item)
-                .filter(node -> node instanceof Attr)
+                .filter(Attr.class::isInstance)
                 .map(node -> childPrefix + attributePrefix + node.getLocalName());
         final NodeList children = element.getChildNodes();
         final Stream<String> childKeys = IntStream.range(0, children.getLength())
@@ -468,10 +491,19 @@ public final class XmlUtils {
         return Pair.of(parts.subList(0, parts.size() - 1), leaf);
     }
 
+    /**
+     * Converts the given XML document to its string representation.
+     * 
+     * @param document The XML document to convert.
+     * @return The string representation of the XML document.
+     * @throws ConfigException If an error occurs during the transformation.
+     */
     static @NotNull String getXml(
             final @NotNull Document document) {
         try {
-            final Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            final TransformerFactory factory = TransformerFactory.newInstance();
+            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            final Transformer transformer = factory.newTransformer();
             final DOMSource source = new DOMSource(document);
             final StringWriter writer = new StringWriter();
             transformer.transform(source, new StreamResult(writer));

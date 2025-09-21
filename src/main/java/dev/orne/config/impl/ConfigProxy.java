@@ -80,13 +80,13 @@ implements InvocationHandler {
             final @NotNull Class<? extends Config> extendedType) {
         this.instance = instance;
         this.extendedType = extendedType;
-        MethodHandles.Lookup lookup;
+        MethodHandles.Lookup lookupInstance;
         try {
-            lookup = MethodHandles.privateLookupIn(extendedType, MethodHandles.lookup());
+            lookupInstance = MethodHandles.privateLookupIn(extendedType, MethodHandles.lookup());
         } catch (final IllegalAccessException e) {
-            lookup = MethodHandles.lookup();
+            lookupInstance = MethodHandles.lookup();
         }
-        this.lookup = lookup;
+        this.lookup = lookupInstance;
     }
 
     /**

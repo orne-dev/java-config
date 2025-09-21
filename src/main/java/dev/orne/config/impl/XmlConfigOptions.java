@@ -34,6 +34,7 @@ import java.util.Enumeration;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -96,6 +97,11 @@ public class XmlConfigOptions {
     public XmlConfigOptions() {
         super();
         this.factory = DocumentBuilderFactory.newInstance();
+        try {
+            this.factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        } catch (final ParserConfigurationException e) {
+            LOG.warn("Error enabling secure XML processing", e);
+        }
         try {
             this.builder = this.factory.newDocumentBuilder();
         } catch (final ParserConfigurationException e) {
