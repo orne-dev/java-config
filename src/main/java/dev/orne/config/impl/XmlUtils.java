@@ -35,6 +35,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.xml.XMLConstants;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -43,6 +44,8 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apiguardian.api.API;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -62,6 +65,29 @@ import dev.orne.config.ConfigException;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public final class XmlUtils {
+
+    /** The class logger. */
+    private static final Logger LOG = LoggerFactory.getLogger(XmlUtils.class);
+
+    /** The XML transformer factory instance. */
+    private static final TransformerFactory TRANSFORMER_FACTORY = TransformerFactory.newInstance();
+    static {
+        try {
+            TRANSFORMER_FACTORY.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        } catch (final TransformerConfigurationException e) {
+            LOG.warn("Error setting secure processing feature on XML TransformerFactory", e);
+        }
+        try {
+            TRANSFORMER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        } catch (final IllegalArgumentException e) {
+            LOG.debug("Error disabling external DTD access on XML TransformerFactory", e);
+        }
+        try {
+            TRANSFORMER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+        } catch (final IllegalArgumentException e) {
+            LOG.debug("Error disabling external stylesheet access on XML TransformerFactory", e);
+        }
+    }
 
     /**
      * Private constructor to prevent instantiation of this utility class.
@@ -501,9 +527,7 @@ public final class XmlUtils {
     static @NotNull String getXml(
             final @NotNull Document document) {
         try {
-            final TransformerFactory factory = TransformerFactory.newInstance();
-            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-            final Transformer transformer = factory.newTransformer();
+            final Transformer transformer = TRANSFORMER_FACTORY.newTransformer();
             final DOMSource source = new DOMSource(document);
             final StringWriter writer = new StringWriter();
             transformer.transform(source, new StreamResult(writer));

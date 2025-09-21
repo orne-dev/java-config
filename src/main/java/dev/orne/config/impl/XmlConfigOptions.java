@@ -64,8 +64,7 @@ import dev.orne.config.XmlConfigBaseBuilder;
 public class XmlConfigOptions {
 
     /** The class logger. */
-    private static final Logger LOG =
-            LoggerFactory.getLogger(XmlConfigOptions.class);
+    private static final Logger LOG = LoggerFactory.getLogger(XmlConfigOptions.class);
 
     /** Error message for not found resources. */
     private static final String RESOURCE_NOT_FOUND_ERR =
@@ -81,7 +80,26 @@ public class XmlConfigOptions {
             "Error mergin configuration XML documents";
 
     /** The XML document builder factory. */
-    private final @NotNull DocumentBuilderFactory factory;
+    private static final @NotNull DocumentBuilderFactory DOC_BUILDER_FACTORY;
+    static {
+        DOC_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
+        try {
+            DOC_BUILDER_FACTORY.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        } catch (final ParserConfigurationException e) {
+            LOG.warn("Error setting secure processing feature on XML DocumentBuilderFactory", e);
+        }
+        try {
+            DOC_BUILDER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        } catch (final IllegalArgumentException e) {
+            LOG.debug("Error disabling external DTD access on XML DocumentBuilderFactory", e);
+        }
+        try {
+            DOC_BUILDER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+        } catch (final IllegalArgumentException e) {
+            LOG.debug("Error disabling external stylesheet access on XML DocumentBuilderFactory", e);
+        }
+    }
+
     /** The XML document builder. */
     private final @NotNull DocumentBuilder builder;
     /** The XML document with the configuration properties. */
@@ -96,18 +114,12 @@ public class XmlConfigOptions {
      */
     public XmlConfigOptions() {
         super();
-        this.factory = DocumentBuilderFactory.newInstance();
         try {
-            this.factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        } catch (final ParserConfigurationException e) {
-            LOG.warn("Error enabling secure XML processing", e);
-        }
-        try {
-            this.builder = this.factory.newDocumentBuilder();
+            this.builder = DOC_BUILDER_FACTORY.newDocumentBuilder();
         } catch (final ParserConfigurationException e) {
             throw new ConfigException("Error creating XML document builder", e);
         }
-        this.document = this.builder.newDocument();
+        this.document = builder.newDocument();
         this.propertySeparator = XmlConfigBaseBuilder.DEFAULT_SEPARATOR;
         this.attributePrefix = XmlConfigBaseBuilder.DEFAULT_ATTRIBUTE_PREFIX;
     }
@@ -120,9 +132,16 @@ public class XmlConfigOptions {
     public XmlConfigOptions(
             final @NotNull XmlConfigOptions copy) {
         super();
-        this.factory = copy.factory;
-        this.builder = copy.builder;
-        this.document = copy.document;
+        try {
+            this.builder = DOC_BUILDER_FACTORY.newDocumentBuilder();
+        } catch (final ParserConfigurationException e) {
+            throw new ConfigException("Error creating XML document builder", e);
+        }
+        this.document = builder.newDocument();
+        if (copy.document.getDocumentElement() != null) {
+            final Node rootCopy = this.document.importNode(copy.document, true);
+            this.document.appendChild(rootCopy);
+        }
         this.propertySeparator = copy.propertySeparator;
         this.attributePrefix = copy.attributePrefix;
     }
