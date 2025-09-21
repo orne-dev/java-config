@@ -77,6 +77,10 @@
     - `dev.orne.config.CommonsConfigNodeBuilder` interface.
     - `dev.orne.config.CommonsMutableConfigBuilder` interface.
     - Add `dev.orne.config.ConfigBuilder.fromJavaPreferences()` method.
+- Add support and fluent configuration API for Spring Environment based configuration.
+    - `dev.orne.config.SpringEnvironmentConfigInitialBuilder` interface.
+    - `dev.orne.config.SpringEnvironmentConfigBuilder` interface.
+    - Add `dev.orne.config.ConfigBuilder.fromSpringEnvironment()` method.
 - Add support to use `Config` as Apache Commons Configuration 2.x `ImmutableConfiguration`.
     - `dev.orne.config.commons.DelegatedOrneConfiguration` class.
 - Add support to use `MutableConfig` as Apache Commons Configuration 2.x `Configuration`.

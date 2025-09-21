@@ -31,6 +31,7 @@ import dev.orne.config.impl.EnvironmentConfigBuilderImpl;
 import dev.orne.config.impl.JsonConfigBuilderImpl;
 import dev.orne.config.impl.PreferencesConfigBuilderImpl;
 import dev.orne.config.impl.PropertiesConfigBuilderImpl;
+import dev.orne.config.impl.SpringEnvironmentConfigBuilderImpl;
 import dev.orne.config.impl.SystemConfigBuilderImpl;
 import dev.orne.config.impl.XmlConfigBuilderImpl;
 import dev.orne.config.impl.YamlConfigBuilderImpl;
@@ -118,6 +119,16 @@ public interface ConfigBuilder<S extends ConfigBuilder<S>> {
      */
     static @NotNull CommonsConfigBuilder<?> fromApacheCommons() {
         return new CommonsConfigBuilderImpl();
+    }
+
+    /**
+     * Creates a new Spring Environment based configuration
+     * builder.
+     * 
+     * @return The configuration builder.
+     */
+    static @NotNull SpringEnvironmentConfigInitialBuilder<?> fromSpringEnvironment() {
+        return new SpringEnvironmentConfigBuilderImpl();
     }
 
     /**

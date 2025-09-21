@@ -41,6 +41,7 @@ import org.mockito.MockitoAnnotations;
 import dev.orne.config.Config;
 import dev.orne.config.ConfigBuilder;
 import dev.orne.config.ConfigCryptoProvider;
+import dev.orne.config.NonIterableConfigException;
 import dev.orne.config.ValueDecoder;
 import dev.orne.config.ValueDecorator;
 
@@ -89,6 +90,19 @@ abstract class AbstractConfigTest {
             @NotNull Map<String, String> properties);
 
     /**
+     * Indicates if the tested configuration implementation can iterate
+     * over configuration property keys.
+     * 
+     * @return {@code true} if the configuration implementation
+     *         can iterate over configuration property keys.
+     *         {@code false} otherwise.
+     * @see Config#getKeys()
+     */
+    protected boolean isIterable() {
+        return true;
+    }
+
+    /**
      * Tests empty instance building.
      */
     @Test
@@ -99,6 +113,9 @@ abstract class AbstractConfigTest {
         assertSame(ValueDecoder.DEFAULT, config.getDecoder());
         assertSame(ValueDecorator.DEFAULT, config.getDecorator());
         assertFalse(config.getResolver().isPresent());
+        if (!isIterable()) {
+            assertThrows(NonIterableConfigException.class, config::getKeysInt);
+        }
         assertFalse(config.containsInt(TEST_KEY));
         assertFalse(config.contains(TEST_KEY));
         assertNull(config.getInt(TEST_KEY));
@@ -122,14 +139,61 @@ abstract class AbstractConfigTest {
         given(mockParent.getKeys()).will(mock -> Arrays.asList(TEST_PARENT_KEY).stream());
         given(mockParent.contains(TEST_PARENT_KEY)).willReturn(true);
         given(mockParent.getUndecored(TEST_PARENT_KEY)).willReturn("testParentValue");
-        assertFalse(config.isEmpty());
-        assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
-        assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_PARENT_KEY));
+        if (isIterable()) {
+            assertFalse(config.isEmpty());
+            assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
+            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_PARENT_KEY));
+        } else {
+            assertThrows(NonIterableConfigException.class, config::getKeysInt);
+        }
         assertFalse(config.containsInt(TEST_PARENT_KEY));
         assertTrue(config.contains(TEST_PARENT_KEY));
         assertNull(config.getInt(TEST_PARENT_KEY));
         assertEquals("testParentValue", config.getUndecored(TEST_PARENT_KEY));
         assertEquals("testParentValue", config.get(TEST_PARENT_KEY));
+    }
+
+    /**
+     * Tests instance building with parent.
+     */
+    @Test
+    void testNonIterableParent() {
+        final Map<String, String> properties = new HashMap<>();
+        properties.put(TEST_KEY, "testValue");
+        final AbstractConfig config = assertInstanceOf(AbstractConfig.class, createBuilder(properties)
+                .withParent(mockParent)
+                .build());
+        assertSame(mockParent, config.getParent());
+        assertSame(ValueDecoder.DEFAULT, config.getDecoder());
+        assertSame(ValueDecorator.DEFAULT, config.getDecorator());
+        assertFalse(config.getResolver().isPresent());
+        given(mockParent.isEmpty()).willThrow(new NonIterableConfigException());
+        given(mockParent.getKeys()).willThrow(new NonIterableConfigException());
+        given(mockParent.contains(TEST_PARENT_KEY)).willReturn(true);
+        given(mockParent.getUndecored(TEST_PARENT_KEY)).willReturn("testParentValue");
+        if (isIterable()) {
+            assertFalse(config.isEmptyInt());
+            assertFalse(config.isEmpty());
+            assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
+            assertEquals(1, config.getKeysInt().collect(Collectors.toSet()).size());
+            assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_KEY));
+            assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
+            assertEquals(1, config.getKeys().collect(Collectors.toSet()).size());
+            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
+            assertFalse(config.getKeys().collect(Collectors.toSet()).contains(TEST_PARENT_KEY));
+        } else {
+            assertThrows(NonIterableConfigException.class, config::getKeysInt);
+        }
+        assertFalse(config.containsInt(TEST_PARENT_KEY));
+        assertTrue(config.contains(TEST_PARENT_KEY));
+        assertNull(config.getInt(TEST_PARENT_KEY));
+        assertEquals("testParentValue", config.getUndecored(TEST_PARENT_KEY));
+        assertEquals("testParentValue", config.get(TEST_PARENT_KEY));
+        assertTrue(config.containsInt(TEST_KEY));
+        assertTrue(config.contains(TEST_KEY));
+        assertEquals("testValue", config.getInt(TEST_KEY));
+        assertEquals("testValue", config.getUndecored(TEST_KEY));
+        assertEquals("testValue", config.get(TEST_KEY));
     }
 
     /**
@@ -148,12 +212,16 @@ abstract class AbstractConfigTest {
         assertSame(decoder, config.getDecoder());
         assertSame(ValueDecorator.DEFAULT, config.getDecorator());
         assertFalse(config.getResolver().isPresent());
-        assertFalse(config.isEmptyInt());
-        assertFalse(config.isEmpty());
-        assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
-        assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_KEY));
-        assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
-        assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
+        if (isIterable()) {
+            assertFalse(config.isEmptyInt());
+            assertFalse(config.isEmpty());
+            assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
+            assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_KEY));
+            assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
+            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
+        } else {
+            assertThrows(NonIterableConfigException.class, config::getKeysInt);
+        }
         assertTrue(config.containsInt(TEST_KEY));
         assertTrue(config.contains(TEST_KEY));
         assertEquals("testValue", config.getInt(TEST_KEY));
@@ -182,13 +250,17 @@ abstract class AbstractConfigTest {
         assertSame(decoder, config.getDecoder());
         assertSame(ValueDecorator.DEFAULT, config.getDecorator());
         assertFalse(config.getResolver().isPresent());
-        assertFalse(config.isEmptyInt());
-        assertFalse(config.isEmpty());
-        assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
-        assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_KEY));
-        assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
-        assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
-        assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_PARENT_KEY));
+        if (isIterable()) {
+            assertFalse(config.isEmptyInt());
+            assertFalse(config.isEmpty());
+            assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
+            assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_KEY));
+            assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
+            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
+            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_PARENT_KEY));
+        } else {
+            assertThrows(NonIterableConfigException.class, config::getKeysInt);
+        }
         assertTrue(config.containsInt(TEST_KEY));
         assertFalse(config.containsInt(TEST_PARENT_KEY));
         assertTrue(config.contains(TEST_KEY));
@@ -222,12 +294,16 @@ abstract class AbstractConfigTest {
         assertNotSame(ValueDecoder.DEFAULT, config.getDecoder());
         assertSame(ValueDecorator.DEFAULT, config.getDecorator());
         assertFalse(config.getResolver().isPresent());
-        assertFalse(config.isEmptyInt());
-        assertFalse(config.isEmpty());
-        assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
-        assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_KEY));
-        assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
-        assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
+        if (isIterable()) {
+            assertFalse(config.isEmptyInt());
+            assertFalse(config.isEmpty());
+            assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
+            assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_KEY));
+            assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
+            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
+        } else {
+            assertThrows(NonIterableConfigException.class, config::getKeysInt);
+        }
         assertTrue(config.containsInt(TEST_KEY));
         assertTrue(config.contains(TEST_KEY));
         assertEquals(encryptedValue, config.getInt(TEST_KEY));
@@ -259,12 +335,16 @@ abstract class AbstractConfigTest {
         assertNotSame(ValueDecoder.DEFAULT, config.getDecoder());
         assertSame(ValueDecorator.DEFAULT, config.getDecorator());
         assertFalse(config.getResolver().isPresent());
-        assertFalse(config.isEmptyInt());
-        assertFalse(config.isEmpty());
-        assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
-        assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_KEY));
-        assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
-        assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
+        if (isIterable()) {
+            assertFalse(config.isEmptyInt());
+            assertFalse(config.isEmpty());
+            assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
+            assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_KEY));
+            assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
+            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
+        } else {
+            assertThrows(NonIterableConfigException.class, config::getKeysInt);
+        }
         assertTrue(config.containsInt(TEST_KEY));
         assertTrue(config.contains(TEST_KEY));
         assertEquals(encryptedValue, config.getInt(TEST_KEY));
@@ -301,13 +381,17 @@ abstract class AbstractConfigTest {
         assertNotSame(ValueDecoder.DEFAULT, config.getDecoder());
         assertSame(ValueDecorator.DEFAULT, config.getDecorator());
         assertFalse(config.getResolver().isPresent());
-        assertFalse(config.isEmptyInt());
-        assertFalse(config.isEmpty());
-        assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
-        assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_KEY));
-        assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
-        assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
-        assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_PARENT_KEY));
+        if (isIterable()) {
+            assertFalse(config.isEmptyInt());
+            assertFalse(config.isEmpty());
+            assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
+            assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_KEY));
+            assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
+            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
+            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_PARENT_KEY));
+        } else {
+            assertThrows(NonIterableConfigException.class, config::getKeysInt);
+        }
         assertTrue(config.containsInt(TEST_KEY));
         assertFalse(config.containsInt(TEST_PARENT_KEY));
         assertTrue(config.contains(TEST_KEY));
@@ -336,12 +420,16 @@ abstract class AbstractConfigTest {
         assertSame(ValueDecoder.DEFAULT, config.getDecoder());
         assertSame(decorator, config.getDecorator());
         assertFalse(config.getResolver().isPresent());
-        assertFalse(config.isEmptyInt());
-        assertFalse(config.isEmpty());
-        assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
-        assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_KEY));
-        assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
-        assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
+        if (isIterable()) {
+            assertFalse(config.isEmptyInt());
+            assertFalse(config.isEmpty());
+            assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
+            assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_KEY));
+            assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
+            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
+        } else {
+            assertThrows(NonIterableConfigException.class, config::getKeysInt);
+        }
         assertTrue(config.containsInt(TEST_KEY));
         assertTrue(config.contains(TEST_KEY));
         assertEquals("testValue", config.getInt(TEST_KEY));
@@ -370,11 +458,15 @@ abstract class AbstractConfigTest {
         assertSame(ValueDecoder.DEFAULT, config.getDecoder());
         assertSame(decorator, config.getDecorator());
         assertFalse(config.getResolver().isPresent());
-        assertFalse(config.isEmptyInt());
-        assertFalse(config.isEmpty());
-        assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
-        assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
-        assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_PARENT_KEY));
+        if (isIterable()) {
+            assertFalse(config.isEmptyInt());
+            assertFalse(config.isEmpty());
+            assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
+            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
+            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_PARENT_KEY));
+        } else {
+            assertThrows(NonIterableConfigException.class, config::getKeysInt);
+        }
         assertTrue(config.containsInt(TEST_KEY));
         assertFalse(config.containsInt(TEST_PARENT_KEY));
         assertTrue(config.contains(TEST_KEY));
@@ -403,14 +495,18 @@ abstract class AbstractConfigTest {
         assertSame(ValueDecoder.DEFAULT, config.getDecoder());
         assertNotSame(ValueDecorator.DEFAULT, config.getDecorator());
         assertTrue(config.getResolver().isPresent());
-        assertFalse(config.isEmptyInt());
-        assertFalse(config.isEmpty());
-        assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
-        assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_KEY));
-        assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_DERIVED_KEY));
-        assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
-        assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
-        assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_DERIVED_KEY));
+        if (isIterable()) {
+            assertFalse(config.isEmptyInt());
+            assertFalse(config.isEmpty());
+            assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
+            assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_KEY));
+            assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_DERIVED_KEY));
+            assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
+            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
+            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_DERIVED_KEY));
+        } else {
+            assertThrows(NonIterableConfigException.class, config::getKeysInt);
+        }
         assertTrue(config.containsInt(TEST_KEY));
         assertTrue(config.containsInt(TEST_DERIVED_KEY));
         assertTrue(config.contains(TEST_KEY));
@@ -441,14 +537,18 @@ abstract class AbstractConfigTest {
         assertSame(ValueDecoder.DEFAULT, config.getDecoder());
         assertNotSame(ValueDecorator.DEFAULT, config.getDecorator());
         assertTrue(config.getResolver().isPresent());
-        assertFalse(config.isEmptyInt());
-        assertFalse(config.isEmpty());
-        assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
-        assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_KEY));
-        assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_DERIVED_KEY));
-        assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
-        assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
-        assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_DERIVED_KEY));
+        if (isIterable()) {
+            assertFalse(config.isEmptyInt());
+            assertFalse(config.isEmpty());
+            assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
+            assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_KEY));
+            assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_DERIVED_KEY));
+            assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
+            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
+            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_DERIVED_KEY));
+        } else {
+            assertThrows(NonIterableConfigException.class, config::getKeysInt);
+        }
         assertTrue(config.containsInt(TEST_KEY));
         assertTrue(config.containsInt(TEST_DERIVED_KEY));
         assertTrue(config.contains(TEST_KEY));
@@ -484,16 +584,20 @@ abstract class AbstractConfigTest {
         assertSame(ValueDecoder.DEFAULT, config.getDecoder());
         assertNotSame(ValueDecorator.DEFAULT, config.getDecorator());
         assertTrue(config.getResolver().isPresent());
-        assertFalse(config.isEmptyInt());
-        assertFalse(config.isEmpty());
-        assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
-        assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_KEY));
-        assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_DERIVED_KEY));
-        assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
-        assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
-        assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_DERIVED_KEY));
-        assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_PARENT_KEY));
-        assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_PARENT_DERIVED_KEY));
+        if (isIterable()) {
+            assertFalse(config.isEmptyInt());
+            assertFalse(config.isEmpty());
+            assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
+            assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_KEY));
+            assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_DERIVED_KEY));
+            assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
+            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
+            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_DERIVED_KEY));
+            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_PARENT_KEY));
+            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_PARENT_DERIVED_KEY));
+        } else {
+            assertThrows(NonIterableConfigException.class, config::getKeysInt);
+        }
         assertTrue(config.containsInt(TEST_KEY));
         assertTrue(config.containsInt(TEST_DERIVED_KEY));
         assertTrue(config.contains(TEST_KEY));
