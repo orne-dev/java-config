@@ -141,6 +141,20 @@ public interface ConfigBuilder<S extends ConfigBuilder<S>> {
             Config parent);
 
     /**
+     * Sets the parent configuration.
+     * <p>
+     * This is a shortcut for {@code withParent(parent.build())}
+     * that allows less verbose configuration hierarchies building.
+     * 
+     * @param parent The parent configuration.
+     * @return This instance, for method chaining.
+     */
+    default @NotNull S withParent(
+            final @NotNull ConfigBuilder<?> parent) {
+        return withParent(parent.build());
+    }
+
+    /**
      * Sets the configuration properties values cryptography
      * transformations provider.
      * 

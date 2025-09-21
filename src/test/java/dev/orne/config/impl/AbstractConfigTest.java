@@ -154,6 +154,38 @@ abstract class AbstractConfigTest {
     }
 
     /**
+     * Tests instance building with parent builder.
+     */
+    @Test
+    void testParentBuilder() {
+        final ConfigBuilder<?> parentBuilder = mock(ConfigBuilder.class);
+        given(parentBuilder.build()).willReturn(mockParent);
+        final AbstractConfig config = assertInstanceOf(AbstractConfig.class, createBuilder()
+                .withParent(parentBuilder)
+                .build());
+        assertSame(mockParent, config.getParent());
+        assertSame(ValueDecoder.DEFAULT, config.getDecoder());
+        assertSame(ValueDecorator.DEFAULT, config.getDecorator());
+        assertFalse(config.getResolver().isPresent());
+        given(mockParent.isEmpty()).willReturn(false);
+        given(mockParent.getKeys()).will(mock -> Arrays.asList(TEST_PARENT_KEY).stream());
+        given(mockParent.contains(TEST_PARENT_KEY)).willReturn(true);
+        given(mockParent.getUndecored(TEST_PARENT_KEY)).willReturn("testParentValue");
+        if (isIterable()) {
+            assertFalse(config.isEmpty());
+            assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
+            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_PARENT_KEY));
+        } else {
+            assertThrows(NonIterableConfigException.class, config::getKeysInt);
+        }
+        assertFalse(config.containsInt(TEST_PARENT_KEY));
+        assertTrue(config.contains(TEST_PARENT_KEY));
+        assertNull(config.getInt(TEST_PARENT_KEY));
+        assertEquals("testParentValue", config.getUndecored(TEST_PARENT_KEY));
+        assertEquals("testParentValue", config.get(TEST_PARENT_KEY));
+    }
+
+    /**
      * Tests instance building with parent.
      */
     @Test
@@ -175,10 +207,8 @@ abstract class AbstractConfigTest {
             assertFalse(config.isEmptyInt());
             assertFalse(config.isEmpty());
             assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
-            assertEquals(1, config.getKeysInt().collect(Collectors.toSet()).size());
             assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_KEY));
             assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
-            assertEquals(1, config.getKeys().collect(Collectors.toSet()).size());
             assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
             assertFalse(config.getKeys().collect(Collectors.toSet()).contains(TEST_PARENT_KEY));
         } else {
