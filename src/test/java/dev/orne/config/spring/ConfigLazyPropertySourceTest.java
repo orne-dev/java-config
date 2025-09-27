@@ -132,7 +132,7 @@ class ConfigLazyPropertySourceTest {
     void testEqualsAndHashCode() {
         assertFalse(propertySource.equals(null));
         assertTrue(propertySource.equals(propertySource));
-        assertFalse(propertySource.equals(new PropertySource<>(propertySourceName, beanName) {
+        assertFalse(propertySource.equals(new PropertySource<String>(propertySourceName, beanName) {
             @Override
             public Object getProperty(String name) { return null; }
         }));
