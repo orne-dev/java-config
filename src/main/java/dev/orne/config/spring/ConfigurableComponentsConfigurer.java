@@ -196,10 +196,9 @@ implements ImportAware, BeanFactoryAware, InitializingBean {
     }
 
     /**
-     * Exposes the Spring properties placeholder configurer configured with
-     * default configuration properties.
+     * Exposes the configurable components configurer.
      * 
-     * @return The properties placeholder configurer.
+     * @return The configurable components configurer.
      */
     @Bean(name=CONFIGURER)
     public @NotNull Optional<Configurer> configurableComponentsConfigurer() {
@@ -211,10 +210,11 @@ implements ImportAware, BeanFactoryAware, InitializingBean {
     }
 
     /**
-     * Exposes the Spring properties placeholder configurer configured with
-     * default configuration properties.
+     * Exposes the Spring configurable components post-processor.
      * 
-     * @return The properties placeholder configurer.
+     * @param configurer The application provided or exposed configurer, if
+     * any.
+     * @return The configurable components post-processor.
      */
     @Bean(name=POST_PROCESSOR)
     public @NotNull ConfigurableComponentsPostProcessor configurableComponentsPostProcessor(

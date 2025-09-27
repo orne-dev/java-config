@@ -58,7 +58,7 @@ extends AbstractWatchableConfig {
      * 
      * @param options The configuration builder options.
      * @param mutableOptions The mutable configuration builder options.
-     * @param jsonOptions The JSON based configuration builder options.
+     * @param xmlOptions The XML based configuration builder options.
      */
     public XmlMutableConfigImpl(
             final @NotNull ConfigOptions options,

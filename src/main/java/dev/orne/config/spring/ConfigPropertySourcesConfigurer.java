@@ -41,8 +41,14 @@ import org.springframework.context.annotation.Bean;
 @API(status = API.Status.STABLE, since = "1.0")
 public interface ConfigPropertySourcesConfigurer {
 
+    /** The bean factory post processor Spring bean name. */
     public static final String POST_PROCESSOR = "orneConfigPropertySourcesPostProcessor";
 
+    /**
+     * Exposes the Spring {@code BeanFactory} post-processor.
+     * 
+     * @return The {@code BeanFactory} post-processor.
+     */
     @Bean(POST_PROCESSOR)
     public default @NotNull BeanFactoryPostProcessor configPropertySourcesPostProcessor() {
         return new ConfigPropertySourcePostProcessor();

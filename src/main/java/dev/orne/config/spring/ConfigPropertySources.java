@@ -52,6 +52,10 @@ import org.apiguardian.api.API;
 @API(status = API.Status.STABLE, since = "1.0")
 public @interface ConfigPropertySources {
 
-    /** The aggregated {@link ConfigPropertySource} annotations. */
+    /**
+     * The aggregated {@link ConfigPropertySource} annotations.
+     * 
+     * @return The aggregated {@link ConfigPropertySource} annotations.
+     */
     ConfigPropertySource[] value();
 }

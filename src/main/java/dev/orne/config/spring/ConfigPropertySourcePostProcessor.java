@@ -132,7 +132,8 @@ implements EnvironmentAware, BeanFactoryPostProcessor {
      * class and add the corresponding property sources to the environment.
      * 
      * @param beanFactory The bean factory to retrieve configuration beans from.
-     * @param amd The {@code Configuration} bean annotation metadata to process.
+     * @param configurationBean The name of the configuration bean.
+     * @param annotations The {@code Configuration} bean annotation metadata.
      * @throws BeanInitializationException If the configuration bean cannot be
      *         found and {@code optional} is {@code false}, or if
      *         multiple configuration beans of the specified type are found.
@@ -154,7 +155,8 @@ implements EnvironmentAware, BeanFactoryPostProcessor {
      * environment.
      * 
      * @param beanFactory The bean factory to retrieve configuration beans from.
-     * @param amd The {@code Configuration} bean annotation metadata to process.
+     * @param configurationBean The name of the configuration bean.
+     * @param annotations The {@code Configuration} bean annotation metadata.
      * @throws BeanInitializationException If the configuration bean cannot be
      *         found and {@code optional} is {@code false}, or if
      *         multiple configuration beans of the specified type are found.
@@ -179,6 +181,7 @@ implements EnvironmentAware, BeanFactoryPostProcessor {
      * corresponding property source to the environment.
      * 
      * @param beanFactory The bean factory to retrieve configuration beans from.
+     * @param configurationBean The name of the configuration bean.
      * @param annotation The {@code ConfigPropertySource} annotation data
      *                   to process.
      * @throws BeanInitializationException If the configuration bean cannot be

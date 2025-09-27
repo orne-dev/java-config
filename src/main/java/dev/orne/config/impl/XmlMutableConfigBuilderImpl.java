@@ -42,7 +42,7 @@ import dev.orne.config.XmlMutableConfigBuilder;
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-07
  * @since 1.0
- * @see YamlMutableConfigBuilder
+ * @see XmlMutableConfigBuilder
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class XmlMutableConfigBuilderImpl
