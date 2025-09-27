@@ -53,7 +53,7 @@ public interface ConfigBuilder<S extends ConfigBuilder<S>> {
      * 
      * @return The configuration builder.
      */
-    static @NotNull EnvironmentConfigBuilder<?> fromEnvironmentVariables() {
+    static @NotNull EnvironmentConfigBuilder fromEnvironmentVariables() {
         return new EnvironmentConfigBuilderImpl();
     }
 
@@ -62,7 +62,7 @@ public interface ConfigBuilder<S extends ConfigBuilder<S>> {
      * 
      * @return The configuration builder.
      */
-    static @NotNull SystemConfigBuilder<?> fromSystemProperties() {
+    static @NotNull SystemConfigBuilder fromSystemProperties() {
         return new SystemConfigBuilderImpl();
     }
 
@@ -71,7 +71,7 @@ public interface ConfigBuilder<S extends ConfigBuilder<S>> {
      * 
      * @return The configuration builder.
      */
-    static @NotNull PropertiesConfigBuilder<?> fromPropertiesFiles() {
+    static @NotNull PropertiesConfigBuilder fromPropertiesFiles() {
         return new PropertiesConfigBuilderImpl();
     }
 
@@ -80,7 +80,7 @@ public interface ConfigBuilder<S extends ConfigBuilder<S>> {
      * 
      * @return The configuration builder.
      */
-    static @NotNull JsonConfigBuilder<?> fromJsonFiles() {
+    static @NotNull JsonConfigBuilder fromJsonFiles() {
         return new JsonConfigBuilderImpl();
     }
 
@@ -89,7 +89,7 @@ public interface ConfigBuilder<S extends ConfigBuilder<S>> {
      * 
      * @return The configuration builder.
      */
-    static @NotNull YamlConfigBuilder<?> fromYamlFiles() {
+    static @NotNull YamlConfigBuilder fromYamlFiles() {
         return new YamlConfigBuilderImpl();
     }
 
@@ -98,7 +98,7 @@ public interface ConfigBuilder<S extends ConfigBuilder<S>> {
      * 
      * @return The configuration builder.
      */
-    static @NotNull XmlConfigBuilder<?> fromXmlFiles() {
+    static @NotNull XmlConfigBuilder fromXmlFiles() {
         return new XmlConfigBuilderImpl();
     }
 
@@ -107,7 +107,7 @@ public interface ConfigBuilder<S extends ConfigBuilder<S>> {
      * 
      * @return The configuration builder.
      */
-    static @NotNull PreferencesConfigNodeBuilder<?> fromJavaPreferences() {
+    static @NotNull PreferencesConfigInitialBuilder fromJavaPreferences() {
         return new PreferencesConfigBuilderImpl();
     }
 
@@ -127,7 +127,7 @@ public interface ConfigBuilder<S extends ConfigBuilder<S>> {
      * 
      * @return The configuration builder.
      */
-    static @NotNull SpringEnvironmentConfigInitialBuilder<?> fromSpringEnvironment() {
+    static @NotNull SpringEnvironmentConfigInitialBuilder fromSpringEnvironment() {
         return new SpringEnvironmentConfigBuilderImpl();
     }
 

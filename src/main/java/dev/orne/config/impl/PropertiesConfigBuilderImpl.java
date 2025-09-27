@@ -44,8 +44,8 @@ import dev.orne.config.PropertiesConfigBuilder;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class PropertiesConfigBuilderImpl
-extends AbstractConfigBuilderImpl<PropertiesConfigBuilderImpl>
-implements PropertiesConfigBuilder<PropertiesConfigBuilderImpl> {
+extends AbstractConfigBuilderImpl<PropertiesConfigBuilder>
+implements PropertiesConfigBuilder {
 
     /** The properties based configuration options. */
     protected final @NotNull PropertiesConfigOptions propertyOptions;
@@ -62,7 +62,7 @@ implements PropertiesConfigBuilder<PropertiesConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PropertiesConfigBuilderImpl add(
+    public @NotNull PropertiesConfigBuilder add(
             final @NotNull Properties values) {
         this.propertyOptions.add(values);
         return thisBuilder();
@@ -72,7 +72,7 @@ implements PropertiesConfigBuilder<PropertiesConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PropertiesConfigBuilderImpl add(
+    public @NotNull PropertiesConfigBuilder add(
             final @NotNull Map<String, String> values) {
         this.propertyOptions.add(values);
         return thisBuilder();
@@ -82,7 +82,7 @@ implements PropertiesConfigBuilder<PropertiesConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PropertiesConfigBuilderImpl load(
+    public @NotNull PropertiesConfigBuilder load(
             final @NotNull String path) {
         this.propertyOptions.load(path);
         return thisBuilder();
@@ -92,7 +92,7 @@ implements PropertiesConfigBuilder<PropertiesConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PropertiesConfigBuilderImpl load(
+    public @NotNull PropertiesConfigBuilder load(
             final @NotNull Path path) {
         this.propertyOptions.load(path);
         return thisBuilder();
@@ -102,7 +102,7 @@ implements PropertiesConfigBuilder<PropertiesConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PropertiesConfigBuilderImpl load(
+    public @NotNull PropertiesConfigBuilder load(
             final @NotNull File file) {
         this.propertyOptions.load(file);
         return thisBuilder();
@@ -112,7 +112,7 @@ implements PropertiesConfigBuilder<PropertiesConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PropertiesConfigBuilderImpl load(
+    public @NotNull PropertiesConfigBuilder load(
             final @NotNull URL url) {
         this.propertyOptions.load(url);
         return thisBuilder();

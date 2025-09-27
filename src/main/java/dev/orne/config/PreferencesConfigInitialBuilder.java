@@ -33,14 +33,12 @@ import org.apiguardian.api.API;
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-05
- * @param <S> The concrete type of the builder.
  * @since 1.0
  * @see Preferences
  * @see Config
  */
 @API(status = API.Status.STABLE, since = "1.0")
-public interface PreferencesConfigNodeBuilder<S extends PreferencesConfigNodeBuilder<S>>
-extends ConfigBuilder<S> {
+public interface PreferencesConfigInitialBuilder {
 
     /**
      * Selects the user preferences tree root node.
@@ -48,7 +46,7 @@ extends ConfigBuilder<S> {
      * @return Next builder, for method chaining.
      * @see Preferences#userRoot()
      */
-    @NotNull PreferencesConfigBuilder<?> ofUserRoot();
+    @NotNull PreferencesConfigBuilder ofUserRoot();
 
     /**
      * Selects the node with the specified path on the user preferences tree.
@@ -59,7 +57,7 @@ extends ConfigBuilder<S> {
      * @see Preferences#userRoot()
      * @see Preferences#node(String)
      */
-    @NotNull PreferencesConfigBuilder<?> ofUser(
+    @NotNull PreferencesConfigBuilder ofUser(
             final @NotNull String path);
 
     /**
@@ -70,7 +68,7 @@ extends ConfigBuilder<S> {
      * @return Next builder, for method chaining.
      * @see Preferences#userNodeForPackage(Class)
      */
-    @NotNull PreferencesConfigBuilder<?> ofUser(
+    @NotNull PreferencesConfigBuilder ofUser(
             final @NotNull Class<?> clazz);
 
     /**
@@ -84,7 +82,7 @@ extends ConfigBuilder<S> {
      * @see Preferences#userNodeForPackage(Class)
      * @see Preferences#node(String)
      */
-    @NotNull PreferencesConfigBuilder<?> ofUser(
+    @NotNull PreferencesConfigBuilder ofUser(
             final @NotNull Class<?> clazz,
             final @NotNull String path);
 
@@ -94,7 +92,7 @@ extends ConfigBuilder<S> {
      * @return Next builder, for method chaining.
      * @see Preferences#systemRoot()
      */
-    @NotNull PreferencesConfigBuilder<?> ofSystemRoot();
+    @NotNull PreferencesConfigBuilder ofSystemRoot();
 
     /**
      * Selects the node with the specified path on the system preferences tree.
@@ -105,7 +103,7 @@ extends ConfigBuilder<S> {
      * @see Preferences#systemRoot()
      * @see Preferences#node(String)
      */
-    @NotNull PreferencesConfigBuilder<?> ofSystem(
+    @NotNull PreferencesConfigBuilder ofSystem(
             final @NotNull String path);
 
     /**
@@ -116,7 +114,7 @@ extends ConfigBuilder<S> {
      * @return Next builder, for method chaining.
      * @see Preferences#systemNodeForPackage(Class)
      */
-    @NotNull PreferencesConfigBuilder<?> ofSystem(
+    @NotNull PreferencesConfigBuilder ofSystem(
             final @NotNull Class<?> clazz);
 
     /**
@@ -130,7 +128,7 @@ extends ConfigBuilder<S> {
      * @see Preferences#systemNodeForPackage(Class)
      * @see Preferences#node(String)
      */
-    @NotNull PreferencesConfigBuilder<?> ofSystem(
+    @NotNull PreferencesConfigBuilder ofSystem(
             final @NotNull Class<?> clazz,
             final @NotNull String path);
 
@@ -140,6 +138,6 @@ extends ConfigBuilder<S> {
      * @param preferences The {@code Preferences} node to use.
      * @return Next builder, for method chaining.
      */
-    @NotNull PreferencesConfigBuilder<?> ofNode(
+    @NotNull PreferencesConfigBuilder ofNode(
             final @NotNull Preferences preferences);
 }

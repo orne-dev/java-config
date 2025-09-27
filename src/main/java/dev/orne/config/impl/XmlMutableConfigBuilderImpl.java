@@ -46,8 +46,8 @@ import dev.orne.config.XmlMutableConfigBuilder;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class XmlMutableConfigBuilderImpl
-extends AbstractMutableConfigBuilderImpl<XmlMutableConfigBuilderImpl>
-implements XmlMutableConfigBuilder<XmlMutableConfigBuilderImpl> {
+extends AbstractMutableConfigBuilderImpl<XmlMutableConfigBuilder>
+implements XmlMutableConfigBuilder {
 
     /** The XML based configuration options. */
     protected final @NotNull XmlConfigOptions xmlOptions;
@@ -71,7 +71,7 @@ implements XmlMutableConfigBuilder<XmlMutableConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilderImpl withSeparator(
+    public @NotNull XmlMutableConfigBuilder withSeparator(
             final @NotEmpty String separator) {
         this.xmlOptions.setPropertySeparator(separator);
         return thisBuilder();
@@ -81,7 +81,7 @@ implements XmlMutableConfigBuilder<XmlMutableConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilderImpl withAttributePrefix(
+    public @NotNull XmlMutableConfigBuilder withAttributePrefix(
             final @NotEmpty String prefix) {
         this.xmlOptions.setAttributePrefix(prefix);
         return thisBuilder();
@@ -91,7 +91,7 @@ implements XmlMutableConfigBuilder<XmlMutableConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilderImpl withEmptyDocument(
+    public @NotNull XmlMutableConfigBuilder withEmptyDocument(
             final String namespaceURI,
             final @NotNull String rootElementName) {
         this.xmlOptions.setRootElement(namespaceURI, rootElementName);
@@ -102,7 +102,7 @@ implements XmlMutableConfigBuilder<XmlMutableConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilderImpl add(
+    public @NotNull XmlMutableConfigBuilder add(
             @NotNull Document values) {
         this.xmlOptions.add(values);
         return thisBuilder();
@@ -112,7 +112,7 @@ implements XmlMutableConfigBuilder<XmlMutableConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilderImpl add(
+    public @NotNull XmlMutableConfigBuilder add(
             final @NotNull Map<String, String> values) {
         if (this.xmlOptions.getDocument().getDocumentElement() == null) {
             throw new ConfigException(
@@ -134,7 +134,7 @@ implements XmlMutableConfigBuilder<XmlMutableConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilderImpl load(
+    public @NotNull XmlMutableConfigBuilder load(
             final @NotNull String path) {
         this.xmlOptions.load(path);
         return thisBuilder();
@@ -144,7 +144,7 @@ implements XmlMutableConfigBuilder<XmlMutableConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilderImpl load(
+    public @NotNull XmlMutableConfigBuilder load(
             final @NotNull Path path) {
         this.xmlOptions.load(path);
         return thisBuilder();
@@ -154,7 +154,7 @@ implements XmlMutableConfigBuilder<XmlMutableConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilderImpl load(
+    public @NotNull XmlMutableConfigBuilder load(
             final @NotNull File file) {
         this.xmlOptions.load(file);
         return thisBuilder();
@@ -164,7 +164,7 @@ implements XmlMutableConfigBuilder<XmlMutableConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilderImpl load(
+    public @NotNull XmlMutableConfigBuilder load(
             final @NotNull URL url) {
         this.xmlOptions.load(url);
         return thisBuilder();

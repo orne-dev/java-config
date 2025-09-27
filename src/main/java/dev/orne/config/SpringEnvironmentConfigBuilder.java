@@ -33,14 +33,13 @@ import org.springframework.core.env.Environment;
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-09
- * @param <T> The concrete type of the builder.
  * @since 1.0
  * @see Environment
  * @see Config
  */
 @API(status = API.Status.STABLE, since = "1.0")
-public interface SpringEnvironmentConfigBuilder<T extends SpringEnvironmentConfigBuilder<T>>
-extends ConfigBuilder<T> {
+public interface SpringEnvironmentConfigBuilder
+extends ConfigBuilder<SpringEnvironmentConfigBuilder> {
 
     /**
      * Sets this configuration to support property keys iteration.
@@ -57,5 +56,5 @@ extends ConfigBuilder<T> {
      * @return This instance, for method chaining.
      * @see Config#getKeys()
      */
-    @NotNull T withIterableKeys();
+    @NotNull SpringEnvironmentConfigBuilder withIterableKeys();
 }

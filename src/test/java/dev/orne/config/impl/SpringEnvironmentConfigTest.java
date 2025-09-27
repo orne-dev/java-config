@@ -109,7 +109,7 @@ extends AbstractConfigTest {
     @Test
     void givenNonConfigurableEnvironment_whenWithIterableKeys_thenThrowsException() {
         final Environment env = mock(Environment.class);
-        final SpringEnvironmentConfigBuilder<?> builder = ConfigBuilder.fromSpringEnvironment()
+        final SpringEnvironmentConfigBuilder builder = ConfigBuilder.fromSpringEnvironment()
                     .ofEnvironment(env);
         assertThrows(ConfigException.class, builder::withIterableKeys);
     }

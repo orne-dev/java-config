@@ -38,8 +38,8 @@ import dev.orne.config.EnvironmentConfigBuilder;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class EnvironmentConfigBuilderImpl
-extends AbstractConfigBuilderImpl<EnvironmentConfigBuilderImpl>
-implements EnvironmentConfigBuilder<EnvironmentConfigBuilderImpl> {
+extends AbstractConfigBuilderImpl<EnvironmentConfigBuilder>
+implements EnvironmentConfigBuilder {
 
     /**
      * Empty constructor.

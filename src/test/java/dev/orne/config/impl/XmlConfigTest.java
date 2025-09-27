@@ -234,7 +234,7 @@ extends AbstractConfigTest {
      */
     @Test
     void testNullResourceBuilder() {
-        final XmlConfigBuilder<?> builder = ConfigBuilder.fromXmlFiles();
+        final XmlConfigBuilder builder = ConfigBuilder.fromXmlFiles();
         assertThrows(NullPointerException.class, () -> builder.load((String) null));
     }
 
@@ -290,7 +290,7 @@ extends AbstractConfigTest {
      */
     @Test
     void testNullFileBuilder() {
-        final XmlConfigBuilder<?> builder = ConfigBuilder.fromXmlFiles();
+        final XmlConfigBuilder builder = ConfigBuilder.fromXmlFiles();
         assertThrows(NullPointerException.class, () -> builder.load((File) null));
     }
 
@@ -346,7 +346,7 @@ extends AbstractConfigTest {
      */
     @Test
     void testNullPathBuilder() {
-        final XmlConfigBuilder<?> builder = ConfigBuilder.fromXmlFiles();
+        final XmlConfigBuilder builder = ConfigBuilder.fromXmlFiles();
         assertThrows(NullPointerException.class, () -> builder.load((Path) null));
     }
 
@@ -402,7 +402,7 @@ extends AbstractConfigTest {
      */
     @Test
     void testNullUrlBuilder() {
-        final XmlConfigBuilder<?> builder = ConfigBuilder.fromXmlFiles();
+        final XmlConfigBuilder builder = ConfigBuilder.fromXmlFiles();
         assertThrows(NullPointerException.class, () -> builder.load((URL) null));
     }
 

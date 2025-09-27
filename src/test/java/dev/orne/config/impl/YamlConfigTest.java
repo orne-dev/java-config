@@ -209,7 +209,7 @@ extends AbstractConfigTest {
      */
     @Test
     void testNullResourceBuilder() {
-        final YamlConfigBuilder<?> builder = ConfigBuilder.fromYamlFiles();
+        final YamlConfigBuilder builder = ConfigBuilder.fromYamlFiles();
         assertThrows(NullPointerException.class, () -> builder.load((String) null));
     }
 
@@ -265,7 +265,7 @@ extends AbstractConfigTest {
      */
     @Test
     void testNullFileBuilder() {
-        final YamlConfigBuilder<?> builder = ConfigBuilder.fromYamlFiles();
+        final YamlConfigBuilder builder = ConfigBuilder.fromYamlFiles();
         assertThrows(NullPointerException.class, () -> builder.load((File) null));
     }
 
@@ -321,7 +321,7 @@ extends AbstractConfigTest {
      */
     @Test
     void testNullPathBuilder() {
-        final YamlConfigBuilder<?> builder = ConfigBuilder.fromYamlFiles();
+        final YamlConfigBuilder builder = ConfigBuilder.fromYamlFiles();
         assertThrows(NullPointerException.class, () -> builder.load((Path) null));
     }
 
@@ -377,7 +377,7 @@ extends AbstractConfigTest {
      */
     @Test
     void testNullUrlBuilder() {
-        final YamlConfigBuilder<?> builder = ConfigBuilder.fromYamlFiles();
+        final YamlConfigBuilder builder = ConfigBuilder.fromYamlFiles();
         assertThrows(NullPointerException.class, () -> builder.load((URL) null));
     }
 

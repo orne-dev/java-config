@@ -48,8 +48,8 @@ import dev.orne.config.JsonMutableConfigBuilder;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class JsonMutableConfigBuilderImpl
-extends AbstractMutableConfigBuilderImpl<JsonMutableConfigBuilderImpl>
-implements JsonMutableConfigBuilder<JsonMutableConfigBuilderImpl> {
+extends AbstractMutableConfigBuilderImpl<JsonMutableConfigBuilder>
+implements JsonMutableConfigBuilder {
 
     /** The JSON based configuration options. */
     protected final @NotNull JsonConfigOptions jsonOptions;
@@ -73,7 +73,7 @@ implements JsonMutableConfigBuilder<JsonMutableConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonMutableConfigBuilderImpl withSeparator(
+    public @NotNull JsonMutableConfigBuilder withSeparator(
             final @NotEmpty String separator) {
         this.jsonOptions.setPropertySeparator(separator);
         return thisBuilder();
@@ -83,7 +83,7 @@ implements JsonMutableConfigBuilder<JsonMutableConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonMutableConfigBuilderImpl add(
+    public @NotNull JsonMutableConfigBuilder add(
             final @NotNull Map<String, String> values) {
         if (!values.isEmpty()) {
             final ObjectNode data = JacksonUtils.NODE_FACTORY.objectNode();
@@ -101,7 +101,7 @@ implements JsonMutableConfigBuilder<JsonMutableConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonMutableConfigBuilderImpl load(
+    public @NotNull JsonMutableConfigBuilder load(
             final @NotNull String path) {
         this.jsonOptions.load(path);
         return thisBuilder();
@@ -111,7 +111,7 @@ implements JsonMutableConfigBuilder<JsonMutableConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonMutableConfigBuilderImpl load(
+    public @NotNull JsonMutableConfigBuilder load(
             final @NotNull Path path) {
         this.jsonOptions.load(path);
         return thisBuilder();
@@ -121,7 +121,7 @@ implements JsonMutableConfigBuilder<JsonMutableConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonMutableConfigBuilderImpl load(
+    public @NotNull JsonMutableConfigBuilder load(
             final @NotNull File file) {
         this.jsonOptions.load(file);
         return thisBuilder();
@@ -131,7 +131,7 @@ implements JsonMutableConfigBuilder<JsonMutableConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonMutableConfigBuilderImpl load(
+    public @NotNull JsonMutableConfigBuilder load(
             final @NotNull URL url) {
         this.jsonOptions.load(url);
         return thisBuilder();

@@ -47,8 +47,8 @@ import dev.orne.config.JsonConfigBuilder;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class JsonConfigBuilderImpl
-extends AbstractConfigBuilderImpl<JsonConfigBuilderImpl>
-implements JsonConfigBuilder<JsonConfigBuilderImpl> {
+extends AbstractConfigBuilderImpl<JsonConfigBuilder>
+implements JsonConfigBuilder {
 
     /** The JSON based configuration options. */
     protected final @NotNull JsonConfigOptions jsonOptions;
@@ -65,7 +65,7 @@ implements JsonConfigBuilder<JsonConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonConfigBuilderImpl withSeparator(
+    public @NotNull JsonConfigBuilder withSeparator(
             final @NotEmpty String separator) {
         this.jsonOptions.setPropertySeparator(separator);
         return thisBuilder();
@@ -75,7 +75,7 @@ implements JsonConfigBuilder<JsonConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonConfigBuilderImpl add(
+    public @NotNull JsonConfigBuilder add(
             final @NotNull Map<String, String> values) {
         if (!values.isEmpty()) {
             final ObjectNode data = JacksonUtils.NODE_FACTORY.objectNode();
@@ -93,7 +93,7 @@ implements JsonConfigBuilder<JsonConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonConfigBuilderImpl load(
+    public @NotNull JsonConfigBuilder load(
             final @NotNull String path) {
         this.jsonOptions.load(path);
         return thisBuilder();
@@ -103,7 +103,7 @@ implements JsonConfigBuilder<JsonConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonConfigBuilderImpl load(
+    public @NotNull JsonConfigBuilder load(
             final @NotNull Path path) {
         this.jsonOptions.load(path);
         return thisBuilder();
@@ -113,7 +113,7 @@ implements JsonConfigBuilder<JsonConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonConfigBuilderImpl load(
+    public @NotNull JsonConfigBuilder load(
             final @NotNull File file) {
         this.jsonOptions.load(file);
         return thisBuilder();
@@ -123,7 +123,7 @@ implements JsonConfigBuilder<JsonConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonConfigBuilderImpl load(
+    public @NotNull JsonConfigBuilder load(
             final @NotNull URL url) {
         this.jsonOptions.load(url);
         return thisBuilder();

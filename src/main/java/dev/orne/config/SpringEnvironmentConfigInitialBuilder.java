@@ -33,13 +33,12 @@ import org.springframework.core.env.Environment;
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-09
- * @param <S> The concrete type of the builder.
  * @since 1.0
  * @see Environment
  * @see Config
  */
 @API(status = API.Status.STABLE, since = "1.0")
-public interface SpringEnvironmentConfigInitialBuilder<S extends SpringEnvironmentConfigInitialBuilder<S>> {
+public interface SpringEnvironmentConfigInitialBuilder {
 
     /**
      * Selects the Spring {@code Environment} to use as source of configuration
@@ -48,6 +47,6 @@ public interface SpringEnvironmentConfigInitialBuilder<S extends SpringEnvironme
      * @param environment The Spring {@code Environment}.
      * @return Next builder, for method chaining.
      */
-    @NotNull SpringEnvironmentConfigBuilder<?> ofEnvironment(
+    @NotNull SpringEnvironmentConfigBuilder ofEnvironment(
             @NotNull Environment environment);
 }

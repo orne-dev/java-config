@@ -39,7 +39,7 @@ import dev.orne.config.ValueEncoder;
  * @see MutableConfigBuilder
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
-public abstract class AbstractMutableConfigBuilderImpl<S extends AbstractMutableConfigBuilderImpl<S>>
+public abstract class AbstractMutableConfigBuilderImpl<S extends MutableConfigBuilder<S>>
 extends AbstractConfigBuilderImpl<S>
 implements MutableConfigBuilder<S> {
 

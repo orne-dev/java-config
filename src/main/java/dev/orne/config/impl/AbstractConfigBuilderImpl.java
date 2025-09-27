@@ -42,7 +42,7 @@ import dev.orne.config.ValueDecorator;
  * @see ConfigBuilder
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
-public abstract class AbstractConfigBuilderImpl<S extends AbstractConfigBuilderImpl<S>>
+public abstract class AbstractConfigBuilderImpl<S extends ConfigBuilder<S>>
 implements ConfigBuilder<S> {
 
     /** The configuration options. */

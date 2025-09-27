@@ -31,17 +31,17 @@ import org.apiguardian.api.API;
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-07
- * @param <S> The concrete type of the builder.
  * @since 1.0
  * @see Config
  */
 @API(status = API.Status.STABLE, since = "1.0")
-public interface XmlConfigBuilder<S extends XmlConfigBuilder<S>>
-extends XmlConfigBaseBuilder<S>, MutableCapableConfigBuilder<S> {
+public interface XmlConfigBuilder
+extends XmlConfigBaseBuilder<XmlConfigBuilder>,
+        MutableCapableConfigBuilder<XmlConfigBuilder> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull XmlMutableConfigBuilder<?> mutable();
+    @NotNull XmlMutableConfigBuilder mutable();
 }

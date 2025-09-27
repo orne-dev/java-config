@@ -35,6 +35,7 @@ import org.w3c.dom.Document;
 
 import dev.orne.config.ConfigException;
 import dev.orne.config.XmlConfigBuilder;
+import dev.orne.config.XmlMutableConfigBuilder;
 
 /**
  * Implementation of XML files based configuration builder.
@@ -46,8 +47,8 @@ import dev.orne.config.XmlConfigBuilder;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class XmlConfigBuilderImpl
-extends AbstractConfigBuilderImpl<XmlConfigBuilderImpl>
-implements XmlConfigBuilder<XmlConfigBuilderImpl> {
+extends AbstractConfigBuilderImpl<XmlConfigBuilder>
+implements XmlConfigBuilder {
 
     /** The XML based configuration options. */
     protected final @NotNull XmlConfigOptions xmlOptions;
@@ -64,7 +65,7 @@ implements XmlConfigBuilder<XmlConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlConfigBuilderImpl withSeparator(
+    public @NotNull XmlConfigBuilder withSeparator(
             final @NotEmpty String separator) {
         this.xmlOptions.setPropertySeparator(separator);
         return thisBuilder();
@@ -74,7 +75,7 @@ implements XmlConfigBuilder<XmlConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlConfigBuilderImpl withAttributePrefix(
+    public @NotNull XmlConfigBuilder withAttributePrefix(
             final @NotEmpty String prefix) {
         this.xmlOptions.setAttributePrefix(prefix);
         return thisBuilder();
@@ -84,7 +85,7 @@ implements XmlConfigBuilder<XmlConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlConfigBuilderImpl withEmptyDocument(
+    public @NotNull XmlConfigBuilder withEmptyDocument(
             final String namespaceURI,
             final @NotNull String rootElementName) {
         this.xmlOptions.setRootElement(namespaceURI, rootElementName);
@@ -95,7 +96,7 @@ implements XmlConfigBuilder<XmlConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlConfigBuilderImpl add(
+    public @NotNull XmlConfigBuilder add(
             @NotNull Document values) {
         this.xmlOptions.add(values);
         return thisBuilder();
@@ -105,7 +106,7 @@ implements XmlConfigBuilder<XmlConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlConfigBuilderImpl add(
+    public @NotNull XmlConfigBuilder add(
             final @NotNull Map<String, String> values) {
         if (this.xmlOptions.getDocument().getDocumentElement() == null) {
             throw new ConfigException(
@@ -127,7 +128,7 @@ implements XmlConfigBuilder<XmlConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlConfigBuilderImpl load(
+    public @NotNull XmlConfigBuilder load(
             final @NotNull String path) {
         this.xmlOptions.load(path);
         return thisBuilder();
@@ -137,7 +138,7 @@ implements XmlConfigBuilder<XmlConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlConfigBuilderImpl load(
+    public @NotNull XmlConfigBuilder load(
             final @NotNull Path path) {
         this.xmlOptions.load(path);
         return thisBuilder();
@@ -147,7 +148,7 @@ implements XmlConfigBuilder<XmlConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlConfigBuilderImpl load(
+    public @NotNull XmlConfigBuilder load(
             final @NotNull File file) {
         this.xmlOptions.load(file);
         return thisBuilder();
@@ -157,7 +158,7 @@ implements XmlConfigBuilder<XmlConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlConfigBuilderImpl load(
+    public @NotNull XmlConfigBuilder load(
             final @NotNull URL url) {
         this.xmlOptions.load(url);
         return thisBuilder();
@@ -167,7 +168,7 @@ implements XmlConfigBuilder<XmlConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilderImpl mutable() {
+    public @NotNull XmlMutableConfigBuilder mutable() {
         return new XmlMutableConfigBuilderImpl(
                 this.options,
                 new MutableConfigOptions(),

@@ -231,7 +231,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullResourceBuilder() {
-        final PropertiesMutableConfigBuilder<?> builder = ConfigBuilder.fromPropertiesFiles()
+        final PropertiesMutableConfigBuilder builder = ConfigBuilder.fromPropertiesFiles()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((String) null));
     }
@@ -293,7 +293,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullFileBuilder() {
-        final PropertiesMutableConfigBuilder<?> builder = ConfigBuilder.fromPropertiesFiles()
+        final PropertiesMutableConfigBuilder builder = ConfigBuilder.fromPropertiesFiles()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((File) null));
     }
@@ -355,7 +355,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullPathBuilder() {
-        final PropertiesMutableConfigBuilder<?> builder = ConfigBuilder.fromPropertiesFiles()
+        final PropertiesMutableConfigBuilder builder = ConfigBuilder.fromPropertiesFiles()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((Path) null));
     }
@@ -417,7 +417,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullUrlBuilder() {
-        final PropertiesMutableConfigBuilder<?> builder = ConfigBuilder.fromPropertiesFiles()
+        final PropertiesMutableConfigBuilder builder = ConfigBuilder.fromPropertiesFiles()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((URL) null));
     }

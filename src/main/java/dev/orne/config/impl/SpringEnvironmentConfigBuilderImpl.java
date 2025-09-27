@@ -44,9 +44,9 @@ import dev.orne.config.SpringEnvironmentConfigInitialBuilder;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class SpringEnvironmentConfigBuilderImpl
-extends AbstractConfigBuilderImpl<SpringEnvironmentConfigBuilderImpl>
-implements SpringEnvironmentConfigInitialBuilder<SpringEnvironmentConfigBuilderImpl>,
-        SpringEnvironmentConfigBuilder<SpringEnvironmentConfigBuilderImpl> {
+extends AbstractConfigBuilderImpl<SpringEnvironmentConfigBuilder>
+implements SpringEnvironmentConfigInitialBuilder,
+        SpringEnvironmentConfigBuilder {
 
     /** The Spring Environment configuration options. */
     protected final @NotNull SpringEnvironmentConfigOptions springOptions =
@@ -63,7 +63,7 @@ implements SpringEnvironmentConfigInitialBuilder<SpringEnvironmentConfigBuilderI
      * {@inheritDoc}
      */
     @Override
-    public @NotNull SpringEnvironmentConfigBuilderImpl ofEnvironment(
+    public @NotNull SpringEnvironmentConfigBuilder ofEnvironment(
             final @NotNull Environment environment) {
         this.springOptions.setEnvironment(Objects.requireNonNull(environment));
         return thisBuilder();
@@ -73,7 +73,7 @@ implements SpringEnvironmentConfigInitialBuilder<SpringEnvironmentConfigBuilderI
      * {@inheritDoc}
      */
     @Override
-    public @NotNull SpringEnvironmentConfigBuilderImpl withIterableKeys() {
+    public @NotNull SpringEnvironmentConfigBuilder withIterableKeys() {
         if (!(this.springOptions.getEnvironment() instanceof ConfigurableEnvironment)) {
             throw new ConfigException(
                     "Iterable property keys support requires a ConfigurableEnvironment");

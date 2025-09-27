@@ -31,14 +31,14 @@ import org.apiguardian.api.API;
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-07
- * @param <S> The concrete type of the builder.
  * @since 1.0
  * @see MutableConfig
  * @see WatchableConfig
  */
 @API(status = API.Status.STABLE, since = "1.0")
-public interface YamlMutableConfigBuilder<S extends YamlMutableConfigBuilder<S>>
-extends YamlConfigBaseBuilder<S>, MutableConfigBuilder<S> {
+public interface YamlMutableConfigBuilder
+extends YamlConfigBaseBuilder<YamlMutableConfigBuilder>,
+        MutableConfigBuilder<YamlMutableConfigBuilder> {
 
     /**
      * {@inheritDoc}

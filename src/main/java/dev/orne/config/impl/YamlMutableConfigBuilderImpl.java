@@ -46,8 +46,8 @@ import dev.orne.config.YamlMutableConfigBuilder;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class YamlMutableConfigBuilderImpl
-extends AbstractMutableConfigBuilderImpl<YamlMutableConfigBuilderImpl>
-implements YamlMutableConfigBuilder<YamlMutableConfigBuilderImpl> {
+extends AbstractMutableConfigBuilderImpl<YamlMutableConfigBuilder>
+implements YamlMutableConfigBuilder {
 
     /** The YAML based configuration options. */
     protected final @NotNull YamlConfigOptions yamlOptions;
@@ -71,7 +71,7 @@ implements YamlMutableConfigBuilder<YamlMutableConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull YamlMutableConfigBuilderImpl withSeparator(
+    public @NotNull YamlMutableConfigBuilder withSeparator(
             final @NotEmpty String separator) {
         this.yamlOptions.setPropertySeparator(separator);
         return thisBuilder();
@@ -81,7 +81,7 @@ implements YamlMutableConfigBuilder<YamlMutableConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull YamlMutableConfigBuilderImpl add(
+    public @NotNull YamlMutableConfigBuilder add(
             final @NotNull Map<String, String> values) {
         if (!values.isEmpty()) {
             final ObjectNode data = JacksonUtils.NODE_FACTORY.objectNode();
@@ -99,7 +99,7 @@ implements YamlMutableConfigBuilder<YamlMutableConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull YamlMutableConfigBuilderImpl load(
+    public @NotNull YamlMutableConfigBuilder load(
             final @NotNull String path) {
         this.yamlOptions.load(path);
         return thisBuilder();
@@ -109,7 +109,7 @@ implements YamlMutableConfigBuilder<YamlMutableConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull YamlMutableConfigBuilderImpl load(
+    public @NotNull YamlMutableConfigBuilder load(
             final @NotNull Path path) {
         this.yamlOptions.load(path);
         return thisBuilder();
@@ -119,7 +119,7 @@ implements YamlMutableConfigBuilder<YamlMutableConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull YamlMutableConfigBuilderImpl load(
+    public @NotNull YamlMutableConfigBuilder load(
             final @NotNull File file) {
         this.yamlOptions.load(file);
         return thisBuilder();
@@ -129,7 +129,7 @@ implements YamlMutableConfigBuilder<YamlMutableConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull YamlMutableConfigBuilderImpl load(
+    public @NotNull YamlMutableConfigBuilder load(
             final @NotNull URL url) {
         this.yamlOptions.load(url);
         return thisBuilder();

@@ -29,7 +29,8 @@ import javax.validation.constraints.NotNull;
 import org.apiguardian.api.API;
 
 import dev.orne.config.PreferencesConfigBuilder;
-import dev.orne.config.PreferencesConfigNodeBuilder;
+import dev.orne.config.PreferencesConfigInitialBuilder;
+import dev.orne.config.PreferencesMutableConfigBuilder;
 
 /**
  * Implementation of {@code Preferences} based immutable configuration builder.
@@ -41,8 +42,9 @@ import dev.orne.config.PreferencesConfigNodeBuilder;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class PreferencesConfigBuilderImpl
-extends AbstractConfigBuilderImpl<PreferencesConfigBuilderImpl>
-implements PreferencesConfigNodeBuilder<PreferencesConfigBuilderImpl>, PreferencesConfigBuilder<PreferencesConfigBuilderImpl> {
+extends AbstractConfigBuilderImpl<PreferencesConfigBuilder>
+implements PreferencesConfigInitialBuilder,
+        PreferencesConfigBuilder {
 
     /** The preferences based configuration options. */
     protected final @NotNull PreferencesConfigOptions preferencesOptions;
@@ -59,7 +61,7 @@ implements PreferencesConfigNodeBuilder<PreferencesConfigBuilderImpl>, Preferenc
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PreferencesConfigBuilderImpl ofUserRoot() {
+    public @NotNull PreferencesConfigBuilder ofUserRoot() {
         this.preferencesOptions.setUserPreferences();
         return thisBuilder();
     }
@@ -68,7 +70,7 @@ implements PreferencesConfigNodeBuilder<PreferencesConfigBuilderImpl>, Preferenc
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PreferencesConfigBuilderImpl ofUser(
+    public @NotNull PreferencesConfigBuilder ofUser(
             final @NotNull String path) {
         this.preferencesOptions.setUserPreferences(path);
         return thisBuilder();
@@ -78,7 +80,7 @@ implements PreferencesConfigNodeBuilder<PreferencesConfigBuilderImpl>, Preferenc
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PreferencesConfigBuilderImpl ofUser(
+    public @NotNull PreferencesConfigBuilder ofUser(
             final @NotNull Class<?> clazz) {
         this.preferencesOptions.setUserPreferences(clazz);
         return thisBuilder();
@@ -88,7 +90,7 @@ implements PreferencesConfigNodeBuilder<PreferencesConfigBuilderImpl>, Preferenc
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PreferencesConfigBuilderImpl ofUser(
+    public @NotNull PreferencesConfigBuilder ofUser(
             final @NotNull Class<?> clazz,
             final @NotNull String path) {
         this.preferencesOptions.setUserPreferences(clazz, path);
@@ -99,7 +101,7 @@ implements PreferencesConfigNodeBuilder<PreferencesConfigBuilderImpl>, Preferenc
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PreferencesConfigBuilderImpl ofSystemRoot() {
+    public @NotNull PreferencesConfigBuilder ofSystemRoot() {
         this.preferencesOptions.setSystemPreferences();
         return thisBuilder();
     }
@@ -108,7 +110,7 @@ implements PreferencesConfigNodeBuilder<PreferencesConfigBuilderImpl>, Preferenc
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PreferencesConfigBuilderImpl ofSystem(
+    public @NotNull PreferencesConfigBuilder ofSystem(
             final @NotNull String path) {
         this.preferencesOptions.setSystemPreferences(path);
         return thisBuilder();
@@ -118,7 +120,7 @@ implements PreferencesConfigNodeBuilder<PreferencesConfigBuilderImpl>, Preferenc
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PreferencesConfigBuilderImpl ofSystem(
+    public @NotNull PreferencesConfigBuilder ofSystem(
             final @NotNull Class<?> clazz) {
         this.preferencesOptions.setSystemPreferences(clazz);
         return thisBuilder();
@@ -128,7 +130,7 @@ implements PreferencesConfigNodeBuilder<PreferencesConfigBuilderImpl>, Preferenc
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PreferencesConfigBuilderImpl ofSystem(
+    public @NotNull PreferencesConfigBuilder ofSystem(
             final @NotNull Class<?> clazz,
             final @NotNull String path) {
         this.preferencesOptions.setSystemPreferences(clazz, path);
@@ -139,7 +141,7 @@ implements PreferencesConfigNodeBuilder<PreferencesConfigBuilderImpl>, Preferenc
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PreferencesConfigBuilderImpl ofNode(
+    public @NotNull PreferencesConfigBuilder ofNode(
             final @NotNull Preferences preferences) {
         this.preferencesOptions.setPreferences(preferences);
         return thisBuilder();
@@ -149,7 +151,7 @@ implements PreferencesConfigNodeBuilder<PreferencesConfigBuilderImpl>, Preferenc
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PreferencesMutableConfigBuilderImpl mutable() {
+    public @NotNull PreferencesMutableConfigBuilder mutable() {
         return new PreferencesMutableConfigBuilderImpl(
                 this.options,
                 new MutableConfigOptions(),

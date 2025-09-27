@@ -216,7 +216,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullResourceBuilder() {
-        final JsonMutableConfigBuilder<?> builder = ConfigBuilder.fromJsonFiles()
+        final JsonMutableConfigBuilder builder = ConfigBuilder.fromJsonFiles()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((String) null));
     }
@@ -275,7 +275,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullFileBuilder() {
-        final JsonMutableConfigBuilder<?> builder = ConfigBuilder.fromJsonFiles()
+        final JsonMutableConfigBuilder builder = ConfigBuilder.fromJsonFiles()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((File) null));
     }
@@ -334,7 +334,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullPathBuilder() {
-        final JsonMutableConfigBuilder<?> builder = ConfigBuilder.fromJsonFiles()
+        final JsonMutableConfigBuilder builder = ConfigBuilder.fromJsonFiles()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((Path) null));
     }
@@ -393,7 +393,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullUrlBuilder() {
-        final JsonMutableConfigBuilder<?> builder = ConfigBuilder.fromJsonFiles()
+        final JsonMutableConfigBuilder builder = ConfigBuilder.fromJsonFiles()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((URL) null));
     }

@@ -29,13 +29,12 @@ import org.apiguardian.api.API;
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-05
- * @param <S> The concrete type of the builder.
  * @since 1.0
  * @see System
  * @see Config
  */
 @API(status = API.Status.STABLE, since = "1.0")
-public interface SystemConfigBuilder<S extends SystemConfigBuilder<S>>
-extends ConfigBuilder<S> {
+public interface SystemConfigBuilder
+extends ConfigBuilder<SystemConfigBuilder> {
     // No extra methods
 }

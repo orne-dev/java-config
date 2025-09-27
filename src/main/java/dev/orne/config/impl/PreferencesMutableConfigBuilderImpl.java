@@ -38,8 +38,8 @@ import dev.orne.config.PreferencesMutableConfigBuilder;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class PreferencesMutableConfigBuilderImpl
-extends AbstractMutableConfigBuilderImpl<PreferencesMutableConfigBuilderImpl>
-implements PreferencesMutableConfigBuilder<PreferencesMutableConfigBuilderImpl> {
+extends AbstractMutableConfigBuilderImpl<PreferencesMutableConfigBuilder>
+implements PreferencesMutableConfigBuilder {
 
     /** The preferences based configuration options. */
     protected final @NotNull PreferencesConfigOptions preferencesOptions;

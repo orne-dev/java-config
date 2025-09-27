@@ -215,7 +215,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullResourceBuilder() {
-        final YamlMutableConfigBuilder<?> builder = ConfigBuilder.fromYamlFiles()
+        final YamlMutableConfigBuilder builder = ConfigBuilder.fromYamlFiles()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((String) null));
     }
@@ -274,7 +274,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullFileBuilder() {
-        final YamlMutableConfigBuilder<?> builder = ConfigBuilder.fromYamlFiles()
+        final YamlMutableConfigBuilder builder = ConfigBuilder.fromYamlFiles()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((File) null));
     }
@@ -333,7 +333,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullPathBuilder() {
-        final YamlMutableConfigBuilder<?> builder = ConfigBuilder.fromYamlFiles()
+        final YamlMutableConfigBuilder builder = ConfigBuilder.fromYamlFiles()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((Path) null));
     }
@@ -392,7 +392,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullUrlBuilder() {
-        final YamlMutableConfigBuilder<?> builder = ConfigBuilder.fromYamlFiles()
+        final YamlMutableConfigBuilder builder = ConfigBuilder.fromYamlFiles()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((URL) null));
     }

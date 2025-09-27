@@ -240,7 +240,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullResourceBuilder() {
-        final XmlMutableConfigBuilder<?> builder = ConfigBuilder.fromXmlFiles()
+        final XmlMutableConfigBuilder builder = ConfigBuilder.fromXmlFiles()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((String) null));
     }
@@ -299,7 +299,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullFileBuilder() {
-        final XmlMutableConfigBuilder<?> builder = ConfigBuilder.fromXmlFiles()
+        final XmlMutableConfigBuilder builder = ConfigBuilder.fromXmlFiles()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((File) null));
     }
@@ -358,7 +358,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullPathBuilder() {
-        final XmlMutableConfigBuilder<?> builder = ConfigBuilder.fromXmlFiles()
+        final XmlMutableConfigBuilder builder = ConfigBuilder.fromXmlFiles()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((Path) null));
     }
@@ -417,7 +417,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullUrlBuilder() {
-        final XmlMutableConfigBuilder<?> builder = ConfigBuilder.fromXmlFiles()
+        final XmlMutableConfigBuilder builder = ConfigBuilder.fromXmlFiles()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((URL) null));
     }
