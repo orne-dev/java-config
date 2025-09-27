@@ -34,7 +34,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import dev.orne.config.ConfigBuilder;
+import dev.orne.config.Config;
 import dev.orne.config.MutableConfigBuilder;
 
 /**
@@ -66,7 +66,7 @@ extends AbstractWatchableConfigTest {
         final TestPreferencesFactory.InMemoryPreferences preferences =
                 new TestPreferencesFactory.InMemoryPreferences();
         preferences.setAttributes(properties);
-        return ConfigBuilder.fromJavaPreferences()
+        return Config.fromJavaPreferences()
                 .ofNode(preferences)
                 .mutable();
     }
@@ -79,7 +79,7 @@ extends AbstractWatchableConfigTest {
         final Preferences preferences = mock(Preferences.class);
         final PreferencesMutableConfigImpl config = assertInstanceOf(
                 PreferencesMutableConfigImpl.class,
-                ConfigBuilder.fromJavaPreferences()
+                Config.fromJavaPreferences()
                     .ofNode(preferences)
                     .mutable()
                     .build());
@@ -95,7 +95,7 @@ extends AbstractWatchableConfigTest {
         TestPreferencesFactory.setUserRoot(preferences);
         final PreferencesMutableConfigImpl config = assertInstanceOf(
                 PreferencesMutableConfigImpl.class,
-                ConfigBuilder.fromJavaPreferences()
+                Config.fromJavaPreferences()
                     .ofUserRoot()
                     .mutable()
                     .build());
@@ -113,7 +113,7 @@ extends AbstractWatchableConfigTest {
         willReturn(preferences).given(rootPreferences).node("/dev/orne/config/impl");
         final PreferencesMutableConfigImpl config = assertInstanceOf(
                 PreferencesMutableConfigImpl.class,
-                ConfigBuilder.fromJavaPreferences()
+                Config.fromJavaPreferences()
                     .ofUser(PreferencesMutableConfigTest.class)
                     .mutable()
                     .build());
@@ -132,7 +132,7 @@ extends AbstractWatchableConfigTest {
         willReturn(preferences).given(rootPreferences).node(path);
         final PreferencesMutableConfigImpl config = assertInstanceOf(
                 PreferencesMutableConfigImpl.class,
-                ConfigBuilder.fromJavaPreferences()
+                Config.fromJavaPreferences()
                     .ofUser(path)
                     .mutable()
                     .build());
@@ -154,7 +154,7 @@ extends AbstractWatchableConfigTest {
         willReturn(preferences).given(classPreferences).node(path);
         final PreferencesMutableConfigImpl config = assertInstanceOf(
                 PreferencesMutableConfigImpl.class,
-                ConfigBuilder.fromJavaPreferences()
+                Config.fromJavaPreferences()
                     .ofUser(PreferencesMutableConfigTest.class, path)
                     .mutable()
                     .build());
@@ -170,7 +170,7 @@ extends AbstractWatchableConfigTest {
         TestPreferencesFactory.setSystemRoot(preferences);
         final PreferencesMutableConfigImpl config = assertInstanceOf(
                 PreferencesMutableConfigImpl.class,
-                ConfigBuilder.fromJavaPreferences()
+                Config.fromJavaPreferences()
                     .ofSystemRoot()
                     .mutable()
                     .build());
@@ -188,7 +188,7 @@ extends AbstractWatchableConfigTest {
         willReturn(preferences).given(rootPreferences).node("/dev/orne/config/impl");
         final PreferencesMutableConfigImpl config = assertInstanceOf(
                 PreferencesMutableConfigImpl.class,
-                ConfigBuilder.fromJavaPreferences()
+                Config.fromJavaPreferences()
                     .ofSystem(PreferencesMutableConfigTest.class)
                     .mutable()
                     .build());
@@ -207,7 +207,7 @@ extends AbstractWatchableConfigTest {
         willReturn(preferences).given(rootPreferences).node(path);
         final PreferencesMutableConfigImpl config = assertInstanceOf(
                 PreferencesMutableConfigImpl.class,
-                ConfigBuilder.fromJavaPreferences()
+                Config.fromJavaPreferences()
                     .ofSystem(path)
                     .mutable()
                     .build());
@@ -229,7 +229,7 @@ extends AbstractWatchableConfigTest {
         willReturn(preferences).given(classPreferences).node(path);
         final PreferencesMutableConfigImpl config = assertInstanceOf(
                 PreferencesMutableConfigImpl.class,
-                ConfigBuilder.fromJavaPreferences()
+                Config.fromJavaPreferences()
                     .ofSystem(PreferencesMutableConfigTest.class, path)
                     .mutable()
                     .build());

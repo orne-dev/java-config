@@ -43,44 +43,44 @@
     - Add `dev.orne.config.ConfigBuilder.withVariableResolution()` method.
 - Add fluent configuration API for environment variables based configuration.
     - `dev.orne.config.EnvironmentConfigBuilder` interface.
-    - Add `dev.orne.config.ConfigBuilder.fromEnvironmentVariables()` method.
+    - Add `dev.orne.config.Config.fromEnvironmentVariables()` method.
 - Add fluent configuration API for System properties based configuration.
     - `dev.orne.config.SystemConfigBuilder` interface.
-    - Add `dev.orne.config.ConfigBuilder.fromSystemProperties()` method.
+    - Add `dev.orne.config.Config.fromSystemProperties()` method.
 - Add fluent configuration API for Java `Properties` based configuration.
     - `dev.orne.config.PropertiesConfigBaseBuilder` interface.
     - `dev.orne.config.PropertiesConfigBuilder` interface.
     - `dev.orne.config.PropertiesMutableConfigBuilder` interface.
-    - Add `dev.orne.config.ConfigBuilder.fromPropertiesFiles()` method.
+    - Add `dev.orne.config.Config.fromPropertiesFiles()` method.
 - Add fluent configuration API for Java `Preferences` based configuration.
     - `dev.orne.config.PreferencesConfigInitialBuilder` interface.
     - `dev.orne.config.PreferencesConfigBuilder` interface.
     - `dev.orne.config.PreferencesMutableConfigBuilder` interface.
-    - Add `dev.orne.config.ConfigBuilder.fromJavaPreferences()` method.
+    - Add `dev.orne.config.Config.fromJavaPreferences()` method.
 - Add support and fluent configuration API for JSON based configuration based on Jackson.
     - `dev.orne.config.JsonConfigBaseBuilder` interface.
     - `dev.orne.config.JsonConfigBuilder` class.
     - `dev.orne.config.JsonMutableConfigBuilder` interface.
-    - Add `dev.orne.config.ConfigBuilder.fromJson()` method.
+    - Add `dev.orne.config.Config.fromJson()` method.
 - Add support and fluent configuration API for YAML based configuration based on Jackson.
     - `dev.orne.config.YamlConfigBaseBuilder` interface.
     - `dev.orne.config.YamlConfigBuilder` class.
     - `dev.orne.config.YamlMutableConfigBuilder` interface.
-    - Add `dev.orne.config.ConfigBuilder.fromYaml()` method.
+    - Add `dev.orne.config.Config.fromYaml()` method.
 - Add support and fluent configuration API for XML based configuration based on Jackson.
     - `dev.orne.config.XmlConfigBaseBuilder` interface.
     - `dev.orne.config.XmlConfigBuilder` class.
     - `dev.orne.config.XmlMutableConfigBuilder` interface.
-    - Add `dev.orne.config.ConfigBuilder.fromXml()` method.
+    - Add `dev.orne.config.Config.fromXml()` method.
 - Add support and fluent configuration API for Commons Configuration 2.x based configuration.
     - `dev.orne.config.CommonsConfigBuilder` interface.
     - `dev.orne.config.CommonsConfigNodeBuilder` interface.
     - `dev.orne.config.CommonsMutableConfigBuilder` interface.
-    - Add `dev.orne.config.ConfigBuilder.fromJavaPreferences()` method.
+    - Add `dev.orne.config.Config.fromJavaPreferences()` method.
 - Add support and fluent configuration API for Spring Environment based configuration.
     - `dev.orne.config.SpringEnvironmentConfigInitialBuilder` interface.
     - `dev.orne.config.SpringEnvironmentConfigBuilder` interface.
-    - Add `dev.orne.config.ConfigBuilder.fromSpringEnvironment()` method.
+    - Add `dev.orne.config.Config.fromSpringEnvironment()` method.
 - Add support to use `Config` as Apache Commons Configuration 2.x `ImmutableConfiguration`.
     - `dev.orne.config.commons.DelegatedOrneConfiguration` class.
 - Add support to use `MutableConfig` as Apache Commons Configuration 2.x `Configuration`.

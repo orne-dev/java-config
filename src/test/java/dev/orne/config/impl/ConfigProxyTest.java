@@ -40,7 +40,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import dev.orne.config.Config;
-import dev.orne.config.ConfigBuilder;
 import dev.orne.config.ConfigException;
 import dev.orne.config.MutableConfig;
 import dev.orne.config.WatchableConfig;
@@ -78,7 +77,7 @@ class ConfigProxyTest {
         final Properties properties = new Properties();
         properties.setProperty(VALUE_PROP, "testValue");
         properties.setProperty(INT_VALUE_PROP, "5");
-        final Config config = ConfigBuilder.fromPropertiesFiles()
+        final Config config = Config.fromPropertiesFiles()
                 .add(properties)
                 .build();
         assertThrows(NullPointerException.class, () -> {
@@ -107,7 +106,7 @@ class ConfigProxyTest {
         final Properties properties = new Properties();
         properties.setProperty(VALUE_PROP, "testValue");
         properties.setProperty(INT_VALUE_PROP, "5");
-        final Config config = ConfigBuilder.fromPropertiesFiles()
+        final Config config = Config.fromPropertiesFiles()
                 .add(properties)
                 .build();
         final Class<? extends Config> nonInterfaceType = mock(Config.class).getClass();
@@ -124,7 +123,7 @@ class ConfigProxyTest {
         final Properties properties = new Properties();
         properties.setProperty(VALUE_PROP, "testValue");
         properties.setProperty(INT_VALUE_PROP, "5");
-        final Config config = ConfigBuilder.fromPropertiesFiles()
+        final Config config = Config.fromPropertiesFiles()
                 .add(properties)
                 .build();
         assertThrows(ConfigException.class, () -> {
@@ -140,7 +139,7 @@ class ConfigProxyTest {
         final Properties properties = new Properties();
         properties.setProperty(VALUE_PROP, "testValue");
         properties.setProperty(INT_VALUE_PROP, "5");
-        final Config config = ConfigBuilder.fromPropertiesFiles()
+        final Config config = Config.fromPropertiesFiles()
                 .add(properties)
                 .build();
         final ConfigExtraSubtype configProxy = Config.as(config, ConfigExtraSubtype.class);
@@ -160,7 +159,7 @@ class ConfigProxyTest {
         final Properties properties = new Properties();
         properties.setProperty(VALUE_PROP, "testValue");
         properties.setProperty(INT_VALUE_PROP, "5");
-        final MutableConfig config = ConfigBuilder.fromPropertiesFiles()
+        final MutableConfig config = Config.fromPropertiesFiles()
                 .add(properties)
                 .mutable()
                 .build();
@@ -183,7 +182,7 @@ class ConfigProxyTest {
         final Properties properties = new Properties();
         properties.setProperty(VALUE_PROP, "testValue");
         properties.setProperty(INT_VALUE_PROP, "5");
-        final Config config = ConfigBuilder.fromPropertiesFiles()
+        final Config config = Config.fromPropertiesFiles()
                 .add(properties)
                 .build();
         assertThrows(ConfigException.class, () -> {
@@ -199,7 +198,7 @@ class ConfigProxyTest {
         final Properties properties = new Properties();
         properties.setProperty(VALUE_PROP, "testValue");
         properties.setProperty(INT_VALUE_PROP, "5");
-        final WatchableConfig config = ConfigBuilder.fromPropertiesFiles()
+        final WatchableConfig config = Config.fromPropertiesFiles()
                 .add(properties)
                 .mutable()
                 .build();
@@ -237,7 +236,7 @@ class ConfigProxyTest {
         final Properties properties = new Properties();
         properties.setProperty(VALUE_PROP, "testValue");
         properties.setProperty(INT_VALUE_PROP, "5");
-        final Config config = ConfigBuilder.fromPropertiesFiles()
+        final Config config = Config.fromPropertiesFiles()
                 .add(properties)
                 .build();
         assertThrows(ConfigException.class, () -> {
@@ -253,7 +252,7 @@ class ConfigProxyTest {
         final Properties properties = new Properties();
         properties.setProperty(VALUE_PROP, "testValue");
         properties.setProperty(INT_VALUE_PROP, "5");
-        final Config config = ConfigBuilder.fromPropertiesFiles()
+        final Config config = Config.fromPropertiesFiles()
                 .add(properties)
                 .build();
         final ExConfigSubtype configProxy = Config.as(config, ExConfigSubtype.class);

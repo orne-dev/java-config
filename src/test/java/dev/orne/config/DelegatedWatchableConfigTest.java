@@ -73,7 +73,7 @@ extends DelegatedMutableConfigTest {
     @Test
     void testSetEvent() {
         final DelegatedWatchableConfig instance = new DelegatedWatchableConfig(
-                ConfigBuilder.fromPropertiesFiles()
+                Config.fromPropertiesFiles()
                     .mutable()
                     .build());
         instance.addListener(mockListener);
@@ -87,7 +87,7 @@ extends DelegatedMutableConfigTest {
     @Test
     void testSetBooleanEvent() {
         final DelegatedWatchableConfig instance = new DelegatedWatchableConfig(
-                ConfigBuilder.fromPropertiesFiles()
+                Config.fromPropertiesFiles()
                     .mutable()
                     .build());
         instance.addListener(mockListener);
@@ -101,7 +101,7 @@ extends DelegatedMutableConfigTest {
     @Test
     void testSetIntegerEvent() {
         final DelegatedWatchableConfig instance = new DelegatedWatchableConfig(
-                ConfigBuilder.fromPropertiesFiles()
+                Config.fromPropertiesFiles()
                     .mutable()
                     .build());
         instance.addListener(mockListener);
@@ -115,7 +115,7 @@ extends DelegatedMutableConfigTest {
     @Test
     void testSetLongEvent() {
         final DelegatedWatchableConfig instance = new DelegatedWatchableConfig(
-                ConfigBuilder.fromPropertiesFiles()
+                Config.fromPropertiesFiles()
                     .mutable()
                     .build());
         instance.addListener(mockListener);
@@ -129,7 +129,7 @@ extends DelegatedMutableConfigTest {
     @Test
     void testRemoveEvent() {
         final DelegatedWatchableConfig instance = new DelegatedWatchableConfig(
-                ConfigBuilder.fromPropertiesFiles()
+                Config.fromPropertiesFiles()
                     .mutable()
                     .build());
         instance.addListener(mockListener);
@@ -142,7 +142,7 @@ extends DelegatedMutableConfigTest {
      */
     @Test
     void testRemoveListener() {
-        final WatchableConfig delegate = ConfigBuilder.fromPropertiesFiles()
+        final WatchableConfig delegate = Config.fromPropertiesFiles()
                 .mutable()
                 .build();
         delegate.addListener(delegateListener);

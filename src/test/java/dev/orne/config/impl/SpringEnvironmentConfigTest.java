@@ -38,6 +38,7 @@ import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
 
+import dev.orne.config.Config;
 import dev.orne.config.ConfigBuilder;
 import dev.orne.config.ConfigException;
 import dev.orne.config.NonIterableConfigException;
@@ -76,7 +77,7 @@ extends AbstractConfigTest {
         given(environment.getPropertySources()).willReturn(sources);
         given(sources.stream()).willAnswer(invocation -> Stream.of(source));
         given(source.getPropertyNames()).willReturn(properties.keySet().toArray(String[]::new));
-        return ConfigBuilder.fromSpringEnvironment()
+        return Config.fromSpringEnvironment()
                 .ofEnvironment(environment)
                 .withIterableKeys();
     }
@@ -96,7 +97,7 @@ extends AbstractConfigTest {
     void testEnvironmentBuilder() {
         final SpringEnvironmentConfigImpl config = assertInstanceOf(
                 SpringEnvironmentConfigImpl.class,
-                ConfigBuilder.fromSpringEnvironment()
+                Config.fromSpringEnvironment()
                     .ofEnvironment(environment)
                     .build());
         assertSame(environment, config.getEnvironment());
@@ -109,7 +110,7 @@ extends AbstractConfigTest {
     @Test
     void givenNonConfigurableEnvironment_whenWithIterableKeys_thenThrowsException() {
         final Environment env = mock(Environment.class);
-        final SpringEnvironmentConfigBuilder builder = ConfigBuilder.fromSpringEnvironment()
+        final SpringEnvironmentConfigBuilder builder = Config.fromSpringEnvironment()
                     .ofEnvironment(env);
         assertThrows(ConfigException.class, builder::withIterableKeys);
     }
@@ -122,7 +123,7 @@ extends AbstractConfigTest {
     void givenNonIterableConfig_whenGetKeys_thenThrowsException() {
         final SpringEnvironmentConfigImpl config = assertInstanceOf(
                 SpringEnvironmentConfigImpl.class,
-                ConfigBuilder.fromSpringEnvironment()
+                Config.fromSpringEnvironment()
                     .ofEnvironment(environment)
                     .build());
         assertThrows(NonIterableConfigException.class, config::getKeys);

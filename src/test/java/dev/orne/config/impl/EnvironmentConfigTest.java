@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import dev.orne.config.Config;
 import dev.orne.config.ConfigBuilder;
 import dev.orne.config.ValueDecoder;
 import dev.orne.config.ValueDecorator;
@@ -61,7 +62,7 @@ extends AbstractConfigTest {
         final Map<String, String> values = Collections.unmodifiableMap(properties);
         assertInstanceOf(
                 EnvironmentConfigBuilderImpl.class,
-                ConfigBuilder.fromEnvironmentVariables());
+                Config.fromEnvironmentVariables());
         return new MockBuilder(values);
     }
 
@@ -73,7 +74,7 @@ extends AbstractConfigTest {
     void testGetEnvironmentVariables() {
         final EnvironmentConfigImpl config = assertInstanceOf(
                 EnvironmentConfigImpl.class,
-                ConfigBuilder.fromEnvironmentVariables()
+                Config.fromEnvironmentVariables()
                     .build());
         assertSame(System.getenv(), config.getEnvironmentVariables());
     }

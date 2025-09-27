@@ -37,6 +37,7 @@ import org.junit.jupiter.api.condition.DisabledForJreRange;
 import org.junit.jupiter.api.condition.JRE;
 import org.mockito.Mock;
 
+import dev.orne.config.Config;
 import dev.orne.config.ConfigBuilder;
 import dev.orne.config.ConfigException;
 import dev.orne.config.ValueDecoder;
@@ -76,7 +77,7 @@ extends AbstractConfigTest {
     protected ConfigBuilder<?> createBuilder(
             final @NotNull Map<String, String> properties) {
         System.getProperties().putAll(properties);
-        return ConfigBuilder.fromSystemProperties();
+        return Config.fromSystemProperties();
     }
 
     /**
@@ -89,7 +90,7 @@ extends AbstractConfigTest {
     void testGetSystemPropertiesSecurityException() {
         final SystemConfigImpl config = assertInstanceOf(
                 SystemConfigImpl.class,
-                ConfigBuilder.fromSystemProperties()
+                Config.fromSystemProperties()
                     .build());
         assertSame(System.getProperties(), config.getSystemProperties());
         final SecurityManager sm = new SecurityManager() {

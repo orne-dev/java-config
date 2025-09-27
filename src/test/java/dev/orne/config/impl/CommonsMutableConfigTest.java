@@ -34,7 +34,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.junit.jupiter.api.Tag;
 
-import dev.orne.config.ConfigBuilder;
+import dev.orne.config.Config;
 import dev.orne.config.MutableConfigBuilder;
 
 /**
@@ -70,7 +70,7 @@ extends AbstractWatchableConfigTest {
         given(interpolator.interpolate(any()))
                 .willAnswer(invocation -> invocation.getArgument(0));
         delegated.setInterpolator(interpolator);
-        return ConfigBuilder.fromApacheCommons()
+        return Config.fromApacheCommons()
                 .ofDelegate(delegated)
                 .mutable();
     }
