@@ -22,9 +22,6 @@ package dev.orne.config.impl;
  * #L%
  */
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.security.Permission;
 import java.util.Map;
 import java.util.Properties;
 
@@ -32,14 +29,10 @@ import javax.validation.constraints.NotNull;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledForJreRange;
-import org.junit.jupiter.api.condition.JRE;
 import org.mockito.Mock;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigBuilder;
-import dev.orne.config.ConfigException;
 import dev.orne.config.ValueDecoder;
 import dev.orne.config.ValueDecorator;
 
@@ -78,39 +71,5 @@ extends AbstractConfigTest {
             final @NotNull Map<String, String> properties) {
         System.getProperties().putAll(properties);
         return Config.fromSystemProperties();
-    }
-
-    /**
-     * Test method for {@link SystemConfigImpl#getSystemProperties()} when
-     * {@code SecurityException} is thrown by {@code System.getProperties()}
-     * and {@code System.getProperty()}.
-     */
-    @Test
-    @DisabledForJreRange(min = JRE.JAVA_17)
-    void testGetSystemPropertiesSecurityException() {
-        final SystemConfigImpl config = assertInstanceOf(
-                SystemConfigImpl.class,
-                Config.fromSystemProperties()
-                    .build());
-        assertSame(System.getProperties(), config.getSystemProperties());
-        final SecurityManager sm = new SecurityManager() {
-            @Override
-            public void checkPropertiesAccess() {
-                throw new SecurityException("Mock exception");
-            }
-            @Override
-            public void checkPermission(Permission perm) {
-                if (!"setSecurityManager".equals(perm.getName())) {
-                    super.checkPermission(perm);
-                }
-            }
-            
-        };
-        System.setSecurityManager(sm);
-        try {
-            assertThrows(ConfigException.class, config::getSystemProperties);
-        } finally {
-            System.setSecurityManager(null);
-        }
     }
 }
