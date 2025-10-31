@@ -1,31 +1,62 @@
-# Orne Java configuration utilities.
+#set( $dash = "#" )
+$dash Orne configuration utilities.
 
-## Usage
+$dash$dash Specifications
+
+- **Maven coordinates:** `dev.orne:config`
+- **License:** LGPL v3
+- **Required Java version:** 11+
+- **JavaEE/JakartaEE dependencies:** None
+
+  *Uses JSR 305 annotations for API documentation only.*
+
+$dash$dash Usage
+
+The binaries can be obtained from [Maven Central][maven search] with the
+`dev.orne:config` coordinates.
+
+Add dependency to your Maven `pom.xml`:
 
 ```xml
-<project ...>
-...
   <dependency>
     <groupId>${project.groupId}</groupId>
     <artifactId>${project.artifactId}</artifactId>
     <version>${project.version}</version>
   </dependency>
-...
-</project>
 ```
 
-## Features
+$dash$dash Features
 
-- [x] Simple usage API
-- [x] System properties based configuration provider
-- [x] Java `Properties` based configuration provider
-- [x] Java `Preferences` based configuration provider
-- [ ] JSON based configuration provider
-- [ ] XML based configuration provider
-- [ ] YAML based configuration provider
-- [x] Secure configuration values
-- [ ] Fluent setup mechanism
-- [x] Configurations hierarchy
-- [x] Apache Commons Configuration integration
-- [x] Automatic beans configuration
-- [ ] Spring integration
+- [Simplified configuration access](./config.html)
+
+  Minimal (functional interface) configuration access API independent of underlying
+  configuration sources and technologies.
+
+- [Fluent configuration instances building API](./build.html)
+
+  Fluent API for building configuration instances from multiple configuration
+  sources.
+
+- [Automatic components configuration](./configurable.html)
+
+  Support for automatic configuration of components implementing the
+  `Configurable` interface.
+
+- [Spring integration](./spring.html)
+
+  Support for usage of Orne configuration instances as Spring `PropertySource`s.
+
+  Support for usage of Spring `Environment` as Orne configuration source.
+
+  Support for automatic configuration of Spring beans implementing the
+  `Configurable` interface.
+
+- [Apache Commons Configuration integration](./commons.html)
+
+  Support for usage of Apache Commons Configuration instances as Orne
+  configuration sources.
+
+  Support for usage of Orne configuration instances by third party components
+  expecting Apache Commons Configuration instances.
+
+[maven search]: https://central.sonatype.com/artifact/dev.orne/config

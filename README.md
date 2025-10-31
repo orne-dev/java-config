@@ -16,23 +16,22 @@ Provides utilities for application configuration management.
 
 ## Features
 
-The library provides the following features (unchecked features are planned and
-unimplemented):
+The library provides the following features:
 
-- [x] Simple usage API
-- [x] Environment variables based configuration provider
-- [x] System properties based configuration provider
-- [x] Java `Properties` based configuration provider
-- [x] Java `Preferences` based configuration provider
-- [x] JSON based configuration provider
-- [x] XML based configuration provider
-- [x] YAML based configuration provider
-- [x] Secure configuration values
-- [x] Fluent setup mechanism
-- [x] Configurations hierarchy
-- [x] Apache Commons Configuration integration
-- [x] Automatic components configuration
-- [x] Spring integration
+- Simple usage API
+- Environment variables based configuration provider
+- System properties based configuration provider
+- Java `Properties` based configuration provider
+- Java `Preferences` based configuration provider
+- JSON based configuration provider
+- XML based configuration provider
+- YAML based configuration provider
+- Secure configuration values
+- Fluent setup mechanism
+- Configurations hierarchy
+- Apache Commons Configuration integration
+- Automatic components configuration
+- Spring integration
 
 ## Usage
 
@@ -43,7 +42,7 @@ The binaries can be obtained from [Maven Central][status.maven] with the
 <dependency>
   <groupId>dev.orne</groupId>
   <artifactId>config</artifactId>
-  <version>0.2.0</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 
@@ -55,9 +54,9 @@ For further information refer to the [Maven Site][site] and [Javadoc][javadoc].
 [javadoc]: https://javadoc.io/doc/dev.orne/config
 [status.license]: http://www.gnu.org/licenses/gpl-3.0.txt
 [status.license.badge]: https://img.shields.io/github/license/orne-dev/java-config
-[status.maven]: https://search.maven.org/artifact/dev.orne/i18n
-[status.maven.badge]: https://img.shields.io/maven-central/v/dev.orne/i18n.svg?label=Maven%20Central
-[status.javadoc.badge]: https://javadoc.io/badge2/dev.orne/i18n/javadoc.svg
+[status.maven]: https://central.sonatype.com/artifact/dev.orne/config
+[status.maven.badge]: https://img.shields.io/maven-central/v/dev.orne/config.svg?label=Maven%20Central
+[status.javadoc.badge]: https://javadoc.io/badge2/dev.orne/config/javadoc.svg
 [status.site.badge]: https://img.shields.io/website?url=https%3A%2F%2Forne-dev.github.io%2Fjava-config%2F
 [status.latest.ci]: https://github.com/orne-dev/java-config/actions/workflows/release.yml
 [status.latest.ci.badge]: https://github.com/orne-dev/java-config/actions/workflows/release.yml/badge.svg?branch=master
