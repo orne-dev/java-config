@@ -45,13 +45,18 @@ public interface Configurable {
      * 
      * @param config The config to apply
      */
-    void configure(
-            @NotNull Config config);
+    default void configure(
+            @NotNull Config config) {
+        // NOP
+    }
 
     /**
-     * Returns {@code true} if this instance is already configured.
+     * Returns {@code true} if this instance is already configured
+     * to prevent further configuration.
      * 
      * @return {@code true} if this instance is already configured
      */
-    boolean isConfigured();
+    default boolean isConfigured() {
+        return false;
+    }
 }
