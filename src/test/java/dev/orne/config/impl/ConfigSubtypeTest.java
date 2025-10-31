@@ -286,8 +286,9 @@ class ConfigSubtypeTest {
                 .add(properties)
                 .build();
         final ConfigSubtype proxy = Config.as(config, ConfigSubtype.class);
-        assertNotEquals(proxy, null);
-        assertEquals(proxy, proxy);
+        assertFalse(proxy.equals(null));
+        assertTrue(proxy.equals(proxy));
+        assertTrue(proxy.equals(proxy));
         assertNotEquals(proxy, config);
         final ConfigSubtype equalProxy = Config.as(config, ConfigSubtype.class);
         assertEquals(proxy.hashCode(), equalProxy.hashCode());

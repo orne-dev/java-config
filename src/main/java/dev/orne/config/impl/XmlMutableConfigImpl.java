@@ -1,8 +1,5 @@
 package dev.orne.config.impl;
 
-import java.io.IOException;
-import java.io.Writer;
-
 /*-
  * #%L
  * Orne Config
@@ -25,21 +22,25 @@ import java.io.Writer;
  * #L%
  */
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 import javax.validation.constraints.NotBlank;
-
 import javax.validation.constraints.NotNull;
 import javax.xml.XMLConstants;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apiguardian.api.API;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 import dev.orne.config.Config;
@@ -57,6 +58,31 @@ import dev.orne.config.FileWatchableConfig;
 public class XmlMutableConfigImpl
 extends AbstractWatchableConfig
 implements FileWatchableConfig {
+
+    /** The class logger. */
+    private static final Logger LOG = LoggerFactory.getLogger(XmlMutableConfigImpl.class);
+
+    /** The transformer factory for XML documents. */
+    private static final TransformerFactory TRANS_FACT;
+    static {
+        TRANS_FACT = TransformerFactory.newInstance();
+        try {
+            TRANS_FACT.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        } catch (final TransformerConfigurationException e) {
+            LOG.warn("Error setting secure processing feature on XML DocumentBuilderFactory", e);
+        }
+        try {
+            TRANS_FACT.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        } catch (final IllegalArgumentException e) {
+            LOG.debug("Error disabling external DTD access on XML DocumentBuilderFactory", e);
+        }
+        try {
+            TRANS_FACT.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+        } catch (final IllegalArgumentException e) {
+            LOG.debug("Error disabling external stylesheet access on XML DocumentBuilderFactory", e);
+        }
+    }
+    
 
     /** The XML document with the configuration options. */
     private final @NotNull Document document;
@@ -195,9 +221,7 @@ implements FileWatchableConfig {
             final @NotNull Writer destination)
     throws IOException {
         try {
-            final TransformerFactory factory = TransformerFactory.newInstance();
-            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-            final Transformer transformer = factory.newTransformer();
+            final Transformer transformer = TRANS_FACT.newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
             final DOMSource source = new DOMSource(this.document);

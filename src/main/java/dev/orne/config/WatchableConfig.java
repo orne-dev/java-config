@@ -69,6 +69,7 @@ extends MutableConfig {
      * @param prefix The prefix for configuration keys.
      * @return The subset configuration.
      */
+    @Override
     default @NotNull WatchableConfig subset(
             final @NotNull String prefix) {
         return ConfigSubset.create(this, prefix);
