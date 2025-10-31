@@ -32,14 +32,13 @@ import org.apiguardian.api.API;
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-07
- * @param <S> The concrete type of the builder.
  * @since 1.0
  * @see ImmutableConfiguration
  * @see Config
  */
 @API(status = API.Status.STABLE, since = "1.0")
-public interface CommonsConfigBuilder<S extends CommonsConfigBuilder<S>>
-extends MutableCapableConfigBuilder<S> {
+public interface CommonsConfigBuilder
+extends MutableCapableConfigBuilder<CommonsConfigBuilder> {
 
     /**
      * Selects the delegated Apache Commons configuration.
@@ -47,12 +46,12 @@ extends MutableCapableConfigBuilder<S> {
      * @param delegate The delegated Apache Commons configuration.
      * @return Next builder, for method chaining.
      */
-    @NotNull S ofDelegate(
-            final @NotNull ImmutableConfiguration delegate);
+    @NotNull CommonsConfigBuilder ofDelegate(
+            @NotNull ImmutableConfiguration delegate);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull CommonsMutableConfigBuilder<?> mutable();
+    @NotNull CommonsMutableConfigBuilder mutable();
 }

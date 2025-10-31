@@ -43,8 +43,8 @@ import dev.orne.config.ConfigBuilder;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class CommonsConfigBuilderImpl
-extends AbstractConfigBuilderImpl<CommonsConfigBuilderImpl>
-implements CommonsConfigBuilder<CommonsConfigBuilderImpl> {
+extends AbstractConfigBuilderImpl<CommonsConfigBuilder>
+implements CommonsConfigBuilder {
 
     /** The Apache Commons based configuration options. */
     protected final @NotNull CommonsConfigOptions commonsOptions;
@@ -61,7 +61,7 @@ implements CommonsConfigBuilder<CommonsConfigBuilderImpl> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull CommonsConfigBuilderImpl ofDelegate(
+    public @NotNull CommonsConfigBuilder ofDelegate(
             final @NotNull ImmutableConfiguration delegate) {
         this.commonsOptions.setDelegated(Objects.requireNonNull(delegate));
         return thisBuilder();
