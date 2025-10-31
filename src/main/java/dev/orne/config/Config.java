@@ -33,7 +33,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apiguardian.api.API;
 
 import dev.orne.config.impl.CommonsConfigBuilderImpl;
-import dev.orne.config.impl.ConfigProxy;
+import dev.orne.config.impl.ConfigSubtype;
 import dev.orne.config.impl.EnvironmentConfigBuilderImpl;
 import dev.orne.config.impl.JsonConfigBuilderImpl;
 import dev.orne.config.impl.PreferencesConfigBuilderImpl;
@@ -123,7 +123,7 @@ public interface Config {
      * 
      * @return The configuration builder.
      */
-    static @NotNull CommonsConfigBuilder<?> fromApacheCommons() {
+    static @NotNull CommonsConfigBuilder fromApacheCommons() {
         return new CommonsConfigBuilderImpl();
     }
 
@@ -153,7 +153,11 @@ public interface Config {
     static <T extends Config> T as(
             final @NotNull Config config,
             final @NotNull Class<T> type) {
-        return ConfigProxy.create(config, type);
+        if (type.isInstance(config)) {
+            return type.cast(config);
+        } else {
+            return ConfigSubtype.create(config, type);
+        }
     }
 
     /**
@@ -429,5 +433,23 @@ public interface Config {
             @NotBlank String key,
             @NotNull Supplier<Long> defaultValue) {
         return ObjectUtils.getFirstNonNull(() -> getLong(key), defaultValue);
+    }
+
+    /**
+     * Creates a configuration proxy of the specified type.
+     * <p>
+     * The configuration proxy will delegate all method calls to this
+     * configuration instance, except for the default methods
+     * defined in the specified type interface, which will be invoked directly
+     * on the interface.
+     * 
+     * @param <T> The configuration type.
+     * @param type The configuration type interface to create a proxy for.
+     * @return The proxy of the specified configuration type.
+     * @see #as(Config, Class)
+     */
+    default <T extends Config> T as(
+            final @NotNull Class<T> type) {
+        return Config.as(this, type);
     }
 }

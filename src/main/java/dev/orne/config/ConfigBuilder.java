@@ -120,4 +120,19 @@ public interface ConfigBuilder<S extends ConfigBuilder<S>> {
      * @return The configuration instance.
      */
     @NotNull Config build();
+
+    /**
+     * Creates the configuration instance as an instance of the specified
+     * configuration type.
+     * <p>
+     * This is a shortcut for {@code Config.as(build(), configType)}.
+     * 
+     * @param configType The configuration sub-type.
+     * @return The configuration instance.
+     * @see Config#as(Config, Class)
+     */
+    default @NotNull Config as(
+            final @NotNull Class<? extends Config> configType) {
+        return Config.as(build(), configType);
+    }
 }

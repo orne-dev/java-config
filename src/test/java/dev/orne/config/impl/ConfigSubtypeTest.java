@@ -27,6 +27,7 @@ import static org.awaitility.Awaitility.*;
 import static org.mockito.BDDMockito.*;
 
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -45,14 +46,14 @@ import dev.orne.config.MutableConfig;
 import dev.orne.config.WatchableConfig;
 
 /**
- * Unit tests for {@code ConfigProxy}.
+ * Unit tests for {@code ConfigSubtype}.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
  * @since 1.0
  */
 @Tag("ut")
-class ConfigProxyTest {
+class ConfigSubtypeTest {
 
     private static final String VALUE_PROP = "test.value";
     private static final String INT_VALUE_PROP = "test.value.int";
@@ -259,6 +260,36 @@ class ConfigProxyTest {
         assertThrows(CustomRuntimeException.class, configProxy::throwRuntime);
         assertThrows(CustomDeclaredException.class, configProxy::throwException);
         assertThrows(CustomError.class, configProxy::throwError);
+    }
+
+    /**
+     * Test method for {@link Config#as(Config, Class)} when instance
+     * is already of the requested type.
+     */
+    @Test
+    void testProxyNotNeeded() {
+        final HashMap<String, String> values = new HashMap<>();
+        final ConfigSubtype config = values::get;
+        assertSame(config, config.as(ConfigSubtype.class));
+        assertSame(config, Config.as(config, ConfigSubtype.class));
+    }
+
+    /**
+     * Test method for {@link Config#as(Config, Class)}.
+     */
+    @Test
+    void testHashCodeEqualToString() {
+        final Properties properties = new Properties();
+        properties.setProperty(VALUE_PROP, "testValue");
+        properties.setProperty(INT_VALUE_PROP, "5");
+        final Config config = Config.fromPropertiesFiles()
+                .add(properties)
+                .build();
+        final ExConfigSubtype proxy = Config.as(config, ExConfigSubtype.class);
+        final ExConfigSubtype equalProxy = Config.as(config, ExConfigSubtype.class);
+        assertEquals(proxy.hashCode(), equalProxy.hashCode());
+        assertEquals(proxy.toString(), equalProxy.toString());
+        assertEquals(proxy, equalProxy);
     }
 
     interface ConfigSubtype extends Config {

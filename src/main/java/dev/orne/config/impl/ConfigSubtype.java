@@ -52,15 +52,25 @@ import dev.orne.config.WatchableConfig;
  * @since 1.0
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
-public class ConfigProxy
+public class ConfigSubtype
 implements InvocationHandler {
 
     /** The list of classes proxied to the configuration instance. */
     private static final List<Class<?>> PROXYED_TYPES = List.of(
-            Object.class,
             Config.class,
             MutableConfig.class,
             WatchableConfig.class);
+    /** Cached {@code Object.equals()} for performance optimization. */
+    private static final Method OBJECT_EQUALS;
+    static {
+        try {
+            OBJECT_EQUALS = Object.class.getMethod(
+                    "equals",
+                    Object.class);
+        } catch (final NoSuchMethodException e) {
+            throw new ExceptionInInitializerError(e);
+        }
+    }
 
     /** The configuration instance. */
     private final @NotNull Config instance;
@@ -75,7 +85,7 @@ implements InvocationHandler {
      * @param instance The configuration instance to be proxied.
      * @param extendedType The type of extended configuration interface.
      */
-    protected ConfigProxy(
+    protected ConfigSubtype(
             final @NotNull Config instance,
             final @NotNull Class<? extends Config> extendedType) {
         this.instance = instance;
@@ -87,39 +97,6 @@ implements InvocationHandler {
             lookupInstance = MethodHandles.lookup();
         }
         this.lookup = lookupInstance;
-    }
-
-    /**
-     * {@inheritDoc}
-    */
-    @Override
-    public Object invoke(
-            final Object proxy,
-            final @NotNull Method method,
-            final @NotNull Object[] args)
-    throws Throwable {
-        final Class<?> declaringClass = method.getDeclaringClass();
-        if (!PROXYED_TYPES.contains(declaringClass)) {
-            return this.lookup
-                    .findSpecial(
-                            declaringClass,
-                            method.getName(),
-                            MethodType.methodType(
-                                method.getReturnType(),
-                                method.getParameterTypes()),
-                            this.extendedType)
-                    .bindTo(proxy)
-                    .invokeWithArguments(args);
-        }
-        try {
-            return method.invoke(this.instance, args);
-        } catch (final  InvocationTargetException e) {
-            if (e.getCause() instanceof RuntimeException) {
-                throw (RuntimeException) e.getCause();
-            } else {
-                throw new ConfigException(e.getCause());
-            }
-        }
     }
 
     /**
@@ -154,7 +131,7 @@ implements InvocationHandler {
             final @NotNull Class<T> type) {
         Objects.requireNonNull(classLoader, "The class loader must not be null");
         Objects.requireNonNull(config, "The configuration instance must not be null");
-        Objects.requireNonNull(classLoader, "The configuration subtype must be an interface.");
+        Objects.requireNonNull(type, "The configuration subtype must be an interface.");
         validateSubtypeInterface(type);
         if (WatchableConfig.class.isAssignableFrom(type)
                 && !(config instanceof WatchableConfig)) {
@@ -165,7 +142,7 @@ implements InvocationHandler {
             throw new ConfigException(
                     "The proxied configuration instance must extend MutableConfig.");
         }
-        final ConfigProxy handler = new ConfigProxy(config, type);
+        final ConfigSubtype handler = new ConfigSubtype(config, type);
         return type.cast(Proxy.newProxyInstance(
                 classLoader,
                 new Class<?>[] { type },
@@ -200,5 +177,118 @@ implements InvocationHandler {
                 validateSubtypeInterface(iface);
             }
         }
+    }
+
+    /**
+     * {@inheritDoc}
+    */
+    @Override
+    public Object invoke(
+            final Object proxy,
+            final @NotNull Method method,
+            final @NotNull Object[] args)
+    throws Throwable {
+        final Class<?> declaringClass = method.getDeclaringClass();
+        if (Object.class.equals(declaringClass)) {
+            return handleObjectMethod(method, args);
+        }
+        if (!PROXYED_TYPES.contains(declaringClass)) {
+            return this.lookup
+                    .findSpecial(
+                            declaringClass,
+                            method.getName(),
+                            MethodType.methodType(
+                                method.getReturnType(),
+                                method.getParameterTypes()),
+                            this.extendedType)
+                    .bindTo(proxy)
+                    .invokeWithArguments(args);
+        }
+        try {
+            return method.invoke(this.instance, args);
+        } catch (final  InvocationTargetException e) {
+            if (e.getCause() instanceof RuntimeException) {
+                throw (RuntimeException) e.getCause();
+            } else {
+                throw new ConfigException(e.getCause());
+            }
+        }
+    }
+
+    /**
+     * Handles {@code Object} methods invocations.
+     * 
+     * @param method The invoked method.
+     * @param args The method arguments.
+     * @return The method invocation result.
+     * @throws ReflectiveOperationException If an error occurs during method
+     * invocation.
+     */
+    protected Object handleObjectMethod(
+            final @NotNull Method method,
+            final Object[] args)
+    throws ReflectiveOperationException {
+        final Object result;
+        if (OBJECT_EQUALS.equals(method)) {
+            result = proxyEquals(args[0]);
+        } else {
+            result = method.invoke(this, args);
+        }
+        return result;
+    }
+
+    /**
+     * Checks equality with another proxy instance.
+     * 
+     * @param other The other proxy instance.
+     * @return {@code true} if both proxies are equal,
+     *         {@code false} otherwise.
+     */
+    protected boolean proxyEquals(
+            final Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null || !Proxy.isProxyClass(other.getClass())) {
+            return false;
+        }
+        return this.equals(Proxy.getInvocationHandler(other));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                this.instance,
+                this.extendedType);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        ConfigSubtype other = (ConfigSubtype) obj;
+        return Objects.equals(this.instance, other.instance)
+                && Objects.equals(this.extendedType, other.extendedType);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return "ConfigSubtype [instance=" + this.instance + ", extendedType=" + this.extendedType + "]";
     }
 }

@@ -49,6 +49,13 @@ implements PreferencesFactory {
     private static Preferences userRoot = new NopPreferences();
 
     /**
+     * Creates a new instance.
+     */
+    public TestPreferencesFactory() {
+        super();
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -106,10 +113,19 @@ implements PreferencesFactory {
     public static class NopPreferences
     extends AbstractPreferences {
 
+        /**
+         * Creates a new NOP preferences root node.
+         */
         public NopPreferences() {
             super(null, "");
         }
 
+        /**
+         * Creates a new NOP preferences child node.
+         * 
+         * @param parent The parent node.
+         * @param name The node name.
+         */
         protected NopPreferences(
                 final @NotNull NopPreferences parent,
                 final @NotNull String name) {
@@ -200,13 +216,24 @@ implements PreferencesFactory {
     public static class InMemoryPreferences
     extends AbstractPreferences {
 
+        /** The attributes stored in this node. */
         private final Map<String, String> attributes;
+        /** The child nodes of this node. */
         private final Map<String, InMemoryPreferences> childs;
 
+        /**
+         * Creates a new in memory preferences root node.
+         */
         public InMemoryPreferences() {
             this(null, "");
         }
 
+        /**
+         * Creates a new in memory preferences child node.
+         * 
+         * @param parent The parent node.
+         * @param name The node name.
+         */
         protected InMemoryPreferences(
                 final @NotNull InMemoryPreferences parent,
                 final @NotNull String name) {
@@ -215,6 +242,11 @@ implements PreferencesFactory {
             this.childs = new HashMap<>();
         }
 
+        /**
+         * Sets all the attributes of this node.
+         * 
+         * @param attributes The attributes to set
+         */
         protected void setAttributes(
                 final @NotNull Map<String, String> attributes) {
             this.attributes.clear();

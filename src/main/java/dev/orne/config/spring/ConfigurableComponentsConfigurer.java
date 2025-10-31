@@ -78,6 +78,13 @@ implements ImportAware, BeanFactoryAware, InitializingBean {
     protected ConfigProvider configProvider;
 
     /**
+     * Creates a new instance.
+     */
+    public ConfigurableComponentsConfigurer() {
+        super();
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override

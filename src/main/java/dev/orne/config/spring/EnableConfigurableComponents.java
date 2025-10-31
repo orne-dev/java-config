@@ -45,7 +45,7 @@ import dev.orne.config.ConfigurationOptions;
  * }
  * 
  * {@literal @}Configuration
- * {@literal @}EnableConfigurableComponents(type = MyConfig.class)
+ * {@literal @}EnableConfigurableComponents(type = Config.class)
  * class AppConfig {
  *    ...
  *    {@literal @}Bean
