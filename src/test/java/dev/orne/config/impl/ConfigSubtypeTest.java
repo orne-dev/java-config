@@ -285,11 +285,27 @@ class ConfigSubtypeTest {
         final Config config = Config.fromPropertiesFiles()
                 .add(properties)
                 .build();
-        final ExConfigSubtype proxy = Config.as(config, ExConfigSubtype.class);
-        final ExConfigSubtype equalProxy = Config.as(config, ExConfigSubtype.class);
+        final ConfigSubtype proxy = Config.as(config, ConfigSubtype.class);
+        assertNotEquals(proxy, null);
+        assertEquals(proxy, proxy);
+        assertNotEquals(proxy, config);
+        final ConfigSubtype equalProxy = Config.as(config, ConfigSubtype.class);
         assertEquals(proxy.hashCode(), equalProxy.hashCode());
         assertEquals(proxy.toString(), equalProxy.toString());
         assertEquals(proxy, equalProxy);
+        final ConfigExtraSubtype extraProxy = Config.as(config, ConfigExtraSubtype.class);
+        assertNotEquals(proxy.hashCode(), extraProxy.hashCode());
+        assertNotEquals(proxy.toString(), extraProxy.toString());
+        assertNotEquals(proxy, extraProxy);
+        final Properties altProperties = new Properties();
+        altProperties.setProperty(VALUE_PROP, "testValue");
+        final Config altConfig = Config.fromPropertiesFiles()
+                .add(altProperties)
+                .build();
+        final ConfigSubtype altProxy = Config.as(altConfig, ConfigSubtype.class);
+        assertNotEquals(proxy.hashCode(), altProxy.hashCode());
+        assertNotEquals(proxy.toString(), altProxy.toString());
+        assertNotEquals(proxy, altProxy);
     }
 
     interface ConfigSubtype extends Config {

@@ -28,6 +28,8 @@ import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
 
+import dev.orne.config.impl.ConfigSubset;
+
 /**
  * Watchable mutable configuration properties provider.
  * 
@@ -59,6 +61,18 @@ extends MutableConfig {
      */
     void removeListener(
             @NotNull Listener listener);
+
+    /**
+     * Creates a subset configuration containing only the properties
+     * with the specified prefix.
+     * 
+     * @param prefix The prefix for configuration keys.
+     * @return The subset configuration.
+     */
+    default @NotNull WatchableConfig subset(
+            final @NotNull String prefix) {
+        return ConfigSubset.create(this, prefix);
+    }
 
     /**
      * Mutable configuration changes listener.

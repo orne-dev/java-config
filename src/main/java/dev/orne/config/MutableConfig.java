@@ -23,8 +23,11 @@ package dev.orne.config;
  */
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
+
+import dev.orne.config.impl.ConfigSubset;
 
 /**
  * Configuration properties provider with properties mutable at runtime.
@@ -102,4 +105,16 @@ extends Config {
      */
     void remove(
             @NotBlank String... keys);
+
+    /**
+     * Creates a subset configuration containing only the properties
+     * with the specified prefix.
+     * 
+     * @param prefix The prefix for configuration keys.
+     * @return The subset configuration.
+     */
+    default @NotNull MutableConfig subset(
+            final @NotNull String prefix) {
+        return ConfigSubset.create(this, prefix);
+    }
 }

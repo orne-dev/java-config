@@ -141,7 +141,7 @@ class ApiUsageExamplesTest {
 
         final HashSet<String> changedProperties = new HashSet<>();
         WatchableConfig.Listener listener = (instance, props) -> {
-            changedProperties.addAll(changedProperties);
+            changedProperties.addAll(props);
         };
         config.addListener(listener);
 
@@ -186,6 +186,24 @@ class ApiUsageExamplesTest {
 
         final Config config = map::get;
         final DatabaseConfig dbConfig = config.as(DatabaseConfig.class);
+        assertEquals("jdbc:mysql://localhost:3306/mydb", dbConfig.getUrl());
+        assertEquals("user", dbConfig.getUsername());
+        assertEquals("password", dbConfig.getPassword());
+    }
+
+    /**
+     * Example of usage of Config subsets.
+     */
+    @Test
+    void exampleOfSubset() {
+        final Map<String, String> map = new HashMap<>();
+        map.put("security.db.url", "jdbc:mysql://localhost:3306/mydb");
+        map.put("security.db.username", "user");
+        map.put("security.db.password", "password");
+
+        final Config config = map::get;
+        final Config securityConfig = config.subset("security.");
+        final DatabaseConfig dbConfig = securityConfig.as(DatabaseConfig.class);
         assertEquals("jdbc:mysql://localhost:3306/mydb", dbConfig.getUrl());
         assertEquals("user", dbConfig.getUsername());
         assertEquals("password", dbConfig.getPassword());

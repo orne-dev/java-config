@@ -34,6 +34,7 @@ import org.apiguardian.api.API;
 
 import dev.orne.config.impl.CommonsConfigBuilderImpl;
 import dev.orne.config.impl.ConfigSubtype;
+import dev.orne.config.impl.ConfigSubset;
 import dev.orne.config.impl.EnvironmentConfigBuilderImpl;
 import dev.orne.config.impl.JsonConfigBuilderImpl;
 import dev.orne.config.impl.PreferencesConfigBuilderImpl;
@@ -451,5 +452,17 @@ public interface Config {
     default <T extends Config> T as(
             final @NotNull Class<T> type) {
         return Config.as(this, type);
+    }
+
+    /**
+     * Creates a subset configuration containing only the properties
+     * with the specified prefix.
+     * 
+     * @param prefix The prefix for configuration keys.
+     * @return The subset configuration.
+     */
+    default @NotNull Config subset(
+            final @NotNull String prefix) {
+        return ConfigSubset.create(this, prefix);
     }
 }

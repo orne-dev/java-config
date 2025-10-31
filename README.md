@@ -29,6 +29,8 @@ The library provides the following features:
 - Secure configuration values
 - Fluent setup mechanism
 - Configurations hierarchy
+- Configuration sub-types
+- Configuration sub-sets
 - Apache Commons Configuration integration
 - Automatic components configuration
 - Spring integration

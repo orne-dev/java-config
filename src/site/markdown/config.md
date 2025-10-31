@@ -97,3 +97,40 @@ String url = dbConfig.getUrl();
 String username = dbConfig.getUsername();
 String password = dbConfig.getPassword();
 ```
+
+## Configuration subsets
+
+Configurations can provide subsets of properties using the `Config.subset()`
+method. The subset configuration will only provide access to properties
+that start with the given prefix.
+
+```java
+Config config = ...;
+Config dbConfig = config.subset("db.");
+String url = dbConfig.get("url"); // actually gets "db.url"
+String username = dbConfig.get("username"); // actually gets "db.username"
+String password = dbConfig.get("password"); // actually gets "db.password"
+```
+
+Subsequent calls to `subset()` an `as()` is supported, allowing to create
+specific configuration subtypes for subsets of properties:
+
+```java
+public interface DatabaseConfig extends Config {
+    default String getUrl() {
+        return get("db.url");
+    }
+    default String getUsername() {
+        return get("db.username");
+    }
+    default String getPassword() {
+        return get("db.password");
+    }
+}
+
+Config config = ...;
+DatabaseConfig dbConfig = config.subset("security.").as(DatabaseConfig.class);
+String url = dbConfig.getUrl(); // actually gets "security.db.url"
+String username = dbConfig.getUsername(); // actually gets "security.db.username"
+String password = dbConfig.getPassword(); // actually gets "security.db.password"
+```
