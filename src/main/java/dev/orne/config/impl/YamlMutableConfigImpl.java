@@ -22,11 +22,16 @@ package dev.orne.config.impl;
  * #L%
  */
 
+import java.io.IOException;
+import java.io.Writer;
+
 import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import dev.orne.config.Config;
 
@@ -56,5 +61,17 @@ extends JsonMutableConfigImpl {
             final @NotNull MutableConfigOptions mutableOptions,
             final @NotNull YamlConfigOptions yamlOptions) {
         super(options, mutableOptions, yamlOptions);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void save(
+            final @NotNull Writer destination)
+    throws IOException {
+        new ObjectMapper(new YAMLFactory())
+                .writerWithDefaultPrettyPrinter()
+                .writeValue(destination, getJsonObject());
     }
 }

@@ -44,5 +44,5 @@ extends YamlConfigBaseBuilder<YamlMutableConfigBuilder>,
      * {@inheritDoc}
      */
     @Override
-    @NotNull WatchableConfig build();
+    @NotNull FileWatchableConfig build();
 }

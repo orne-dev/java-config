@@ -1,5 +1,7 @@
 package dev.orne.config;
 
+import org.apiguardian.api.API;
+
 /*-
  * #%L
  * Orne Config
@@ -22,31 +24,17 @@ package dev.orne.config;
  * #L%
  */
 
-import java.util.Properties;
-
-import javax.validation.constraints.NotNull;
-
-import org.apiguardian.api.API;
-
 /**
- * {@code Properties} based mutable configuration builder.
+ * Watchable mutable configuration properties provider that can
+ * be saved to file system.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
- * @version 1.0, 2025-05
+ * @version 1.0, 2025-10
  * @since 1.0
- * @see Properties
- * @see MutableConfig
  * @see WatchableConfig
- * @see FileWatchableConfig
  */
 @API(status = API.Status.STABLE, since = "1.0")
-public interface PropertiesMutableConfigBuilder
-extends PropertiesConfigBaseBuilder<PropertiesMutableConfigBuilder>,
-        MutableConfigBuilder<PropertiesMutableConfigBuilder> {
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull FileWatchableConfig build();
+public interface FileWatchableConfig
+extends FileMutableConfig, WatchableConfig {
+    // No extra methods
 }

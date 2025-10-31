@@ -44,5 +44,5 @@ extends XmlConfigBaseBuilder<XmlMutableConfigBuilder>,
      * {@inheritDoc}
      */
     @Override
-    @NotNull WatchableConfig build();
+    @NotNull FileWatchableConfig build();
 }

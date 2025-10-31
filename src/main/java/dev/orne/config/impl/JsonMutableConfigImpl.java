@@ -22,6 +22,8 @@ package dev.orne.config.impl;
  * #L%
  */
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Objects;
 import java.util.WeakHashMap;
 import java.util.stream.Stream;
@@ -34,9 +36,11 @@ import org.apiguardian.api.API;
 
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import dev.orne.config.Config;
+import dev.orne.config.FileWatchableConfig;
 
 /**
  * Jackson {@code ObjectNode} based mutable configuration.
@@ -49,7 +53,8 @@ import dev.orne.config.Config;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class JsonMutableConfigImpl
-extends AbstractWatchableConfig {
+extends AbstractWatchableConfig
+implements FileWatchableConfig {
 
     /** The JSON object with the configuration properties. */
     private final @NotNull ObjectNode jsonObject;
@@ -174,5 +179,17 @@ extends AbstractWatchableConfig {
         Objects.requireNonNull(key);
         return cache.computeIfAbsent(key, k ->
                 JacksonUtils.propertyToPointer(key, this.propertySeparator));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void save(
+            final @NotNull Writer destination)
+    throws IOException {
+        new ObjectMapper()
+                .writerWithDefaultPrettyPrinter()
+                .writeValue(destination, this.jsonObject);
     }
 }

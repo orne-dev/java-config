@@ -1,5 +1,8 @@
 package dev.orne.config.impl;
 
+import java.io.IOException;
+import java.io.Writer;
+
 /*-
  * #%L
  * Orne Config
@@ -28,11 +31,19 @@ import java.util.stream.Stream;
 import javax.validation.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
+import javax.xml.XMLConstants;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apiguardian.api.API;
 import org.w3c.dom.Document;
 
 import dev.orne.config.Config;
+import dev.orne.config.FileWatchableConfig;
 
 /**
  * Implementation of {@code WatchableConfig} based on a XML document.
@@ -44,7 +55,8 @@ import dev.orne.config.Config;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class XmlMutableConfigImpl
-extends AbstractWatchableConfig {
+extends AbstractWatchableConfig
+implements FileWatchableConfig {
 
     /** The XML document with the configuration options. */
     private final @NotNull Document document;
@@ -172,6 +184,27 @@ extends AbstractWatchableConfig {
                     this.propertySeparator,
                     this.attributePrefix,
                     null);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void save(
+            final @NotNull Writer destination)
+    throws IOException {
+        try {
+            final TransformerFactory factory = TransformerFactory.newInstance();
+            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            final Transformer transformer = factory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+            final DOMSource source = new DOMSource(this.document);
+            final StreamResult result = new StreamResult(destination);
+            transformer.transform(source, result);
+        } catch (final TransformerException e) {
+            throw new IOException("Error saving XML configuration", e);
         }
     }
 }

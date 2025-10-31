@@ -27,12 +27,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 import javax.xml.parsers.DocumentBuilder;
@@ -482,5 +484,78 @@ extends AbstractWatchableConfigTest {
         assertEquals(defaultSeparatorValue, config.get(defaultSeparatorNewKey));
         assertTrue(config.contains(customSeparatorKey));
         assertEquals(customSeparatorValue, config.get(customSeparatorKey));
+    }
+
+    /**
+     * Tests instance saving to OutputStream.
+     */
+    @Test
+    void testSaveOutputStream()
+    throws IOException {
+        final Document doc = docBuilder.newDocument();
+        doc.appendChild(doc.importNode(testValues.getDocumentElement() , true));
+        final XmlMutableConfigImpl config = assertInstanceOf(
+                XmlMutableConfigImpl.class,
+                Config.fromXmlFiles()
+                    .mutable()
+                    .add(doc)
+                    .build());
+        final File tmp = File.createTempFile(JsonMutableConfigTest.class.getSimpleName(), ".xml");
+        try {
+            try (final FileOutputStream fos = new FileOutputStream(tmp)) {
+                config.save(fos);
+            }
+            final XmlConfigImpl reload = assertInstanceOf(
+                    XmlConfigImpl.class,
+                    Config.fromXmlFiles()
+                        .load(tmp)
+                        .build());
+            assertEquals(
+                    config.getKeys().collect(Collectors.toSet()),
+                    reload.getKeys().collect(Collectors.toSet()));
+            config.getKeys().forEach(key ->
+                assertEquals(
+                        config.get(key),
+                        reload.get(key)));
+        } finally {
+            tmp.delete();
+        }
+    }
+
+    /**
+     * Tests instance saving to Writer.
+     */
+    @Test
+    void testSaveWriter()
+    throws IOException {
+        final Document doc = docBuilder.newDocument();
+        doc.appendChild(doc.importNode(testValues.getDocumentElement() , true));
+        final XmlMutableConfigImpl config = assertInstanceOf(
+                XmlMutableConfigImpl.class,
+                Config.fromXmlFiles()
+                    .mutable()
+                    .add(doc)
+                    .build());
+        final File tmp = File.createTempFile(JsonMutableConfigTest.class.getSimpleName(), ".xml");
+        try {
+            try (final FileOutputStream fos = new FileOutputStream(tmp);
+                    final OutputStreamWriter writer = new OutputStreamWriter(fos)) {
+                config.save(writer);
+            }
+            final XmlConfigImpl reload = assertInstanceOf(
+                    XmlConfigImpl.class,
+                    Config.fromXmlFiles()
+                        .load(tmp)
+                        .build());
+            assertEquals(
+                    config.getKeys().collect(Collectors.toSet()),
+                    reload.getKeys().collect(Collectors.toSet()));
+            config.getKeys().forEach(key ->
+                assertEquals(
+                        config.get(key),
+                        reload.get(key)));
+        } finally {
+            tmp.delete();
+        }
     }
 }

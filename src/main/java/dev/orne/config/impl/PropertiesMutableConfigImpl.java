@@ -1,5 +1,9 @@
 package dev.orne.config.impl;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Writer;
+
 /*-
  * #%L
  * Orne Config
@@ -31,6 +35,7 @@ import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
 
+import dev.orne.config.FileWatchableConfig;
 import dev.orne.config.MutableConfig;
 
 /**
@@ -44,7 +49,8 @@ import dev.orne.config.MutableConfig;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class PropertiesMutableConfigImpl
-extends AbstractWatchableConfig {
+extends AbstractWatchableConfig
+implements FileWatchableConfig {
 
     /** The configuration properties. */
     private final @NotNull Properties config;
@@ -127,5 +133,25 @@ extends AbstractWatchableConfig {
         for (final String key : keys) {
             this.config.remove(key);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void save(
+            final @NotNull OutputStream destination)
+    throws IOException {
+        this.config.store(destination, null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void save(
+            final @NotNull Writer destination)
+    throws IOException {
+        this.config.store(destination, null);
     }
 }

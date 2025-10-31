@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
@@ -97,9 +98,9 @@ extends AbstractWatchableConfigTest {
         fileProps.setProperty(TEST_COMMON_KEY, TEST_FILE_TYPE);
         fileProps.setProperty(TEST_FILE_KEY, TEST_FILE_TYPE);
         testFile = File.createTempFile(PropertiesConfigTest.class.getSimpleName(), ".properties");
-        final FileOutputStream fileOS = new FileOutputStream(testFile);
-        fileProps.store(fileOS, null);
-        fileOS.close();
+        try (final FileOutputStream fileOS = new FileOutputStream(testFile)) {
+            fileProps.store(fileOS, null);
+        }
         testPath = testFile.toPath();
         testUrl = PropertiesConfigTest.class.getResource("test.url.properties");
     }
@@ -445,5 +446,62 @@ extends AbstractWatchableConfigTest {
         final Properties properties = config.getProperties();
         assertNotNull(properties);
         assertTrue(properties.isEmpty());
+    }
+
+    /**
+     * Tests instance saving to OutputStream.
+     */
+    @Test
+    void testSaveOutputStream()
+    throws IOException {
+        final PropertiesMutableConfigImpl config = assertInstanceOf(
+                PropertiesMutableConfigImpl.class,
+                Config.fromPropertiesFiles()
+                    .mutable()
+                    .add(testProperties)
+                    .build());
+        final File tmp = File.createTempFile(PropertiesConfigTest.class.getSimpleName(), ".properties");
+        try {
+            try (final FileOutputStream fos = new FileOutputStream(tmp)) {
+                config.save(fos);
+            }
+            final PropertiesConfigImpl reload = assertInstanceOf(
+                    PropertiesConfigImpl.class,
+                    Config.fromPropertiesFiles()
+                        .load(tmp)
+                        .build());
+            assertEquals(config.getProperties(), reload.getProperties());
+        } finally {
+            tmp.delete();
+        }
+    }
+
+    /**
+     * Tests instance saving to Writer.
+     */
+    @Test
+    void testSaveWriter()
+    throws IOException {
+        final PropertiesMutableConfigImpl config = assertInstanceOf(
+                PropertiesMutableConfigImpl.class,
+                Config.fromPropertiesFiles()
+                    .mutable()
+                    .add(testProperties)
+                    .build());
+        final File tmp = File.createTempFile(PropertiesConfigTest.class.getSimpleName(), ".properties");
+        try {
+            try (final FileOutputStream fos = new FileOutputStream(tmp);
+                    final OutputStreamWriter writer = new OutputStreamWriter(fos)) {
+                config.save(writer);
+            }
+            final PropertiesConfigImpl reload = assertInstanceOf(
+                    PropertiesConfigImpl.class,
+                    Config.fromPropertiesFiles()
+                        .load(tmp)
+                        .build());
+            assertEquals(config.getProperties(), reload.getProperties());
+        } finally {
+            tmp.delete();
+        }
     }
 }

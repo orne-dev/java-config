@@ -43,5 +43,5 @@ extends JsonConfigBaseBuilder<JsonMutableConfigBuilder>, MutableConfigBuilder<Js
      * {@inheritDoc}
      */
     @Override
-    @NotNull WatchableConfig build();
+    @NotNull FileWatchableConfig build();
 }

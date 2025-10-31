@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
@@ -457,5 +458,62 @@ extends AbstractWatchableConfigTest {
         assertEquals(defaultSeparatorValue, config.get(defaultSeparatorNewKey));
         assertTrue(config.contains(customSeparatorKey));
         assertEquals(customSeparatorValue, config.get(customSeparatorKey));
+    }
+
+    /**
+     * Tests instance saving to OutputStream.
+     */
+    @Test
+    void testSaveOutputStream()
+    throws IOException {
+        final JsonMutableConfigImpl config = assertInstanceOf(
+                JsonMutableConfigImpl.class,
+                Config.fromJsonFiles()
+                    .mutable()
+                    .add(testValues)
+                    .build());
+        final File tmp = File.createTempFile(JsonMutableConfigTest.class.getSimpleName(), ".json");
+        try {
+            try (final FileOutputStream fos = new FileOutputStream(tmp)) {
+                config.save(fos);
+            }
+            final JsonConfigImpl reload = assertInstanceOf(
+                    JsonConfigImpl.class,
+                    Config.fromJsonFiles()
+                        .load(tmp)
+                        .build());
+            assertEquals(config.getJsonObject(), reload.getJsonObject());
+        } finally {
+            tmp.delete();
+        }
+    }
+
+    /**
+     * Tests instance saving to Writer.
+     */
+    @Test
+    void testSaveWriter()
+    throws IOException {
+        final JsonMutableConfigImpl config = assertInstanceOf(
+                JsonMutableConfigImpl.class,
+                Config.fromJsonFiles()
+                    .mutable()
+                    .add(testValues)
+                    .build());
+        final File tmp = File.createTempFile(JsonMutableConfigTest.class.getSimpleName(), ".json");
+        try {
+            try (final FileOutputStream fos = new FileOutputStream(tmp);
+                    final OutputStreamWriter writer = new OutputStreamWriter(fos)) {
+                config.save(writer);
+            }
+            final JsonConfigImpl reload = assertInstanceOf(
+                    JsonConfigImpl.class,
+                    Config.fromJsonFiles()
+                        .load(tmp)
+                        .build());
+            assertEquals(config.getJsonObject(), reload.getJsonObject());
+        } finally {
+            tmp.delete();
+        }
     }
 }
