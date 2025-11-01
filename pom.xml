@@ -48,7 +48,7 @@
     <license.licenseName>gpl_v3</license.licenseName>
 
     <commons.lang.version>3.9</commons.lang.version>
-    <commons.beanutils.version>1.9.4</commons.beanutils.version>
+    <commons.beanutils.version>1.11.0</commons.beanutils.version>
 
     <javax.validation.version>2.0.1.Final</javax.validation.version>
     <jsr305.version>3.0.2</jsr305.version>
