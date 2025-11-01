@@ -36,6 +36,7 @@ import org.junit.jupiter.api.Test;
 
 import dev.orne.config.Config;
 import dev.orne.config.MutableConfigBuilder;
+import dev.orne.config.test.TestPreferencesFactory;
 
 /**
  * Unit tests for {@code MutablePreferencesConfig}.

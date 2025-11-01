@@ -22,29 +22,42 @@ package dev.orne.config;
  * #L%
  */
 
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
-
-import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
 
 /**
- * {@code Preferences} based mutable configuration builder.
+ * Mutable configuration properties provider based on Java Preferences.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
- * @version 1.0, 2025-05
+ * @version 1.0, 2025-11
  * @since 1.0
  * @see Preferences
- * @see MutableConfig
- * @see WatchableConfig
  */
 @API(status = API.Status.STABLE, since = "1.0")
-public interface PreferencesMutableConfigBuilder
-extends MutableConfigBuilder<PreferencesMutableConfigBuilder> {
+public interface PreferencesMutableConfig
+extends WatchableConfig {
 
     /**
-     * {@inheritDoc}
+     * Synchronizes the configuration properties from the source preferences
+     * node.
+     * 
+     * @throws BackingStoreException If an error occurs synchronizing the
+     * configuration properties.
+     * @see Preferences#sync()
      */
-    @Override
-    @NotNull PreferencesMutableConfig build();
+    void sync()
+    throws BackingStoreException;
+
+    /**
+     * Saves the current configuration properties to the source preferences
+     * node.
+     * 
+     * @throws BackingStoreException If an error occurs writing the
+     * configuration properties.
+     * @see Preferences#flush()
+     */
+    void flush()
+    throws BackingStoreException;
 }

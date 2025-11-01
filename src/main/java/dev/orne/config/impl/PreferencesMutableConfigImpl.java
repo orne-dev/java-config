@@ -36,6 +36,7 @@ import org.apiguardian.api.API;
 
 import dev.orne.config.ConfigException;
 import dev.orne.config.MutableConfig;
+import dev.orne.config.PreferencesMutableConfig;
 
 /**
  * Implementation of {@code MutableConfig} based on Java {@code Preferences}.
@@ -49,7 +50,7 @@ import dev.orne.config.MutableConfig;
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class PreferencesMutableConfigImpl
 extends AbstractWatchableConfig
-implements PreferenceChangeListener {
+implements PreferencesMutableConfig, PreferenceChangeListener {
 
     /** The preferences node to use as storage of configuration properties. */
     private final @NotNull Preferences preferences;
@@ -184,13 +185,9 @@ implements PreferenceChangeListener {
     }
 
     /**
-     * Synchronizes the configuration properties from the source preferences
-     * node.
-     * 
-     * @throws ConfigException If an error occurs synchronizing the
-     * configuration properties.
-     * @see Preferences#sync()
+     * {@inheritDoc}
      */
+    @Override
     public void sync() {
         try {
             getPreferences().sync();
@@ -200,13 +197,9 @@ implements PreferenceChangeListener {
     }
 
     /**
-     * Saves the current configuration properties to the source preferences
-     * node.
-     * 
-     * @throws ConfigException If an error occurs writing the configuration
-     * properties.
-     * @see Preferences#flush()
+     * {@inheritDoc}
      */
+    @Override
     public void flush() {
         try {
             getPreferences().flush();

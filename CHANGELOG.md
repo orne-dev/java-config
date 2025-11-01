@@ -59,6 +59,7 @@
 - Add fluent configuration API for Java `Preferences` based configuration.
     - `dev.orne.config.PreferencesConfigInitialBuilder` interface.
     - `dev.orne.config.PreferencesConfigBuilder` interface.
+    - `dev.orne.config.PreferencesMutableConfig` interface.
     - `dev.orne.config.PreferencesMutableConfigBuilder` interface.
     - Add `dev.orne.config.Config.fromJavaPreferences()` method.
 - Add support and fluent configuration API for JSON based configuration based on Jackson.

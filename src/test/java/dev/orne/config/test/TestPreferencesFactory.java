@@ -1,4 +1,4 @@
-package dev.orne.config.impl;
+package dev.orne.config.test;
 
 /*-
  * #%L
@@ -234,7 +234,7 @@ implements PreferencesFactory {
          * @param parent The parent node.
          * @param name The node name.
          */
-        protected InMemoryPreferences(
+        public InMemoryPreferences(
                 final @NotNull InMemoryPreferences parent,
                 final @NotNull String name) {
             super(parent, name);
@@ -247,7 +247,7 @@ implements PreferencesFactory {
          * 
          * @param attributes The attributes to set
          */
-        protected void setAttributes(
+        public void setAttributes(
                 final @NotNull Map<String, String> attributes) {
             this.attributes.clear();
             this.attributes.putAll(attributes);

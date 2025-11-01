@@ -36,6 +36,7 @@ import org.junit.jupiter.api.Test;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigBuilder;
+import dev.orne.config.test.TestPreferencesFactory;
 
 /**
  * Unit tests for {@link PreferencesConfigImpl}.
