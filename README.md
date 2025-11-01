@@ -9,10 +9,10 @@ Provides utilities for application configuration management.
 [![Javadoc][status.javadoc.badge]][javadoc]
 [![Maven site][status.site.badge]][site]
 
-| Latest Release | Develop |
-| :------------: | :-------------: |
-| [![Build Status][status.latest.ci.badge]][status.latest.ci] | [![Build Status][status.dev.ci.badge]][status.dev.ci] |
-| [![Coverage][status.latest.cov.badge]][status.latest.cov] | [![Coverage][status.dev.cov.badge]][status.dev.cov] |
+| Branch | CI Status | Quality | Coverage |
+| :------------: | :-------------: | :-------------: | :-------------: |
+| Main | [![Build Status][status.latest.ci.badge]][status.latest.ci] | [![Quality][status.sonar.quality.badge]][status.sonar] | [![Coverage][status.sonar.cov.badge]][status.sonar] |
+| Develop | [![Build Status][status.dev.ci.badge]][status.dev.ci] | | |
 
 ## Features
 
@@ -62,9 +62,8 @@ For further information refer to the [Maven Site][site] and [Javadoc][javadoc].
 [status.site.badge]: https://img.shields.io/website?url=https%3A%2F%2Forne-dev.github.io%2Fjava-config%2F
 [status.latest.ci]: https://github.com/orne-dev/java-config/actions/workflows/release.yml
 [status.latest.ci.badge]: https://github.com/orne-dev/java-config/actions/workflows/release.yml/badge.svg?branch=master
-[status.latest.cov]: https://sonarcloud.io/dashboard?id=orne-dev_java-config
-[status.latest.cov.badge]: https://sonarcloud.io/api/project_badges/measure?project=orne-dev_java-config&metric=coverage
 [status.dev.ci]: https://github.com/orne-dev/java-config/actions/workflows/build.yml
 [status.dev.ci.badge]: https://github.com/orne-dev/java-config/actions/workflows/build.yml/badge.svg?branch=develop
-[status.dev.cov]: https://sonarcloud.io/dashboard?id=orne-dev_java-config&branch=develop
-[status.dev.cov.badge]: https://sonarcloud.io/api/project_badges/measure?project=orne-dev_java-config&metric=coverage&branch=develop
+[status.sonar]: https://sonarcloud.io/dashboard?id=orne-dev_java-config
+[status.sonar.quality.badge]: https://sonarcloud.io/api/project_badges/quality_gate?project=orne-dev_java-config
+[status.sonar.cov.badge]: https://sonarcloud.io/api/project_badges/measure?project=orne-dev_java-config&metric=coverage
