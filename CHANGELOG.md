@@ -21,6 +21,7 @@
 - Add optional dependency with `org.apache.commons:commons-configuration2` 2.12.0.
 - Add optional dependency with `com.fasterxml.jackson.core:jackson-databind` 2.19.1.
 - Add optional dependency with `com.fasterxml.jackson.dataformat:jackson-dataformat-yaml` 2.19.1.
+- Add optional dependency with `org.springframework:spring-context` 5.3.31.
 - Add configuration exceptions hierarchy.
     - `dev.orne.config.ConfigException` runtime exception.
     - `dev.orne.config.NonIterableConfigException` runtime exception.
@@ -32,6 +33,9 @@
     - `dev.orne.config.ValueEncoder` interface.
 - Add mutable configuration change events support.
     - `dev.orne.config.WatchableConfig` interface.
+- Add mutable configuration persistence API.
+    - `dev.orne.config.FileMutableConfig` interface.
+    - `dev.orne.config.FileWatchableConfig` interface.
 - Add support and fluent configuration API for configuration properties encryption.
     - `dev.orne.config.ConfigCryptoEngine` interface.
     - `dev.orne.config.ConfigCryptoProvider` interface.
@@ -87,8 +91,13 @@
     - `dev.orne.config.commons.DelegatedOrneMutableConfiguration` class.
 - Add support to use `ConfigCryptoProvider` as Apache Commons Configuration 2.x `ConfigurationDecoder`.
     - `dev.orne.config.commons.DelegatedOrneConfigurationDecoder` class.
-- Add support for configuration subtypes and proxies.
+- Add support for configuration subsets.
+    - Add `dev.orne.config.Config.subset()` method.
+    - Add `dev.orne.config.MutableConfig.subset()` method.
+    - Add `dev.orne.config.WatchableConfig.subset()` method.
+- Add support for configuration subtypes.
     - Add `dev.orne.config.Config.as()` method.
+- Add support for configuration delegation.
     - `dev.orne.config.DelegatedConfig` class.
     - `dev.orne.config.DelegatedMutableConfig` class.
     - `dev.orne.config.DelegatedWatchableConfig` class.
