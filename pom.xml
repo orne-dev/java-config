@@ -47,7 +47,7 @@
     <target.java.version>1.8</target.java.version>
     <license.licenseName>gpl_v3</license.licenseName>
 
-    <commons.lang.version>3.9</commons.lang.version>
+    <commons.lang.version>3.18.0</commons.lang.version>
     <commons.beanutils.version>1.9.4</commons.beanutils.version>
 
     <javax.validation.version>2.0.1.Final</javax.validation.version>
