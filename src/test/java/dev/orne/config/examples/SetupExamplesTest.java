@@ -113,7 +113,7 @@ class SetupExamplesTest {
     void exampleOfJavaProperties() {
         final Map<String, String> localValues = Map.of(
                 "host", "www.example.org");
-        final Config config = Config.fromPropertiesFiles()
+        final Config config = Config.fromProperties()
                 .load("example/config.properties")
                 .add(localValues)
                 .build();
@@ -131,7 +131,7 @@ class SetupExamplesTest {
     throws IOException {
         final Map<String, String> localValues = Map.of(
                 "host", "www.example.org");
-        final FileWatchableConfig config = Config.fromPropertiesFiles()
+        final FileWatchableConfig config = Config.fromProperties()
                 .load("example/config.properties")
                 .add(localValues)
                 .mutable()
@@ -455,13 +455,13 @@ class SetupExamplesTest {
      */
     @Test
     void exampleOfConfigHierarchy() {
-        final Config baseConfig = Config.fromPropertiesFiles()
+        final Config baseConfig = Config.fromProperties()
                 .load("example/base.properties")
                 .withParent(Config.fromSystemProperties()
                     .withParent(Config.fromEnvironmentVariables())
                     .build())
                 .build();
-        final Config config = Config.fromPropertiesFiles()
+        final Config config = Config.fromProperties()
                 .load("example/dev.properties")
                 .withParent(baseConfig)
                 .build();
@@ -478,13 +478,13 @@ class SetupExamplesTest {
      */
     @Test
     void exampleOfConfigHierarchyParentOverride() {
-        final Config baseConfig = Config.fromPropertiesFiles()
+        final Config baseConfig = Config.fromProperties()
                 .load("example/base.properties")
                 .withParent(Config.fromSystemProperties()
                     .withParent(Config.fromEnvironmentVariables())
                     .build())
                 .build();
-        final Config config = Config.fromPropertiesFiles()
+        final Config config = Config.fromProperties()
                 .load("example/dev.properties")
                 .withParent(baseConfig)
                 .withOverrideParentProperties()
@@ -505,7 +505,7 @@ class SetupExamplesTest {
         final ValueDecoder parentDecode = value -> {
             return "decoded_parent[" + value + "]";
         };
-        final Config parent = Config.fromPropertiesFiles()
+        final Config parent = Config.fromProperties()
                 .add(Map.of(
                     "api.key", "my_encoded_api_key"))
                 .withDecoder(parentDecode)
@@ -513,7 +513,7 @@ class SetupExamplesTest {
         final ValueDecoder decode = value -> {
             return "decoded[" + value + "]";
         };
-        final Config config = Config.fromPropertiesFiles()
+        final Config config = Config.fromProperties()
                 .add(Map.of(
                     "api.child.key", "my_encoded_child_api_key"))
                 .withParent(parent)
@@ -531,14 +531,14 @@ class SetupExamplesTest {
         final ValueEncoder parentEncode = value -> {
             return "encoded_parent[" + value + "]";
         };
-        final MutableConfig parent = Config.fromPropertiesFiles()
+        final MutableConfig parent = Config.fromProperties()
                 .mutable()
                 .withEncoder(parentEncode)
                 .build();
         final ValueEncoder encode = value -> {
             return "encoded[" + value + "]";
         };
-        final MutableConfig config = Config.fromPropertiesFiles()
+        final MutableConfig config = Config.fromProperties()
                 .withParent(parent)
                 .mutable()
                 .withEncoder(encode)
@@ -559,7 +559,7 @@ class SetupExamplesTest {
                 .withAesGcmEngine("secretSalt".getBytes(StandardCharsets.UTF_8))
                 .withSecretKey("secretKey".toCharArray())
                 .build();
-        final MutableConfig config = Config.fromPropertiesFiles()
+        final MutableConfig config = Config.fromProperties()
                     .add(Map.of(
                         "api.key", crypto.encrypt("my_old_plain_api_key")))
                     .withEncryption(crypto)
@@ -600,7 +600,7 @@ class SetupExamplesTest {
                 .withEngine(engine)
                 .withSecretKey("secretKey".toCharArray())
                 .build();
-        final MutableConfig config = Config.fromPropertiesFiles()
+        final MutableConfig config = Config.fromProperties()
                 .add(Map.of(
                     "api.key", crypto.encrypt("my_old_plain_api_key")))
                 .withEncryption(crypto)
@@ -620,7 +620,7 @@ class SetupExamplesTest {
                 .withAesGcmEngine("secretSalt".getBytes(StandardCharsets.UTF_8))
                 .withSecretKey("secretKey".toCharArray())
                 .build();
-        final Config config = Config.fromPropertiesFiles()
+        final Config config = Config.fromProperties()
                 .add(Map.of(
                     "api.key", crypto.encrypt("my_old_plain_api_key")))
                 .withEncryption(crypto)
@@ -643,7 +643,7 @@ class SetupExamplesTest {
         final ValueEncoder encode = value -> {
             return "encoded[" + value + "]";
         };
-        final MutableConfig config = Config.fromPropertiesFiles()
+        final MutableConfig config = Config.fromProperties()
                 .add(Map.of(
                     "api.key", crypto.encrypt("my_old_plain_api_key")))
                 .withEncryption(crypto)
@@ -664,7 +664,7 @@ class SetupExamplesTest {
         ValueDecorator parentDecorate = value -> {
             return "parentDecorated[" + value + "]";
         };
-        Config parent = Config.fromPropertiesFiles()
+        Config parent = Config.fromProperties()
                 .add(Map.of(
                     "host", "example.com"))
                 .withDecorator(parentDecorate)
@@ -672,7 +672,7 @@ class SetupExamplesTest {
         ValueDecorator decorate = value -> {
             return "decorated[" + value + "]";
         };
-        Config config = Config.fromPropertiesFiles()
+        Config config = Config.fromProperties()
                 .withParent(parent)
                 .withDecorator(decorate)
                 .build();
@@ -685,11 +685,11 @@ class SetupExamplesTest {
      */
     @Test
     void exampleOfVariableResolution() {
-        Config config = Config.fromPropertiesFiles()
+        Config config = Config.fromProperties()
                 .add(Map.of(
                     "host", "example.com",
                     "port", "80"))
-                .withParent(Config.fromPropertiesFiles()
+                .withParent(Config.fromProperties()
                     .add(Map.of(
                         "service.url", "http://${host}:${port}/api",
                         "host", "localhost",
@@ -709,7 +709,7 @@ class SetupExamplesTest {
         ValueDecorator decorate = value -> {
             return "decorated[" + value + "]";
         };
-        Config config = Config.fromPropertiesFiles()
+        Config config = Config.fromProperties()
                 .add(Map.of(
                     "service.url", "http://${host}:${port}/api",
                     "host", "localhost",

@@ -86,7 +86,7 @@ class ApiUsageExamplesTest {
         map.put("db.username", "user");
         map.put("db.password", "password");
 
-        final Config config = Config.fromPropertiesFiles()
+        final Config config = Config.fromProperties()
                 .add(map)
                 .build();
 
@@ -110,7 +110,7 @@ class ApiUsageExamplesTest {
         final Map<String, String> map = new HashMap<>();
         map.put("obsolete.property", "olf.value");
 
-        final MutableConfig config = Config.fromPropertiesFiles()
+        final MutableConfig config = Config.fromProperties()
                 .add(map)
                 .mutable()
                 .build();
@@ -135,7 +135,7 @@ class ApiUsageExamplesTest {
         final Map<String, String> map = new HashMap<>();
         map.put("obsolete.property", "olf.value");
 
-        final WatchableConfig config = Config.fromPropertiesFiles()
+        final WatchableConfig config = Config.fromProperties()
                 .add(map)
                 .mutable()
                 .build();

@@ -78,7 +78,7 @@ class ConfigSubtypeTest {
         final Properties properties = new Properties();
         properties.setProperty(VALUE_PROP, "testValue");
         properties.setProperty(INT_VALUE_PROP, "5");
-        final Config config = Config.fromPropertiesFiles()
+        final Config config = Config.fromProperties()
                 .add(properties)
                 .build();
         assertThrows(NullPointerException.class, () -> {
@@ -107,7 +107,7 @@ class ConfigSubtypeTest {
         final Properties properties = new Properties();
         properties.setProperty(VALUE_PROP, "testValue");
         properties.setProperty(INT_VALUE_PROP, "5");
-        final Config config = Config.fromPropertiesFiles()
+        final Config config = Config.fromProperties()
                 .add(properties)
                 .build();
         final Class<? extends Config> nonInterfaceType = mock(Config.class).getClass();
@@ -124,7 +124,7 @@ class ConfigSubtypeTest {
         final Properties properties = new Properties();
         properties.setProperty(VALUE_PROP, "testValue");
         properties.setProperty(INT_VALUE_PROP, "5");
-        final Config config = Config.fromPropertiesFiles()
+        final Config config = Config.fromProperties()
                 .add(properties)
                 .build();
         assertThrows(ConfigException.class, () -> {
@@ -140,7 +140,7 @@ class ConfigSubtypeTest {
         final Properties properties = new Properties();
         properties.setProperty(VALUE_PROP, "testValue");
         properties.setProperty(INT_VALUE_PROP, "5");
-        final Config config = Config.fromPropertiesFiles()
+        final Config config = Config.fromProperties()
                 .add(properties)
                 .build();
         final ConfigExtraSubtype configProxy = Config.as(config, ConfigExtraSubtype.class);
@@ -160,7 +160,7 @@ class ConfigSubtypeTest {
         final Properties properties = new Properties();
         properties.setProperty(VALUE_PROP, "testValue");
         properties.setProperty(INT_VALUE_PROP, "5");
-        final MutableConfig config = Config.fromPropertiesFiles()
+        final MutableConfig config = Config.fromProperties()
                 .add(properties)
                 .mutable()
                 .build();
@@ -183,7 +183,7 @@ class ConfigSubtypeTest {
         final Properties properties = new Properties();
         properties.setProperty(VALUE_PROP, "testValue");
         properties.setProperty(INT_VALUE_PROP, "5");
-        final Config config = Config.fromPropertiesFiles()
+        final Config config = Config.fromProperties()
                 .add(properties)
                 .build();
         assertThrows(ConfigException.class, () -> {
@@ -199,7 +199,7 @@ class ConfigSubtypeTest {
         final Properties properties = new Properties();
         properties.setProperty(VALUE_PROP, "testValue");
         properties.setProperty(INT_VALUE_PROP, "5");
-        final WatchableConfig config = Config.fromPropertiesFiles()
+        final WatchableConfig config = Config.fromProperties()
                 .add(properties)
                 .mutable()
                 .build();
@@ -237,7 +237,7 @@ class ConfigSubtypeTest {
         final Properties properties = new Properties();
         properties.setProperty(VALUE_PROP, "testValue");
         properties.setProperty(INT_VALUE_PROP, "5");
-        final Config config = Config.fromPropertiesFiles()
+        final Config config = Config.fromProperties()
                 .add(properties)
                 .build();
         assertThrows(ConfigException.class, () -> {
@@ -253,7 +253,7 @@ class ConfigSubtypeTest {
         final Properties properties = new Properties();
         properties.setProperty(VALUE_PROP, "testValue");
         properties.setProperty(INT_VALUE_PROP, "5");
-        final Config config = Config.fromPropertiesFiles()
+        final Config config = Config.fromProperties()
                 .add(properties)
                 .build();
         final ExConfigSubtype configProxy = Config.as(config, ExConfigSubtype.class);
@@ -282,7 +282,7 @@ class ConfigSubtypeTest {
         final Properties properties = new Properties();
         properties.setProperty(VALUE_PROP, "testValue");
         properties.setProperty(INT_VALUE_PROP, "5");
-        final Config config = Config.fromPropertiesFiles()
+        final Config config = Config.fromProperties()
                 .add(properties)
                 .build();
         final ConfigSubtype proxy = Config.as(config, ConfigSubtype.class);
@@ -300,7 +300,7 @@ class ConfigSubtypeTest {
         assertNotEquals(proxy, extraProxy);
         final Properties altProperties = new Properties();
         altProperties.setProperty(VALUE_PROP, "testValue");
-        final Config altConfig = Config.fromPropertiesFiles()
+        final Config altConfig = Config.fromProperties()
                 .add(altProperties)
                 .build();
         final ConfigSubtype altProxy = Config.as(altConfig, ConfigSubtype.class);

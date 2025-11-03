@@ -115,7 +115,7 @@ extends AbstractConfigTest {
     @Override
     protected ConfigBuilder<?> createBuilder(
             final @NotNull Map<String, String> properties) {
-        return Config.fromPropertiesFiles()
+        return Config.fromProperties()
                 .add(properties);
     }
 
@@ -126,7 +126,7 @@ extends AbstractConfigTest {
     void testEmptyBuilder() {
         final PropertiesConfigImpl config = assertInstanceOf(
                 PropertiesConfigImpl.class,
-                Config.fromPropertiesFiles()
+                Config.fromProperties()
                     .build());
         assertNull(config.getParent());
         assertSame(ValueDecoder.DEFAULT, config.getDecoder());
@@ -143,7 +143,7 @@ extends AbstractConfigTest {
     void testPropertiesBuilder() {
         final PropertiesConfigImpl config = assertInstanceOf(
                 PropertiesConfigImpl.class,
-                Config.fromPropertiesFiles()
+                Config.fromProperties()
                     .add(testProperties)
                     .build());
         assertNull(config.getParent());
@@ -175,7 +175,7 @@ extends AbstractConfigTest {
         data.put(TEST_KEY, "testValue");
         final PropertiesConfigImpl config = assertInstanceOf(
                 PropertiesConfigImpl.class,
-                Config.fromPropertiesFiles()
+                Config.fromProperties()
                     .add(data)
                     .build());
         assertNull(config.getParent());
@@ -195,7 +195,7 @@ extends AbstractConfigTest {
     void testResourceBuilder() {
         final PropertiesConfigImpl config = assertInstanceOf(
                 PropertiesConfigImpl.class,
-                Config.fromPropertiesFiles()
+                Config.fromProperties()
                     .load(testResource)
                     .build());
         assertNull(config.getParent());
@@ -223,7 +223,7 @@ extends AbstractConfigTest {
      */
     @Test
     void testNullResourceBuilder() {
-        final PropertiesConfigBuilder builder = Config.fromPropertiesFiles();
+        final PropertiesConfigBuilder builder = Config.fromProperties();
         assertThrows(NullPointerException.class, () -> builder.load((String) null));
     }
 
@@ -234,7 +234,7 @@ extends AbstractConfigTest {
     void testMissingResourceBuilder() {
         final PropertiesConfigImpl config = assertInstanceOf(
                 PropertiesConfigImpl.class,
-                Config.fromPropertiesFiles()
+                Config.fromProperties()
                     .load("non/existent/resource.properties")
                     .build());
         assertNull(config.getParent());
@@ -253,7 +253,7 @@ extends AbstractConfigTest {
     void testFileBuilder() {
         final PropertiesConfigImpl config = assertInstanceOf(
                 PropertiesConfigImpl.class,
-                Config.fromPropertiesFiles()
+                Config.fromProperties()
                     .load(testFile)
                     .build());
         assertNull(config.getParent());
@@ -282,7 +282,7 @@ extends AbstractConfigTest {
      */
     @Test
     void testNullFileBuilder() {
-        final PropertiesConfigBuilder builder = Config.fromPropertiesFiles();
+        final PropertiesConfigBuilder builder = Config.fromProperties();
         assertThrows(NullPointerException.class, () -> builder.load((File) null));
     }
 
@@ -293,7 +293,7 @@ extends AbstractConfigTest {
     void testMissingFileBuilder() {
         final PropertiesConfigImpl config = assertInstanceOf(
                 PropertiesConfigImpl.class,
-                Config.fromPropertiesFiles()
+                Config.fromProperties()
                     .load(new File("non/existent/resource.properties"))
                     .build());
         assertNull(config.getParent());
@@ -312,7 +312,7 @@ extends AbstractConfigTest {
     void testPathBuilder() {
         final PropertiesConfigImpl config = assertInstanceOf(
                 PropertiesConfigImpl.class,
-                Config.fromPropertiesFiles()
+                Config.fromProperties()
                     .load(testPath)
                     .build());
         assertNull(config.getParent());
@@ -341,7 +341,7 @@ extends AbstractConfigTest {
      */
     @Test
     void testNullPathBuilder() {
-        final PropertiesConfigBuilder builder = Config.fromPropertiesFiles();
+        final PropertiesConfigBuilder builder = Config.fromProperties();
         assertThrows(NullPointerException.class, () -> builder.load((Path) null));
     }
 
@@ -352,7 +352,7 @@ extends AbstractConfigTest {
     void testMissingPathBuilder() {
         final PropertiesConfigImpl config = assertInstanceOf(
                 PropertiesConfigImpl.class,
-                Config.fromPropertiesFiles()
+                Config.fromProperties()
                     .load(Paths.get("non/existent/path.properties"))
                     .build());
         assertNull(config.getParent());
@@ -371,7 +371,7 @@ extends AbstractConfigTest {
     void testUrlBuilder() {
         final PropertiesConfigImpl config = assertInstanceOf(
                 PropertiesConfigImpl.class,
-                Config.fromPropertiesFiles()
+                Config.fromProperties()
                     .load(testUrl)
                     .build());
         assertNull(config.getParent());
@@ -400,7 +400,7 @@ extends AbstractConfigTest {
      */
     @Test
     void testNullUrlBuilder() {
-        final PropertiesConfigBuilder builder = Config.fromPropertiesFiles();
+        final PropertiesConfigBuilder builder = Config.fromProperties();
         assertThrows(NullPointerException.class, () -> builder.load((URL) null));
     }
 
@@ -416,7 +416,7 @@ extends AbstractConfigTest {
                 .toURL();
         final PropertiesConfigImpl config = assertInstanceOf(
                 PropertiesConfigImpl.class,
-                Config.fromPropertiesFiles()
+                Config.fromProperties()
                     .load(missingUrl)
                     .build());
         assertNull(config.getParent());

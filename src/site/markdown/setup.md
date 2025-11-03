@@ -43,13 +43,13 @@ String userHome = config.get("user.home");
 ### Java Properties
 
 Configuration instance that uses Java `Properties` as storage mechanism
-can be created using the `Config.fromPropertiesFiles()` method.
+can be created using the `Config.fromProperties()` method.
 
 Example:
 
 ```java
 Map<String, String> localValues = ...;
-Config config = Config.fromPropertiesFiles()
+Config config = Config.fromProperties()
         .load("example/config.properties")
         .add(localValues) // Overrides loaded properties
         .build();
@@ -63,7 +63,7 @@ Example:
 
 ```java
 Map<String, String> localValues = ...;
-FileWatchableConfig config = Config.fromPropertiesFiles()
+FileWatchableConfig config = Config.fromProperties()
         .load("example/config.properties")
         .add(localValues) // Overrides loaded properties
         .mutable()
@@ -303,13 +303,13 @@ development, testing and production configurations.
 Example:
 
 ```java
-Config baseConfig = ConfigProvider.fromPropertiesFiles()
+Config baseConfig = ConfigProvider.fromProperties()
     .load("example/base.properties")
     .withParent(Config.fromSystemProperties()
         .withParent(Config.fromEnvironmentVariables())
         .build())
     .build();
-Config config = ConfigProvider.fromPropertiesFiles()
+Config config = ConfigProvider.fromProperties()
     .load("example/dev.properties")
     .withParent(baseConfig)
     .build();
@@ -331,13 +331,13 @@ override the parent configuration and provide the value for that key.
 Example:
 
 ```java
-Config baseConfig = ConfigProvider.fromPropertiesFiles()
+Config baseConfig = ConfigProvider.fromProperties()
     .load("example/base.properties")
     .withParent(Config.fromSystemProperties()
         .withParent(Config.fromEnvironmentVariables())
         .build())
     .build();
-Config config = ConfigProvider.fromPropertiesFiles()
+Config config = ConfigProvider.fromProperties()
     .load("example/dev.properties")
     .withParent(baseConfig)
     .withOverrideParentProperties()
@@ -362,13 +362,13 @@ Example:
 
 ```java
 ValueDecoder parentDecode = ...;
-Config parent = Config.fromPropertiesFiles()
+Config parent = Config.fromProperties()
         .add(Map.of(
             "api.key", "my_encoded_api_key"))
         .withDecoder(parentDecode)
         .build();
 ValueDecoder decode = ...;
-Config config = Config.fromPropertiesFiles()
+Config config = Config.fromProperties()
         .add(Map.of(
             "api.child.key", "my_encoded_child_api_key"))
         .withParent(parent)
@@ -397,12 +397,12 @@ Example:
 
 ```java
 ValueEncoder parentEncode = ...;
-MutableConfig parent = Config.fromPropertiesFiles()
+MutableConfig parent = Config.fromProperties()
         .mutable()
         .withEncoder(parentEncode)
         .build();
 ValueEncoder encode = ...;
-MutableConfig config = Config.fromPropertiesFiles()
+MutableConfig config = Config.fromProperties()
         .withParent(parent)
         .mutable()
         .withEncoder(encode)
@@ -432,7 +432,7 @@ ConfigCryptoProvider crypto = ConfigCryptoProvider.builder()
         .withAesGcmEngine("secretSalt".getBytes(StandardCharsets.UTF_8))
         .withSecretKey("secretKey".toCharArray())
         .build();
-MutableConfig config = Config.fromPropertiesFiles()
+MutableConfig config = Config.fromProperties()
         .add(Map.of(
             "api.key", "my_encoded_api_key"))
         .withEncryption(crypto)
@@ -464,7 +464,7 @@ Example:
 
 ```java
 ConfigCryptoProvider crypto = ...;
-Config config = Config.fromPropertiesFiles()
+Config config = Config.fromProperties()
         .add(Map.of(
             "api.key", "my_encoded_api_key"))
         .withEncryption(crypto)
@@ -482,7 +482,7 @@ Example:
 ConfigCryptoProvider crypto = ...;
 ValueDecoder decode = ...;
 ValueEncoder encode = ...;
-MutableConfig config = Config.fromPropertiesFiles()
+MutableConfig config = Config.fromProperties()
         .add(Map.of(
             "api.key", "my_encoded_api_key"))
         .withEncryption(crypto)
@@ -515,13 +515,13 @@ Example:
 
 ```java
 ValueDecorator parentDecorate = ...;
-Config parent = Config.fromPropertiesFiles()
+Config parent = Config.fromProperties()
         .add(Map.of(
             "host", "example.com"))
         .withDecorator(parentDecorate)
         .build();;
 ValueDecorator decorate = ...;
-Config config = Config.fromPropertiesFiles()
+Config config = Config.fromProperties()
         .withParent(parent)
         .withDecorator(decorate)
         .build();
@@ -543,11 +543,11 @@ sources in the configuration hierarchy.
 Example:
 
 ```java
-Config config = Config.fromPropertiesFiles()
+Config config = Config.fromProperties()
         .add(Map.of(
             "host", "example.com",
             "port", "80"))
-        .withParent(Config.fromPropertiesFiles()
+        .withParent(Config.fromProperties()
             .add(Map.of(
                 "service.url", "http://${host}:${port}/api",
                 "host", "localhost",
@@ -567,7 +567,7 @@ Example:
 
 ```java
 ValueDecorator decorate = value -> "decorated[" + value + "]";
-Config config = Config.fromPropertiesFiles()
+Config config = Config.fromProperties()
         .add(Map.of(
             "service.url", "http://${host}:${port}/api",
             "host", "localhost",

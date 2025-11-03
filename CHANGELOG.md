@@ -55,7 +55,7 @@
     - `dev.orne.config.PropertiesConfigBaseBuilder` interface.
     - `dev.orne.config.PropertiesConfigBuilder` interface.
     - `dev.orne.config.PropertiesMutableConfigBuilder` interface.
-    - Add `dev.orne.config.Config.fromPropertiesFiles()` method.
+    - Add `dev.orne.config.Config.fromProperties()` method.
 - Add fluent configuration API for Java `Preferences` based configuration.
     - `dev.orne.config.PreferencesConfigInitialBuilder` interface.
     - `dev.orne.config.PreferencesConfigBuilder` interface.

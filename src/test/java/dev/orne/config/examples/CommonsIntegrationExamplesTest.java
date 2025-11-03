@@ -90,7 +90,7 @@ class CommonsIntegrationExamplesTest {
         map.put("enabled", "true");
         map.put("timeout", "5000");
 
-        final MutableConfig config = Config.fromPropertiesFiles()
+        final MutableConfig config = Config.fromProperties()
                 .add(map)
                 .mutable()
                 .build();

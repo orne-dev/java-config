@@ -703,7 +703,7 @@ class SpringConfigTest {
             final HashMap<String, String> props = new HashMap<>();
             props.put(GrandparentConfig.GRANDPA_CFG_PROP, GRANDPA_PROP_VALUE);
             return Config.as(
-                    Config.fromPropertiesFiles()
+                    Config.fromProperties()
                         .add(props)
                         .build(),
                     GrandparentConfig.class);
@@ -715,7 +715,7 @@ class SpringConfigTest {
             final HashMap<String, String> props = new HashMap<>();
             props.put(ParentConfig.PARENT_CFG_PROP, PARENT_PROP_VALUE);
             return Config.as(
-                    Config.fromPropertiesFiles()
+                    Config.fromProperties()
                         .withParent(parent)
                         .add(props)
                         .build(),
@@ -868,7 +868,7 @@ class SpringConfigTest {
             props.put(ParentConfig.PARENT_CFG_PROP, PARENT_PROP_VALUE);
             props.put(ChildConfig.CHILD_CFG_PROP, CHILD_PROP_VALUE);
             return Config.as(
-                    Config.fromPropertiesFiles()
+                    Config.fromProperties()
                         .withParent(parent)
                         .withOverrideParentProperties()
                         .add(props)
@@ -882,7 +882,7 @@ class SpringConfigTest {
             final HashMap<String, String> props = new HashMap<>();
             props.put(SibblingConfig.SIBBLING_CFG_PROP, SIBBLING_PROP_VALUE);
             return Config.as(
-                    Config.fromPropertiesFiles()
+                    Config.fromProperties()
                         .add(props)
                         .build(),
                         SibblingConfig.class);

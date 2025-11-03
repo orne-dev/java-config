@@ -78,7 +78,7 @@ public interface Config {
      * 
      * @return The configuration builder.
      */
-    static @NotNull PropertiesConfigBuilder fromPropertiesFiles() {
+    static @NotNull PropertiesConfigBuilder fromProperties() {
         return new PropertiesConfigBuilderImpl();
     }
 

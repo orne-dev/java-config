@@ -61,7 +61,7 @@ class ConfigSubsetTest {
         values.put("db.host", "localhost");
         values.put("db.port", "5432");
         values.put("db.user", "admin");
-        final Config config = Config.fromPropertiesFiles()
+        final Config config = Config.fromProperties()
                 .add(values)
                 .build();
         final Config dbConfig = config.subset("db.");
@@ -95,7 +95,7 @@ class ConfigSubsetTest {
         values.put("service.db.host", "localhost");
         values.put("service.db.port", "5432");
         values.put("service.db.user", "admin");
-        final Config config = Config.fromPropertiesFiles()
+        final Config config = Config.fromProperties()
                 .add(values)
                 .build();
         final Config serviceConfig = config.subset("service.");
@@ -223,7 +223,7 @@ class ConfigSubsetTest {
         final HashMap<String, String> values = new HashMap<>();
         values.put("service.url", "http://example.com");
         values.put("service.timeout", "5000");
-        final WatchableConfig config = Config.fromPropertiesFiles()
+        final WatchableConfig config = Config.fromProperties()
                 .add(values)
                 .mutable()
                 .build();
@@ -274,7 +274,7 @@ class ConfigSubsetTest {
         values.put("service.db.host", "localhost");
         values.put("service.db.port", "5432");
         values.put("service.db.user", "admin");
-        final WatchableConfig config = Config.fromPropertiesFiles()
+        final WatchableConfig config = Config.fromProperties()
                 .add(values)
                 .mutable()
                 .build();
@@ -321,7 +321,7 @@ class ConfigSubsetTest {
         values.put("db.host", "localhost");
         values.put("db.port", "5432");
         values.put("db.user", "admin");
-        final Config config = Config.fromPropertiesFiles()
+        final Config config = Config.fromProperties()
                 .add(values)
                 .build();
         final Config proxy = config.subset("db.");
@@ -340,7 +340,7 @@ class ConfigSubsetTest {
         altValues.put("db.host", "example.org");
         altValues.put("db.port", "5432");
         altValues.put("db.user", "admin");
-        final Config altConfig = Config.fromPropertiesFiles()
+        final Config altConfig = Config.fromProperties()
                 .add(altValues)
                 .build();
         final Config altProxy = altConfig.subset("db.");
