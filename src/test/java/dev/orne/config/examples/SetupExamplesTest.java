@@ -245,7 +245,7 @@ class SetupExamplesTest {
     void exampleOfXml() {
         final Map<String, String> localValues = Map.of(
                 "host", "www.example.org");
-        final Config config = Config.fromXmlFiles()
+        final Config config = Config.fromXml()
                 .load("example/config.xml")
                 .add(localValues)
                 .build();
@@ -263,7 +263,7 @@ class SetupExamplesTest {
     throws IOException {
         final Map<String, String> localValues = Map.of(
                 "host", "www.example.org");
-        final FileWatchableConfig config = Config.fromXmlFiles()
+        final FileWatchableConfig config = Config.fromXml()
                 .load("example/config.xml")
                 .add(localValues)
                 .mutable()

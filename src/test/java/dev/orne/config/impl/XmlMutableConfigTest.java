@@ -154,7 +154,7 @@ extends AbstractWatchableConfigTest {
     @Override
     protected MutableConfigBuilder<?> createBuilder(
             final @NotNull Map<String, String> properties) {
-        return Config.fromXmlFiles()
+        return Config.fromXml()
                 .mutable()
                 .withEmptyDocument("config")
                 .add(properties);
@@ -167,7 +167,7 @@ extends AbstractWatchableConfigTest {
     void testEmptyBuilder() {
         final XmlMutableConfigImpl config = assertInstanceOf(
                 XmlMutableConfigImpl.class,
-                Config.fromXmlFiles()
+                Config.fromXml()
                     .mutable()
                     .build());
         assertNull(config.getParent());
@@ -185,7 +185,7 @@ extends AbstractWatchableConfigTest {
     void testDocBuilder() {
         final XmlMutableConfigImpl config = assertInstanceOf(
                 XmlMutableConfigImpl.class,
-                Config.fromXmlFiles()
+                Config.fromXml()
                     .add(testValues)
                     .mutable()
                     .build());
@@ -215,7 +215,7 @@ extends AbstractWatchableConfigTest {
     void testResourceBuilder() {
         final XmlMutableConfigImpl config = assertInstanceOf(
                 XmlMutableConfigImpl.class,
-                Config.fromXmlFiles()
+                Config.fromXml()
                     .load(testResource)
                     .mutable()
                     .build());
@@ -242,7 +242,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullResourceBuilder() {
-        final XmlMutableConfigBuilder builder = Config.fromXmlFiles()
+        final XmlMutableConfigBuilder builder = Config.fromXml()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((String) null));
     }
@@ -254,7 +254,7 @@ extends AbstractWatchableConfigTest {
     void testMissingResourceBuilder() {
         final XmlMutableConfigImpl config = assertInstanceOf(
                 XmlMutableConfigImpl.class,
-                Config.fromXmlFiles()
+                Config.fromXml()
                     .load("non/existent/resource.xml")
                     .mutable()
                     .build());
@@ -274,7 +274,7 @@ extends AbstractWatchableConfigTest {
     void testFileBuilder() {
         final XmlMutableConfigImpl config = assertInstanceOf(
                 XmlMutableConfigImpl.class,
-                Config.fromXmlFiles()
+                Config.fromXml()
                     .load(testFile)
                     .mutable()
                     .build());
@@ -301,7 +301,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullFileBuilder() {
-        final XmlMutableConfigBuilder builder = Config.fromXmlFiles()
+        final XmlMutableConfigBuilder builder = Config.fromXml()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((File) null));
     }
@@ -313,7 +313,7 @@ extends AbstractWatchableConfigTest {
     void testMissingFileBuilder() {
         final XmlMutableConfigImpl config = assertInstanceOf(
                 XmlMutableConfigImpl.class,
-                Config.fromXmlFiles()
+                Config.fromXml()
                     .load(new File("non/existent/resource.xml"))
                     .mutable()
                     .build());
@@ -333,7 +333,7 @@ extends AbstractWatchableConfigTest {
     void testPathBuilder() {
         final XmlMutableConfigImpl config = assertInstanceOf(
                 XmlMutableConfigImpl.class,
-                Config.fromXmlFiles()
+                Config.fromXml()
                     .load(testPath)
                     .mutable()
                     .build());
@@ -360,7 +360,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullPathBuilder() {
-        final XmlMutableConfigBuilder builder = Config.fromXmlFiles()
+        final XmlMutableConfigBuilder builder = Config.fromXml()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((Path) null));
     }
@@ -372,7 +372,7 @@ extends AbstractWatchableConfigTest {
     void testMissingPathBuilder() {
         final XmlMutableConfigImpl config = assertInstanceOf(
                 XmlMutableConfigImpl.class,
-                Config.fromXmlFiles()
+                Config.fromXml()
                     .load(Paths.get("non/existent/path.xml"))
                     .mutable()
                     .build());
@@ -392,7 +392,7 @@ extends AbstractWatchableConfigTest {
     void testUrlBuilder() {
         final XmlMutableConfigImpl config = assertInstanceOf(
                 XmlMutableConfigImpl.class,
-                Config.fromXmlFiles()
+                Config.fromXml()
                     .load(testUrl)
                     .mutable()
                     .build());
@@ -419,7 +419,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullUrlBuilder() {
-        final XmlMutableConfigBuilder builder = Config.fromXmlFiles()
+        final XmlMutableConfigBuilder builder = Config.fromXml()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((URL) null));
     }
@@ -436,7 +436,7 @@ extends AbstractWatchableConfigTest {
                 .toURL();
         final XmlMutableConfigImpl config = assertInstanceOf(
                 XmlMutableConfigImpl.class,
-                Config.fromXmlFiles()
+                Config.fromXml()
                     .mutable()
                     .load(missingUrl)
                     .build());
@@ -466,7 +466,7 @@ extends AbstractWatchableConfigTest {
         customSeparatorValues.put(customSeparatorKey, customSeparatorValue);
         final XmlMutableConfigImpl config = assertInstanceOf(
                 XmlMutableConfigImpl.class,
-                Config.fromXmlFiles()
+                Config.fromXml()
                     .mutable()
                     .withEmptyDocument("config")
                     .add(defaultSeparatorValues)
@@ -496,7 +496,7 @@ extends AbstractWatchableConfigTest {
         doc.appendChild(doc.importNode(testValues.getDocumentElement() , true));
         final XmlMutableConfigImpl config = assertInstanceOf(
                 XmlMutableConfigImpl.class,
-                Config.fromXmlFiles()
+                Config.fromXml()
                     .mutable()
                     .add(doc)
                     .build());
@@ -507,7 +507,7 @@ extends AbstractWatchableConfigTest {
             }
             final XmlConfigImpl reload = assertInstanceOf(
                     XmlConfigImpl.class,
-                    Config.fromXmlFiles()
+                    Config.fromXml()
                         .load(tmp)
                         .build());
             assertEquals(
@@ -532,7 +532,7 @@ extends AbstractWatchableConfigTest {
         doc.appendChild(doc.importNode(testValues.getDocumentElement() , true));
         final XmlMutableConfigImpl config = assertInstanceOf(
                 XmlMutableConfigImpl.class,
-                Config.fromXmlFiles()
+                Config.fromXml()
                     .mutable()
                     .add(doc)
                     .build());
@@ -544,7 +544,7 @@ extends AbstractWatchableConfigTest {
             }
             final XmlConfigImpl reload = assertInstanceOf(
                     XmlConfigImpl.class,
-                    Config.fromXmlFiles()
+                    Config.fromXml()
                         .load(tmp)
                         .build());
             assertEquals(

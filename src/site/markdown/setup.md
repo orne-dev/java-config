@@ -145,7 +145,7 @@ config.save(path);
 ### XML files
 
 Configuration instance that retrieves values from XML files
-or documents can be created using the `Config.fromXmlFiles()` method.
+or documents can be created using the `Config.fromXml()` method.
 
 **Note:** This configuration source ignores root XML element when converting
 XML structure into configuration properties.
@@ -156,7 +156,7 @@ Example:
 
 ```java
 Map<String, String> localValues = ...;
-Config config = Config.fromXmlFiles()
+Config config = Config.fromXml()
         .load("example/config.xml")
         .add(localValues) // Overrides loaded properties
         .build();
@@ -170,7 +170,7 @@ Example:
 
 ```java
 Map<String, String> localValues = ...;
-FileWatchableConfig config = Config.fromXmlFiles()
+FileWatchableConfig config = Config.fromXml()
         .load("example/config.xml")
         .add(localValues) // Overrides loaded properties
         .mutable()

@@ -105,7 +105,7 @@ public interface Config {
      * 
      * @return The configuration builder.
      */
-    static @NotNull XmlConfigBuilder fromXmlFiles() {
+    static @NotNull XmlConfigBuilder fromXml() {
         return new XmlConfigBuilderImpl();
     }
 

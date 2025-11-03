@@ -151,7 +151,7 @@ extends AbstractConfigTest {
     @Override
     protected ConfigBuilder<?> createBuilder(
             final @NotNull Map<String, String> properties) {
-        return Config.fromXmlFiles()
+        return Config.fromXml()
                 .withEmptyDocument("config")
                 .add(properties);
     }
@@ -163,7 +163,7 @@ extends AbstractConfigTest {
     void testEmptyBuilder() {
         final XmlConfigImpl config = assertInstanceOf(
                 XmlConfigImpl.class,
-                Config.fromXmlFiles()
+                Config.fromXml()
                     .build());
         assertNull(config.getParent());
         assertSame(ValueDecoder.DEFAULT, config.getDecoder());
@@ -180,7 +180,7 @@ extends AbstractConfigTest {
     void testDocBuilder() {
         final XmlConfigImpl config = assertInstanceOf(
                 XmlConfigImpl.class,
-                Config.fromXmlFiles()
+                Config.fromXml()
                     .add(testValues)
                     .build());
         assertNull(config.getParent());
@@ -209,7 +209,7 @@ extends AbstractConfigTest {
     void testResourceBuilder() {
         final XmlConfigImpl config = assertInstanceOf(
                 XmlConfigImpl.class,
-                Config.fromXmlFiles()
+                Config.fromXml()
                     .load(testResource)
                     .build());
         assertNull(config.getParent());
@@ -235,7 +235,7 @@ extends AbstractConfigTest {
      */
     @Test
     void testNullResourceBuilder() {
-        final XmlConfigBuilder builder = Config.fromXmlFiles();
+        final XmlConfigBuilder builder = Config.fromXml();
         assertThrows(NullPointerException.class, () -> builder.load((String) null));
     }
 
@@ -246,7 +246,7 @@ extends AbstractConfigTest {
     void testMissingResourceBuilder() {
         final XmlConfigImpl config = assertInstanceOf(
                 XmlConfigImpl.class,
-                Config.fromXmlFiles()
+                Config.fromXml()
                     .load("non/existent/resource.xml")
                     .build());
         assertNull(config.getParent());
@@ -265,7 +265,7 @@ extends AbstractConfigTest {
     void testFileBuilder() {
         final XmlConfigImpl config = assertInstanceOf(
                 XmlConfigImpl.class,
-                Config.fromXmlFiles()
+                Config.fromXml()
                     .load(testFile)
                     .build());
         assertNull(config.getParent());
@@ -291,7 +291,7 @@ extends AbstractConfigTest {
      */
     @Test
     void testNullFileBuilder() {
-        final XmlConfigBuilder builder = Config.fromXmlFiles();
+        final XmlConfigBuilder builder = Config.fromXml();
         assertThrows(NullPointerException.class, () -> builder.load((File) null));
     }
 
@@ -302,7 +302,7 @@ extends AbstractConfigTest {
     void testMissingFileBuilder() {
         final XmlConfigImpl config = assertInstanceOf(
                 XmlConfigImpl.class,
-                Config.fromXmlFiles()
+                Config.fromXml()
                     .load(new File("non/existent/resource.xml"))
                     .build());
         assertNull(config.getParent());
@@ -321,7 +321,7 @@ extends AbstractConfigTest {
     void testPathBuilder() {
         final XmlConfigImpl config = assertInstanceOf(
                 XmlConfigImpl.class,
-                Config.fromXmlFiles()
+                Config.fromXml()
                     .load(testPath)
                     .build());
         assertNull(config.getParent());
@@ -347,7 +347,7 @@ extends AbstractConfigTest {
      */
     @Test
     void testNullPathBuilder() {
-        final XmlConfigBuilder builder = Config.fromXmlFiles();
+        final XmlConfigBuilder builder = Config.fromXml();
         assertThrows(NullPointerException.class, () -> builder.load((Path) null));
     }
 
@@ -358,7 +358,7 @@ extends AbstractConfigTest {
     void testMissingPathBuilder() {
         final XmlConfigImpl config = assertInstanceOf(
                 XmlConfigImpl.class,
-                Config.fromXmlFiles()
+                Config.fromXml()
                     .load(Paths.get("non/existent/path.xml"))
                     .build());
         assertNull(config.getParent());
@@ -377,7 +377,7 @@ extends AbstractConfigTest {
     void testUrlBuilder() {
         final XmlConfigImpl config = assertInstanceOf(
                 XmlConfigImpl.class,
-                Config.fromXmlFiles()
+                Config.fromXml()
                     .load(testUrl)
                     .build());
         assertNull(config.getParent());
@@ -403,7 +403,7 @@ extends AbstractConfigTest {
      */
     @Test
     void testNullUrlBuilder() {
-        final XmlConfigBuilder builder = Config.fromXmlFiles();
+        final XmlConfigBuilder builder = Config.fromXml();
         assertThrows(NullPointerException.class, () -> builder.load((URL) null));
     }
 
@@ -419,7 +419,7 @@ extends AbstractConfigTest {
                 .toURL();
         final XmlConfigImpl config = assertInstanceOf(
                 XmlConfigImpl.class,
-                Config.fromXmlFiles()
+                Config.fromXml()
                     .load(missingUrl)
                     .build());
         assertNull(config.getParent());
@@ -448,7 +448,7 @@ extends AbstractConfigTest {
         customSeparatorValues.put(customSeparatorKey, customSeparatorValue);
         final XmlConfigImpl config = assertInstanceOf(
                 XmlConfigImpl.class,
-                Config.fromXmlFiles()
+                Config.fromXml()
                     .withEmptyDocument("config")
                     .add(defaultSeparatorValues)
                     .withSeparator(customSeparator)
