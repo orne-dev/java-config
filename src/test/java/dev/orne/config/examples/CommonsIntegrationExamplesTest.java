@@ -40,13 +40,14 @@ import dev.orne.config.commons.DelegatedOrneConfiguration;
 import dev.orne.config.commons.DelegatedOrneMutableConfiguration;
 
 /**
- * Integration tests of Apache Commons integration examples of public site.
+ * Tests of Apache Commons integration examples of public site.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
  * @see https://orne-dev.github.io/java-config/commons.html
  */
 @Tag("ut")
+@Tag("examples")
 class CommonsIntegrationExamplesTest {
 
     /**

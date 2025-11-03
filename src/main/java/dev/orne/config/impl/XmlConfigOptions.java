@@ -139,7 +139,7 @@ public class XmlConfigOptions {
         }
         this.document = builder.newDocument();
         if (copy.document.getDocumentElement() != null) {
-            final Node rootCopy = this.document.importNode(copy.document, true);
+            final Node rootCopy = this.document.importNode(copy.document.getDocumentElement(), true);
             this.document.appendChild(rootCopy);
         }
         this.propertySeparator = copy.propertySeparator;

@@ -75,6 +75,9 @@ config.removeListener(listener);
 Applications can provide extensions to the `Config` interface to provide
 direct access to specific configuration properties.
 
+Subtypes must provide only default methods that access properties using
+the base `Config`, `MutableConfig` or `WatchableConfig` methods.
+
 Proxies to underlying `Config` instance of subtypes can be created using
 `Config.as()` methods:
 

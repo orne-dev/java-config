@@ -74,8 +74,7 @@ extends MutableConfig {
     throws IOException {
         try (final OutputStream output = Files.newOutputStream(
                 destination,
-                StandardOpenOption.WRITE,
-                StandardOpenOption.CREATE_NEW)) {
+                StandardOpenOption.WRITE)) {
             save(output);
         }
     }

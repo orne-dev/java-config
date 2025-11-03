@@ -40,13 +40,14 @@ import dev.orne.config.MutableConfig;
 import dev.orne.config.WatchableConfig;
 
 /**
- * Integration tests of {@link Config} API usage examples of public site.
+ * Tests of {@link Config} API usage examples of public site.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
  * @see https://orne-dev.github.io/java-config/config.html
  */
 @Tag("ut")
+@Tag("examples")
 class ApiUsageExamplesTest {
 
     /**

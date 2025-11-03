@@ -29,7 +29,7 @@ import org.apiguardian.api.API;
 import dev.orne.config.impl.CryptoProviderBuilderImpl;
 
 /**
- * Provider of cryptography transformations for configuration values.
+ * Provider of cryptographic transformations for configuration values.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2020-04

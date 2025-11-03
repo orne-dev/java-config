@@ -36,6 +36,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.ContextConfiguration;
@@ -77,6 +78,8 @@ class SpringConfigTest {
     static final String CHILD_PARENT_CFG_BEAN = "childContextParentCfgBean";
     static final String CHILD_CHILD_CFG_BEAN = "childContextChildCfgBean";
     static final String CHILD_CHILD_STRICT_CFG_BEAN = "childContextStrictChildCfgBean";
+    static final String CLASSIC_PROP_KEY = "spring.classic.prop";
+    static final String CLASSIC_PROP_PARENT_VALUE = "parentClassicSpringValue";
 
     @Autowired
     private Environment environment;
@@ -195,6 +198,9 @@ class SpringConfigTest {
     @Test
     void testParentContextNoPropsBean() {
         assertEquals(
+                CLASSIC_PROP_PARENT_VALUE,
+                parentContextNoPropsBean.getClassicPropValue());
+        assertEquals(
                 SpringConfig.GRANDPA_PROP_VALUE,
                 parentContextNoPropsBean.getGrandpaPropValue());
         assertEquals(
@@ -217,6 +223,9 @@ class SpringConfigTest {
 
     @Test
     void testParentContextNoNestedBean() {
+        assertEquals(
+                CLASSIC_PROP_PARENT_VALUE,
+                parentContextNoNestedBean.getClassicPropValue());
         assertEquals(
                 SpringConfig.GRANDPA_PROP_VALUE,
                 parentContextNoNestedBean.getGrandpaPropValue());
@@ -251,6 +260,9 @@ class SpringConfigTest {
     @Test
     void testParentContextStrictChildCfgBean() {
         assertEquals(
+                CLASSIC_PROP_PARENT_VALUE,
+                parentContextStrictChildCfgBean.getClassicPropValue());
+        assertEquals(
                 SpringConfig.GRANDPA_PROP_VALUE,
                 parentContextStrictChildCfgBean.getGrandpaPropValue());
         assertEquals(
@@ -274,6 +286,9 @@ class SpringConfigTest {
 
     @Test
     void testChildContextNoPropsBean() {
+        assertEquals(
+                CLASSIC_PROP_PARENT_VALUE,
+                childContextNoPropsBean.getClassicPropValue());
         assertEquals(
                 SpringConfig.GRANDPA_PROP_VALUE,
                 childContextNoPropsBean.getGrandpaPropValue());
@@ -301,6 +316,9 @@ class SpringConfigTest {
 
     @Test
     void testChildContextNoNestedBean() {
+        assertEquals(
+                CLASSIC_PROP_PARENT_VALUE,
+                childContextNoNestedBean.getClassicPropValue());
         assertEquals(
                 SpringConfig.GRANDPA_PROP_VALUE,
                 childContextNoNestedBean.getGrandpaPropValue());
@@ -330,6 +348,9 @@ class SpringConfigTest {
 
     @Test
     void testChildContextParentCfgBean() {
+        assertEquals(
+                CLASSIC_PROP_PARENT_VALUE,
+                childContextParentCfgBean.getClassicPropValue());
         assertEquals(
                 SpringConfig.GRANDPA_PROP_VALUE,
                 childContextParentCfgBean.getGrandpaPropValue());
@@ -370,6 +391,9 @@ class SpringConfigTest {
     private void assertParentConfigBean(
             final ConfigurableBean bean) {
         assertEquals(
+                CLASSIC_PROP_PARENT_VALUE,
+                bean.getClassicPropValue());
+        assertEquals(
                 SpringConfig.GRANDPA_PROP_VALUE,
                 bean.getGrandpaPropValue());
         assertEquals(
@@ -394,6 +418,9 @@ class SpringConfigTest {
 
     private void assertChildConfigBean(
             final ConfigurableBean bean) {
+        assertEquals(
+                CLASSIC_PROP_PARENT_VALUE,
+                bean.getClassicPropValue());
         assertEquals(
                 SpringConfig.GRANDPA_PROP_VALUE,
                 bean.getGrandpaPropValue());
@@ -466,6 +493,7 @@ class SpringConfigTest {
     public static class ConfigurableBean
     implements Configurable {
 
+        private final String classicPropValue;
         private final String grandpaPropValue;
         private final String parentPropValue;
         private final String childPropValue;
@@ -481,11 +509,13 @@ class SpringConfigTest {
         private final NestedConfigurableBean nested = new NestedConfigurableBean();
 
         public ConfigurableBean(
+                String classicPropValue,
                 String grandpaPropValue,
                 String parentPropValue,
                 String childPropValue,
                 String sibblingPropValue) {
             super();
+            this.classicPropValue = classicPropValue;
             this.grandpaPropValue = grandpaPropValue;
             this.parentPropValue = parentPropValue;
             this.childPropValue = childPropValue;
@@ -501,6 +531,10 @@ class SpringConfigTest {
         @Override
         public boolean isConfigured() {
             return configured;
+        }
+
+        public String getClassicPropValue() {
+            return classicPropValue;
         }
 
         public String getGrandpaPropValue() {
@@ -586,11 +620,12 @@ class SpringConfigTest {
     public static class NoPropertiesConfigurableBean
     extends ConfigurableBean {
         public NoPropertiesConfigurableBean(
+                String classicPropValue,
                 String grandpaPropValue,
                 String parentPropValue,
                 String childPropValue,
                 String sibblingPropValue) {
-            super(grandpaPropValue, parentPropValue, childPropValue, sibblingPropValue);
+            super(classicPropValue, grandpaPropValue, parentPropValue, childPropValue, sibblingPropValue);
         }
     }
 
@@ -598,11 +633,12 @@ class SpringConfigTest {
     public static class NoNestedConfigurableBean
     extends ConfigurableBean {
         public NoNestedConfigurableBean(
+                String classicPropValue,
                 String grandpaPropValue,
                 String parentPropValue,
                 String childPropValue,
                 String sibblingPropValue) {
-            super(grandpaPropValue, parentPropValue, childPropValue, sibblingPropValue);
+            super(classicPropValue, grandpaPropValue, parentPropValue, childPropValue, sibblingPropValue);
         }
     }
 
@@ -610,11 +646,12 @@ class SpringConfigTest {
     public static class ParentConfigConfigurableBean
     extends ConfigurableBean {
         public ParentConfigConfigurableBean(
+                String classicPropValue,
                 String grandpaPropValue,
                 String parentPropValue,
                 String childPropValue,
                 String sibblingPropValue) {
-            super(grandpaPropValue, parentPropValue, childPropValue, sibblingPropValue);
+            super(classicPropValue, grandpaPropValue, parentPropValue, childPropValue, sibblingPropValue);
         }
     }
 
@@ -622,11 +659,12 @@ class SpringConfigTest {
     public static class ChildConfigConfigurableBean
     extends ConfigurableBean {
         public ChildConfigConfigurableBean(
+                String classicPropValue,
                 String grandpaPropValue,
                 String parentPropValue,
                 String childPropValue,
                 String sibblingPropValue) {
-            super(grandpaPropValue, parentPropValue, childPropValue, sibblingPropValue);
+            super(classicPropValue, grandpaPropValue, parentPropValue, childPropValue, sibblingPropValue);
         }
     }
 
@@ -636,15 +674,17 @@ class SpringConfigTest {
     public static class ChildStrictConfigurableBean
     extends ConfigurableBean {
         public ChildStrictConfigurableBean(
+                String classicPropValue,
                 String grandpaPropValue,
                 String parentPropValue,
                 String childPropValue,
                 String sibblingPropValue) {
-            super(grandpaPropValue, parentPropValue, childPropValue, sibblingPropValue);
+            super(classicPropValue, grandpaPropValue, parentPropValue, childPropValue, sibblingPropValue);
         }
     }
 
     @Configuration
+    @PropertySource("classpath:dev/orne/config/spring/spring.config.test.properties")
     @ConfigPropertySource(type = ParentConfig.class)
     @EnableConfigurableComponents(type = ParentConfig.class)
     static class SpringConfig
@@ -684,6 +724,8 @@ class SpringConfigTest {
 
         @Bean(name = PARENT_BEAN)
         public ConfigurableBean parentContextBean(
+                @Value("${" + CLASSIC_PROP_KEY + ":#{null}}")
+                final String classicPropValue,
                 @Value("${" + GrandparentConfig.GRANDPA_CFG_PROP + ":#{null}}")
                 final String grandpaPropValue,
                 @Value("${" + ParentConfig.PARENT_CFG_PROP + ":#{null}}")
@@ -693,6 +735,7 @@ class SpringConfigTest {
                 @Value("${" + SibblingConfig.SIBBLING_CFG_PROP + ":#{null}}")
                 final String sibblingPropValue) {
             return new ConfigurableBean(
+                    classicPropValue,
                     grandpaPropValue,
                     parentPropValue,
                     childPropValue,
@@ -701,6 +744,8 @@ class SpringConfigTest {
 
         @Bean(name = PARENT_NO_PROPS_BEAN)
         public NoPropertiesConfigurableBean parentContextNoPropsBean(
+                @Value("${" + CLASSIC_PROP_KEY + ":#{null}}")
+                final String classicPropValue,
                 @Value("${" + GrandparentConfig.GRANDPA_CFG_PROP + ":#{null}}")
                 final String grandpaPropValue,
                 @Value("${" + ParentConfig.PARENT_CFG_PROP + ":#{null}}")
@@ -710,6 +755,7 @@ class SpringConfigTest {
                 @Value("${" + SibblingConfig.SIBBLING_CFG_PROP + ":#{null}}")
                 final String sibblingPropValue) {
             return new NoPropertiesConfigurableBean(
+                    classicPropValue,
                     grandpaPropValue,
                     parentPropValue,
                     childPropValue,
@@ -718,6 +764,8 @@ class SpringConfigTest {
 
         @Bean(name = PARENT_NO_NESTED_BEAN)
         public NoNestedConfigurableBean parentContextNoNestedBean(
+                @Value("${" + CLASSIC_PROP_KEY + ":#{null}}")
+                final String classicPropValue,
                 @Value("${" + GrandparentConfig.GRANDPA_CFG_PROP + ":#{null}}")
                 final String grandpaPropValue,
                 @Value("${" + ParentConfig.PARENT_CFG_PROP + ":#{null}}")
@@ -727,6 +775,7 @@ class SpringConfigTest {
                 @Value("${" + SibblingConfig.SIBBLING_CFG_PROP + ":#{null}}")
                 final String sibblingPropValue) {
             return new NoNestedConfigurableBean(
+                    classicPropValue,
                     grandpaPropValue,
                     parentPropValue,
                     childPropValue,
@@ -735,6 +784,8 @@ class SpringConfigTest {
 
         @Bean(name = PARENT_PARENT_CFG_BEAN)
         public ParentConfigConfigurableBean parentContextParentCfgBean(
+                @Value("${" + CLASSIC_PROP_KEY + ":#{null}}")
+                final String classicPropValue,
                 @Value("${" + GrandparentConfig.GRANDPA_CFG_PROP + ":#{null}}")
                 final String grandpaPropValue,
                 @Value("${" + ParentConfig.PARENT_CFG_PROP + ":#{null}}")
@@ -744,6 +795,7 @@ class SpringConfigTest {
                 @Value("${" + SibblingConfig.SIBBLING_CFG_PROP + ":#{null}}")
                 final String sibblingPropValue) {
             return new ParentConfigConfigurableBean(
+                    classicPropValue,
                     grandpaPropValue,
                     parentPropValue,
                     childPropValue,
@@ -752,6 +804,8 @@ class SpringConfigTest {
 
         @Bean(name = PARENT_CHILD_CFG_BEAN)
         public ChildConfigConfigurableBean parentContextChildCfgBean(
+                @Value("${" + CLASSIC_PROP_KEY + ":#{null}}")
+                final String classicPropValue,
                 @Value("${" + GrandparentConfig.GRANDPA_CFG_PROP + ":#{null}}")
                 final String grandpaPropValue,
                 @Value("${" + ParentConfig.PARENT_CFG_PROP + ":#{null}}")
@@ -761,6 +815,7 @@ class SpringConfigTest {
                 @Value("${" + SibblingConfig.SIBBLING_CFG_PROP + ":#{null}}")
                 final String sibblingPropValue) {
             return new ChildConfigConfigurableBean(
+                    classicPropValue,
                     grandpaPropValue,
                     parentPropValue,
                     childPropValue,
@@ -769,6 +824,8 @@ class SpringConfigTest {
 
         @Bean(name = PARENT_CHILD_STRICT_CFG_BEAN)
         public ChildStrictConfigurableBean parentContextStrictChildCfgBean(
+                @Value("${" + CLASSIC_PROP_KEY + ":#{null}}")
+                final String classicPropValue,
                 @Value("${" + GrandparentConfig.GRANDPA_CFG_PROP + ":#{null}}")
                 final String grandpaPropValue,
                 @Value("${" + ParentConfig.PARENT_CFG_PROP + ":#{null}}")
@@ -778,6 +835,7 @@ class SpringConfigTest {
                 @Value("${" + SibblingConfig.SIBBLING_CFG_PROP + ":#{null}}")
                 final String sibblingPropValue) {
             return new ChildStrictConfigurableBean(
+                    classicPropValue,
                     grandpaPropValue,
                     parentPropValue,
                     childPropValue,
@@ -787,6 +845,7 @@ class SpringConfigTest {
 
 
     @Configuration
+    @PropertySource("classpath:dev/orne/config/spring/spring.config.test.child.properties")
     @ConfigPropertySource(type = ChildConfig.class)
     @ConfigPropertySource(type = SibblingConfig.class)
     @EnableConfigurableComponents(type = ChildConfig.class)
@@ -831,6 +890,8 @@ class SpringConfigTest {
 
         @Bean(name = CHILD_BEAN)
         public ConfigurableBean childContextBean(
+                @Value("${" + CLASSIC_PROP_KEY + ":#{null}}")
+                final String classicPropValue,
                 @Value("${" + GrandparentConfig.GRANDPA_CFG_PROP + ":#{null}}")
                 final String grandpaPropValue,
                 @Value("${" + ParentConfig.PARENT_CFG_PROP + ":#{null}}")
@@ -840,6 +901,7 @@ class SpringConfigTest {
                 @Value("${" + SibblingConfig.SIBBLING_CFG_PROP + ":#{null}}")
                 final String sibblingPropValue) {
             return new ConfigurableBean(
+                    classicPropValue,
                     grandpaPropValue,
                     parentPropValue,
                     childPropValue,
@@ -848,6 +910,8 @@ class SpringConfigTest {
 
         @Bean(name = CHILD_NO_PROPS_BEAN)
         public NoPropertiesConfigurableBean childContextNoPropsBean(
+                @Value("${" + CLASSIC_PROP_KEY + ":#{null}}")
+                final String classicPropValue,
                 @Value("${" + GrandparentConfig.GRANDPA_CFG_PROP + ":#{null}}")
                 final String grandpaPropValue,
                 @Value("${" + ParentConfig.PARENT_CFG_PROP + ":#{null}}")
@@ -857,6 +921,7 @@ class SpringConfigTest {
                 @Value("${" + SibblingConfig.SIBBLING_CFG_PROP + ":#{null}}")
                 final String sibblingPropValue) {
             return new NoPropertiesConfigurableBean(
+                    classicPropValue,
                     grandpaPropValue,
                     parentPropValue,
                     childPropValue,
@@ -865,6 +930,8 @@ class SpringConfigTest {
 
         @Bean(name = CHILD_NO_NESTED_BEAN)
         public NoNestedConfigurableBean childContextNoNestedBean(
+                @Value("${" + CLASSIC_PROP_KEY + ":#{null}}")
+                final String classicPropValue,
                 @Value("${" + GrandparentConfig.GRANDPA_CFG_PROP + ":#{null}}")
                 final String grandpaPropValue,
                 @Value("${" + ParentConfig.PARENT_CFG_PROP + ":#{null}}")
@@ -874,6 +941,7 @@ class SpringConfigTest {
                 @Value("${" + SibblingConfig.SIBBLING_CFG_PROP + ":#{null}}")
                 final String sibblingPropValue) {
             return new NoNestedConfigurableBean(
+                    classicPropValue,
                     grandpaPropValue,
                     parentPropValue,
                     childPropValue,
@@ -882,6 +950,8 @@ class SpringConfigTest {
 
         @Bean(name = CHILD_PARENT_CFG_BEAN)
         public ParentConfigConfigurableBean childContextParentCfgBean(
+                @Value("${" + CLASSIC_PROP_KEY + ":#{null}}")
+                final String classicPropValue,
                 @Value("${" + GrandparentConfig.GRANDPA_CFG_PROP + ":#{null}}")
                 final String grandpaPropValue,
                 @Value("${" + ParentConfig.PARENT_CFG_PROP + ":#{null}}")
@@ -891,6 +961,7 @@ class SpringConfigTest {
                 @Value("${" + SibblingConfig.SIBBLING_CFG_PROP + ":#{null}}")
                 final String sibblingPropValue) {
             return new ParentConfigConfigurableBean(
+                    classicPropValue,
                     grandpaPropValue,
                     parentPropValue,
                     childPropValue,
@@ -899,6 +970,8 @@ class SpringConfigTest {
 
         @Bean(name = CHILD_CHILD_CFG_BEAN)
         public ChildConfigConfigurableBean childContextChildCfgBean(
+                @Value("${" + CLASSIC_PROP_KEY + ":#{null}}")
+                final String classicPropValue,
                 @Value("${" + GrandparentConfig.GRANDPA_CFG_PROP + ":#{null}}")
                 final String grandpaPropValue,
                 @Value("${" + ParentConfig.PARENT_CFG_PROP + ":#{null}}")
@@ -908,6 +981,7 @@ class SpringConfigTest {
                 @Value("${" + SibblingConfig.SIBBLING_CFG_PROP + ":#{null}}")
                 final String sibblingPropValue) {
             return new ChildConfigConfigurableBean(
+                    classicPropValue,
                     grandpaPropValue,
                     parentPropValue,
                     childPropValue,
@@ -916,6 +990,8 @@ class SpringConfigTest {
 
         @Bean(name = CHILD_CHILD_STRICT_CFG_BEAN)
         public ChildStrictConfigurableBean childContextStrictChildCfgBean(
+                @Value("${" + CLASSIC_PROP_KEY + ":#{null}}")
+                final String classicPropValue,
                 @Value("${" + GrandparentConfig.GRANDPA_CFG_PROP + ":#{null}}")
                 final String grandpaPropValue,
                 @Value("${" + ParentConfig.PARENT_CFG_PROP + ":#{null}}")
@@ -925,6 +1001,7 @@ class SpringConfigTest {
                 @Value("${" + SibblingConfig.SIBBLING_CFG_PROP + ":#{null}}")
                 final String sibblingPropValue) {
             return new ChildStrictConfigurableBean(
+                    classicPropValue,
                     grandpaPropValue,
                     parentPropValue,
                     childPropValue,

@@ -186,8 +186,8 @@ extends AbstractWatchableConfigTest {
         final XmlMutableConfigImpl config = assertInstanceOf(
                 XmlMutableConfigImpl.class,
                 Config.fromXmlFiles()
-                    .mutable()
                     .add(testValues)
+                    .mutable()
                     .build());
         assertNull(config.getParent());
         assertSame(ValueDecoder.DEFAULT, config.getDecoder());
@@ -216,8 +216,8 @@ extends AbstractWatchableConfigTest {
         final XmlMutableConfigImpl config = assertInstanceOf(
                 XmlMutableConfigImpl.class,
                 Config.fromXmlFiles()
-                    .mutable()
                     .load(testResource)
+                    .mutable()
                     .build());
         assertNull(config.getParent());
         assertSame(ValueDecoder.DEFAULT, config.getDecoder());
@@ -255,8 +255,8 @@ extends AbstractWatchableConfigTest {
         final XmlMutableConfigImpl config = assertInstanceOf(
                 XmlMutableConfigImpl.class,
                 Config.fromXmlFiles()
-                .mutable()
                     .load("non/existent/resource.xml")
+                    .mutable()
                     .build());
         assertNull(config.getParent());
         assertSame(ValueDecoder.DEFAULT, config.getDecoder());
@@ -275,8 +275,8 @@ extends AbstractWatchableConfigTest {
         final XmlMutableConfigImpl config = assertInstanceOf(
                 XmlMutableConfigImpl.class,
                 Config.fromXmlFiles()
-                    .mutable()
                     .load(testFile)
+                    .mutable()
                     .build());
         assertNull(config.getParent());
         assertSame(ValueDecoder.DEFAULT, config.getDecoder());
@@ -314,8 +314,8 @@ extends AbstractWatchableConfigTest {
         final XmlMutableConfigImpl config = assertInstanceOf(
                 XmlMutableConfigImpl.class,
                 Config.fromXmlFiles()
-                    .mutable()
                     .load(new File("non/existent/resource.xml"))
+                    .mutable()
                     .build());
         assertNull(config.getParent());
         assertSame(ValueDecoder.DEFAULT, config.getDecoder());
@@ -334,8 +334,8 @@ extends AbstractWatchableConfigTest {
         final XmlMutableConfigImpl config = assertInstanceOf(
                 XmlMutableConfigImpl.class,
                 Config.fromXmlFiles()
-                    .mutable()
                     .load(testPath)
+                    .mutable()
                     .build());
         assertNull(config.getParent());
         assertSame(ValueDecoder.DEFAULT, config.getDecoder());
@@ -373,8 +373,8 @@ extends AbstractWatchableConfigTest {
         final XmlMutableConfigImpl config = assertInstanceOf(
                 XmlMutableConfigImpl.class,
                 Config.fromXmlFiles()
-                    .mutable()
                     .load(Paths.get("non/existent/path.xml"))
+                    .mutable()
                     .build());
         assertNull(config.getParent());
         assertSame(ValueDecoder.DEFAULT, config.getDecoder());
@@ -393,8 +393,8 @@ extends AbstractWatchableConfigTest {
         final XmlMutableConfigImpl config = assertInstanceOf(
                 XmlMutableConfigImpl.class,
                 Config.fromXmlFiles()
-                    .mutable()
                     .load(testUrl)
+                    .mutable()
                     .build());
         assertNull(config.getParent());
         assertSame(ValueDecoder.DEFAULT, config.getDecoder());
