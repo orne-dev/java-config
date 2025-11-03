@@ -129,7 +129,7 @@ extends AbstractWatchableConfigTest {
     @Override
     protected MutableConfigBuilder<?> createBuilder(
             final @NotNull Map<String, String> properties) {
-        return Config.fromYamlFiles()
+        return Config.fromYaml()
                 .mutable()
                 .add(properties);
     }
@@ -141,7 +141,7 @@ extends AbstractWatchableConfigTest {
     void testEmptyBuilder() {
         final YamlMutableConfigImpl config = assertInstanceOf(
                 YamlMutableConfigImpl.class,
-                Config.fromYamlFiles()
+                Config.fromYaml()
                     .mutable()
                     .build());
         assertNull(config.getParent());
@@ -159,7 +159,7 @@ extends AbstractWatchableConfigTest {
     void testMapBuilder() {
         final YamlMutableConfigImpl config = assertInstanceOf(
                 YamlMutableConfigImpl.class,
-                Config.fromYamlFiles()
+                Config.fromYaml()
                     .mutable()
                     .add(testValues)
                     .build());
@@ -189,7 +189,7 @@ extends AbstractWatchableConfigTest {
     void testResourceBuilder() {
         final YamlMutableConfigImpl config = assertInstanceOf(
                 YamlMutableConfigImpl.class,
-                Config.fromYamlFiles()
+                Config.fromYaml()
                     .mutable()
                     .load(testResource)
                     .build());
@@ -216,7 +216,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullResourceBuilder() {
-        final YamlMutableConfigBuilder builder = Config.fromYamlFiles()
+        final YamlMutableConfigBuilder builder = Config.fromYaml()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((String) null));
     }
@@ -228,7 +228,7 @@ extends AbstractWatchableConfigTest {
     void testMissingResourceBuilder() {
         final YamlMutableConfigImpl config = assertInstanceOf(
                 YamlMutableConfigImpl.class,
-                Config.fromYamlFiles()
+                Config.fromYaml()
                     .mutable()
                     .load("non/existent/resource.yaml")
                     .build());
@@ -248,7 +248,7 @@ extends AbstractWatchableConfigTest {
     void testFileBuilder() {
         final YamlMutableConfigImpl config = assertInstanceOf(
                 YamlMutableConfigImpl.class,
-                Config.fromYamlFiles()
+                Config.fromYaml()
                     .mutable()
                     .load(testFile)
                     .build());
@@ -275,7 +275,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullFileBuilder() {
-        final YamlMutableConfigBuilder builder = Config.fromYamlFiles()
+        final YamlMutableConfigBuilder builder = Config.fromYaml()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((File) null));
     }
@@ -287,7 +287,7 @@ extends AbstractWatchableConfigTest {
     void testMissingFileBuilder() {
         final YamlMutableConfigImpl config = assertInstanceOf(
                 YamlMutableConfigImpl.class,
-                Config.fromYamlFiles()
+                Config.fromYaml()
                     .mutable()
                     .load(new File("non/existent/resource.yaml"))
                     .build());
@@ -307,7 +307,7 @@ extends AbstractWatchableConfigTest {
     void testPathBuilder() {
         final YamlMutableConfigImpl config = assertInstanceOf(
                 YamlMutableConfigImpl.class,
-                Config.fromYamlFiles()
+                Config.fromYaml()
                     .mutable()
                     .load(testPath)
                     .build());
@@ -334,7 +334,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullPathBuilder() {
-        final YamlMutableConfigBuilder builder = Config.fromYamlFiles()
+        final YamlMutableConfigBuilder builder = Config.fromYaml()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((Path) null));
     }
@@ -346,7 +346,7 @@ extends AbstractWatchableConfigTest {
     void testMissingPathBuilder() {
         final YamlMutableConfigImpl config = assertInstanceOf(
                 YamlMutableConfigImpl.class,
-                Config.fromYamlFiles()
+                Config.fromYaml()
                     .mutable()
                     .load(Paths.get("non/existent/path.yaml"))
                     .build());
@@ -366,7 +366,7 @@ extends AbstractWatchableConfigTest {
     void testUrlBuilder() {
         final YamlMutableConfigImpl config = assertInstanceOf(
                 YamlMutableConfigImpl.class,
-                Config.fromYamlFiles()
+                Config.fromYaml()
                     .mutable()
                     .load(testUrl)
                     .build());
@@ -393,7 +393,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullUrlBuilder() {
-        final YamlMutableConfigBuilder builder = Config.fromYamlFiles()
+        final YamlMutableConfigBuilder builder = Config.fromYaml()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((URL) null));
     }
@@ -410,7 +410,7 @@ extends AbstractWatchableConfigTest {
                 .toURL();
         final YamlMutableConfigImpl config = assertInstanceOf(
                 YamlMutableConfigImpl.class,
-                Config.fromYamlFiles()
+                Config.fromYaml()
                     .mutable()
                     .load(missingUrl)
                     .build());
@@ -440,7 +440,7 @@ extends AbstractWatchableConfigTest {
         customSeparatorValues.put(customSeparatorKey, customSeparatorValue);
         final YamlMutableConfigImpl config = assertInstanceOf(
                 YamlMutableConfigImpl.class,
-                Config.fromYamlFiles()
+                Config.fromYaml()
                     .mutable()
                     .add(defaultSeparatorValues)
                     .withSeparator(customSeparator)
@@ -467,7 +467,7 @@ extends AbstractWatchableConfigTest {
     throws IOException {
         final YamlMutableConfigImpl config = assertInstanceOf(
                 YamlMutableConfigImpl.class,
-                Config.fromYamlFiles()
+                Config.fromYaml()
                     .mutable()
                     .add(testValues)
                     .build());
@@ -478,7 +478,7 @@ extends AbstractWatchableConfigTest {
             }
             final YamlConfigImpl reload = assertInstanceOf(
                     YamlConfigImpl.class,
-                    Config.fromYamlFiles()
+                    Config.fromYaml()
                         .load(tmp)
                         .build());
             assertEquals(config.getJsonObject(), reload.getJsonObject());
@@ -495,7 +495,7 @@ extends AbstractWatchableConfigTest {
     throws IOException {
         final YamlMutableConfigImpl config = assertInstanceOf(
                 YamlMutableConfigImpl.class,
-                Config.fromYamlFiles()
+                Config.fromYaml()
                     .mutable()
                     .add(testValues)
                     .build());
@@ -507,7 +507,7 @@ extends AbstractWatchableConfigTest {
             }
             final YamlConfigImpl reload = assertInstanceOf(
                     YamlConfigImpl.class,
-                    Config.fromYamlFiles()
+                    Config.fromYaml()
                         .load(tmp)
                         .build());
             assertEquals(config.getJsonObject(), reload.getJsonObject());

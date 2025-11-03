@@ -111,13 +111,13 @@ config.save(path);
 ### YAML
 
 Jackson 2 based configuration instance that retrieves values from YAML files
-or objects can be created using the `Config.fromYamlFiles()` method.
+or objects can be created using the `Config.fromYaml()` method.
 
 Example:
 
 ```java
 Map<String, String> localValues = ...;
-Config config = Config.fromYamlFiles()
+Config config = Config.fromYaml()
         .load("example/config.yml")
         .add(localValues) // Overrides loaded properties
         .build();
@@ -131,7 +131,7 @@ Example:
 
 ```java
 Map<String, String> localValues = ...;
-FileWatchableConfig config = Config.fromYamlFiles()
+FileWatchableConfig config = Config.fromYaml()
         .load("example/config.yml")
         .add(localValues) // Overrides loaded properties
         .mutable()

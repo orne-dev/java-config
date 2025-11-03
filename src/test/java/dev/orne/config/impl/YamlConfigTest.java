@@ -127,7 +127,7 @@ extends AbstractConfigTest {
     @Override
     protected ConfigBuilder<?> createBuilder(
             final @NotNull Map<String, String> properties) {
-        return Config.fromYamlFiles()
+        return Config.fromYaml()
                 .add(properties);
     }
 
@@ -138,7 +138,7 @@ extends AbstractConfigTest {
     void testEmptyBuilder() {
         final YamlConfigImpl config = assertInstanceOf(
                 YamlConfigImpl.class,
-                Config.fromYamlFiles()
+                Config.fromYaml()
                     .build());
         assertNull(config.getParent());
         assertSame(ValueDecoder.DEFAULT, config.getDecoder());
@@ -155,7 +155,7 @@ extends AbstractConfigTest {
     void testMapBuilder() {
         final YamlConfigImpl config = assertInstanceOf(
                 YamlConfigImpl.class,
-                Config.fromYamlFiles()
+                Config.fromYaml()
                     .add(testValues)
                     .build());
         assertNull(config.getParent());
@@ -184,7 +184,7 @@ extends AbstractConfigTest {
     void testResourceBuilder() {
         final YamlConfigImpl config = assertInstanceOf(
                 YamlConfigImpl.class,
-                Config.fromYamlFiles()
+                Config.fromYaml()
                     .load(testResource)
                     .build());
         assertNull(config.getParent());
@@ -210,7 +210,7 @@ extends AbstractConfigTest {
      */
     @Test
     void testNullResourceBuilder() {
-        final YamlConfigBuilder builder = Config.fromYamlFiles();
+        final YamlConfigBuilder builder = Config.fromYaml();
         assertThrows(NullPointerException.class, () -> builder.load((String) null));
     }
 
@@ -221,7 +221,7 @@ extends AbstractConfigTest {
     void testMissingResourceBuilder() {
         final YamlConfigImpl config = assertInstanceOf(
                 YamlConfigImpl.class,
-                Config.fromYamlFiles()
+                Config.fromYaml()
                     .load("non/existent/resource.yaml")
                     .build());
         assertNull(config.getParent());
@@ -240,7 +240,7 @@ extends AbstractConfigTest {
     void testFileBuilder() {
         final YamlConfigImpl config = assertInstanceOf(
                 YamlConfigImpl.class,
-                Config.fromYamlFiles()
+                Config.fromYaml()
                     .load(testFile)
                     .build());
         assertNull(config.getParent());
@@ -266,7 +266,7 @@ extends AbstractConfigTest {
      */
     @Test
     void testNullFileBuilder() {
-        final YamlConfigBuilder builder = Config.fromYamlFiles();
+        final YamlConfigBuilder builder = Config.fromYaml();
         assertThrows(NullPointerException.class, () -> builder.load((File) null));
     }
 
@@ -277,7 +277,7 @@ extends AbstractConfigTest {
     void testMissingFileBuilder() {
         final YamlConfigImpl config = assertInstanceOf(
                 YamlConfigImpl.class,
-                Config.fromYamlFiles()
+                Config.fromYaml()
                     .load(new File("non/existent/resource.yaml"))
                     .build());
         assertNull(config.getParent());
@@ -296,7 +296,7 @@ extends AbstractConfigTest {
     void testPathBuilder() {
         final YamlConfigImpl config = assertInstanceOf(
                 YamlConfigImpl.class,
-                Config.fromYamlFiles()
+                Config.fromYaml()
                     .load(testPath)
                     .build());
         assertNull(config.getParent());
@@ -322,7 +322,7 @@ extends AbstractConfigTest {
      */
     @Test
     void testNullPathBuilder() {
-        final YamlConfigBuilder builder = Config.fromYamlFiles();
+        final YamlConfigBuilder builder = Config.fromYaml();
         assertThrows(NullPointerException.class, () -> builder.load((Path) null));
     }
 
@@ -333,7 +333,7 @@ extends AbstractConfigTest {
     void testMissingPathBuilder() {
         final YamlConfigImpl config = assertInstanceOf(
                 YamlConfigImpl.class,
-                Config.fromYamlFiles()
+                Config.fromYaml()
                     .load(Paths.get("non/existent/path.yaml"))
                     .build());
         assertNull(config.getParent());
@@ -352,7 +352,7 @@ extends AbstractConfigTest {
     void testUrlBuilder() {
         final YamlConfigImpl config = assertInstanceOf(
                 YamlConfigImpl.class,
-                Config.fromYamlFiles()
+                Config.fromYaml()
                     .load(testUrl)
                     .build());
         assertNull(config.getParent());
@@ -378,7 +378,7 @@ extends AbstractConfigTest {
      */
     @Test
     void testNullUrlBuilder() {
-        final YamlConfigBuilder builder = Config.fromYamlFiles();
+        final YamlConfigBuilder builder = Config.fromYaml();
         assertThrows(NullPointerException.class, () -> builder.load((URL) null));
     }
 
@@ -394,7 +394,7 @@ extends AbstractConfigTest {
                 .toURL();
         final YamlConfigImpl config = assertInstanceOf(
                 YamlConfigImpl.class,
-                Config.fromYamlFiles()
+                Config.fromYaml()
                     .load(missingUrl)
                     .build());
         assertNull(config.getParent());
@@ -423,7 +423,7 @@ extends AbstractConfigTest {
         customSeparatorValues.put(customSeparatorKey, customSeparatorValue);
         final YamlConfigImpl config = assertInstanceOf(
                 YamlConfigImpl.class,
-                Config.fromYamlFiles()
+                Config.fromYaml()
                     .add(defaultSeparatorValues)
                     .withSeparator(customSeparator)
                     .add(customSeparatorValues)

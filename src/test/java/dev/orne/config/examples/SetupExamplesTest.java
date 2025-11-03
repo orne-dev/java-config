@@ -201,7 +201,7 @@ class SetupExamplesTest {
     void exampleOfYaml() {
         final Map<String, String> localValues = Map.of(
                 "host", "www.example.org");
-        final Config config = Config.fromYamlFiles()
+        final Config config = Config.fromYaml()
                 .load("example/config.yml")
                 .add(localValues)
                 .build();
@@ -219,7 +219,7 @@ class SetupExamplesTest {
     throws IOException {
         final Map<String, String> localValues = Map.of(
                 "host", "www.example.org");
-        final FileWatchableConfig config = Config.fromYamlFiles()
+        final FileWatchableConfig config = Config.fromYaml()
                 .load("example/config.yml")
                 .add(localValues)
                 .mutable()

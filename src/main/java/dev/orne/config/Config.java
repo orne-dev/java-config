@@ -96,7 +96,7 @@ public interface Config {
      * 
      * @return The configuration builder.
      */
-    static @NotNull YamlConfigBuilder fromYamlFiles() {
+    static @NotNull YamlConfigBuilder fromYaml() {
         return new YamlConfigBuilderImpl();
     }
 
