@@ -127,12 +127,13 @@ public interface ConfigBuilder<S extends ConfigBuilder<S>> {
      * <p>
      * This is a shortcut for {@code Config.as(build(), configType)}.
      * 
+     * @param <T> The configuration sub-type.
      * @param configType The configuration sub-type.
      * @return The configuration instance.
      * @see Config#as(Config, Class)
      */
-    default @NotNull Config as(
-            final @NotNull Class<? extends Config> configType) {
+    default <T extends Config> @NotNull T as(
+            final @NotNull Class<T> configType) {
         return Config.as(build(), configType);
     }
 }
