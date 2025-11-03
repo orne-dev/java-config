@@ -157,7 +157,7 @@ class SetupExamplesTest {
     void exampleOfJson() {
         final Map<String, String> localValues = Map.of(
                 "host", "www.example.org");
-        final Config config = Config.fromJsonFiles()
+        final Config config = Config.fromJson()
                 .load("example/config.json")
                 .add(localValues)
                 .build();
@@ -175,7 +175,7 @@ class SetupExamplesTest {
     throws IOException {
         final Map<String, String> localValues = Map.of(
                 "host", "www.example.org");
-        final FileWatchableConfig config = Config.fromJsonFiles()
+        final FileWatchableConfig config = Config.fromJson()
                 .load("example/config.json")
                 .add(localValues)
                 .mutable()

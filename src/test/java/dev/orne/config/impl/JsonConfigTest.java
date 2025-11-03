@@ -126,7 +126,7 @@ extends AbstractConfigTest {
     @Override
     protected ConfigBuilder<?> createBuilder(
             final @NotNull Map<String, String> properties) {
-        return Config.fromJsonFiles()
+        return Config.fromJson()
                 .add(properties);
     }
 
@@ -137,7 +137,7 @@ extends AbstractConfigTest {
     void testEmptyBuilder() {
         final JsonConfigImpl config = assertInstanceOf(
                 JsonConfigImpl.class,
-                Config.fromJsonFiles()
+                Config.fromJson()
                     .build());
         assertNull(config.getParent());
         assertSame(ValueDecoder.DEFAULT, config.getDecoder());
@@ -154,7 +154,7 @@ extends AbstractConfigTest {
     void testMapBuilder() {
         final JsonConfigImpl config = assertInstanceOf(
                 JsonConfigImpl.class,
-                Config.fromJsonFiles()
+                Config.fromJson()
                     .add(testValues)
                     .build());
         assertNull(config.getParent());
@@ -183,7 +183,7 @@ extends AbstractConfigTest {
     void testResourceBuilder() {
         final JsonConfigImpl config = assertInstanceOf(
                 JsonConfigImpl.class,
-                Config.fromJsonFiles()
+                Config.fromJson()
                     .load(testResource)
                     .build());
         assertNull(config.getParent());
@@ -209,7 +209,7 @@ extends AbstractConfigTest {
      */
     @Test
     void testNullResourceBuilder() {
-        final JsonConfigBuilder builder = Config.fromJsonFiles();
+        final JsonConfigBuilder builder = Config.fromJson();
         assertThrows(NullPointerException.class, () -> builder.load((String) null));
     }
 
@@ -220,7 +220,7 @@ extends AbstractConfigTest {
     void testMissingResourceBuilder() {
         final JsonConfigImpl config = assertInstanceOf(
                 JsonConfigImpl.class,
-                Config.fromJsonFiles()
+                Config.fromJson()
                     .load("non/existent/resource.json")
                     .build());
         assertNull(config.getParent());
@@ -239,7 +239,7 @@ extends AbstractConfigTest {
     void testFileBuilder() {
         final JsonConfigImpl config = assertInstanceOf(
                 JsonConfigImpl.class,
-                Config.fromJsonFiles()
+                Config.fromJson()
                     .load(testFile)
                     .build());
         assertNull(config.getParent());
@@ -265,7 +265,7 @@ extends AbstractConfigTest {
      */
     @Test
     void testNullFileBuilder() {
-        final JsonConfigBuilder builder = Config.fromJsonFiles();
+        final JsonConfigBuilder builder = Config.fromJson();
         assertThrows(NullPointerException.class, () -> builder.load((File) null));
     }
 
@@ -276,7 +276,7 @@ extends AbstractConfigTest {
     void testMissingFileBuilder() {
         final JsonConfigImpl config = assertInstanceOf(
                 JsonConfigImpl.class,
-                Config.fromJsonFiles()
+                Config.fromJson()
                     .load(new File("non/existent/resource.json"))
                     .build());
         assertNull(config.getParent());
@@ -295,7 +295,7 @@ extends AbstractConfigTest {
     void testPathBuilder() {
         final JsonConfigImpl config = assertInstanceOf(
                 JsonConfigImpl.class,
-                Config.fromJsonFiles()
+                Config.fromJson()
                     .load(testPath)
                     .build());
         assertNull(config.getParent());
@@ -321,7 +321,7 @@ extends AbstractConfigTest {
      */
     @Test
     void testNullPathBuilder() {
-        final JsonConfigBuilder builder = Config.fromJsonFiles();
+        final JsonConfigBuilder builder = Config.fromJson();
         assertThrows(NullPointerException.class, () -> builder.load((Path) null));
     }
 
@@ -332,7 +332,7 @@ extends AbstractConfigTest {
     void testMissingPathBuilder() {
         final JsonConfigImpl config = assertInstanceOf(
                 JsonConfigImpl.class,
-                Config.fromJsonFiles()
+                Config.fromJson()
                     .load(Paths.get("non/existent/path.json"))
                     .build());
         assertNull(config.getParent());
@@ -351,7 +351,7 @@ extends AbstractConfigTest {
     void testUrlBuilder() {
         final JsonConfigImpl config = assertInstanceOf(
                 JsonConfigImpl.class,
-                Config.fromJsonFiles()
+                Config.fromJson()
                     .load(testUrl)
                     .build());
         assertNull(config.getParent());
@@ -377,7 +377,7 @@ extends AbstractConfigTest {
      */
     @Test
     void testNullUrlBuilder() {
-        final JsonConfigBuilder builder = Config.fromJsonFiles();
+        final JsonConfigBuilder builder = Config.fromJson();
         assertThrows(NullPointerException.class, () -> builder.load((URL) null));
     }
 
@@ -393,7 +393,7 @@ extends AbstractConfigTest {
                 .toURL();
         final JsonConfigImpl config = assertInstanceOf(
                 JsonConfigImpl.class,
-                Config.fromJsonFiles()
+                Config.fromJson()
                     .load(missingUrl)
                     .build());
         assertNull(config.getParent());
@@ -422,7 +422,7 @@ extends AbstractConfigTest {
         customSeparatorValues.put(customSeparatorKey, customSeparatorValue);
         final JsonConfigImpl config = assertInstanceOf(
                 JsonConfigImpl.class,
-                Config.fromJsonFiles()
+                Config.fromJson()
                     .add(defaultSeparatorValues)
                     .withSeparator(customSeparator)
                     .add(customSeparatorValues)

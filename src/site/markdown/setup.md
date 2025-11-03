@@ -77,13 +77,13 @@ config.save(path);
 ### JSON
 
 Jackson 2 based configuration instance that retrieves values from JSON files
-or objects can be created using the `Config.fromJsonFiles()` method.
+or objects can be created using the `Config.fromJson()` method.
 
 Example:
 
 ```java
 Map<String, String> localValues = ...;
-Config config = Config.fromJsonFiles()
+Config config = Config.fromJson()
         .load("config/application.json")
         .add(localValues) // Overrides loaded properties
         .build();
@@ -97,7 +97,7 @@ Example:
 
 ```java
 Map<String, String> localValues = ...;
-FileWatchableConfig config = Config.fromJsonFiles()
+FileWatchableConfig config = Config.fromJson()
         .load("example/config.json")
         .add(localValues) // Overrides loaded properties
         .mutable()

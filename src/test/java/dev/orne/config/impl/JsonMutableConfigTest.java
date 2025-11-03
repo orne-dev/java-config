@@ -130,7 +130,7 @@ extends AbstractWatchableConfigTest {
     @Override
     protected MutableConfigBuilder<?> createBuilder(
             final @NotNull Map<String, String> properties) {
-        return Config.fromJsonFiles()
+        return Config.fromJson()
                 .mutable()
                 .add(properties);
     }
@@ -142,7 +142,7 @@ extends AbstractWatchableConfigTest {
     void testEmptyBuilder() {
         final JsonMutableConfigImpl config = assertInstanceOf(
                 JsonMutableConfigImpl.class,
-                Config.fromJsonFiles()
+                Config.fromJson()
                     .mutable()
                     .build());
         assertNull(config.getParent());
@@ -160,7 +160,7 @@ extends AbstractWatchableConfigTest {
     void testMapBuilder() {
         final JsonMutableConfigImpl config = assertInstanceOf(
                 JsonMutableConfigImpl.class,
-                Config.fromJsonFiles()
+                Config.fromJson()
                     .mutable()
                     .add(testValues)
                     .build());
@@ -190,7 +190,7 @@ extends AbstractWatchableConfigTest {
     void testResourceBuilder() {
         final JsonMutableConfigImpl config = assertInstanceOf(
                 JsonMutableConfigImpl.class,
-                Config.fromJsonFiles()
+                Config.fromJson()
                     .mutable()
                     .load(testResource)
                     .build());
@@ -217,7 +217,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullResourceBuilder() {
-        final JsonMutableConfigBuilder builder = Config.fromJsonFiles()
+        final JsonMutableConfigBuilder builder = Config.fromJson()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((String) null));
     }
@@ -229,7 +229,7 @@ extends AbstractWatchableConfigTest {
     void testMissingResourceBuilder() {
         final JsonMutableConfigImpl config = assertInstanceOf(
                 JsonMutableConfigImpl.class,
-                Config.fromJsonFiles()
+                Config.fromJson()
                     .mutable()
                     .load("non/existent/resource.json")
                     .build());
@@ -249,7 +249,7 @@ extends AbstractWatchableConfigTest {
     void testFileBuilder() {
         final JsonMutableConfigImpl config = assertInstanceOf(
                 JsonMutableConfigImpl.class,
-                Config.fromJsonFiles()
+                Config.fromJson()
                     .mutable()
                     .load(testFile)
                     .build());
@@ -276,7 +276,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullFileBuilder() {
-        final JsonMutableConfigBuilder builder = Config.fromJsonFiles()
+        final JsonMutableConfigBuilder builder = Config.fromJson()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((File) null));
     }
@@ -288,7 +288,7 @@ extends AbstractWatchableConfigTest {
     void testMissingFileBuilder() {
         final JsonMutableConfigImpl config = assertInstanceOf(
                 JsonMutableConfigImpl.class,
-                Config.fromJsonFiles()
+                Config.fromJson()
                     .mutable()
                     .load(new File("non/existent/resource.json"))
                     .build());
@@ -308,7 +308,7 @@ extends AbstractWatchableConfigTest {
     void testPathBuilder() {
         final JsonMutableConfigImpl config = assertInstanceOf(
                 JsonMutableConfigImpl.class,
-                Config.fromJsonFiles()
+                Config.fromJson()
                     .mutable()
                     .load(testPath)
                     .build());
@@ -335,7 +335,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullPathBuilder() {
-        final JsonMutableConfigBuilder builder = Config.fromJsonFiles()
+        final JsonMutableConfigBuilder builder = Config.fromJson()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((Path) null));
     }
@@ -347,7 +347,7 @@ extends AbstractWatchableConfigTest {
     void testMissingPathBuilder() {
         final JsonMutableConfigImpl config = assertInstanceOf(
                 JsonMutableConfigImpl.class,
-                Config.fromJsonFiles()
+                Config.fromJson()
                     .mutable()
                     .load(Paths.get("non/existent/path.json"))
                     .build());
@@ -367,7 +367,7 @@ extends AbstractWatchableConfigTest {
     void testUrlBuilder() {
         final JsonMutableConfigImpl config = assertInstanceOf(
                 JsonMutableConfigImpl.class,
-                Config.fromJsonFiles()
+                Config.fromJson()
                     .mutable()
                     .load(testUrl)
                     .build());
@@ -394,7 +394,7 @@ extends AbstractWatchableConfigTest {
      */
     @Test
     void testNullUrlBuilder() {
-        final JsonMutableConfigBuilder builder = Config.fromJsonFiles()
+        final JsonMutableConfigBuilder builder = Config.fromJson()
                 .mutable();
         assertThrows(NullPointerException.class, () -> builder.load((URL) null));
     }
@@ -411,7 +411,7 @@ extends AbstractWatchableConfigTest {
                 .toURL();
         final JsonMutableConfigImpl config = assertInstanceOf(
                 JsonMutableConfigImpl.class,
-                Config.fromJsonFiles()
+                Config.fromJson()
                     .mutable()
                     .load(missingUrl)
                     .build());
@@ -441,7 +441,7 @@ extends AbstractWatchableConfigTest {
         customSeparatorValues.put(customSeparatorKey, customSeparatorValue);
         final JsonMutableConfigImpl config = assertInstanceOf(
                 JsonMutableConfigImpl.class,
-                Config.fromJsonFiles()
+                Config.fromJson()
                     .mutable()
                     .add(defaultSeparatorValues)
                     .withSeparator(customSeparator)
@@ -468,7 +468,7 @@ extends AbstractWatchableConfigTest {
     throws IOException {
         final JsonMutableConfigImpl config = assertInstanceOf(
                 JsonMutableConfigImpl.class,
-                Config.fromJsonFiles()
+                Config.fromJson()
                     .mutable()
                     .add(testValues)
                     .build());
@@ -479,7 +479,7 @@ extends AbstractWatchableConfigTest {
             }
             final JsonConfigImpl reload = assertInstanceOf(
                     JsonConfigImpl.class,
-                    Config.fromJsonFiles()
+                    Config.fromJson()
                         .load(tmp)
                         .build());
             assertEquals(config.getJsonObject(), reload.getJsonObject());
@@ -496,7 +496,7 @@ extends AbstractWatchableConfigTest {
     throws IOException {
         final JsonMutableConfigImpl config = assertInstanceOf(
                 JsonMutableConfigImpl.class,
-                Config.fromJsonFiles()
+                Config.fromJson()
                     .mutable()
                     .add(testValues)
                     .build());
@@ -508,7 +508,7 @@ extends AbstractWatchableConfigTest {
             }
             final JsonConfigImpl reload = assertInstanceOf(
                     JsonConfigImpl.class,
-                    Config.fromJsonFiles()
+                    Config.fromJson()
                         .load(tmp)
                         .build());
             assertEquals(config.getJsonObject(), reload.getJsonObject());

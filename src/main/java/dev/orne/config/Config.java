@@ -87,7 +87,7 @@ public interface Config {
      * 
      * @return The configuration builder.
      */
-    static @NotNull JsonConfigBuilder fromJsonFiles() {
+    static @NotNull JsonConfigBuilder fromJson() {
         return new JsonConfigBuilderImpl();
     }
 
