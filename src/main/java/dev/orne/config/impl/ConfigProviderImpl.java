@@ -25,6 +25,7 @@ package dev.orne.config.impl;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.validation.constraints.NotNull;
 
@@ -33,7 +34,7 @@ import org.apiguardian.api.API;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigProvider;
-import dev.orne.config.ConfigurationOptions;
+import dev.orne.config.PreferredConfig;
 
 /**
  * Default implementation of {@code ConfigProvider}.
@@ -55,7 +56,7 @@ implements ConfigProvider {
             "Cannot register a null configuration.";
     /** Error message for null preferred configuration. */
     private static final String NULL_PREFERRED_ERR =
-            "Unexpected null preferred configuration for class ";
+            "Unexpected null preferred configuration.";
 
     /** The default configuration. */
     private final Config defaultConfig;
@@ -131,36 +132,27 @@ implements ConfigProvider {
      */
     @Override
     public Config selectConfig(
-            final ConfigurationOptions options,
-            final @NotNull Class<?> targetClass) {
+            final PreferredConfig preferences) {
         Config result = null;
-        if (options == null || options.preferredConfigs().length == 0) {
+        if (preferences == null || preferences.value().length == 0) {
             result = this.defaultConfig;
         } else {
-            for (final Class<?> preferred : options.preferredConfigs()) {
-                Validate.notNull(preferred, NULL_PREFERRED_ERR + targetClass);
+            for (final Class<?> preferred : preferences.value()) {
+                Validate.notNull(preferred, NULL_PREFERRED_ERR);
                 if (this.mappings.containsKey(preferred)) {
                     result = this.mappings.get(preferred);
                     break;
                 }
             }
-            if (result == null && options.fallbackToDefaultConfig()) {
+            if (result == null && preferences.fallbackToDefaultConfig()) {
                 result = this.defaultConfig;
             }
         }
         return result;
     }
 
-    /**
-     * Returns {@code true} if a configuration is mapped for the requested
-     * class.
-     * 
-     * @param type The requested class
-     * @return {@code true} if a configuration is mapped for the requested
-     * class
-     */
-    protected boolean isMapped(
-            final @NotNull Class<?> type) {
-        return this.mappings.containsKey(type);
+    public @NotNull Optional<Config> getConfig(
+            final @NotNull Class<? extends Config> type) {
+        return Optional.ofNullable(this.mappings.get(type));
     }
 }

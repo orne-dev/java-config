@@ -36,6 +36,7 @@ import dev.orne.config.ConfigProvider;
 import dev.orne.config.Configurable;
 import dev.orne.config.ConfigurationOptions;
 import dev.orne.config.Configurer;
+import dev.orne.config.PreferredConfig;
 
 /**
  * Unit tests for {@code ConfigurerImpl.configure()}.
@@ -69,12 +70,11 @@ class ConfigurerImplConfigureTest {
                 Configurer.fromProvider(configProvider)));
         final ConnfigurableNoOptionsTestBean bean = spy(new ConnfigurableNoOptionsTestBean());
 
-        given(configProvider.getDefaultConfig()).willReturn(config);
+        given(configProvider.selectConfig(any())).willReturn(config);
 
         configurer.configure(bean);
 
-        then(configProvider).should(times(1)).getDefaultConfig();
-        then(configProvider).should(times(0)).selectConfig(any(), any());
+        then(configProvider).should(times(1)).selectConfig(null);
         then(configurer).should(times(1)).configureProperties(bean, config);
         then(configurer).should(times(1)).configureNestedBeans(bean, config);
         then(bean).should(times(1)).configure(config);
@@ -82,21 +82,20 @@ class ConfigurerImplConfigureTest {
 
     /**
      * Test method for {@link ConfigurerImpl#configure(Configurable)} for
-     * beans without options an no default config.
+     * beans without options an no suitable config.
      */
     @Test
-    void testConfigureNoOptionsNoDefaultConfig() {
+    void testConfigureNoOptionsNoConfig() {
         final ConfigurerImpl configurer = spy(assertInstanceOf(
                 ConfigurerImpl.class,
                 Configurer.fromProvider(configProvider)));
         final ConnfigurableNoOptionsTestBean bean = spy(new ConnfigurableNoOptionsTestBean());
 
-        given(configProvider.getDefaultConfig()).willReturn(null);
+        given(configProvider.selectConfig(any())).willReturn(null);
 
         configurer.configure(bean);
 
-        then(configProvider).should(times(1)).getDefaultConfig();
-        then(configProvider).should(times(0)).selectConfig(any(), any());
+        then(configProvider).should(times(1)).selectConfig(null);
         then(configurer).should(times(0)).configureProperties(bean, config);
         then(configurer).should(times(0)).configureNestedBeans(bean, config);
         then(bean).should(times(0)).configure(config);
@@ -113,12 +112,12 @@ class ConfigurerImplConfigureTest {
                 Configurer.fromProvider(configProvider)));
         final ConnfigurableDefaultOptionsTestBean bean = spy(new ConnfigurableDefaultOptionsTestBean());
 
-        given(configProvider.selectConfig(any(), any())).willReturn(config);
+        given(configProvider.selectConfig(any())).willReturn(config);
 
         configurer.configure(bean);
 
         then(configProvider).should(times(0)).getDefaultConfig();
-        then(configProvider).should(times(1)).selectConfig(any(), eq(bean.getClass()));
+        then(configProvider).should(times(1)).selectConfig(any());
         then(configurer).should(times(1)).configureProperties(bean, config);
         then(configurer).should(times(1)).configureNestedBeans(bean, config);
         then(bean).should(times(1)).configure(config);
@@ -126,21 +125,21 @@ class ConfigurerImplConfigureTest {
 
     /**
      * Test method for {@link ConfigurerImpl#configure(Configurable)} for
-     * beans without options an no default config.
+     * beans without options an no suitable config.
      */
     @Test
-    void testConfigureDefaultOptionsNoDefaultConfig() {
+    void testConfigureDefaultOptionsNoConfig() {
         final ConfigurerImpl configurer = spy(assertInstanceOf(
                 ConfigurerImpl.class,
                 Configurer.fromProvider(configProvider)));
         final ConnfigurableDefaultOptionsTestBean bean = spy(new ConnfigurableDefaultOptionsTestBean());
 
-        given(configProvider.selectConfig(any(), any())).willReturn(null);
+        given(configProvider.selectConfig(any())).willReturn(null);
 
         configurer.configure(bean);
 
         then(configProvider).should(times(0)).getDefaultConfig();
-        then(configProvider).should(times(1)).selectConfig(any(), eq(bean.getClass()));
+        then(configProvider).should(times(1)).selectConfig(any());
         then(configurer).should(times(0)).configureProperties(bean, config);
         then(configurer).should(times(0)).configureNestedBeans(bean, config);
         then(bean).should(times(0)).configure(config);
@@ -157,12 +156,12 @@ class ConfigurerImplConfigureTest {
                 Configurer.fromProvider(configProvider)));
         final ConnfigurableNoPropertiesTestBean bean = spy(new ConnfigurableNoPropertiesTestBean());
 
-        given(configProvider.selectConfig(any(), any())).willReturn(config);
+        given(configProvider.selectConfig(any())).willReturn(config);
 
         configurer.configure(bean);
 
         then(configProvider).should(times(0)).getDefaultConfig();
-        then(configProvider).should(times(1)).selectConfig(any(), eq(bean.getClass()));
+        then(configProvider).should(times(1)).selectConfig(any());
         then(configurer).should(times(0)).configureProperties(bean, config);
         then(configurer).should(times(1)).configureNestedBeans(bean, config);
         then(bean).should(times(1)).configure(config);
@@ -170,21 +169,21 @@ class ConfigurerImplConfigureTest {
 
     /**
      * Test method for {@link ConfigurerImpl#configure(Configurable)} for
-     * beans without options an no default config.
+     * beans without options an no suitable config.
      */
     @Test
-    void testConfigureNoPropertiesOptionsNoDefaultConfig() {
+    void testConfigureNoPropertiesOptionsNoConfig() {
         final ConfigurerImpl configurer = spy(assertInstanceOf(
                 ConfigurerImpl.class,
                 Configurer.fromProvider(configProvider)));
         final ConnfigurableNoPropertiesTestBean bean = spy(new ConnfigurableNoPropertiesTestBean());
 
-        given(configProvider.selectConfig(any(), any())).willReturn(null);
+        given(configProvider.selectConfig(any())).willReturn(null);
 
         configurer.configure(bean);
 
         then(configProvider).should(times(0)).getDefaultConfig();
-        then(configProvider).should(times(1)).selectConfig(any(), eq(bean.getClass()));
+        then(configProvider).should(times(1)).selectConfig(any());
         then(configurer).should(times(0)).configureProperties(bean, config);
         then(configurer).should(times(0)).configureNestedBeans(bean, config);
         then(bean).should(times(0)).configure(config);
@@ -201,12 +200,12 @@ class ConfigurerImplConfigureTest {
                 Configurer.fromProvider(configProvider)));
         final ConnfigurableNoNestedBeansTestBean bean = spy(new ConnfigurableNoNestedBeansTestBean());
 
-        given(configProvider.selectConfig(any(), any())).willReturn(config);
+        given(configProvider.selectConfig(any())).willReturn(config);
 
         configurer.configure(bean);
 
         then(configProvider).should(times(0)).getDefaultConfig();
-        then(configProvider).should(times(1)).selectConfig(any(), eq(bean.getClass()));
+        then(configProvider).should(times(1)).selectConfig(any());
         then(configurer).should(times(1)).configureProperties(bean, config);
         then(configurer).should(times(0)).configureNestedBeans(bean, config);
         then(bean).should(times(1)).configure(config);
@@ -214,21 +213,21 @@ class ConfigurerImplConfigureTest {
 
     /**
      * Test method for {@link ConfigurerImpl#configure(Configurable)} for
-     * beans without options an no default config.
+     * beans without options an no suitable config.
      */
     @Test
-    void testConfigureNoNestedOptionsNoDefaultConfig() {
+    void testConfigureNoNestedOptionsNoConfig() {
         final ConfigurerImpl configurer = spy(assertInstanceOf(
                 ConfigurerImpl.class,
                 Configurer.fromProvider(configProvider)));
         final ConnfigurableNoNestedBeansTestBean bean = spy(new ConnfigurableNoNestedBeansTestBean());
 
-        given(configProvider.selectConfig(any(), any())).willReturn(null);
+        given(configProvider.selectConfig(any())).willReturn(null);
 
         configurer.configure(bean);
 
         then(configProvider).should(times(0)).getDefaultConfig();
-        then(configProvider).should(times(1)).selectConfig(any(), eq(bean.getClass()));
+        then(configProvider).should(times(1)).selectConfig(any());
         then(configurer).should(times(0)).configureProperties(bean, config);
         then(configurer).should(times(0)).configureNestedBeans(bean, config);
         then(bean).should(times(0)).configure(config);
@@ -245,12 +244,12 @@ class ConfigurerImplConfigureTest {
                 Configurer.fromProvider(configProvider)));
         final ConnfigurableOnlyConfigureTestBean bean = spy(new ConnfigurableOnlyConfigureTestBean());
 
-        given(configProvider.selectConfig(any(), any())).willReturn(config);
+        given(configProvider.selectConfig(any())).willReturn(config);
 
         configurer.configure(bean);
 
         then(configProvider).should(times(0)).getDefaultConfig();
-        then(configProvider).should(times(1)).selectConfig(any(), eq(bean.getClass()));
+        then(configProvider).should(times(1)).selectConfig(any());
         then(configurer).should(times(0)).configureProperties(bean, config);
         then(configurer).should(times(0)).configureNestedBeans(bean, config);
         then(bean).should(times(1)).configure(config);
@@ -258,21 +257,21 @@ class ConfigurerImplConfigureTest {
 
     /**
      * Test method for {@link ConfigurerImpl#configure(Configurable)} for
-     * beans without options an no default config.
+     * beans without options an no suitable config.
      */
     @Test
-    void testConfigureOnlyConfigureOptionsNoDefaultConfig() {
+    void testConfigureOnlyConfigureOptionsNoConfig() {
         final ConfigurerImpl configurer = spy(assertInstanceOf(
                 ConfigurerImpl.class,
                 Configurer.fromProvider(configProvider)));
         final ConnfigurableOnlyConfigureTestBean bean = spy(new ConnfigurableOnlyConfigureTestBean());
 
-        given(configProvider.selectConfig(any(), any())).willReturn(null);
+        given(configProvider.selectConfig(any())).willReturn(null);
 
         configurer.configure(bean);
 
         then(configProvider).should(times(0)).getDefaultConfig();
-        then(configProvider).should(times(1)).selectConfig(any(), eq(bean.getClass()));
+        then(configProvider).should(times(1)).selectConfig(any());
         then(configurer).should(times(0)).configureProperties(bean, config);
         then(configurer).should(times(0)).configureNestedBeans(bean, config);
         then(bean).should(times(0)).configure(config);
@@ -291,6 +290,7 @@ class ConfigurerImplConfigureTest {
         }
     }
 
+    @PreferredConfig
     @ConfigurationOptions
     public static class ConnfigurableDefaultOptionsTestBean
     implements Configurable {

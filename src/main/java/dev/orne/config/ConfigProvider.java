@@ -22,6 +22,8 @@ package dev.orne.config;
  * #L%
  */
 
+import java.util.Optional;
+
 import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
@@ -59,18 +61,22 @@ public interface ConfigProvider {
     @NotNull Config getDefaultConfig();
 
     /**
-     * Returns a suitable {@code Config} instance for the configuration
-     * options passed as argument. The target class is passed as second
-     * argument for implementations that support extra annotations for
-     * configuration options.
+     * Returns the registered {@code Config} for the specified type, if any.
      * 
-     * @param options The configuration options of the target class.
-     * @param targetClass The target class for extra annotation retrieval, if
-     * supported.
+     * @param type The configuration type.
+     * @return The registered {@code Config}.
+     */
+    @NotNull Optional<Config> getConfig(
+            @NotNull Class<? extends Config> type);
+
+    /**
+     * Returns a suitable {@code Config} instance for the configuration
+     * preferences passed as argument.
+     * 
+     * @param preferences The configuration preferences.
      * @return The selected {@code Config} instance, or {@code null} if no one
      * is suitable
      */
     Config selectConfig(
-            final ConfigurationOptions options,
-            final @NotNull Class<?> targetClass);
+            PreferredConfig preferences);
 }

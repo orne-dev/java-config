@@ -22,44 +22,42 @@ package dev.orne.config;
  * #L%
  */
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
 
 /**
- * Sets the configuration preferences for the {@code Configurable} class.
+ * Sets the preferred {@code Config} subtype(s).
+ * Usable both for {@code Configurable} classes and for Spring injection
+ * points.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
- * @version 2.0, 2019-07
+ * @version 1.0, 2025-11
  * @since 0.1
  * @see Configurable
  */
 @Documented
-@Retention(RUNTIME)
-@Target({ TYPE })
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.TYPE, ElementType.FIELD, ElementType.PARAMETER })
 @API(status = API.Status.STABLE, since = "1.0")
-public @interface ConfigurationOptions {
+public @interface PreferredConfig {
 
     /**
-     * Sets if the class properties should be configured
-     * automatically.
+     * Sets the preferred configuration classes.
      * 
-     * @return {@code true} if the class properties should be configured
-     * automatically.
+     * @return The preferred configuration classes.
      */
-    boolean configureProperties() default true;
+    Class<? extends Config>[] value() default {};
 
     /**
-     * Sets if the class properties that implement {@code Configurable}
-     * should be configured automatically.
+     * Sets if the default configuration should be used if one of the
+     * preferred ones is not found.
      * 
-     * @return {@code true} if the class properties that implement {@code Configurable}
-     * should be configured automatically.
+     * @return {@code true} if the default configuration should be used.
      */
-    boolean configureNestedBeans() default true;
+    boolean fallbackToDefaultConfig() default true;
 }

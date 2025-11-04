@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigProvider;
-import dev.orne.config.ConfigurationOptions;
+import dev.orne.config.PreferredConfig;
 
 /**
  * Unit tests for {@code ConfigProviderImpl}.
@@ -66,9 +66,9 @@ class ConfigProviderImplTest {
 
         assertNotNull(provider.getDefaultConfig());
         assertSame(defaultConfig, provider.getDefaultConfig());
-        assertTrue(provider.isMapped(defaultConfig.getClass()));
-        assertTrue(provider.isMapped(Level1Config.class));
-        assertTrue(provider.isMapped(Config.class));
+        assertTrue(provider.getConfig(defaultConfig.getClass()).isPresent());
+        assertTrue(provider.getConfig(Level1Config.class).isPresent());
+        assertTrue(provider.getConfig(Config.class).isPresent());
 
         then(defaultConfig).shouldHaveNoInteractions();
     }
@@ -88,11 +88,11 @@ class ConfigProviderImplTest {
 
         assertNotNull(provider.getDefaultConfig());
         assertSame(defaultConfig, provider.getDefaultConfig());
-        assertTrue(provider.isMapped(defaultConfig.getClass()));
-        assertTrue(provider.isMapped(Level1Config.class));
-        assertTrue(provider.isMapped(Config.class));
-        assertTrue(provider.isMapped(testConfig.getClass()));
-        assertTrue(provider.isMapped(Level2Config.class));
+        assertTrue(provider.getConfig(defaultConfig.getClass()).isPresent());
+        assertTrue(provider.getConfig(Level1Config.class).isPresent());
+        assertTrue(provider.getConfig(Config.class).isPresent());
+        assertTrue(provider.getConfig(testConfig.getClass()).isPresent());
+        assertTrue(provider.getConfig(Level2Config.class).isPresent());
 
         then(defaultConfig).shouldHaveNoInteractions();
         then(testConfig).shouldHaveNoInteractions();
@@ -100,7 +100,7 @@ class ConfigProviderImplTest {
 
     /**
      * Test method for
-     * {@link ConfigProviderImpl#selectConfig(ConfigurationOptions, Class)
+     * {@link ConfigProviderImpl#selectConfig(PreferredConfig)
      * with null options.
      */
     @Test
@@ -113,10 +113,10 @@ class ConfigProviderImplTest {
                     .addConfig(testConfig)
                     .build());
         final Class<?> targetClass = NoOptionsTestBean.class;
-        final ConfigurationOptions options = targetClass.getAnnotation(
-                ConfigurationOptions.class);
+        final PreferredConfig options = targetClass.getAnnotation(
+                PreferredConfig.class);
         
-        final Config result = provider.selectConfig(options, targetClass);
+        final Config result = provider.selectConfig(options);
 
         assertNotNull(result);
         assertSame(defaultConfig, result);
@@ -127,7 +127,7 @@ class ConfigProviderImplTest {
 
     /**
      * Test method for
-     * {@link ConfigProviderImpl#selectConfig(ConfigurationOptions, Class)
+     * {@link ConfigProviderImpl#selectConfig(PreferredConfig)
      * with default options.
      */
     @Test
@@ -140,10 +140,10 @@ class ConfigProviderImplTest {
                     .addConfig(testConfig)
                     .build());
         final Class<?> targetClass = DefaultOptionsTestBean.class;
-        final ConfigurationOptions options = targetClass.getAnnotation(
-                ConfigurationOptions.class);
+        final PreferredConfig options = targetClass.getAnnotation(
+                PreferredConfig.class);
         
-        final Config result = provider.selectConfig(options, targetClass);
+        final Config result = provider.selectConfig(options);
 
         assertNotNull(result);
         assertSame(defaultConfig, result);
@@ -154,7 +154,7 @@ class ConfigProviderImplTest {
 
     /**
      * Test method for
-     * {@link ConfigProviderImpl#selectConfig(ConfigurationOptions, Class)
+     * {@link ConfigProviderImpl#selectConfig(PreferredConfig)
      * with preferred configuration.
      */
     @Test
@@ -167,10 +167,10 @@ class ConfigProviderImplTest {
                     .addConfig(testConfig)
                     .build());
         final Class<?> targetClass = Level2TestBean.class;
-        final ConfigurationOptions options = targetClass.getAnnotation(
-                ConfigurationOptions.class);
+        final PreferredConfig options = targetClass.getAnnotation(
+                PreferredConfig.class);
         
-        final Config result = provider.selectConfig(options, targetClass);
+        final Config result = provider.selectConfig(options);
 
         assertNotNull(result);
         assertSame(testConfig, result);
@@ -181,7 +181,7 @@ class ConfigProviderImplTest {
 
     /**
      * Test method for
-     * {@link ConfigProviderImpl#selectConfig(ConfigurationOptions, Class)
+     * {@link ConfigProviderImpl#selectConfig(PreferredConfig, Class)
      * with preferred not found configuration.
      */
     @Test
@@ -189,10 +189,10 @@ class ConfigProviderImplTest {
         final Config defaultConfig = mock(Level1Config.class);
         final ConfigProviderImpl provider = new ConfigProviderImpl(defaultConfig);
         final Class<?> targetClass = Level2TestBean.class;
-        final ConfigurationOptions options = targetClass.getAnnotation(
-                ConfigurationOptions.class);
+        final PreferredConfig options = targetClass.getAnnotation(
+                PreferredConfig.class);
         
-        final Config result = provider.selectConfig(options, targetClass);
+        final Config result = provider.selectConfig(options);
 
         assertNotNull(result);
         assertSame(defaultConfig, result);
@@ -202,7 +202,7 @@ class ConfigProviderImplTest {
 
     /**
      * Test method for
-     * {@link ConfigProviderImpl#selectConfig(ConfigurationOptions, Class)
+     * {@link ConfigProviderImpl#selectConfig(PreferredConfig, Class)
      * with preferred configuration with no default accepted.
      */
     @Test
@@ -212,10 +212,10 @@ class ConfigProviderImplTest {
         final ConfigProviderImpl provider = new ConfigProviderImpl(defaultConfig);
         provider.registerConfig(testConfig);
         final Class<?> targetClass = Level2NoDefaultTestBean.class;
-        final ConfigurationOptions options = targetClass.getAnnotation(
-                ConfigurationOptions.class);
+        final PreferredConfig options = targetClass.getAnnotation(
+                PreferredConfig.class);
         
-        final Config result = provider.selectConfig(options, targetClass);
+        final Config result = provider.selectConfig(options);
 
         assertNotNull(result);
         assertSame(testConfig, result);
@@ -226,7 +226,7 @@ class ConfigProviderImplTest {
 
     /**
      * Test method for
-     * {@link ConfigProviderImpl#selectConfig(ConfigurationOptions, Class)
+     * {@link ConfigProviderImpl#selectConfig(PreferredConfig, Class)
      * with preferred not found configuration with no default accepted.
      */
     @Test
@@ -234,10 +234,10 @@ class ConfigProviderImplTest {
         final Config defaultConfig = mock(Level1Config.class);
         final ConfigProviderImpl provider = new ConfigProviderImpl(defaultConfig);
         final Class<?> targetClass = Level2NoDefaultTestBean.class;
-        final ConfigurationOptions options = targetClass.getAnnotation(
-                ConfigurationOptions.class);
+        final PreferredConfig options = targetClass.getAnnotation(
+                PreferredConfig.class);
         
-        final Config result = provider.selectConfig(options, targetClass);
+        final Config result = provider.selectConfig(options);
 
         assertNull(result);
 
@@ -266,18 +266,18 @@ class ConfigProviderImplTest {
         // Empty class
     }
 
-    @ConfigurationOptions
+    @PreferredConfig
     public static class DefaultOptionsTestBean {
         // Empty class
     }
 
-    @ConfigurationOptions(preferredConfigs=Level2Config.class)
+    @PreferredConfig(Level2Config.class)
     public static class Level2TestBean {
         // Empty class
     }
 
-    @ConfigurationOptions(
-            preferredConfigs=Level2Config.class,
+    @PreferredConfig(
+            value=Level2Config.class,
             fallbackToDefaultConfig=false)
     public static class Level2NoDefaultTestBean {
         // Empty class

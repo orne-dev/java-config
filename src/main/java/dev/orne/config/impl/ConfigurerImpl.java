@@ -47,6 +47,7 @@ import dev.orne.config.Configurable;
 import dev.orne.config.ConfigurableProperty;
 import dev.orne.config.ConfigurationOptions;
 import dev.orne.config.Configurer;
+import dev.orne.config.PreferredConfig;
 
 /**
  * Default implementation of {@code Configurer}.
@@ -121,21 +122,17 @@ implements Configurer {
             final @NotNull Configurable bean) {
         Validate.notNull(bean, "A not null bean is required.");
         final Class<?> componentClass = bean.getClass();
-        final ConfigurationOptions metadata = componentClass.getAnnotation(
+        final PreferredConfig preferences = componentClass.getAnnotation(
+                PreferredConfig.class);
+        final ConfigurationOptions options = componentClass.getAnnotation(
                 ConfigurationOptions.class);
-        final Config config;
-        if (metadata == null) {
-            config = this.configProvider.getDefaultConfig();
-        } else {
-            config = this.configProvider.selectConfig(
-                    metadata, componentClass);
-        }
+        final Config config = this.configProvider.selectConfig(preferences);
         if (config != null) {
-            if (metadata == null || metadata.configureProperties()) {
+            if (options == null || options.configureProperties()) {
                 configureProperties(bean, config);
             }
             bean.configure(config);
-            if (metadata == null || metadata.configureNestedBeans()) {
+            if (options == null || options.configureNestedBeans()) {
                 configureNestedBeans(bean, config);
             }
         }
