@@ -31,9 +31,7 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 import org.springframework.context.annotation.Import;
 
-import dev.orne.config.Config;
 import dev.orne.config.Configurable;
-import dev.orne.config.ConfigurationOptions;
 
 /**
  * Annotation for automatic configuration of {@code Configurable} beans.
@@ -45,13 +43,8 @@ import dev.orne.config.ConfigurationOptions;
  * }
  * 
  * {@literal @}Configuration
- * {@literal @}EnableConfigurableComponents(type = Config.class)
+ * {@literal @}EnableConfigurableComponents
  * class AppConfig {
- *    ...
- *    {@literal @}Bean
- *    public Config myConfig() {
- *        ...
- *    }
  *    ...
  *    {@literal @}Bean
  *    public MyComponent myConfigurableComponent() {
@@ -61,46 +54,19 @@ import dev.orne.config.ConfigurationOptions;
  * }
  * </pre>
  * <p>
- * Allows to specify the default configuration to apply when multiple
- * {@code Config} beans are found in the application context.
+ * See {@link ConfigProviderCustomizer} for details on the
+ * {@code ConfigProvider} configuration and how to customize it.
  * <p>
- * Example:
- * <pre>
- * class MyComponent implements Configurable {
- *     ...
- * }
- * 
- * {@literal @}Configuration
- * {@literal @}EnableConfigurableComponents(MyConfig.class)
- * class AppConfig {
- *    ...
- *    {@literal @}Bean
- *    public MyConfig myConfig() {
- *        return Config.as(
- *            ...,
- *            MyConfig.class);
- *    }
- *    ...
- *    {@literal @}Bean
- *    public AltConfig altConfig() {
- *        return Config.as(
- *            ...,
- *            AltConfig.class);
- *    }
- *    ...
- *    {@literal @}Bean
- *    public MyComponent myConfigurableComponent() {
- *        ...
- *    }
- *    ...
- * }
- * </pre>
+ * By default, the {@code Configurer} used to configure the
+ * {@code Configurable} components is not exposed as a bean. To
+ * expose it, set the {@code exposeConfigurer} attribute to
+ * {@code true}.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-08
  * @since 1.0
  * @see Configurable
- * @see ConfigurationOptions
+ * @see ConfigProviderCustomizer
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -108,30 +74,6 @@ import dev.orne.config.ConfigurationOptions;
 @Import(ConfigurableComponentsConfigurer.class)
 @API(status = API.Status.STABLE, since = "1.0")
 public @interface EnableConfigurableComponents {
-
-    /**
-     * The type of the default configuration to apply to the annotated classes.
-     * <p>
-     * Alias for {@link #type()}.
-     * 
-     * @return The default configuration type.
-     */
-    Class<? extends Config> value() default Config.class;
-
-    /**
-     * The bean name of the default configuration to apply to the annotated
-     * classes.
-     * 
-     * @return The default configuration bean name.
-     */
-    String name() default "";
-
-    /**
-     * The type of the default configuration to apply to the annotated classes.
-     * 
-     * @return The default configuration type.
-     */
-    Class<? extends Config> type() default Config.class;
 
     /**
      * Whether to expose the {@code Configurer} bean used to configure the

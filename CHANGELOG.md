@@ -13,7 +13,6 @@
     - Make `Config` a functional interface with a `String get(String)` method.
     - Limit supported value types to String, Boolean, Integer and Long.
     - Add `Stream<String> getKeys()` method to `Config` for properties scanning.
-- **Breaking:** Rename `ConfigurationOptions.preferedConfigs` property to `preferredConfigs`.
 
 ### Added
 
@@ -106,15 +105,22 @@
     - `dev.orne.config.ConfigProviderBuilder` interface.
     - Add `dev.orne.config.ConfigProvider.builder(Config)` method.
     - Add `dev.orne.config.Configurer.fromProvider(ConfigProvider)` method.
-- Add support of usage of `Config` beans as `PropertySource`s on Spring applications.
-    - `dev.orne.config.spring.ConfigPropertySource` annotation.
-    - `dev.orne.config.spring.ConfigPropertySources` annotation.
+- Add preferred configurations support.
+    - Add `dev.orne.config.PreferredConfig` annotation.
+- Add Spring integration.
+    - `dev.orne.config.spring.ConfigProviderCustomizer` interface.
+    - Add support of usage of `Config` beans as `PropertySource`s on Spring applications.
+        - `dev.orne.config.spring.ConfigPropertySource` annotation.
+        - `dev.orne.config.spring.ConfigPropertySources` annotation.
+    - Add support for automatic configuration of Configurable beans
+        - `dev.orne.config.spring.EnableConfigurableComponents` annotation.
 
 ### Removed
 
-- **Breaking:** Removed obsolete API.
+- **Breaking:** Remove obsolete API.
     - `dev.orne.config.HierarchicalConfig` interface.
-- **Breaking:** Removed and made internal implementation classes.
+- **Breaking:** Remove `ConfigurationOptions` preferred configuration properties in favor of `PreferredConfig`.
+- **Breaking:** Remove and made internal implementation classes.
     - `dev.orne.config.AbstractConfig` class.
     - `dev.orne.config.AbstractStringConfig` class.
     - `dev.orne.config.SystemConfig` class.

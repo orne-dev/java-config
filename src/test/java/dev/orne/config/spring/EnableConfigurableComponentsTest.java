@@ -25,6 +25,7 @@ package dev.orne.config.spring;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
@@ -47,6 +48,7 @@ import dev.orne.config.Config;
 import dev.orne.config.Configurable;
 import dev.orne.config.ConfigurableProperty;
 import dev.orne.config.ConfigurationOptions;
+import dev.orne.config.PreferredConfig;
 
 /**
  * Validation tests for {@code EnableConfigurableComponents} and
@@ -61,10 +63,10 @@ import dev.orne.config.ConfigurationOptions;
 @Tag("ut")
 @ExtendWith(SpringExtension.class)
 @ContextHierarchy({
-    @ContextConfiguration(classes = SpringConfigTest.SpringConfig.class),
-    @ContextConfiguration(classes = SpringConfigTest.ChildSpringConfig.class)
+    @ContextConfiguration(classes = EnableConfigurableComponentsTest.SpringConfig.class),
+    @ContextConfiguration(classes = EnableConfigurableComponentsTest.ChildSpringConfig.class)
 })
-class SpringConfigTest {
+class EnableConfigurableComponentsTest {
 
     static final String PARENT_BEAN = "parentContextBean";
     static final String PARENT_NO_PROPS_BEAN = "parentContextNoPropsBean";
@@ -642,7 +644,7 @@ class SpringConfigTest {
         }
     }
 
-    @ConfigurationOptions(preferredConfigs = ParentConfig.class)
+    @PreferredConfig(ParentConfig.class)
     public static class ParentConfigConfigurableBean
     extends ConfigurableBean {
         public ParentConfigConfigurableBean(
@@ -655,7 +657,7 @@ class SpringConfigTest {
         }
     }
 
-    @ConfigurationOptions(preferredConfigs = ChildConfig.class)
+    @PreferredConfig(ChildConfig.class)
     public static class ChildConfigConfigurableBean
     extends ConfigurableBean {
         public ChildConfigConfigurableBean(
@@ -668,8 +670,7 @@ class SpringConfigTest {
         }
     }
 
-    @ConfigurationOptions(
-            preferredConfigs = ChildConfig.class,
+    @PreferredConfig(value = ChildConfig.class,
             fallbackToDefaultConfig = false)
     public static class ChildStrictConfigurableBean
     extends ConfigurableBean {
@@ -686,11 +687,18 @@ class SpringConfigTest {
     @Configuration
     @PropertySource("classpath:dev/orne/config/spring/spring.config.test.properties")
     @ConfigPropertySource(type = ParentConfig.class)
-    @EnableConfigurableComponents(type = ParentConfig.class)
-    static class SpringConfig {
+    @EnableConfigurableComponents
+    static class SpringConfig
+    implements ConfigProviderCustomizer {
 
         static final String GRANDPA_PROP_VALUE = "grandpaCodeValue";
         static final String PARENT_PROP_VALUE = "parentPropValue";
+
+        @Override
+        public @NotNull Config configureDefaultConfig(
+                final @NotNull Map<String, Config> configs) {
+            return parentConfig(null);
+        }
 
         @Bean
         public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
@@ -847,8 +855,9 @@ class SpringConfigTest {
     @PropertySource("classpath:dev/orne/config/spring/spring.config.test.child.properties")
     @ConfigPropertySource(type = ChildConfig.class)
     @ConfigPropertySource(type = SibblingConfig.class)
-    @EnableConfigurableComponents(type = ChildConfig.class)
-    static class ChildSpringConfig {
+    @EnableConfigurableComponents
+    static class ChildSpringConfig
+    implements ConfigProviderCustomizer {
 
         static final String PARENT_PROP_VALUE = "parentPropChildValue";
         static final String CHILD_PROP_VALUE = "childPropValue";
@@ -857,6 +866,12 @@ class SpringConfigTest {
         @Bean
         public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
             return new PropertySourcesPlaceholderConfigurer();
+        }
+
+        @Override
+        public @NotNull Config configureDefaultConfig(
+                final @NotNull Map<String, Config> configs) {
+            return childConfig(null);
         }
 
         @Bean
