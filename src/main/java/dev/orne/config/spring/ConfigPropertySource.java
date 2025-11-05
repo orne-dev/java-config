@@ -30,7 +30,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 
 import dev.orne.config.Config;
@@ -40,14 +40,12 @@ import dev.orne.config.Config;
  * {@link org.springframework.core.env.PropertySource PropertySource} to Spring's
  * {@link org.springframework.core.env.Environment Environment} that will use
  * the specified {@code Config} context bean.
- * To be used @{@link Configuration} classes in conjunction with
- * {@link ConfigPropertySourcesConfigurer} interface.
  * <p>
  * Example:
  * <pre>
  * {@literal @}Configuration
  * {@literal @}ConfigPropertySource("myConfig")
- * public class AppConfig implements ConfigPropertySourcesConfigurer {
+ * public class AppConfig {
  *    // ...
  *    {@literal @}Bean
  *    public Config myConfig() {
@@ -64,12 +62,12 @@ import dev.orne.config.Config;
  * @version 1.0, 2025-08
  * @since 1.0
  * @see PropertySource
- * @see ConfigPropertySourcesConfigurer
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE })
 @Repeatable(ConfigPropertySources.class)
+@Import(ConfigPropertySourcePostProcessor.class)
 @API(status = API.Status.STABLE, since = "1.0")
 public @interface ConfigPropertySource {
 

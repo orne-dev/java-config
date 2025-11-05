@@ -29,6 +29,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
+import org.springframework.context.annotation.Import;
 
 /**
  * Container annotation that aggregates several {@link ConfigPropertySource}
@@ -49,6 +50,7 @@ import org.apiguardian.api.API;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE })
+@Import(ConfigPropertySourcePostProcessor.class)
 @API(status = API.Status.STABLE, since = "1.0")
 public @interface ConfigPropertySources {
 

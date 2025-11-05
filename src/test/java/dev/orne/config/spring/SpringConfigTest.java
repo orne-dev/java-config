@@ -687,8 +687,7 @@ class SpringConfigTest {
     @PropertySource("classpath:dev/orne/config/spring/spring.config.test.properties")
     @ConfigPropertySource(type = ParentConfig.class)
     @EnableConfigurableComponents(type = ParentConfig.class)
-    static class SpringConfig
-    implements ConfigPropertySourcesConfigurer {
+    static class SpringConfig {
 
         static final String GRANDPA_PROP_VALUE = "grandpaCodeValue";
         static final String PARENT_PROP_VALUE = "parentPropValue";
@@ -849,8 +848,7 @@ class SpringConfigTest {
     @ConfigPropertySource(type = ChildConfig.class)
     @ConfigPropertySource(type = SibblingConfig.class)
     @EnableConfigurableComponents(type = ChildConfig.class)
-    static class ChildSpringConfig
-    implements ConfigPropertySourcesConfigurer {
+    static class ChildSpringConfig {
 
         static final String PARENT_PROP_VALUE = "parentPropChildValue";
         static final String CHILD_PROP_VALUE = "childPropValue";
