@@ -114,6 +114,8 @@
         - `dev.orne.config.spring.ConfigPropertySources` annotation.
     - Add support for automatic configuration of Configurable beans
         - `dev.orne.config.spring.EnableConfigurableComponents` annotation.
+    - Add support for `PreferredConfig` based inyection of `Config` instances into Spring beans.
+        - `dev.orne.config.spring.EnablePreferredConfigInyection` annotation.
 
 ### Removed
 
