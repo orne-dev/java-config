@@ -136,9 +136,8 @@ implements InvocationHandler {
     /**
      * Creates a new configuration proxy instance with the specified configuration.
      *
-     * @param <T> The type of the configuration interface.
      * @param config The proxied configuration instance.
-     * @param type The configuration type interface to create a proxy for.
+     * @param prefix The prefix for configuration keys.
      * @return A new configuration proxy instance.
      */
     public static @NotNull Config create(
@@ -154,9 +153,8 @@ implements InvocationHandler {
     /**
      * Creates a new configuration proxy instance with the specified configuration.
      *
-     * @param <T> The type of the configuration interface.
      * @param config The proxied configuration instance.
-     * @param type The configuration type interface to create a proxy for.
+     * @param prefix The prefix for configuration keys.
      * @return A new configuration proxy instance.
      */
     public static @NotNull MutableConfig create(
@@ -172,9 +170,8 @@ implements InvocationHandler {
     /**
      * Creates a new configuration proxy instance with the specified configuration.
      *
-     * @param <T> The type of the configuration interface.
      * @param config The proxied configuration instance.
-     * @param type The configuration type interface to create a proxy for.
+     * @param prefix The prefix for configuration keys.
      * @return A new configuration proxy instance.
      */
     public static @NotNull WatchableConfig create(
@@ -190,8 +187,9 @@ implements InvocationHandler {
     /**
      * Creates a new configuration proxy instance with the specified configuration.
      *
-     * @param <T> The type of the configuration interface.
+     * @param <T> The configuration interface type.
      * @param classLoader The class loader to be used for the proxy.
+     * @param type The configuration interface type.
      * @param config The proxied configuration instance.
      * @param prefix The prefix for configuration keys.
      * @return A new configuration proxy instance.

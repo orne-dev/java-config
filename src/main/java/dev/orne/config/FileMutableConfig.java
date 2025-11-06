@@ -55,6 +55,7 @@ extends MutableConfig {
      * encoding (usually UTF-8).
      * 
      * @param destination The destination file.
+     * @throws IOException If an I/O error occurs.
      */
     default void save(
             @NotNull File destination)
@@ -68,6 +69,7 @@ extends MutableConfig {
      * encoding (usually UTF-8).
      * 
      * @param destination The destination path.
+     * @throws IOException If an I/O error occurs.
      */
     default void save(
             @NotNull Path destination)
@@ -85,6 +87,7 @@ extends MutableConfig {
      * using the default encoding (usually UTF-8).
      * 
      * @param destination The destination output stream.
+     * @throws IOException If an I/O error occurs.
      */
     default void save(
             @NotNull OutputStream destination)
@@ -98,6 +101,7 @@ extends MutableConfig {
      * 
      * @param destination The destination output stream.
      * @param encoding The encoding to use.
+     * @throws IOException If an I/O error occurs.
      */
     default void save(
             @NotNull OutputStream destination,
@@ -114,6 +118,7 @@ extends MutableConfig {
      * Saves the configuration properties to the specified writer.
      * 
      * @param destination The destination writer.
+     * @throws IOException If an I/O error occurs.
      */
     void save(
             @NotNull Writer destination)

@@ -33,7 +33,6 @@ import org.apiguardian.api.API;
 /**
  * Annotation for enable default full Spring integration.
  * <p>
- * <p>
  * Example:
  * <pre>
  * {@literal @}Configuration
@@ -77,6 +76,7 @@ import org.apiguardian.api.API;
  * class AppConfig {
  *     ...
  * }
+ * </pre>
  * <p>
  * See {@link ConfigProviderCustomizer} for details on the
  * {@code ConfigProvider} configuration and how to customize it.
