@@ -55,6 +55,7 @@
 
     <awaitility.version>4.3.0</awaitility.version>
 
+    <jakarta.transform.skip>true</jakarta.transform.skip>
     <github.project.id>java-config</github.project.id>
     <sonar.projectKey>orne-dev_java-config</sonar.projectKey>
   </properties>
