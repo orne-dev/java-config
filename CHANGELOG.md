@@ -109,13 +109,15 @@
     - Add `dev.orne.config.PreferredConfig` annotation.
 - Add Spring integration.
     - `dev.orne.config.spring.ConfigProviderCustomizer` interface.
-    - Add support of usage of `Config` beans as `PropertySource`s on Spring applications.
+    - Support of usage of `Config` beans as `PropertySource`s on Spring applications.
         - `dev.orne.config.spring.ConfigPropertySource` annotation.
         - `dev.orne.config.spring.ConfigPropertySources` annotation.
-    - Add support for automatic configuration of Configurable beans
+    - Support for automatic configuration of Configurable beans
         - `dev.orne.config.spring.EnableConfigurableComponents` annotation.
-    - Add support for `PreferredConfig` based inyection of `Config` instances into Spring beans.
+    - Support for `PreferredConfig` based inyection of `Config` instances into Spring beans.
         - `dev.orne.config.spring.EnablePreferredConfigInyection` annotation.
+    - All featues activation through a single annotation.
+        - `dev.orne.config.spring.EnableOrneConfig` annotation.
 
 ### Removed
 
