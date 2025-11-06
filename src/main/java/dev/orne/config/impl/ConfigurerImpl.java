@@ -132,7 +132,7 @@ implements Configurer {
                 configureProperties(bean, config);
             }
             bean.configure(config);
-            if (options == null || options.configureNestedBeans()) {
+            if (options != null && options.configureNestedBeans()) {
                 configureNestedBeans(bean, config);
             }
         }

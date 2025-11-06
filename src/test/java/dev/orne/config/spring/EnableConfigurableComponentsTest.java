@@ -70,13 +70,13 @@ class EnableConfigurableComponentsTest {
 
     static final String PARENT_BEAN = "parentContextBean";
     static final String PARENT_NO_PROPS_BEAN = "parentContextNoPropsBean";
-    static final String PARENT_NO_NESTED_BEAN = "parentContextNoNestedBean";
+    static final String PARENT_NESTED_BEAN = "parentContextNestedBean";
     static final String PARENT_PARENT_CFG_BEAN = "parentContextParentCfgBean";
     static final String PARENT_CHILD_CFG_BEAN = "parentContextChildCfgBean";
     static final String PARENT_CHILD_STRICT_CFG_BEAN = "parentContextStrictChildCfgBean";
     static final String CHILD_BEAN = "childContextBean";
     static final String CHILD_NO_PROPS_BEAN = "childContextNoPropsBean";
-    static final String CHILD_NO_NESTED_BEAN = "childContextNoNestedBean";
+    static final String CHILD_NESTED_BEAN = "childContextNestedBean";
     static final String CHILD_PARENT_CFG_BEAN = "childContextParentCfgBean";
     static final String CHILD_CHILD_CFG_BEAN = "childContextChildCfgBean";
     static final String CHILD_CHILD_STRICT_CFG_BEAN = "childContextStrictChildCfgBean";
@@ -100,8 +100,8 @@ class EnableConfigurableComponentsTest {
     @Qualifier(PARENT_NO_PROPS_BEAN)
     private ConfigurableBean parentContextNoPropsBean;
     @Autowired
-    @Qualifier(PARENT_NO_NESTED_BEAN)
-    private ConfigurableBean parentContextNoNestedBean;
+    @Qualifier(PARENT_NESTED_BEAN)
+    private ConfigurableBean parentContextNestedBean;
     @Autowired
     @Qualifier(PARENT_PARENT_CFG_BEAN)
     private ConfigurableBean parentContextParentCfgBean;
@@ -118,8 +118,8 @@ class EnableConfigurableComponentsTest {
     @Qualifier(CHILD_NO_PROPS_BEAN)
     private ConfigurableBean childContextNoPropsBean;
     @Autowired
-    @Qualifier(CHILD_NO_NESTED_BEAN)
-    private ConfigurableBean childContextNoNestedBean;
+    @Qualifier(CHILD_NESTED_BEAN)
+    private ConfigurableBean childContextNestedBean;
     @Autowired
     @Qualifier(CHILD_PARENT_CFG_BEAN)
     private ConfigurableBean childContextParentCfgBean;
@@ -209,7 +209,7 @@ class EnableConfigurableComponentsTest {
                 SpringConfig.PARENT_PROP_VALUE,
                 parentContextNoPropsBean.getParentPropValue());
         assertNull(parentContextNoPropsBean.getChildPropValue());
-        assertNull(parentContextNoNestedBean.getSibblingPropValue());
+        assertNull(parentContextNestedBean.getSibblingPropValue());
         assertTrue(parentContextNoPropsBean.isConfigured());
         assertEquals(
                 SpringConfig.GRANDPA_PROP_VALUE,
@@ -217,36 +217,36 @@ class EnableConfigurableComponentsTest {
         assertNull(parentContextNoPropsBean.getParentCfgProp());
         assertNull(parentContextNoPropsBean.getChildCfgProp());
         assertNull(parentContextNoPropsBean.getSibblingCfgProp());
-        assertTrue(parentContextNoPropsBean.getNested().isConfigured());
-        assertEquals(
-                SpringConfig.PARENT_PROP_VALUE,
-                parentContextNoPropsBean.getNested().getParentCfgProp());
+        assertFalse(parentContextNoPropsBean.getNested().isConfigured());
+        assertNull(parentContextNoPropsBean.getNested().getParentCfgProp());
     }
 
     @Test
-    void testParentContextNoNestedBean() {
+    void testParentContextNestedBean() {
         assertEquals(
                 CLASSIC_PROP_PARENT_VALUE,
-                parentContextNoNestedBean.getClassicPropValue());
+                parentContextNestedBean.getClassicPropValue());
         assertEquals(
                 SpringConfig.GRANDPA_PROP_VALUE,
-                parentContextNoNestedBean.getGrandpaPropValue());
+                parentContextNestedBean.getGrandpaPropValue());
         assertEquals(
                 SpringConfig.PARENT_PROP_VALUE,
-                parentContextNoNestedBean.getParentPropValue());
-        assertNull(parentContextNoNestedBean.getChildPropValue());
-        assertNull(parentContextNoNestedBean.getSibblingPropValue());
-        assertTrue(parentContextNoNestedBean.isConfigured());
+                parentContextNestedBean.getParentPropValue());
+        assertNull(parentContextNestedBean.getChildPropValue());
+        assertNull(parentContextNestedBean.getSibblingPropValue());
+        assertTrue(parentContextNestedBean.isConfigured());
         assertEquals(
                 SpringConfig.GRANDPA_PROP_VALUE,
-                parentContextNoNestedBean.getGrandpaCfgProp());
+                parentContextNestedBean.getGrandpaCfgProp());
         assertEquals(
                 SpringConfig.PARENT_PROP_VALUE,
-                parentContextNoNestedBean.getParentCfgProp());
-        assertNull(parentContextNoNestedBean.getChildCfgProp());
-        assertNull(parentContextNoNestedBean.getSibblingCfgProp());
-        assertFalse(parentContextNoNestedBean.getNested().isConfigured());
-        assertNull(parentContextNoNestedBean.getNested().getParentCfgProp());
+                parentContextNestedBean.getParentCfgProp());
+        assertNull(parentContextNestedBean.getChildCfgProp());
+        assertNull(parentContextNestedBean.getSibblingCfgProp());
+        assertTrue(parentContextNestedBean.getNested().isConfigured());
+        assertEquals(
+                SpringConfig.PARENT_PROP_VALUE,
+                parentContextNestedBean.getNested().getParentCfgProp());
     }
 
     @Test
@@ -302,7 +302,7 @@ class EnableConfigurableComponentsTest {
                 childContextNoPropsBean.getChildPropValue());
         assertEquals(
                 ChildSpringConfig.SIBBLING_PROP_VALUE,
-                childContextNoNestedBean.getSibblingPropValue());
+                childContextNestedBean.getSibblingPropValue());
         assertTrue(childContextNoPropsBean.isConfigured());
         assertEquals(
                 SpringConfig.GRANDPA_PROP_VALUE,
@@ -310,42 +310,42 @@ class EnableConfigurableComponentsTest {
         assertNull(childContextNoPropsBean.getParentCfgProp());
         assertNull(childContextNoPropsBean.getChildCfgProp());
         assertNull(childContextNoPropsBean.getSibblingCfgProp());
-        assertTrue(childContextNoPropsBean.getNested().isConfigured());
-        assertEquals(
-                ChildSpringConfig.PARENT_PROP_VALUE,
-                childContextNoPropsBean.getNested().getParentCfgProp());
+        assertFalse(childContextNoPropsBean.getNested().isConfigured());
+        assertNull(childContextNoPropsBean.getNested().getParentCfgProp());
     }
 
     @Test
-    void testChildContextNoNestedBean() {
+    void testChildContextNestedBean() {
         assertEquals(
                 CLASSIC_PROP_PARENT_VALUE,
-                childContextNoNestedBean.getClassicPropValue());
+                childContextNestedBean.getClassicPropValue());
         assertEquals(
                 SpringConfig.GRANDPA_PROP_VALUE,
-                childContextNoNestedBean.getGrandpaPropValue());
+                childContextNestedBean.getGrandpaPropValue());
         assertEquals(
                 ChildSpringConfig.PARENT_PROP_VALUE,
-                childContextNoNestedBean.getParentPropValue());
+                childContextNestedBean.getParentPropValue());
         assertEquals(
                 ChildSpringConfig.CHILD_PROP_VALUE,
-                childContextNoNestedBean.getChildPropValue());
+                childContextNestedBean.getChildPropValue());
         assertEquals(
                 ChildSpringConfig.SIBBLING_PROP_VALUE,
-                childContextNoNestedBean.getSibblingPropValue());
-        assertTrue(childContextNoNestedBean.isConfigured());
+                childContextNestedBean.getSibblingPropValue());
+        assertTrue(childContextNestedBean.isConfigured());
         assertEquals(
                 SpringConfig.GRANDPA_PROP_VALUE,
-                childContextNoNestedBean.getGrandpaCfgProp());
+                childContextNestedBean.getGrandpaCfgProp());
         assertEquals(
                 ChildSpringConfig.PARENT_PROP_VALUE,
-                childContextNoNestedBean.getParentCfgProp());
+                childContextNestedBean.getParentCfgProp());
         assertEquals(
                 ChildSpringConfig.CHILD_PROP_VALUE,
-                childContextNoNestedBean.getChildCfgProp());
-        assertNull(childContextNoNestedBean.getSibblingCfgProp());
-        assertFalse(childContextNoNestedBean.getNested().isConfigured());
-        assertNull(childContextNoNestedBean.getNested().getParentCfgProp());
+                childContextNestedBean.getChildCfgProp());
+        assertNull(childContextNestedBean.getSibblingCfgProp());
+        assertTrue(childContextNestedBean.getNested().isConfigured());
+        assertEquals(
+                ChildSpringConfig.PARENT_PROP_VALUE,
+                childContextNestedBean.getNested().getParentCfgProp());
     }
 
     @Test
@@ -358,13 +358,13 @@ class EnableConfigurableComponentsTest {
                 childContextParentCfgBean.getGrandpaPropValue());
         assertEquals(
                 ChildSpringConfig.PARENT_PROP_VALUE,
-                childContextNoNestedBean.getParentPropValue());
+                childContextNestedBean.getParentPropValue());
         assertEquals(
                 ChildSpringConfig.CHILD_PROP_VALUE,
-                childContextNoNestedBean.getChildPropValue());
+                childContextNestedBean.getChildPropValue());
         assertEquals(
                 ChildSpringConfig.SIBBLING_PROP_VALUE,
-                childContextNoNestedBean.getSibblingPropValue());
+                childContextNestedBean.getSibblingPropValue());
         assertTrue(childContextParentCfgBean.isConfigured());
         assertEquals(
                 SpringConfig.GRANDPA_PROP_VALUE,
@@ -374,10 +374,8 @@ class EnableConfigurableComponentsTest {
                 childContextParentCfgBean.getParentCfgProp());
         assertNull(childContextParentCfgBean.getChildCfgProp());
         assertNull(childContextParentCfgBean.getSibblingCfgProp());
-        assertTrue(childContextParentCfgBean.getNested().isConfigured());
-        assertEquals(
-                ChildSpringConfig.PARENT_PROP_VALUE,
-                childContextParentCfgBean.getNested().getParentCfgProp());
+        assertFalse(childContextParentCfgBean.getNested().isConfigured());
+        assertNull(childContextParentCfgBean.getNested().getParentCfgProp());
     }
 
     @Test
@@ -412,10 +410,8 @@ class EnableConfigurableComponentsTest {
                 bean.getParentCfgProp());
         assertNull(bean.getChildCfgProp());
         assertNull(bean.getSibblingCfgProp());
-        assertTrue(bean.getNested().isConfigured());
-        assertEquals(
-                SpringConfig.PARENT_PROP_VALUE,
-                bean.getNested().getParentCfgProp());
+        assertFalse(bean.getNested().isConfigured());
+        assertNull(bean.getNested().getParentCfgProp());
     }
 
     private void assertChildConfigBean(
@@ -446,10 +442,8 @@ class EnableConfigurableComponentsTest {
                 ChildSpringConfig.CHILD_PROP_VALUE,
                 bean.getChildCfgProp());
         assertNull(bean.getSibblingCfgProp());
-        assertTrue(bean.getNested().isConfigured());
-        assertEquals(
-                ChildSpringConfig.PARENT_PROP_VALUE,
-                bean.getNested().getParentCfgProp());
+        assertFalse(bean.getNested().isConfigured());
+        assertNull(bean.getNested().getParentCfgProp());
     }
 
     public static interface GrandparentConfig
@@ -631,10 +625,10 @@ class EnableConfigurableComponentsTest {
         }
     }
 
-    @ConfigurationOptions(configureNestedBeans = false)
-    public static class NoNestedConfigurableBean
+    @ConfigurationOptions(configureNestedBeans = true)
+    public static class NestedEnabledConfigurableBean
     extends ConfigurableBean {
-        public NoNestedConfigurableBean(
+        public NestedEnabledConfigurableBean(
                 String classicPropValue,
                 String grandpaPropValue,
                 String parentPropValue,
@@ -769,8 +763,8 @@ class EnableConfigurableComponentsTest {
                     sibblingPropValue);
         }
 
-        @Bean(name = PARENT_NO_NESTED_BEAN)
-        public NoNestedConfigurableBean parentContextNoNestedBean(
+        @Bean(name = PARENT_NESTED_BEAN)
+        public NestedEnabledConfigurableBean parentContextNestedBean(
                 @Value("${" + CLASSIC_PROP_KEY + ":#{null}}")
                 final String classicPropValue,
                 @Value("${" + GrandparentConfig.GRANDPA_CFG_PROP + ":#{null}}")
@@ -781,7 +775,7 @@ class EnableConfigurableComponentsTest {
                 final String childPropValue,
                 @Value("${" + SibblingConfig.SIBBLING_CFG_PROP + ":#{null}}")
                 final String sibblingPropValue) {
-            return new NoNestedConfigurableBean(
+            return new NestedEnabledConfigurableBean(
                     classicPropValue,
                     grandpaPropValue,
                     parentPropValue,
@@ -941,8 +935,8 @@ class EnableConfigurableComponentsTest {
                     sibblingPropValue);
         }
 
-        @Bean(name = CHILD_NO_NESTED_BEAN)
-        public NoNestedConfigurableBean childContextNoNestedBean(
+        @Bean(name = CHILD_NESTED_BEAN)
+        public NestedEnabledConfigurableBean childContextNestedBean(
                 @Value("${" + CLASSIC_PROP_KEY + ":#{null}}")
                 final String classicPropValue,
                 @Value("${" + GrandparentConfig.GRANDPA_CFG_PROP + ":#{null}}")
@@ -953,7 +947,7 @@ class EnableConfigurableComponentsTest {
                 final String childPropValue,
                 @Value("${" + SibblingConfig.SIBBLING_CFG_PROP + ":#{null}}")
                 final String sibblingPropValue) {
-            return new NoNestedConfigurableBean(
+            return new NestedEnabledConfigurableBean(
                     classicPropValue,
                     grandpaPropValue,
                     parentPropValue,

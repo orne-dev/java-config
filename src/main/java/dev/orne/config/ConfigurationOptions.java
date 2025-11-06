@@ -61,5 +61,5 @@ public @interface ConfigurationOptions {
      * @return {@code true} if the class properties that implement {@code Configurable}
      * should be configured automatically.
      */
-    boolean configureNestedBeans() default true;
+    boolean configureNestedBeans() default false;
 }

@@ -76,7 +76,7 @@ class ConfigurerImplConfigureTest {
 
         then(configProvider).should(times(1)).selectConfig(null);
         then(configurer).should(times(1)).configureProperties(bean, config);
-        then(configurer).should(times(1)).configureNestedBeans(bean, config);
+        then(configurer).should(times(0)).configureNestedBeans(bean, config);
         then(bean).should(times(1)).configure(config);
     }
 
@@ -119,7 +119,7 @@ class ConfigurerImplConfigureTest {
         then(configProvider).should(times(0)).getDefaultConfig();
         then(configProvider).should(times(1)).selectConfig(any());
         then(configurer).should(times(1)).configureProperties(bean, config);
-        then(configurer).should(times(1)).configureNestedBeans(bean, config);
+        then(configurer).should(times(0)).configureNestedBeans(bean, config);
         then(bean).should(times(1)).configure(config);
     }
 
@@ -163,7 +163,7 @@ class ConfigurerImplConfigureTest {
         then(configProvider).should(times(0)).getDefaultConfig();
         then(configProvider).should(times(1)).selectConfig(any());
         then(configurer).should(times(0)).configureProperties(bean, config);
-        then(configurer).should(times(1)).configureNestedBeans(bean, config);
+        then(configurer).should(times(0)).configureNestedBeans(bean, config);
         then(bean).should(times(1)).configure(config);
     }
 
@@ -194,11 +194,11 @@ class ConfigurerImplConfigureTest {
      * beans without options.
      */
     @Test
-    void testConfigureNoNestedOptions() {
+    void testConfigureNestedOptions() {
         final ConfigurerImpl configurer = spy(assertInstanceOf(
                 ConfigurerImpl.class,
                 Configurer.fromProvider(configProvider)));
-        final ConnfigurableNoNestedBeansTestBean bean = spy(new ConnfigurableNoNestedBeansTestBean());
+        final ConnfigurableNestedBeansTestBean bean = spy(new ConnfigurableNestedBeansTestBean());
 
         given(configProvider.selectConfig(any())).willReturn(config);
 
@@ -207,7 +207,7 @@ class ConfigurerImplConfigureTest {
         then(configProvider).should(times(0)).getDefaultConfig();
         then(configProvider).should(times(1)).selectConfig(any());
         then(configurer).should(times(1)).configureProperties(bean, config);
-        then(configurer).should(times(0)).configureNestedBeans(bean, config);
+        then(configurer).should(times(1)).configureNestedBeans(bean, config);
         then(bean).should(times(1)).configure(config);
     }
 
@@ -216,11 +216,11 @@ class ConfigurerImplConfigureTest {
      * beans without options an no suitable config.
      */
     @Test
-    void testConfigureNoNestedOptionsNoConfig() {
+    void testConfigureNestedOptionsNoConfig() {
         final ConfigurerImpl configurer = spy(assertInstanceOf(
                 ConfigurerImpl.class,
                 Configurer.fromProvider(configProvider)));
-        final ConnfigurableNoNestedBeansTestBean bean = spy(new ConnfigurableNoNestedBeansTestBean());
+        final ConnfigurableNestedBeansTestBean bean = spy(new ConnfigurableNestedBeansTestBean());
 
         given(configProvider.selectConfig(any())).willReturn(null);
 
@@ -238,11 +238,11 @@ class ConfigurerImplConfigureTest {
      * beans without options.
      */
     @Test
-    void testConfigureOnlyConfigureOptions() {
+    void testConfigureOnlyNestedOptions() {
         final ConfigurerImpl configurer = spy(assertInstanceOf(
                 ConfigurerImpl.class,
                 Configurer.fromProvider(configProvider)));
-        final ConnfigurableOnlyConfigureTestBean bean = spy(new ConnfigurableOnlyConfigureTestBean());
+        final ConnfigurableOnlyConfigureNestedBean bean = spy(new ConnfigurableOnlyConfigureNestedBean());
 
         given(configProvider.selectConfig(any())).willReturn(config);
 
@@ -251,7 +251,7 @@ class ConfigurerImplConfigureTest {
         then(configProvider).should(times(0)).getDefaultConfig();
         then(configProvider).should(times(1)).selectConfig(any());
         then(configurer).should(times(0)).configureProperties(bean, config);
-        then(configurer).should(times(0)).configureNestedBeans(bean, config);
+        then(configurer).should(times(1)).configureNestedBeans(bean, config);
         then(bean).should(times(1)).configure(config);
     }
 
@@ -260,11 +260,11 @@ class ConfigurerImplConfigureTest {
      * beans without options an no suitable config.
      */
     @Test
-    void testConfigureOnlyConfigureOptionsNoConfig() {
+    void testConfigureOnlyNestedOptionsNoConfig() {
         final ConfigurerImpl configurer = spy(assertInstanceOf(
                 ConfigurerImpl.class,
                 Configurer.fromProvider(configProvider)));
-        final ConnfigurableOnlyConfigureTestBean bean = spy(new ConnfigurableOnlyConfigureTestBean());
+        final ConnfigurableOnlyConfigureNestedBean bean = spy(new ConnfigurableOnlyConfigureNestedBean());
 
         given(configProvider.selectConfig(any())).willReturn(null);
 
@@ -319,8 +319,8 @@ class ConfigurerImplConfigureTest {
         }
     }
 
-    @ConfigurationOptions(configureNestedBeans=false)
-    public static class ConnfigurableNoNestedBeansTestBean
+    @ConfigurationOptions(configureNestedBeans=true)
+    public static class ConnfigurableNestedBeansTestBean
     implements Configurable {
         private boolean configured;
         @Override
@@ -333,8 +333,8 @@ class ConfigurerImplConfigureTest {
         }
     }
 
-    @ConfigurationOptions(configureProperties=false, configureNestedBeans=false)
-    public static class ConnfigurableOnlyConfigureTestBean
+    @ConfigurationOptions(configureProperties=false, configureNestedBeans=true)
+    public static class ConnfigurableOnlyConfigureNestedBean
     implements Configurable {
         private boolean configured;
         @Override

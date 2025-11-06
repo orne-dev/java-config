@@ -124,6 +124,7 @@
 - **Breaking:** Remove obsolete API.
     - `dev.orne.config.HierarchicalConfig` interface.
 - **Breaking:** Remove `ConfigurationOptions` preferred configuration properties in favor of `PreferredConfig`.
+- **Breaking:** Changed `ConfigurationOptions.configureNestedBeans` default value to `false`.
 - **Breaking:** Remove and made internal implementation classes.
     - `dev.orne.config.AbstractConfig` class.
     - `dev.orne.config.AbstractStringConfig` class.
