@@ -33,7 +33,7 @@ Config config = ...;
 config.isEmpty(); // check if configuration has any property
 config.getKeys().forEach(key -> { ... }); // iterate all property names
 config.getKeys(prefix).forEach(key -> { ... }); // iterate property names with given prefix
-config.getKeys(filter).forEach(key -> { ... }); // iterate property names matching given filter
+config.getKeys(predicate).forEach(key -> { ... }); // iterate property names matching given filter
 ```
 
 ## Mutable configurations
@@ -119,7 +119,7 @@ Subsequent calls to `subset()` an `as()` is supported, allowing to create
 specific configuration subtypes for subsets of properties:
 
 ```java
-public interface DatabaseConfig extends Config {
+public interface SecurityConfig extends Config {
     default String getUrl() {
         return get("db.url");
     }
@@ -132,7 +132,7 @@ public interface DatabaseConfig extends Config {
 }
 
 Config config = ...;
-DatabaseConfig dbConfig = config.subset("security.").as(DatabaseConfig.class);
+SecurityConfig dbConfig = config.subset("security.").as(SecurityConfig.class);
 String url = dbConfig.getUrl(); // actually gets "security.db.url"
 String username = dbConfig.getUsername(); // actually gets "security.db.username"
 String password = dbConfig.getPassword(); // actually gets "security.db.password"

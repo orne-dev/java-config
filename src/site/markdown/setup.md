@@ -79,6 +79,11 @@ config.save(path);
 Jackson 2 based configuration instance that retrieves values from JSON files
 or objects can be created using the `Config.fromJson()` method.
 
+**Note:** Requires Jackson 2.x `com.fasterxml.jackson.core:jackson-databind`
+dependency.
+The library declares dependency as optional, so it must be included explicitly
+in the project dependencies.
+
 Example:
 
 ```java
@@ -112,6 +117,11 @@ config.save(path);
 
 Jackson 2 based configuration instance that retrieves values from YAML files
 or objects can be created using the `Config.fromYaml()` method.
+
+**Note:** Requires Jackson 2.x `com.fasterxml.jackson.dataformat:jackson-dataformat-yaml`
+dependency.
+The library declares dependency as optional, so it must be included explicitly
+in the project dependencies.
 
 Example:
 
@@ -222,10 +232,9 @@ can be created using the `Config.fromJavaPreferences()` method.
 Example:
 
 ```java
-Properties localValues = ...;
+String path = ...;
 Config config = Config.fromJavaPreferences()
-        .add(localValues)
-        .load("config/override.properties")
+        .ofUser(path)
         .build();
 String host = config.get("host");
 ```
@@ -236,8 +245,9 @@ can be synchronized with persisted on files or output streams.
 Example:
 
 ```java
+String path = ...;
 PreferencesMutableConfig config = Config.fromJavaPreferences()
-        .load("config/application.properties")
+        .ofUser(path)
         .mutable()
         .build();
 config.set("host", "example.com");
@@ -306,8 +316,7 @@ Example:
 Config baseConfig = ConfigProvider.fromProperties()
     .load("example/base.properties")
     .withParent(Config.fromSystemProperties()
-        .withParent(Config.fromEnvironmentVariables())
-        .build())
+        .withParent(Config.fromEnvironmentVariables()))
     .build();
 Config config = ConfigProvider.fromProperties()
     .load("example/dev.properties")
@@ -356,7 +365,7 @@ in the configuration source, and decoded when retrieved
 for usage.
 
 This is enabled using the `withDecoder()` method
-during the building process, allowing to chain multiple decorators.
+during the building process, allowing to chain multiple decoders.
 
 Example:
 
@@ -391,7 +400,7 @@ like API keys or passwords, that should be stored in an encoded format
 in the configuration source, and encoded when set.
 
 This is enabled using the `withEncoder()` method
-during the building process, allowing to chain multiple decorators.
+during the building process, allowing to chain multiple encoders.
 
 Example:
 
@@ -419,7 +428,7 @@ parent.set("api.key", "my_plain_api_key");
 
 A special type of encoders and decoders are the cryptographic encoders
 and decoders, that allow to encode and decode configuration property values
-using cryptographic algorithms, like AES or RSA.
+using cryptographic algorithms, like AES.
 
 This is enabled using the `withEncryption()` methods during the building
 process, passing a `ConfigCryptoProvider` instance that provides the

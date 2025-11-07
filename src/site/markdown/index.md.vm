@@ -44,19 +44,22 @@ $dash$dash Features
 
 - [Spring integration](./spring.html)
 
-  Support for usage of Orne configuration instances as Spring `PropertySource`s.
+  Support for usage of Spring `Environment` as configuration source.
 
-  Support for usage of Spring `Environment` as Orne configuration source.
+  Support for usage of `Config` instances as Spring `PropertySource`.
+
+  Support for `Config` instances injection and preferred configuration
+  selection.
 
   Support for automatic configuration of Spring beans implementing the
   `Configurable` interface.
 
 - [Apache Commons Configuration integration](./commons.html)
 
-  Support for usage of Apache Commons Configuration instances as Orne
+  Support for usage of Apache Commons Configuration instances as
   configuration sources.
 
-  Support for usage of Orne configuration instances by third party components
-  expecting Apache Commons Configuration instances.
+  Support for usage of `Config` instances by third party components
+  expecting Apache Commons `Configuration` instances.
 
 [maven search]: https://central.sonatype.com/artifact/dev.orne/config
