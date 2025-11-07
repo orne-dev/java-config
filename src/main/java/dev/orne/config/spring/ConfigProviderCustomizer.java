@@ -84,12 +84,27 @@ public interface ConfigProviderCustomizer {
     /**
      * Registers additional {@code Config} instances.
      * 
-     * @param builder The configuration provider builder.
+     * @param registry The registry of additional configurations.
      * @param configs The configurations available in the Spring context.
      */
     default void registerAdditionalConfigs(
-            final @NotNull ConfigProviderBuilder builder,
+            final @NotNull ConfigRegistry registry,
             final @NotNull Map<String, Config> configs) {
-        configs.values().forEach(builder::addConfig);
+        configs.values().forEach(registry::add);
+    }
+
+    /**
+     * Registry for additional {@code Config} instances.
+     */
+    @FunctionalInterface
+    interface ConfigRegistry {
+
+        /**
+         * Adds a new {@code Config} instance.
+         * 
+         * @param config The configuration to add.
+         */
+        void add(
+                @NotNull Config config);
     }
 }

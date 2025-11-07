@@ -37,7 +37,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 import dev.orne.config.Config;
-import dev.orne.config.ConfigProviderBuilder;
 import dev.orne.config.PreferredConfig;
 
 /**
@@ -415,10 +414,10 @@ class EnablePreferredConfigInyectionTest {
 
         @Override
         public void registerAdditionalConfigs(
-                final @NotNull ConfigProviderBuilder builder,
+                final @NotNull ConfigRegistry builder,
                 final @NotNull Map<String, Config> configs) {
             // Ensure priority to subtypeConfig over subtypeConfig2
-            builder.addConfig(subtypeConfig());
+            builder.add(subtypeConfig());
             ConfigProviderCustomizer.super.registerAdditionalConfigs(builder, configs);
         }
     }

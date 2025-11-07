@@ -34,13 +34,14 @@ import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigProvider;
-import dev.orne.config.ConfigProviderBuilder;
+import dev.orne.config.impl.ConfigProviderImpl;
 
 /**
  * Bean factory post processor that provides a {@code ConfigProvider}
@@ -52,7 +53,7 @@ import dev.orne.config.ConfigProviderBuilder;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class ConfigProviderConfigurer
-implements EnvironmentAware, BeanFactoryPostProcessor {
+implements EnvironmentAware, BeanFactoryPostProcessor, BeanPostProcessor {
 
     /** The class logger. */
     private static final Logger LOG = LoggerFactory.getLogger(ConfigProviderConfigurer.class);
@@ -70,8 +71,10 @@ implements EnvironmentAware, BeanFactoryPostProcessor {
     protected String appConfigProviderBeanName;
     /** The application provided configuration provider customizer bean name. */
     protected String customizerBeanName;
-    /** The application provided configuration provider. */
+    /** The configuration provider. */
     protected ConfigProvider configProvider;
+    /** The created configuration provider. */
+    protected ConfigProviderImpl ownConfigProvider;
 
     /**
      * Creates a new instance.
@@ -89,6 +92,12 @@ implements EnvironmentAware, BeanFactoryPostProcessor {
         this.environment = environment;
     }
 
+    /**
+     * Detects application provided {@code ConfigProvider} and
+     * {@code ConfigProviderCustomizer} beans.
+     * 
+     * {@inheritDoc}
+     */
     @Override
     public void postProcessBeanFactory(
             final @NotNull ConfigurableListableBeanFactory beanFactory)
@@ -122,6 +131,21 @@ implements EnvironmentAware, BeanFactoryPostProcessor {
     }
 
     /**
+     * Registers 
+     */
+    @Override
+    public @NotNull Object postProcessAfterInitialization(
+            final @NotNull Object bean,
+            final @NotNull String beanName)
+    throws BeansException {
+        if (bean instanceof Config && this.ownConfigProvider != null) {
+            LOG.debug("Registering Config bean '{}' initialized after ConfigProvider creation...", beanName);
+            this.ownConfigProvider.registerConfig((Config) bean);
+        }
+        return bean;
+    }
+
+    /**
      * Creates and exposes the automatically created {@code Config} bean,
      * if any.
      * 
@@ -131,7 +155,8 @@ implements EnvironmentAware, BeanFactoryPostProcessor {
         if (this.configProvider == null) {
             if (this.appConfigProviderBeanName == null) {
                 LOG.debug("Creating default ConfigProvider bean...");
-                this.configProvider = createConfigProvider();
+                this.ownConfigProvider = createConfigProvider();
+                this.configProvider = this.ownConfigProvider;
             } else {
                 LOG.debug("Using application provided ConfigProvider: {}",
                         this.appConfigProviderBeanName);
@@ -148,25 +173,25 @@ implements EnvironmentAware, BeanFactoryPostProcessor {
      * 
      * @return The new configuration provider.
      */
-    protected @NotNull ConfigProvider createConfigProvider() {
+    protected @NotNull ConfigProviderImpl createConfigProvider() {
         final Map<String, Config> configs = BeanFactoryUtils.beansOfTypeIncludingAncestors(
                 beanFactory,
                 Config.class);
-        final ConfigProviderBuilder builder;
+        final ConfigProviderImpl provider;
         if (this.customizerBeanName == null) {
-            builder = ConfigProvider.builder(createDefaultConfig());
-            configs.values().stream().forEach(builder::addConfig);
+            provider = new ConfigProviderImpl(createDefaultConfig());
+            configs.values().stream().forEach(provider::registerConfig);
         } else {
             LOG.debug("Using application provided ConfigProvider customizer: {}",
                     this.customizerBeanName);
             final ConfigProviderCustomizer customizer = beanFactory.getBean(
                     this.customizerBeanName,
                     ConfigProviderCustomizer.class);
-            builder = ConfigProvider.builder(
+            provider = new ConfigProviderImpl(
                     customizer.configureDefaultConfig(configs));
-            customizer.registerAdditionalConfigs(builder, configs);
+            customizer.registerAdditionalConfigs(cfg -> provider.registerConfig(cfg), configs);
         }
-        return builder.build();
+        return provider;
     }
 
     /**

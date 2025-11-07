@@ -27,7 +27,7 @@ import static org.mockito.BDDMockito.*;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigProvider;
-import dev.orne.config.ConfigProviderBuilder;
+import dev.orne.config.impl.ConfigProviderImpl;
 import dev.orne.config.impl.SpringEnvironmentConfigImpl;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -243,7 +243,7 @@ class ConfigProviderConfigurerTest {
         assertSame(defaultConfig, provider.getConfig(Config.class).get());
         assertFalse(provider.getConfig(ExtConfig.class).isPresent());
         assertFalse(provider.getConfig(ExtConfig2.class).isPresent());
-        then(customizer).should().registerAdditionalConfigs(any(ConfigProviderBuilder.class), eq(configBeans));
+        then(customizer).should().registerAdditionalConfigs(any(ConfigProviderCustomizer.ConfigRegistry.class), eq(configBeans));
         assertNull(configurer.configProvider);
     }
 
@@ -274,7 +274,7 @@ class ConfigProviderConfigurerTest {
         assertSame(defaultConfig, provider.getConfig(Config.class).get());
         assertFalse(provider.getConfig(ExtConfig.class).isPresent());
         assertFalse(provider.getConfig(ExtConfig2.class).isPresent());
-        then(customizer).should().registerAdditionalConfigs(any(ConfigProviderBuilder.class), eq(configBeans));
+        then(customizer).should().registerAdditionalConfigs(any(ConfigProviderCustomizer.ConfigRegistry.class), eq(configBeans));
         assertNull(configurer.configProvider);
     }
 
@@ -283,7 +283,7 @@ class ConfigProviderConfigurerTest {
      */
     @Test
     void givenNoProviderBeanName_whenGetConfigProvider_thenCreatesProvider() {
-        ConfigProvider provider = mock(ConfigProvider.class);
+        ConfigProviderImpl provider = mock(ConfigProviderImpl.class);
         ConfigProviderConfigurer spied = spy(configurer);
         willReturn(provider).given(spied).createConfigProvider();
         final ConfigProvider result = spied.getConfigProvider();
