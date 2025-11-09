@@ -189,7 +189,7 @@ implements EnvironmentAware, BeanFactoryPostProcessor, BeanPostProcessor {
                     ConfigProviderCustomizer.class);
             provider = new ConfigProviderImpl(
                     customizer.configureDefaultConfig(configs));
-            customizer.registerAdditionalConfigs(cfg -> provider.registerConfig(cfg), configs);
+            customizer.registerAdditionalConfigs(provider::registerConfig, configs);
         }
         return provider;
     }

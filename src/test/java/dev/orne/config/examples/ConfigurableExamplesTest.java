@@ -214,6 +214,7 @@ class ConfigurableExamplesTest {
         private String host;
         private int port;
 
+        @Override
         public void configure(Config config) {
             MyConfig myConfig = config.as(MyConfig.class);
             this.host = myConfig.getHost();
