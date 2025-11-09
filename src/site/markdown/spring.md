@@ -27,7 +27,7 @@ This enables the following features:
 - Default Spring `Environment` based `Config` instance.
 - Detection and registration of additional `Config` beans present on Spring context.
 - Usage of `Config` beans as `PropertySource`s on Spring applications.
-- `PreferredConfig` based inyection of `Config` instances into Spring beans.
+- `PreferredConfig` based injection of `Config` instances into Spring beans.
 - Automatic configuration of `Configurable` beans.
 
 Default and additional `Config` customization can be achieved implementing the
@@ -57,14 +57,14 @@ class AppConfig {
 }
 ```
 
-### `PreferredConfig` based inyection
+### `PreferredConfig` based injection
 
-The `PreferredConfig` based inyection of `Config` instances into Spring beans
-can be activated through the `EnablePreferredConfigInyection` annotation:
+The `PreferredConfig` based injection of `Config` instances into Spring beans
+can be activated through the `EnablePreferredConfigInjection` annotation:
 
 ```java
 @Configuration
-@EnablePreferredConfigInyection
+@EnablePreferredConfigInjection
 class AppConfig {
 
     @Bean

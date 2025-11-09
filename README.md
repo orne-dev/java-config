@@ -31,9 +31,9 @@ The library provides the following features:
 - Configurations hierarchy
 - Configuration sub-types
 - Configuration sub-sets
+- Spring integration
 - Apache Commons Configuration integration
 - Automatic components configuration
-- Spring integration
 
 ## Usage
 

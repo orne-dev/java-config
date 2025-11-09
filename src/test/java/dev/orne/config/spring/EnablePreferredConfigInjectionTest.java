@@ -40,14 +40,14 @@ import dev.orne.config.Config;
 import dev.orne.config.PreferredConfig;
 
 /**
- * Unit tests for {@link EnablePreferredConfigInyection}.
+ * Unit tests for {@link EnablePreferredConfigInjection}.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
  * @since 1.0
  */
 @Tag("ut")
-class EnablePreferredConfigInyectionTest {
+class EnablePreferredConfigInjectionTest {
 
     private static final String CFG_ID_PROP = "cfg.id";
     private static final String DEFAULT_CFG_ID = "env";
@@ -261,7 +261,7 @@ class EnablePreferredConfigInyectionTest {
 
     @Configuration
     @PropertySource("classpath:dev/orne/config/spring/config.autowire.test.properties")
-    @EnablePreferredConfigInyection
+    @EnablePreferredConfigInjection
     static class NoConfigConfiguration {
         // No extra beans
     }

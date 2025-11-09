@@ -41,7 +41,7 @@ import dev.orne.config.PreferredConfig;
  * Example:
  * <pre>
  * {@literal @}Configuration
- * {@literal @}EnablePreferredConfigInyection
+ * {@literal @}EnablePreferredConfigInjection
  * class AppConfig {
  *     ...
  *     {@literal @}Bean
@@ -80,7 +80,7 @@ import dev.orne.config.PreferredConfig;
  * class MyComponent {
  *     ...
  *     {@literal @}Autowired
- *     public inyectedByMethod(
+ *     public injectedByMethod(
  *             {@literal @}PreferredConfig(AltConfig.class) Config config) {
  *         ...
  *     }
@@ -100,6 +100,6 @@ import dev.orne.config.PreferredConfig;
 @Target({ ElementType.TYPE })
 @Import(ConfigAutowireCandidateResolverConfigurer.class)
 @API(status = API.Status.STABLE, since = "1.0")
-public @interface EnablePreferredConfigInyection {
+public @interface EnablePreferredConfigInjection {
     // No extra attributes
 }

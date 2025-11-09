@@ -66,12 +66,12 @@ import org.apiguardian.api.API;
  * }
  * </pre>
  * <p>
- * This is equivalent to manually enabling {@code EnablePreferredConfigInyection}
+ * This is equivalent to manually enabling {@code EnablePreferredConfigInjection}
  * and {@code EnableConfigurableComponents}, as {@code ConfigPropertySource}
  * does not require any extra configuration:
  * <pre>
  * {@literal @}Configuration
- * {@literal @}EnablePreferredConfigInyection
+ * {@literal @}EnablePreferredConfigInjection
  * {@literal @}EnableConfigurableComponents
  * class AppConfig {
  *     ...
@@ -84,14 +84,14 @@ import org.apiguardian.api.API;
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-11
  * @since 1.0
- * @see EnablePreferredConfigInyection
+ * @see EnablePreferredConfigInjection
  * @see EnableConfigurableComponents
  * @see ConfigProviderCustomizer
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE })
-@EnablePreferredConfigInyection
+@EnablePreferredConfigInjection
 @EnableConfigurableComponents
 @API(status = API.Status.STABLE, since = "1.0")
 public @interface EnableOrneConfig {

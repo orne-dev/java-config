@@ -45,7 +45,7 @@ import dev.orne.config.spring.ConfigPropertySource;
 import dev.orne.config.spring.ConfigProviderCustomizer;
 import dev.orne.config.spring.EnableConfigurableComponents;
 import dev.orne.config.spring.EnableOrneConfig;
-import dev.orne.config.spring.EnablePreferredConfigInyection;
+import dev.orne.config.spring.EnablePreferredConfigInjection;
 
 /**
  * Tests of Spring integration usage examples of public site.
@@ -359,7 +359,7 @@ class SpringExamplesTest {
 
     @Configuration
     @PropertySource("classpath:dev/orne/config/spring/config.autowire.test.properties")
-    @EnablePreferredConfigInyection
+    @EnablePreferredConfigInjection
     static class EnablePreferredConfigInjectionExample {
 
         @Bean
@@ -394,7 +394,7 @@ class SpringExamplesTest {
 
         @Bean
         public ConfigSubtype subtypeConfig() {
-            // No parent config here, requires inyection
+            // No parent config here, requires injection
             return Config.fromProperties()
                     .add(Map.of(
                             CFG_ID_PROP, SUBTYPE_CFG_ID))
