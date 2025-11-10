@@ -1,6 +1,6 @@
 # Orne Java configuration utilities - Changelog
 
-## 1.0.0 - [Unreleased]
+## 1.0.0 - 2025-11-10
 
 - **Requires Java 11 or newer.**
 - **Major API compatibility break.**
