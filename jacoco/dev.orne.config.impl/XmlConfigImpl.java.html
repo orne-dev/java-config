@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>XmlConfigImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">XmlConfigImpl.java</span></div><h1>XmlConfigImpl.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.util.Objects;
+import java.util.stream.Stream;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import org.apiguardian.api.API;
+import org.w3c.dom.Document;
+
+import dev.orne.config.Config;
+
+/**
+ * Implementation of {@code Config} based on a XML document.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-07
+ * @since 0.1
+ * @see Config
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public class XmlConfigImpl
+extends AbstractConfig {
+
+    /** The XML document with the configuration options. */
+    private final @NotNull Document document;
+    /** The configuration nested properties separator. */
+    private final @NotBlank String propertySeparator;
+    /** The XML attributes references prefix. */
+    private final @NotBlank String attributePrefix;
+
+    /**
+     * Creates a new instance.
+     * 
+     * @param options The configuration builder options.
+     * @param xmlOptions The XML based configuration builder options.
+     */
+    public XmlConfigImpl(
+            final @NotNull ConfigOptions options,
+            final @NotNull XmlConfigOptions xmlOptions) {
+<span class="fc" id="L64">        super(options);</span>
+<span class="fc" id="L65">        Objects.requireNonNull(xmlOptions);</span>
+<span class="fc" id="L66">        this.document = Objects.requireNonNull(xmlOptions.getDocument());</span>
+<span class="fc" id="L67">        this.propertySeparator = Objects.requireNonNull(xmlOptions.getPropertySeparator());</span>
+<span class="fc" id="L68">        this.attributePrefix = Objects.requireNonNull(xmlOptions.getAttributePrefix());</span>
+<span class="fc" id="L69">    }</span>
+
+    /**
+     * Returns the XML document with the configuration options.
+     * 
+     * @return The XML document with the configuration options.
+     */
+    protected @NotNull Document getDocument() {
+<span class="fc" id="L77">        return this.document;</span>
+    }
+
+    /**
+     * Returns the configuration nested properties separator.
+     * 
+     * @return The configuration nested properties separator.
+     */
+    protected @NotBlank String getPropertySeparator() {
+<span class="fc" id="L86">        return this.propertySeparator;</span>
+    }
+
+    /**
+     * Returns the XML attributes references prefix.
+     * 
+     * @return The XML attributes references prefix.
+     */
+    protected @NotBlank String getAttributePrefix() {
+<span class="nc" id="L95">        return this.attributePrefix;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean isEmptyInt() {
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">        return !this.document.getDocumentElement().hasAttributes()</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">                &amp;&amp; !this.document.getDocumentElement().hasChildNodes();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean containsInt(@NotBlank String key) {
+<span class="fc" id="L112">        return XmlUtils.contains(</span>
+                this.document,
+                key,
+                this.propertySeparator,
+                this.attributePrefix);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected @NotNull Stream&lt;String&gt; getKeysInt() {
+<span class="fc" id="L124">        return XmlUtils.extractKeys(</span>
+                this.document,
+                this.propertySeparator,
+                this.attributePrefix);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getInt(@NotBlank String key) {
+<span class="fc" id="L135">        return XmlUtils.getValue(</span>
+                this.document,
+                key,
+                this.propertySeparator,
+                attributePrefix)
+<span class="fc" id="L140">                .orElse(null);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

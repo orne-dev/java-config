@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">AbstractConfig.java</span></div><h1>AbstractConfig.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Stream;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import org.apache.commons.lang3.Validate;
+import org.apiguardian.api.API;
+
+import dev.orne.config.Config;
+import dev.orne.config.ConfigException;
+import dev.orne.config.NonIterableConfigException;
+import dev.orne.config.ValueDecoder;
+import dev.orne.config.ValueDecorator;
+import dev.orne.config.WatchableConfig;
+
+/**
+ * Base abstract implementation of configuration properties provider.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-04
+ * @since 1.0
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public abstract class AbstractConfig
+implements Config {
+
+    /** Error message for blank property keys. */
+    protected static final String KEY_BLANK_ERR =
+            &quot;Property key must be a non blank string&quot;;
+
+    /** The parent configuration. */
+    private final Config parent;
+    /** If parent configuration property values are overridden values of this instance. */
+    private final boolean overrideParentProperties;
+    /** The configuration properties values decoder. */
+    private final @NotNull ValueDecoder decoder;
+    /** The configuration properties values decorator. */
+    private final @NotNull ValueDecorator decorator;
+    /** The configuration properties values variable resolver. */
+    private final VariableResolver resolver;
+
+    /**
+     * Creates a new instance.
+     * 
+     * @param options The configuration builder options.
+     */
+    protected AbstractConfig(
+            final @NotNull ConfigOptions options) {
+<span class="fc" id="L75">        super();</span>
+<span class="fc" id="L76">        Objects.requireNonNull(options);</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        if (options.getCryptoProvider() != null) {</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">            if (options.getDecoder() == null) {</span>
+<span class="fc" id="L79">                options.setDecoder(options.getCryptoProvider()::decrypt);</span>
+            } else {
+<span class="fc" id="L81">                options.setDecoder(</span>
+<span class="fc" id="L82">                        options.getDecoder().compose(options.getCryptoProvider()::decrypt));</span>
+            }
+        }
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        if (options.getDecoder() == null) {</span>
+<span class="fc" id="L86">            options.setDecoder(ValueDecoder.DEFAULT);</span>
+        }
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        if (options.isVariableResolutionEnabled()) {</span>
+<span class="fc" id="L89">            this.resolver = new VariableResolver(this);</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">            if (options.getDecorator() == null) {</span>
+<span class="fc" id="L91">                options.setDecorator(resolver::decorate);</span>
+            } else {
+<span class="fc" id="L93">                options.setDecorator(options.getDecorator().compose(resolver::decorate));</span>
+            }
+        } else {
+<span class="fc" id="L96">            this.resolver = null;</span>
+        }
+<span class="fc bfc" id="L98" title="All 2 branches covered.">        if (options.getDecorator() == null) {</span>
+<span class="fc" id="L99">            options.setDecorator(ValueDecorator.DEFAULT);</span>
+        }
+<span class="fc" id="L101">        this.parent = options.getParent();</span>
+<span class="fc" id="L102">        this.overrideParentProperties = options.isOverrideParentProperties();</span>
+<span class="fc" id="L103">        this.decoder = options.getDecoder();</span>
+<span class="fc" id="L104">        this.decorator = options.getDecorator();</span>
+<span class="fc bfc" id="L105" title="All 4 branches covered.">        if (getParent() instanceof WatchableConfig &amp;&amp; this.resolver != null) {</span>
+<span class="fc" id="L106">            ((WatchableConfig) getParent()).addListener(</span>
+<span class="fc" id="L107">                    (config, keys) -&gt; this.resolver.clearCache());</span>
+        }
+<span class="fc" id="L109">    }</span>
+
+    /**
+     * Returns the parent configuration, if any.
+     * 
+     * @return The parent configuration
+     */
+    @Override
+    public Config getParent() {
+<span class="fc" id="L118">        return this.parent;</span>
+    }
+
+    /**
+     * Returns {@code true} if the properties values from the parent
+     * configuration (if any) are overridden by the properties values
+     * from this instance.
+     * 
+     * @return {@code true} if the properties values from the parent
+     * configuration are overridden by the properties values from this
+     * instance.
+     */
+    public boolean isOverrideParentProperties() {
+<span class="nc" id="L131">        return this.overrideParentProperties;</span>
+    }
+
+    /**
+     * Returns the read configuration properties values decoder.
+     * 
+     * @return The configuration properties values decoder.
+     */
+    protected @NotNull ValueDecoder getDecoder() {
+<span class="fc" id="L140">        return this.decoder;</span>
+    }
+
+    /**
+     * Returns the read configuration properties values decorator.
+     * 
+     * @return The configuration properties values decorator.
+     */
+    protected @NotNull ValueDecorator getDecorator() {
+<span class="fc" id="L149">        return this.decorator;</span>
+    }
+
+    /**
+     * Returns the configuration properties values variable resolver.
+     * 
+     * @return The configuration properties values variable resolver.
+     */
+    protected @NotNull Optional&lt;VariableResolver&gt; getResolver() {
+<span class="fc" id="L158">        return Optional.ofNullable(this.resolver);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isEmpty() {
+<span class="pc bpc" id="L166" title="1 of 4 branches missed.">        return isEmptyInt() &amp;&amp;</span>
+<span class="pc bnc" id="L167" title="All 2 branches missed.">                (this.parent == null || this.parent.isEmpty());</span>
+    }
+
+    /**
+     * Returns {@code true} if this configuration instance contains no
+     * property.
+     * &lt;p&gt;
+     * Parent configuration
+     * 
+     * @return Returns {@code true} if the configuration contains no property.
+     * @throws NonIterableConfigException If the configuration property keys
+     * cannot be iterated.
+     * @throws ConfigException If an error occurs accessing the configuration.
+     */
+    protected abstract boolean isEmptyInt();
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean contains(
+            final @NotBlank String key) {
+<span class="fc" id="L189">        Validate.notBlank(key, KEY_BLANK_ERR);</span>
+<span class="fc bfc" id="L190" title="All 4 branches covered.">        return containsInt(key) || </span>
+<span class="fc bfc" id="L191" title="All 2 branches covered.">                (this.parent != null &amp;&amp; this.parent.contains(key));</span>
+    }
+
+    /**
+     * Returns {@code true} if the property with the key passed as argument
+     * has been configured in this configuration instance.
+     * 
+     * @param key The configuration property.
+     * @return Returns {@code true} if the property has been configured.
+     */
+    protected abstract boolean containsInt(
+            @NotBlank String key);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull Stream&lt;String&gt; getKeys() {
+<span class="fc bfc" id="L209" title="All 2 branches covered.">        if (this.parent == null) {</span>
+<span class="fc" id="L210">            return getKeysInt();</span>
+        } else {
+            try {
+<span class="fc" id="L213">                return Stream.concat(getKeysInt(), this.parent.getKeys());</span>
+<span class="fc" id="L214">            } catch (final NonIterableConfigException e) {</span>
+<span class="fc" id="L215">                return getKeysInt();</span>
+            }
+        }
+    }
+
+    /**
+     * Returns the configuration property keys contained in this configuration
+     * instance .
+     * 
+     * @return The configuration property keys.
+     * @throws NonIterableConfigException If the configuration property keys
+     * cannot be iterated.
+     * @throws ConfigException If an error occurs accessing the configuration.
+     */
+    protected abstract @NotNull Stream&lt;String&gt; getKeysInt();
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String get(
+            final @NotBlank String key) {
+<span class="fc" id="L237">        Validate.notBlank(key, KEY_BLANK_ERR);</span>
+<span class="fc" id="L238">        return this.decorator.decorate(getUndecored(key));</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getUndecored(
+            final @NotBlank String key) {
+        final String value;
+<span class="fc bfc" id="L248" title="All 2 branches covered.">        if (this.overrideParentProperties) {</span>
+<span class="fc bfc" id="L249" title="All 2 branches covered.">            if (containsInt(key)) {</span>
+<span class="fc" id="L250">                value = this.decoder.decode(getInt(key));</span>
+<span class="pc bpc" id="L251" title="1 of 2 branches missed.">            } else if (this.parent != null) {</span>
+<span class="fc" id="L252">                value = this.parent.getUndecored(key);</span>
+            } else {
+<span class="nc" id="L254">                value = null;</span>
+            }
+        } else {
+<span class="fc bfc" id="L257" title="All 4 branches covered.">            if (this.parent != null &amp;&amp; this.parent.contains(key)) {</span>
+<span class="fc" id="L258">                value = this.parent.getUndecored(key);</span>
+            } else {
+<span class="fc" id="L260">                value = this.decoder.decode(getInt(key));</span>
+            }
+        }
+<span class="fc" id="L263">        return value;</span>
+    }
+
+    /**
+     * Returns the value of the configuration property as {@code String}.
+     * 
+     * @param key The configuration property.
+     * @return The configuration parameter value.
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value.
+     */
+    protected abstract String getInt(
+            final @NotBlank String key);
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

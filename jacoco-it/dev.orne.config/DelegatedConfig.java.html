@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DelegatedConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config</a> &gt; <span class="el_source">DelegatedConfig.java</span></div><h1>DelegatedConfig.java</h1><pre class="source lang-java linenums">package dev.orne.config;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import org.apiguardian.api.API;
+
+/**
+ * A configuration that delegates all operations to another configuration.
+ * This class is useful for creating a proxy or wrapper around an existing
+ * configuration instance, allowing for additional behavior or modifications
+ * without changing the original configuration.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-08
+ * @since 1.0
+ */
+@API(status = API.Status.STABLE, since = &quot;1.0&quot;)
+public class DelegatedConfig
+implements Config {
+
+    /** The configuration to delegate to. */
+    private final @NotNull Config delegate;
+
+    /**
+     * Creates a new instance.
+     *
+     * @param delegate The configuration to delegate to.
+     */
+    public DelegatedConfig(
+            final @NotNull Config delegate) {
+<span class="nc" id="L59">        super();</span>
+<span class="nc" id="L60">        this.delegate = Objects.requireNonNull(delegate);</span>
+<span class="nc" id="L61">    }</span>
+
+    /**
+     * Returns the delegate configuration.
+     *
+     * @return The delegate configuration.
+     */
+    protected @NotNull Config getDelegate() {
+<span class="nc" id="L69">        return this.delegate;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Config getParent() {
+<span class="nc" id="L77">        return this.delegate.getParent();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isEmpty() {
+<span class="nc" id="L85">        return this.delegate.isEmpty();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean contains(
+            final @NotBlank String key) {
+<span class="nc" id="L94">        return this.delegate.contains(key);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull Stream&lt;String&gt; getKeys() {
+<span class="nc" id="L102">        return this.delegate.getKeys();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull Stream&lt;String&gt; getKeys(
+            final @NotNull Predicate&lt;String&gt; filter) {
+<span class="nc" id="L111">        return this.delegate.getKeys(filter);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull Stream&lt;String&gt; getKeys(
+            final @NotNull String prefix) {
+<span class="nc" id="L120">        return this.delegate.getKeys(prefix);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String get(
+            final @NotBlank String key) {
+<span class="nc" id="L129">        return this.delegate.get(key);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getUndecored(
+            final @NotBlank String key) {
+<span class="nc" id="L138">        return this.delegate.getUndecored(key);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String get(
+            final @NotBlank String key,
+            final String defaultValue) {
+<span class="nc" id="L148">        return this.delegate.get(key, defaultValue);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String get(
+            final @NotBlank String key,
+            final @NotNull Supplier&lt;String&gt; defaultValue) {
+<span class="nc" id="L158">        return this.delegate.get(key, defaultValue);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Boolean getBoolean(
+            final @NotBlank String key) {
+<span class="nc" id="L167">        return this.delegate.getBoolean(key);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getBoolean(
+            final @NotBlank String key,
+            final boolean defaultValue) {
+<span class="nc" id="L177">        return this.delegate.getBoolean(key, defaultValue);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Boolean getBoolean(
+            final @NotBlank String key,
+            final @NotNull Supplier&lt;Boolean&gt; defaultValue) {
+<span class="nc" id="L187">        return this.delegate.getBoolean(key, defaultValue);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Integer getInteger(
+            final @NotNull String key) {
+<span class="nc" id="L196">        return this.delegate.getInteger(key);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getInteger(
+            final @NotNull String key,
+            final int defaultValue) {
+<span class="nc" id="L206">        return this.delegate.getInteger(key, defaultValue);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Integer getInteger(
+            final @NotBlank String key,
+            final @NotNull Supplier&lt;Integer&gt; defaultValue) {
+<span class="nc" id="L216">        return this.delegate.getInteger(key, defaultValue);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Long getLong(
+            final @NotNull String key) {
+<span class="nc" id="L225">        return this.delegate.getLong(key);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public long getLong(
+            final @NotNull String key,
+            final long defaultValue) {
+<span class="nc" id="L235">        return this.delegate.getLong(key, defaultValue);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Long getLong(
+            final @NotBlank String key,
+            final @NotNull Supplier&lt;Long&gt; defaultValue) {
+<span class="nc" id="L245">        return this.delegate.getLong(key, defaultValue);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

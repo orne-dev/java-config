@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConfigAutowireCandidateResolver.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.spring</a> &gt; <span class="el_source">ConfigAutowireCandidateResolver.java</span></div><h1>ConfigAutowireCandidateResolver.java</h1><pre class="source lang-java linenums">package dev.orne.config.spring;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.util.function.Supplier;
+
+import javax.validation.constraints.NotNull;
+
+import org.apiguardian.api.API;
+import org.springframework.beans.factory.config.BeanDefinitionHolder;
+import org.springframework.beans.factory.config.DependencyDescriptor;
+import org.springframework.beans.factory.support.AutowireCandidateResolver;
+
+import dev.orne.config.Config;
+import dev.orne.config.ConfigProvider;
+import dev.orne.config.PreferredConfig;
+
+/**
+ * Autowire candidate resolver that provides {@code Config} instances
+ * from a {@code ConfigProvider}.
+ * &lt;p&gt;
+ * Supports the {@code PreferredConfig} annotation to select
+ * the desired configuration.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-11
+ * @since 1.0
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public class ConfigAutowireCandidateResolver
+implements AutowireCandidateResolver {
+
+    /** The parent autowire candidate resolver. */
+    public final @NotNull AutowireCandidateResolver parent;
+    /** The configuration provider supplier. */
+    public final @NotNull Supplier&lt;ConfigProvider&gt; configProvider;
+
+    /**
+     * Creates a new instance.
+     * 
+     * @param parent The parent autowire candidate resolver.
+     * @param configProvider The configuration provider supplier.
+     */
+    public ConfigAutowireCandidateResolver(
+            final @NotNull AutowireCandidateResolver parent,
+            final @NotNull Supplier&lt;ConfigProvider&gt; configProvider) {
+<span class="fc" id="L67">        super();</span>
+<span class="fc" id="L68">        this.parent = parent;</span>
+<span class="fc" id="L69">        this.configProvider = configProvider;</span>
+<span class="fc" id="L70">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isAutowireCandidate(
+            final BeanDefinitionHolder bdHolder,
+            final DependencyDescriptor descriptor) {
+<span class="fc" id="L79">        return parent.isAutowireCandidate(bdHolder, descriptor);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isRequired(
+            final DependencyDescriptor descriptor) {
+<span class="fc" id="L88">        return parent.isRequired(descriptor);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean hasQualifier(
+            final DependencyDescriptor descriptor) {
+<span class="nc" id="L97">        return parent.hasQualifier(descriptor);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Object getSuggestedValue(
+            final DependencyDescriptor descriptor) {
+<span class="fc bfc" id="L106" title="All 2 branches covered.">        if (!Config.class.equals(descriptor.getDeclaredType())) {</span>
+<span class="fc" id="L107">            return parent.getSuggestedValue(descriptor);</span>
+        }
+<span class="fc" id="L109">        final PreferredConfig annot = descriptor.getAnnotation(PreferredConfig.class);</span>
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">        if (annot == null) {</span>
+<span class="fc" id="L111">            return configProvider.get().getDefaultConfig();</span>
+        } else {
+<span class="nc" id="L113">            return configProvider.get().selectConfig(annot);</span>
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Object getLazyResolutionProxyIfNecessary(
+            final DependencyDescriptor descriptor,
+            final String beanName) {
+<span class="fc" id="L124">        return parent.getLazyResolutionProxyIfNecessary(descriptor, beanName);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public AutowireCandidateResolver cloneIfNecessary() {
+<span class="nc" id="L132">        return parent.cloneIfNecessary();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

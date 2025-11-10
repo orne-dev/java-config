@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JsonMutableConfigBuilderImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">JsonMutableConfigBuilderImpl.java</span></div><h1>JsonMutableConfigBuilderImpl.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.io.File;
+import java.net.URL;
+import java.nio.file.Path;
+import java.util.Map;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import org.apiguardian.api.API;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import dev.orne.config.JsonMutableConfigBuilder;
+
+
+/**
+ * Implementation of Jackson {@code ObjectNode} based mutable configuration
+ * builder.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-07
+ * @since 1.0
+ * @see JsonMutableConfigBuilder
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public class JsonMutableConfigBuilderImpl
+extends AbstractMutableConfigBuilderImpl&lt;JsonMutableConfigBuilder&gt;
+implements JsonMutableConfigBuilder {
+
+    /** The JSON based configuration options. */
+    protected final @NotNull JsonConfigOptions jsonOptions;
+
+    /**
+     * Copy constructor.
+     * 
+     * @param options The configuration options to copy.
+     * @param mutableOptions The mutable configuration options to copy.
+     * @param jsonOptions The JSON based configuration options to copy.
+     */
+    protected JsonMutableConfigBuilderImpl(
+            final @NotNull ConfigOptions options,
+            final @NotNull MutableConfigOptions mutableOptions,
+            final @NotNull JsonConfigOptions jsonOptions) {
+<span class="fc" id="L68">        super(options, mutableOptions);</span>
+<span class="fc" id="L69">        this.jsonOptions = new JsonConfigOptions(jsonOptions);</span>
+<span class="fc" id="L70">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull JsonMutableConfigBuilder withSeparator(
+            final @NotEmpty String separator) {
+<span class="fc" id="L78">        this.jsonOptions.setPropertySeparator(separator);</span>
+<span class="fc" id="L79">        return thisBuilder();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull JsonMutableConfigBuilder add(
+            final @NotNull Map&lt;String, String&gt; values) {
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        if (!values.isEmpty()) {</span>
+<span class="fc" id="L89">            final ObjectNode data = JacksonUtils.NODE_FACTORY.objectNode();</span>
+<span class="fc" id="L90">            values.forEach((key, value) -&gt; JacksonUtils.setNodeValue(</span>
+                    data,
+<span class="fc" id="L92">                    this.jsonOptions.getPropertySeparator(),</span>
+                    key,
+                    value));
+<span class="fc" id="L95">            this.jsonOptions.add(data);</span>
+        }
+<span class="fc" id="L97">        return thisBuilder();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull JsonMutableConfigBuilder load(
+            final @NotNull String path) {
+<span class="fc" id="L106">        this.jsonOptions.load(path);</span>
+<span class="fc" id="L107">        return thisBuilder();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull JsonMutableConfigBuilder load(
+            final @NotNull Path path) {
+<span class="fc" id="L116">        this.jsonOptions.load(path);</span>
+<span class="fc" id="L117">        return thisBuilder();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull JsonMutableConfigBuilder load(
+            final @NotNull File file) {
+<span class="fc" id="L126">        this.jsonOptions.load(file);</span>
+<span class="fc" id="L127">        return thisBuilder();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull JsonMutableConfigBuilder load(
+            final @NotNull URL url) {
+<span class="fc" id="L136">        this.jsonOptions.load(url);</span>
+<span class="fc" id="L137">        return thisBuilder();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull JsonMutableConfigImpl build() {
+<span class="fc" id="L145">        return new JsonMutableConfigImpl(</span>
+                this.options,
+                this.mutableOptions,
+                this.jsonOptions);
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

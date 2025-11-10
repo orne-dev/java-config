@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CommonsMutableConfigImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">CommonsMutableConfigImpl.java</span></div><h1>CommonsMutableConfigImpl.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
+
+import java.util.Objects;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.event.ConfigurationEvent;
+import org.apache.commons.configuration2.event.Event;
+import org.apache.commons.configuration2.event.EventSource;
+import org.apache.commons.configuration2.reloading.ReloadingEvent;
+import org.apiguardian.api.API;
+
+/**
+ * Implementation of {@code MutableConfig} based on Apache Commons
+ * {@code Configuration}.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2020-09
+ * @since 0.2
+ * @see Configuration
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public class CommonsMutableConfigImpl
+extends AbstractWatchableConfig {
+
+    /** The delegated Apache Commons configuration. */
+    private final @NotNull Configuration config;
+    /** If local events must be suppressed. */
+    private final boolean localEventsSuppressed;
+
+    /**
+     * Creates a new instance.
+     * 
+     * @param options The configuration builder options.
+     * @param mutableOptions The mutable configuration builder options.
+     * @param commonsOptions The Apache Commons based configuration options.
+     */
+    public CommonsMutableConfigImpl(
+            final @NotNull ConfigOptions options,
+            final @NotNull MutableConfigOptions mutableOptions,
+            final @NotNull CommonsConfigOptions commonsOptions) {
+<span class="fc" id="L68">        super(options, mutableOptions);</span>
+<span class="fc" id="L69">        Objects.requireNonNull(commonsOptions);</span>
+<span class="fc" id="L70">        this.config = (Configuration) commonsOptions.getDelegated();</span>
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">        if (config instanceof EventSource) {</span>
+<span class="fc" id="L72">            this.localEventsSuppressed = true;</span>
+<span class="fc" id="L73">            configureCommonsEvents((EventSource) config);</span>
+        } else {
+<span class="nc" id="L75">            this.localEventsSuppressed = false;</span>
+        }
+<span class="fc" id="L77">    }</span>
+
+    /**
+     * Returns the delegated Apache Commons configuration.
+     * 
+     * @return The delegated Apache Commons configuration
+     */
+    protected @NotNull Configuration getConfig() {
+<span class="nc" id="L85">        return this.config;</span>
+    }
+
+    /**
+     * Returns {@code true} if local events must be suppressed.
+     * 
+     * @return If local events must be suppressed.
+     */
+    protected boolean isLocalEventsSuppressed() {
+<span class="nc" id="L94">        return this.localEventsSuppressed;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean isEmptyInt() {
+<span class="fc" id="L102">        return this.config.isEmpty();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected @NotNull Stream&lt;String&gt; getKeysInt() {
+<span class="fc" id="L110">        final Iterable&lt;String&gt; iterable = this.config::getKeys;</span>
+<span class="fc" id="L111">        return StreamSupport.stream(iterable.spliterator(), false);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean containsInt(
+            final @NotBlank String key) {
+<span class="fc" id="L120">        return this.config.containsKey(key);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getInt(
+            final @NotBlank String key) {
+<span class="fc" id="L129">        return this.config.getString(key);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void setInt(
+            final @NotBlank String key,
+            final @NotNull String value) {
+<span class="fc" id="L139">        this.config.setProperty(key, value);</span>
+<span class="fc" id="L140">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void removeInt(
+            final @NotBlank String... keys) {
+<span class="fc bfc" id="L148" title="All 2 branches covered.">        for (final String key : keys) {</span>
+<span class="fc" id="L149">            this.config.clearProperty(key);</span>
+        }
+<span class="fc" id="L151">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void notifyLocalChanges(
+            final @NotNull String... keys) {
+<span class="pc bpc" id="L159" title="1 of 2 branches missed.">        if (!this.localEventsSuppressed) {</span>
+<span class="nc" id="L160">            super.notifyLocalChanges(keys);</span>
+        }
+<span class="fc" id="L162">    }</span>
+
+    /**
+     * Configures reception of Apache Commons events.
+     * 
+     * @param source The Apache Commons events source.
+     */
+    protected void configureCommonsEvents(
+            final @NotNull EventSource source) {
+<span class="fc" id="L171">        final EventSource commonsEvents = (EventSource) config;</span>
+<span class="fc" id="L172">        commonsEvents.addEventListener(</span>
+                ConfigurationEvent.ADD_PROPERTY,
+                this::processCommonsEvent);
+<span class="fc" id="L175">        commonsEvents.addEventListener(</span>
+                ConfigurationEvent.CLEAR_PROPERTY,
+                this::processCommonsEvent);
+<span class="fc" id="L178">        commonsEvents.addEventListener(</span>
+                ConfigurationEvent.SET_PROPERTY,
+                this::processCommonsEvent);
+<span class="fc" id="L181">        commonsEvents.addEventListener(</span>
+                ConfigurationEvent.CLEAR,
+                this::processCommonsEvent);
+<span class="fc" id="L184">    }</span>
+
+    /**
+     * Processes the specified Apache Commons event.
+     * 
+     * @param event The Apache Commons event.
+     */
+    protected void processCommonsEvent(
+            final @NotNull Event event) {
+<span class="pc bpc" id="L193" title="1 of 2 branches missed.">        if (event instanceof ConfigurationEvent) {</span>
+<span class="fc" id="L194">            final ConfigurationEvent propEvent = (ConfigurationEvent) event;</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">            if (propEvent.isBeforeUpdate()) {</span>
+<span class="fc" id="L196">                getResolver().ifPresent(VariableResolver::clearCache);</span>
+<span class="pc bpc" id="L197" title="1 of 2 branches missed.">            } else if (propEvent.getPropertyName() != null) {</span>
+<span class="fc" id="L198">                getEvents().notify(this, propEvent.getPropertyName());</span>
+            }
+<span class="pc bnc" id="L200" title="All 2 branches missed.">        } else if (event instanceof ReloadingEvent) {</span>
+<span class="nc" id="L201">            getResolver().ifPresent(VariableResolver::clearCache);</span>
+        }
+<span class="fc" id="L203">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PreferencesConfigOptions.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">PreferencesConfigOptions.java</span></div><h1>PreferencesConfigOptions.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.util.prefs.Preferences;
+
+import javax.validation.constraints.NotNull;
+
+import org.apiguardian.api.API;
+
+/**
+ * Options of {@code Preferences} based configuration builder.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-05
+ * @since 1.0
+ * @see PreferencesConfigImpl
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public class PreferencesConfigOptions {
+
+    /** The preferences node to use as storage of configuration properties. */
+    private Preferences preferences;
+
+    /**
+     * Empty constructor.
+     */
+    public PreferencesConfigOptions() {
+<span class="fc" id="L49">        super();</span>
+<span class="fc" id="L50">    }</span>
+
+    /**
+     * Copy constructor.
+     * 
+     * @param copy The instance to copy.
+     */
+    public PreferencesConfigOptions(
+            final @NotNull PreferencesConfigOptions copy) {
+<span class="fc" id="L59">        super();</span>
+<span class="fc" id="L60">        this.preferences = copy.preferences;</span>
+<span class="fc" id="L61">    }</span>
+
+    /**
+     * Returns the preferences node to use as storage of configuration
+     * properties.
+     * 
+     * @return The preferences node to use as storage of configuration
+     * properties.
+     */
+    public @NotNull Preferences getPreferences() {
+<span class="fc" id="L71">        return this.preferences;</span>
+    }
+
+    /**
+     * Sets the preferences node to use as storage of configuration
+     * properties.
+     * @param preferences The preferences node to use as storage of configuration
+     * properties.
+     */
+    public void setPreferences(Preferences preferences) {
+<span class="fc" id="L81">        this.preferences = preferences;</span>
+<span class="fc" id="L82">    }</span>
+
+    /**
+     * Sets the user preferences tree root node.
+     * 
+     * @see Preferences#userRoot()
+     */
+    public void setUserPreferences() {
+<span class="fc" id="L90">        this.preferences = Preferences.userRoot();</span>
+<span class="fc" id="L91">    }</span>
+
+    /**
+     * Sets the node with the specified path on the user preferences tree.
+     * 
+     * @param path The path of the configuration's preferences, relative to
+     * user preference tree's root node
+     * @see Preferences#userRoot()
+     * @see Preferences#node(String)
+     */
+    public void setUserPreferences(
+            final @NotNull String path) {
+<span class="fc" id="L103">        this.preferences = Preferences.userRoot().node(path);</span>
+<span class="fc" id="L104">    }</span>
+
+    /**
+     * Sets the node for the package of the specified class on the user
+     * preferences tree.
+     * 
+     * @param clazz The class which package use when calculating base node
+     * @see Preferences#userNodeForPackage(Class)
+     */
+    public void setUserPreferences(
+            final @NotNull Class&lt;?&gt; clazz) {
+<span class="fc" id="L115">        this.preferences = Preferences.userNodeForPackage(clazz);</span>
+<span class="fc" id="L116">    }</span>
+
+    /**
+     * Set the node with the specified path relative to the node for the
+     * package of the specified class on the user preferences tree.
+     * 
+     * @param clazz The class which package use when calculating base node
+     * @param path The path of the configuration's preferences, relative to
+     * base node
+     * @see Preferences#userNodeForPackage(Class)
+     * @see Preferences#node(String)
+     */
+    public void setUserPreferences(
+            final @NotNull Class&lt;?&gt; clazz,
+            final @NotNull String path) {
+<span class="fc" id="L131">        this.preferences = Preferences.userNodeForPackage(clazz).node(path);</span>
+<span class="fc" id="L132">    }</span>
+
+    /**
+     * Sets the system preferences tree root node.
+     * 
+     * @see Preferences#systemRoot()
+     */
+    public void setSystemPreferences() {
+<span class="fc" id="L140">        this.preferences = Preferences.systemRoot();</span>
+<span class="fc" id="L141">    }</span>
+
+    /**
+     * Sets the node with the specified path on the system preferences tree.
+     * 
+     * @param path The path of the configuration's preferences, relative to
+     * root node.
+     * @see Preferences#systemRoot()
+     * @see Preferences#node(String)
+     */
+    public void setSystemPreferences(
+            final @NotNull String path) {
+<span class="fc" id="L153">        this.preferences = Preferences.systemRoot().node(path);</span>
+<span class="fc" id="L154">    }</span>
+
+    /**
+     * Sets the node for the package of the specified class on the system
+     * preferences tree.
+     * 
+     * @param clazz The class which package use when calculating base node.
+     * @see Preferences#systemNodeForPackage(Class)
+     */
+    public void setSystemPreferences(
+            final @NotNull Class&lt;?&gt; clazz) {
+<span class="fc" id="L165">        this.preferences = Preferences.systemNodeForPackage(clazz);</span>
+<span class="fc" id="L166">    }</span>
+
+    /**
+     * Sets the specified path relative to the node for the package of the
+     * specified class on the system preferences tree.
+     * 
+     * @param clazz The class which package use when calculating base node
+     * @param path The path of the configuration's preferences, relative to
+     * base node
+     * @see Preferences#systemNodeForPackage(Class)
+     * @see Preferences#node(String)
+     */
+    public void setSystemPreferences(
+            final @NotNull Class&lt;?&gt; clazz,
+            final @NotNull String path) {
+<span class="fc" id="L181">        this.preferences = Preferences.systemNodeForPackage(clazz).node(path);</span>
+<span class="fc" id="L182">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

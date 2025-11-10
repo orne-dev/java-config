@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JacksonUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">JacksonUtils.java</span></div><h1>JacksonUtils.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.util.Objects;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import org.apiguardian.api.API;
+
+import com.fasterxml.jackson.core.JsonPointer;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode.OverwriteMode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+/**
+ * Utility class for JSON operations based on Jackson.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-07
+ * @since 1.0
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public final class JacksonUtils {
+
+    /** The JSON node factory. */
+<span class="fc" id="L50">    static final JsonNodeFactory NODE_FACTORY =</span>
+            new JsonNodeFactory(false);
+    /** JSON pointer segments separator as string. */
+<span class="fc" id="L53">    static final String POINTER_SEPARATOR = String.valueOf(JsonPointer.SEPARATOR);</span>
+
+    /**
+     * Private constructor to prevent instantiation of this utility class.
+     */
+    private JacksonUtils() {
+        // Utility class
+    }
+
+    /**
+     * Resolves configuration keys to JSON pointer expressions by replacing
+     * properties separator with the JSON pointer segment separator.
+     * 
+     * @param key The configuration key.
+     * @param separator The properties separator to use.
+     * @return The JSON pointer expression.
+     */
+    static @NotNull JsonPointer propertyToPointer(
+            final @NotBlank String key,
+            final @NotBlank String separator) {
+<span class="fc" id="L73">        Objects.requireNonNull(key);</span>
+<span class="fc" id="L74">        Objects.requireNonNull(separator);</span>
+<span class="fc" id="L75">        final String pointer = POINTER_SEPARATOR + key.replace(separator, POINTER_SEPARATOR);</span>
+<span class="fc" id="L76">        return JsonPointer.compile(pointer);</span>
+    }
+
+    /**
+     * Sets the value of a JSON node at the specified key.
+     * 
+     * @param jsonObject The JSON object to modify.
+     * @param separator The properties separator.
+     * @param key The configuration key.
+     * @param value The value to set.
+     */
+    static void setNodeValue(
+            final @NotNull ObjectNode jsonObject,
+            final @NotBlank String separator,
+            final @NotBlank String key,
+            final @NotNull String value) {
+<span class="fc" id="L92">        final JsonPointer pointer = propertyToPointer(key, separator);</span>
+<span class="fc" id="L93">        setNodeValue(jsonObject, pointer, value);</span>
+<span class="fc" id="L94">    }</span>
+
+    /**
+     * Sets the value of a JSON node at the specified pointer.
+     * 
+     * @param jsonObject The JSON object to modify.
+     * @param pointer The JSON pointer to the node.
+     * @param value The value to set.
+     */
+    static void setNodeValue(
+            final @NotNull ObjectNode jsonObject,
+            final @NotNull JsonPointer pointer,
+            final String value) {
+<span class="fc" id="L107">        final JsonPointer lastPointer = pointer.last();</span>
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">        final JsonNode valueNode = value == null ? NODE_FACTORY.nullNode() : NODE_FACTORY.textNode(value);</span>
+<span class="pc bpc" id="L109" title="1 of 2 branches missed.">        if (lastPointer.mayMatchElement()) {</span>
+<span class="nc" id="L110">            final ArrayNode parent = jsonObject.withArray(pointer.head(), OverwriteMode.NULLS, true);</span>
+<span class="nc" id="L111">            final int index = lastPointer.getMatchingIndex();</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">            if (parent.size() &lt;= index) {</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">                for (int i = parent.size(); i &lt;= index; i++) {</span>
+<span class="nc" id="L114">                    parent.add(NODE_FACTORY.nullNode());</span>
+                }
+            }
+<span class="nc" id="L117">            parent.set(lastPointer.getMatchingIndex(), valueNode);</span>
+<span class="nc" id="L118">        } else {</span>
+<span class="fc" id="L119">            final ObjectNode parent = jsonObject.withObject(pointer.head(), OverwriteMode.NULLS, true);</span>
+<span class="fc" id="L120">            parent.set(lastPointer.getMatchingProperty(), valueNode);</span>
+        }
+<span class="fc" id="L122">    }</span>
+
+    /**
+     * Removes a node from the JSON object at the specified key.
+     * 
+     * @param jsonObject The JSON object to modify.
+     * @param separator The properties separator.
+     * @param key The configuration key.
+     */
+    static void removeNode(
+            final @NotNull ObjectNode jsonObject,
+            final @NotBlank String separator,
+            final @NotBlank String key) {
+<span class="nc" id="L135">        final JsonPointer pointer = propertyToPointer(key, separator);</span>
+<span class="nc" id="L136">        removeNode(jsonObject, pointer);</span>
+<span class="nc" id="L137">    }</span>
+
+    /**
+     * Removes a node from the JSON object at the specified pointer.
+     * 
+     * @param jsonObject The JSON object to modify.
+     * @param pointer The JSON pointer to the node to remove.
+     */
+    static void removeNode(
+            final @NotNull ObjectNode jsonObject,
+            final @NotNull JsonPointer pointer) {
+<span class="fc" id="L148">        final JsonNode parent = jsonObject.at(pointer.head());</span>
+<span class="pc bpc" id="L149" title="1 of 2 branches missed.">        if (!parent.isMissingNode()) {</span>
+<span class="pc bpc" id="L150" title="1 of 2 branches missed.">            if (parent.isObject()) {</span>
+<span class="fc" id="L151">                ((ObjectNode) parent).remove(pointer.last().getMatchingProperty());</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">            } else if (parent.isArray()) {</span>
+<span class="nc" id="L153">                ((ArrayNode) parent).remove(pointer.last().getMatchingIndex());</span>
+            }
+        }
+<span class="fc" id="L156">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

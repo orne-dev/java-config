@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PreferencesConfigImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">PreferencesConfigImpl.java</span></div><h1>PreferencesConfigImpl.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.util.Objects;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
+import java.util.stream.Stream;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import org.apiguardian.api.API;
+
+import dev.orne.config.Config;
+import dev.orne.config.ConfigException;
+
+/**
+ * Implementation of {@code Config} based on Java {@code Preferences}.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2019-07
+ * @version 2.0, 2025-05
+ * @since 0.1
+ * @see Config
+ * @see Preferences
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public class PreferencesConfigImpl
+extends AbstractConfig {
+
+    /** The preferences node to use as storage of configuration properties. */
+    private final @NotNull Preferences preferences;
+
+    /**
+     * Creates a new instance.
+     * 
+     * @param options The configuration builder options.
+     * @param preferencesOptions The preferences based configuration builder options.
+     */
+    public PreferencesConfigImpl(
+            final @NotNull ConfigOptions options,
+            final @NotNull PreferencesConfigOptions preferencesOptions) {
+<span class="fc" id="L64">        super(options);</span>
+<span class="fc" id="L65">        Objects.requireNonNull(preferencesOptions);</span>
+<span class="fc" id="L66">        this.preferences = Objects.requireNonNull(preferencesOptions.getPreferences());</span>
+<span class="fc" id="L67">    }</span>
+
+    /**
+     * Returns the preferences node to use as storage of configuration
+     * parameters.
+     * 
+     * @return The preferences node.
+     */
+    protected @NotNull Preferences getPreferences() {
+<span class="fc" id="L76">        return this.preferences;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean isEmptyInt() {
+        try {
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">            return this.preferences.keys().length == 0;</span>
+<span class="nc" id="L86">        } catch (final IllegalStateException | BackingStoreException ise) {</span>
+<span class="nc" id="L87">            throw new ConfigException(&quot;Error accessing configuration&quot;, ise);</span>
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean containsInt(@NotBlank String key) {
+        try {
+<span class="fc bfc" id="L97" title="All 2 branches covered.">            return this.preferences.get(key, null) != null;</span>
+<span class="nc" id="L98">        } catch (final IllegalStateException ise) {</span>
+<span class="nc" id="L99">            throw new ConfigException(&quot;Error accessing configuration property&quot;, ise);</span>
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected @NotNull Stream&lt;String&gt; getKeysInt() {
+        try {
+<span class="fc" id="L109">            return Stream.of(this.preferences.keys());</span>
+<span class="nc" id="L110">        } catch (final IllegalStateException | BackingStoreException e) {</span>
+<span class="nc" id="L111">            throw new ConfigException(&quot;Error accessing configuration&quot;, e);</span>
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getInt(@NotBlank String key) {
+        try {
+<span class="fc" id="L121">            return this.preferences.get(key, null);</span>
+<span class="nc" id="L122">        } catch (final IllegalStateException ise) {</span>
+<span class="nc" id="L123">            throw new ConfigException(&quot;Error retrieving configuration property value&quot;, ise);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

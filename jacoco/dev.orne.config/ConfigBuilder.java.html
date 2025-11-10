@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConfigBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config</a> &gt; <span class="el_source">ConfigBuilder.java</span></div><h1>ConfigBuilder.java</h1><pre class="source lang-java linenums">package dev.orne.config;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import javax.validation.constraints.NotNull;
+
+import org.apiguardian.api.API;
+
+/**
+ * Configuration builder.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-05
+ * @param &lt;S&gt; The concrete type of the builder.
+ * @since 1.0
+ * @see Config
+ */
+@API(status = API.Status.STABLE, since = &quot;1.0&quot;)
+public interface ConfigBuilder&lt;S extends ConfigBuilder&lt;S&gt;&gt; {
+
+    /**
+     * Sets the parent configuration.
+     * 
+     * @param parent The parent configuration.
+     * @return This instance, for method chaining.
+     */
+    @NotNull S withParent(
+            Config parent);
+
+    /**
+     * Sets the parent configuration.
+     * &lt;p&gt;
+     * This is a shortcut for {@code withParent(parent.build())}
+     * that allows less verbose configuration hierarchies building.
+     * 
+     * @param parent The parent configuration.
+     * @return This instance, for method chaining.
+     */
+    default @NotNull S withParent(
+            final @NotNull ConfigBuilder&lt;?&gt; parent) {
+<span class="fc" id="L61">        return withParent(parent.build());</span>
+    }
+
+    /**
+     * Sets whether the configuration properties values from the parent
+     * configuration (if any) must be overridden by the properties values
+     * from this configuration.
+     * &lt;p&gt;
+     * By default, parent configuration properties values are not overridden.
+     * Thus, if a property is defined both in current configuration and in
+     * the parent configuration, the value from the parent configuration
+     * will be returned.
+     * 
+     * @return This instance, for method chaining.
+     */
+    @NotNull S withOverrideParentProperties();
+
+    /**
+     * Sets the configuration properties values cryptography
+     * transformations provider.
+     * 
+     * @param provider The cryptography transformations provider.
+     * @return This instance, for method chaining.
+     */
+    @NotNull S withEncryption(
+            ConfigCryptoProvider provider);
+
+    /**
+     * Sets the configuration properties values decoder.
+     * Applied to property values contained in the builded configuration
+     * instance (not to the parent configuration properties, if any).
+     * 
+     * @param encoder The configuration properties values decoder.
+     * @return This instance, for method chaining.
+     */
+    @NotNull S withDecoder(
+            ValueDecoder encoder);
+
+    /**
+     * Enables configuration property values variable resolution.
+     * 
+     * @return This instance, for method chaining.
+     */
+    @NotNull S withVariableResolution();
+
+    /**
+     * Sets the configuration properties values decorator.
+     * Applied to property values returned by the builded configuration
+     * instance (whatever its source).
+     * 
+     * @param decorator The configuration properties values decorator.
+     * @return This instance, for method chaining.
+     */
+    @NotNull S withDecorator(
+            ValueDecorator decorator);
+
+    /**
+     * Creates the configuration instance.
+     * 
+     * @return The configuration instance.
+     */
+    @NotNull Config build();
+
+    /**
+     * Creates the configuration instance as an instance of the specified
+     * configuration type.
+     * &lt;p&gt;
+     * This is a shortcut for {@code Config.as(build(), configType)}.
+     * 
+     * @param &lt;T&gt; The configuration sub-type.
+     * @param configType The configuration sub-type.
+     * @return The configuration instance.
+     * @see Config#as(Config, Class)
+     */
+    default &lt;T extends Config&gt; @NotNull T as(
+            final @NotNull Class&lt;T&gt; configType) {
+<span class="fc" id="L137">        return Config.as(build(), configType);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

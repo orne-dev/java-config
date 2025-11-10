@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PooledConfigCryptoProvider.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">PooledConfigCryptoProvider.java</span></div><h1>PooledConfigCryptoProvider.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.lang.ref.SoftReference;
+import java.util.NoSuchElementException;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.validation.constraints.NotNull;
+
+import org.apache.commons.pool2.BasePooledObjectFactory;
+import org.apache.commons.pool2.ObjectPool;
+import org.apache.commons.pool2.PooledObject;
+import org.apache.commons.pool2.PooledObjectFactory;
+import org.apache.commons.pool2.impl.PooledSoftReference;
+import org.apache.commons.pool2.impl.SoftReferenceObjectPool;
+import org.apiguardian.api.API;
+
+import dev.orne.config.ConfigCryptoEngine;
+import dev.orne.config.ConfigCryptoProviderException;
+
+/**
+ * Default implementation of {@code ConfigCryptoProvider} based on
+ * {@code ConfigCryptoEngine} with pooled {@code Cipher}s.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2020-08
+ * @since 0.2
+ * @see Cipher
+ * @see SecretKey
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public class PooledConfigCryptoProvider
+extends AbstractConfigCryptoProvider {
+
+    /** The pool of {@code Cipher} instances to use. */
+    private final @NotNull ObjectPool&lt;Cipher&gt; ciphersPool;
+
+    /**
+     * Creates a new instance with specified builder configuration options.
+     * 
+     * @param options The configured builder options.
+     */
+    public PooledConfigCryptoProvider(
+            final @NotNull CryptoProviderOptions options) {
+<span class="fc" id="L67">        super(options);</span>
+<span class="fc" id="L68">        this.ciphersPool = new SoftReferenceObjectPool&lt;&gt;(new PooledCipherFactory(options.getEngine()));</span>
+<span class="fc" id="L69">    }</span>
+
+    /**
+     * Creates a new instance.
+     * 
+     * @param engine The cryptographic engine to use.
+     * @param destroyEngine If the engine must be destroyed with provider.
+     * @param secretKey The secret key to use.
+     * @param pool The pool of {@code Cipher} instances to use.
+     */
+    protected PooledConfigCryptoProvider(
+            final @NotNull ConfigCryptoEngine engine,
+            final boolean destroyEngine,
+            final @NotNull SecretKey secretKey,
+            final @NotNull ObjectPool&lt;Cipher&gt; pool) {
+<span class="fc" id="L84">        super(engine, destroyEngine, secretKey);</span>
+<span class="fc" id="L85">        this.ciphersPool = pool;</span>
+<span class="fc" id="L86">    }</span>
+
+    /**
+     * Returns the pool of {@code Cipher}s to use during encryption and
+     * decryption.
+     * 
+     * @return The pool of {@code Cipher}s to use during encryption and
+     * decryption
+     */
+    protected @NotNull ObjectPool&lt;Cipher&gt; getCiphersPool() {
+<span class="fc" id="L96">        return this.ciphersPool;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull String encrypt(
+            final @NotNull String value)
+    throws ConfigCryptoProviderException {
+<span class="fc" id="L106">        checkDestroyed();</span>
+<span class="fc" id="L107">        ConfigCryptoProviderException encryptException = null;</span>
+        try {
+<span class="fc" id="L109">            final Cipher cipher = this.ciphersPool.borrowObject();</span>
+            try {
+<span class="fc" id="L111">                return encrypt(value, cipher);</span>
+<span class="fc" id="L112">            } catch (final ConfigCryptoProviderException ccpe) {</span>
+<span class="fc" id="L113">                encryptException = ccpe;</span>
+<span class="fc" id="L114">                throw ccpe;</span>
+            } finally {
+<span class="fc" id="L116">                this.ciphersPool.returnObject(cipher);</span>
+            }
+<span class="fc" id="L118">        } catch (final IllegalStateException ise) {</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">            if (encryptException == null) {</span>
+<span class="fc" id="L120">                throw ise;</span>
+            } else {
+<span class="fc" id="L122">                encryptException.addSuppressed(ise);</span>
+<span class="fc" id="L123">                throw encryptException;</span>
+            }
+<span class="fc" id="L125">        } catch (final ConfigCryptoProviderException ccpe) {</span>
+<span class="fc" id="L126">            throw ccpe;</span>
+<span class="fc" id="L127">        } catch (final NoSuchElementException nsee) {</span>
+<span class="fc" id="L128">            throw new ConfigCryptoProviderException(&quot;&quot;, nsee);</span>
+<span class="fc" id="L129">        } catch (final Exception e) {</span>
+<span class="fc" id="L130">            throw new ConfigCryptoProviderException(&quot;&quot;, e);</span>
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull String decrypt(
+            final @NotNull String value)
+    throws ConfigCryptoProviderException {
+<span class="fc" id="L141">        checkDestroyed();</span>
+<span class="fc" id="L142">        ConfigCryptoProviderException decryptException = null;</span>
+        try {
+<span class="fc" id="L144">            final Cipher cipher = this.ciphersPool.borrowObject();</span>
+            try {
+<span class="fc" id="L146">                return decrypt(value, cipher);</span>
+<span class="fc" id="L147">            } catch (final ConfigCryptoProviderException ccpe) {</span>
+<span class="fc" id="L148">                decryptException = ccpe;</span>
+<span class="fc" id="L149">                throw ccpe;</span>
+            } finally {
+<span class="fc" id="L151">                this.ciphersPool.returnObject(cipher);</span>
+            }
+<span class="fc" id="L153">        } catch (final IllegalStateException ise) {</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">            if (decryptException == null) {</span>
+<span class="fc" id="L155">                throw ise;</span>
+            } else {
+<span class="fc" id="L157">                decryptException.addSuppressed(ise);</span>
+<span class="fc" id="L158">                throw decryptException;</span>
+            }
+<span class="fc" id="L160">        } catch (final ConfigCryptoProviderException ccpe) {</span>
+<span class="fc" id="L161">            throw ccpe;</span>
+<span class="fc" id="L162">        } catch (final NoSuchElementException nsee) {</span>
+<span class="fc" id="L163">            throw new ConfigCryptoProviderException(&quot;&quot;, nsee);</span>
+<span class="fc" id="L164">        } catch (final Exception e) {</span>
+<span class="fc" id="L165">            throw new ConfigCryptoProviderException(&quot;&quot;, e);</span>
+        }
+    }
+
+    /**
+     * Implementation of {@code PooledObjectFactory} that creates new instances
+     * of {@code Cipher} using an instance of {@code ConfigCryptoEngine}.
+     * 
+     * @author &lt;a href=&quot;mailto:https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+     * @version 1.0, 2020-08
+     * @since 0.2
+     * @see PooledObjectFactory
+     */
+    @API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+    public static class PooledCipherFactory
+    extends BasePooledObjectFactory&lt;Cipher&gt; {
+
+        /** The cryptographic engine. */
+        private final @NotNull ConfigCryptoEngine engine;
+
+        /**
+         * Creates a new instance.
+         * 
+         * @param engine The cryptographic engine
+         */
+        public PooledCipherFactory(
+                final @NotNull ConfigCryptoEngine engine) {
+<span class="fc" id="L192">            super();</span>
+<span class="fc" id="L193">            this.engine = engine;</span>
+<span class="fc" id="L194">        }</span>
+
+        /**
+         * Returns the cryptographic engine.
+         * 
+         * @return The cryptographic engine
+         */
+        protected @NotNull ConfigCryptoEngine getEngine() {
+<span class="fc" id="L202">            return engine;</span>
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public @NotNull Cipher create()
+        throws ConfigCryptoProviderException {
+<span class="fc" id="L211">            return this.engine.createCipher();</span>
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public @NotNull PooledObject&lt;Cipher&gt; wrap(final @NotNull Cipher obj) {
+<span class="fc" id="L219">            return new PooledSoftReference&lt;&gt;(new SoftReference&lt;&gt;(obj));</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PropertiesConfigBuilderImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">PropertiesConfigBuilderImpl.java</span></div><h1>PropertiesConfigBuilderImpl.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.io.File;
+import java.net.URL;
+import java.nio.file.Path;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.validation.constraints.NotNull;
+
+import org.apiguardian.api.API;
+
+import dev.orne.config.PropertiesConfigBuilder;
+
+/**
+ * Implementation of {@code Properties} based immutable configuration builder.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-05
+ * @since 1.0
+ * @see PropertiesConfigBuilder
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public class PropertiesConfigBuilderImpl
+extends AbstractConfigBuilderImpl&lt;PropertiesConfigBuilder&gt;
+implements PropertiesConfigBuilder {
+
+    /** The properties based configuration options. */
+    protected final @NotNull PropertiesConfigOptions propertyOptions;
+
+    /**
+     * Empty constructor.
+     */
+    public PropertiesConfigBuilderImpl() {
+<span class="nc" id="L57">        super();</span>
+<span class="nc" id="L58">        this.propertyOptions = new PropertiesConfigOptions();</span>
+<span class="nc" id="L59">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull PropertiesConfigBuilder add(
+            final @NotNull Properties values) {
+<span class="nc" id="L67">        this.propertyOptions.add(values);</span>
+<span class="nc" id="L68">        return thisBuilder();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull PropertiesConfigBuilder add(
+            final @NotNull Map&lt;String, String&gt; values) {
+<span class="nc" id="L77">        this.propertyOptions.add(values);</span>
+<span class="nc" id="L78">        return thisBuilder();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull PropertiesConfigBuilder load(
+            final @NotNull String path) {
+<span class="nc" id="L87">        this.propertyOptions.load(path);</span>
+<span class="nc" id="L88">        return thisBuilder();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull PropertiesConfigBuilder load(
+            final @NotNull Path path) {
+<span class="nc" id="L97">        this.propertyOptions.load(path);</span>
+<span class="nc" id="L98">        return thisBuilder();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull PropertiesConfigBuilder load(
+            final @NotNull File file) {
+<span class="nc" id="L107">        this.propertyOptions.load(file);</span>
+<span class="nc" id="L108">        return thisBuilder();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull PropertiesConfigBuilder load(
+            final @NotNull URL url) {
+<span class="nc" id="L117">        this.propertyOptions.load(url);</span>
+<span class="nc" id="L118">        return thisBuilder();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull PropertiesMutableConfigBuilderImpl mutable() {
+<span class="nc" id="L126">        return new PropertiesMutableConfigBuilderImpl(</span>
+                this.options,
+                new MutableConfigOptions(),
+                propertyOptions);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull PropertiesConfigImpl build() {
+<span class="nc" id="L137">        return new PropertiesConfigImpl(this.options, this.propertyOptions);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

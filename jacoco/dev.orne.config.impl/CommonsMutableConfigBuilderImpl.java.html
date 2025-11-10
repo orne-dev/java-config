@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CommonsMutableConfigBuilderImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">CommonsMutableConfigBuilderImpl.java</span></div><h1>CommonsMutableConfigBuilderImpl.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.util.Objects;
+
+import javax.validation.constraints.NotNull;
+
+import org.apache.commons.configuration2.Configuration;
+import org.apiguardian.api.API;
+
+import dev.orne.config.CommonsMutableConfigBuilder;
+import dev.orne.config.MutableConfigBuilder;
+
+/**
+ * Implementation of Apache Commons {@code Configuration} based mutable
+ * configuration builder.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-07
+ * @since 1.0
+ * @see MutableConfigBuilder
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public class CommonsMutableConfigBuilderImpl
+extends AbstractMutableConfigBuilderImpl&lt;CommonsMutableConfigBuilder&gt;
+implements CommonsMutableConfigBuilder {
+
+    /** The Apache Commons based configuration options. */
+    protected final @NotNull CommonsConfigOptions commonsOptions;
+
+    /**
+     * Copy constructor.
+     * 
+     * @param options The configuration options to copy.
+     * @param mutableOptions The mutable configuration options to copy.
+     * @param commonsOptions TThe Apache Commons based configuration options to
+     * copy.
+     */
+    public CommonsMutableConfigBuilderImpl(
+            final @NotNull ConfigOptions options,
+            final @NotNull MutableConfigOptions mutableOptions,
+            final @NotNull CommonsConfigOptions commonsOptions) {
+<span class="fc" id="L64">        super(options, mutableOptions);</span>
+<span class="fc" id="L65">        this.commonsOptions = new CommonsConfigOptions(Objects.requireNonNull(commonsOptions));</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">        if (this.commonsOptions.getDelegated() != null</span>
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">                &amp;&amp; !(this.commonsOptions.getDelegated() instanceof Configuration)) {</span>
+<span class="nc" id="L68">            throw new IllegalArgumentException(</span>
+                    &quot;Delegated configuration must be an instance of &quot;
+                            + &quot;org.apache.commons.configuration2.Configuration&quot;);
+        }
+<span class="fc" id="L72">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull CommonsMutableConfigBuilder ofDelegate(
+            final @NotNull Configuration delegate) {
+<span class="fc" id="L80">        this.commonsOptions.setDelegated(Objects.requireNonNull(delegate));</span>
+<span class="fc" id="L81">        return thisBuilder();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull CommonsMutableConfigImpl build() {
+<span class="fc" id="L89">        return new CommonsMutableConfigImpl(</span>
+                this.options,
+                this.mutableOptions,
+                this.commonsOptions);
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

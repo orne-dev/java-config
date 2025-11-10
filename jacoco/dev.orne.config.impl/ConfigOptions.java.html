@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConfigOptions.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">ConfigOptions.java</span></div><h1>ConfigOptions.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import javax.validation.constraints.NotNull;
+
+import org.apiguardian.api.API;
+
+import dev.orne.config.Config;
+import dev.orne.config.ConfigCryptoProvider;
+import dev.orne.config.ValueDecoder;
+import dev.orne.config.ValueDecorator;
+
+/**
+ * Options of configuration builder.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-05
+ * @since 1.0
+ * @see Config
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public class ConfigOptions {
+
+    /** The parent configuration. */
+    private Config parent;
+    /** If parent configuration property values are overridden values of this instance. */
+    private boolean overrideParentProperties;
+    /** The cryptography transformations provider. */
+    private ConfigCryptoProvider cryptoProvider;
+    /** The configuration values decoder. */
+    private ValueDecoder decoder;
+    /** If configuration property values variable resolution is enabled. */
+    private boolean variableResolutionEnabled;
+    /** The configuration properties values decorator. */
+    private ValueDecorator decorator;
+
+    /**
+     * Empty constructor.
+     */
+    public ConfigOptions() {
+<span class="fc" id="L62">        super();</span>
+<span class="fc" id="L63">    }</span>
+
+    /**
+     * Copy constructor.
+     * 
+     * @param copy The instance to copy.
+     */
+    public ConfigOptions(
+            final @NotNull ConfigOptions copy) {
+<span class="fc" id="L72">        super();</span>
+<span class="fc" id="L73">        this.parent = copy.parent;</span>
+<span class="fc" id="L74">        this.overrideParentProperties = copy.overrideParentProperties;</span>
+<span class="fc" id="L75">        this.cryptoProvider = copy.cryptoProvider;</span>
+<span class="fc" id="L76">        this.decoder = copy.decoder;</span>
+<span class="fc" id="L77">        this.variableResolutionEnabled = copy.variableResolutionEnabled;</span>
+<span class="fc" id="L78">        this.decorator = copy.decorator;</span>
+<span class="fc" id="L79">    }</span>
+
+    /**
+     * Returns the parent configuration.
+     * 
+     * @return The parent configuration.
+     */
+    public Config getParent() {
+<span class="fc" id="L87">        return this.parent;</span>
+    }
+
+    /**
+     * Sets the parent configuration.
+     * 
+     * @param parent The parent configuration.
+     */
+    public void setParent(
+            final Config parent) {
+<span class="fc" id="L97">        this.parent = parent;</span>
+<span class="fc" id="L98">    }</span>
+
+    /**
+     * Returns {@code true} if the configuration properties values from
+     * the parent configuration (if any) are overridden by the properties
+     * values from this configuration.
+     * 
+     * @return If the configuration properties values from the parent
+     * configuration are overridden by the properties values from this
+     * configuration.
+     */
+    public boolean isOverrideParentProperties() {
+<span class="fc" id="L110">        return this.overrideParentProperties;</span>
+    }
+
+    /**
+     * Sets if the configuration properties values from the parent
+     * configuration (if any) are overridden by the properties values
+     * from this configuration.
+     * 
+     * @param override If the configuration properties
+     * values from the parent configuration are overridden by the
+     * properties values from this configuration.
+     */
+    public void setOverrideParentProperties(
+            final boolean override) {
+<span class="fc" id="L124">        this.overrideParentProperties = override;</span>
+<span class="fc" id="L125">    }</span>
+
+    /**
+     * Returns the cryptography transformations provider.
+     * 
+     * @return The cryptography transformations provider.
+     */
+    public ConfigCryptoProvider getCryptoProvider() {
+<span class="fc" id="L133">        return this.cryptoProvider;</span>
+    }
+
+    /**
+     * Sets the cryptography transformations provider.
+     * 
+     * @param provider The cryptography transformations provider.
+     */
+    public void setCryptoProvider(
+            final ConfigCryptoProvider provider) {
+<span class="fc" id="L143">        this.cryptoProvider = provider;</span>
+<span class="fc" id="L144">    }</span>
+
+    /**
+     * Returns the configuration values decoder.
+     * 
+     * @return The configuration values decoder.
+     */
+    public ValueDecoder getDecoder() {
+<span class="fc" id="L152">        return this.decoder;</span>
+    }
+
+    /**
+     * Sets the configuration values decoder.
+     * 
+     * @param decoder The configuration values decoder.
+     */
+    public void setDecoder(
+            final ValueDecoder decoder) {
+<span class="fc" id="L162">        this.decoder = decoder;</span>
+<span class="fc" id="L163">    }</span>
+
+    /**
+     * Returns {@code true} if configuration property values variable
+     * resolution is enabled.
+     * 
+     * @return If configuration property values variable resolution is enabled.
+     */
+    public boolean isVariableResolutionEnabled() {
+<span class="fc" id="L172">        return this.variableResolutionEnabled;</span>
+    }
+
+    /**
+     * Sets if configuration property values variable resolution is enabled.
+     * 
+     * @param enabled If configuration property values variable resolution is
+     * enabled.
+     */
+    public void setVariableResolutionEnabled(
+            final boolean enabled) {
+<span class="fc" id="L183">        this.variableResolutionEnabled = enabled;</span>
+<span class="fc" id="L184">    }</span>
+
+    /**
+     * Returns the configuration properties values decorator.
+     * 
+     * @return The configuration properties values decorator.
+     */
+    public ValueDecorator getDecorator() {
+<span class="fc" id="L192">        return this.decorator;</span>
+    }
+
+    /**
+     * Sets the configuration properties values decorator.
+     * 
+     * @param decorator The configuration properties values decorator.
+     */
+    public void setDecorator(
+            final ValueDecorator decorator) {
+<span class="fc" id="L202">        this.decorator = decorator;</span>
+<span class="fc" id="L203">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

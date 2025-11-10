@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConfigurableComponentsConfigurer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.spring</a> &gt; <span class="el_source">ConfigurableComponentsConfigurer.java</span></div><h1>ConfigurableComponentsConfigurer.java</h1><pre class="source lang-java linenums">package dev.orne.config.spring;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import javax.validation.constraints.NotNull;
+
+import org.apiguardian.api.API;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ImportAware;
+import org.springframework.core.annotation.AnnotationAttributes;
+import org.springframework.core.type.AnnotationMetadata;
+
+import dev.orne.config.Configurer;
+
+/**
+ * Spring configuration for {@code ConfigurableComponentsPostProcessor}
+ * based on {@code EnableConfigurableComponents} annotation.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-08
+ * @since 1.0
+ */
+@Configuration
+@Import(ConfigProviderConfigurer.class)
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public class ConfigurableComponentsConfigurer
+implements ImportAware {
+
+    /** The name of the {@code Configurer} bean. */
+    public static final String CONFIGURER = &quot;orneConfigConfigurableComponentsConfigurer&quot;;
+    /** The name of the {@code ConfigurableComponentsPostProcessor} bean. */
+    public static final String POST_PROCESSOR = &quot;orneConfigConfigurableComponentsPostProcessor&quot;;
+
+    /** The annotation data for the configuration. */
+    protected AnnotationAttributes annotationData;
+    /** The {@code ConfigProvider} supplier for current Spring context. */
+    protected ConfigProviderConfigurer springConfigProvider;
+    /** The exposed configurable components {@code Configurer}, if any. */
+    protected Configurer exposedConfigurer;
+
+    /**
+     * Creates a new instance.
+     */
+    public ConfigurableComponentsConfigurer() {
+<span class="fc" id="L68">        super();</span>
+<span class="fc" id="L69">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setImportMetadata(
+            final @NotNull AnnotationMetadata importMetadata) {
+<span class="fc" id="L77">        annotationData = AnnotationAttributes.fromMap(</span>
+<span class="fc" id="L78">                importMetadata.getAnnotationAttributes(EnableConfigurableComponents.class.getName()));</span>
+<span class="fc" id="L79">    }</span>
+
+    /**
+     * Sets the {@code ConfigProvider} supplier for current Spring context.
+     * 
+     * @param provider The {@code ConfigProvider} supplier for current Spring
+     * context.
+     */
+    @Autowired
+    public void setSpringConfigProvider(
+            final ConfigProviderConfigurer provider) {
+<span class="fc" id="L90">        this.springConfigProvider = provider;</span>
+<span class="fc" id="L91">    }</span>
+
+    /**
+     * Exposes the configurable components configurer.
+     * 
+     * @return The configurable components configurer.
+     */
+    @Bean(name=CONFIGURER)
+    public Configurer configurableComponentsConfigurer() {
+<span class="fc" id="L100">        return this.exposedConfigurer;</span>
+    }
+
+    /**
+     * Exposes the Spring configurable components post-processor.
+     * 
+     * @param configurer The application provided or exposed configurer, if
+     * any.
+     * @return The configurable components post-processor.
+     */
+    @Bean(name=POST_PROCESSOR)
+    public @NotNull ConfigurableComponentsPostProcessor configurableComponentsPostProcessor() {
+<span class="fc" id="L112">        final Configurer configurer = Configurer.fromProvider(</span>
+<span class="fc" id="L113">                this.springConfigProvider.getConfigProvider());</span>
+<span class="pc bpc" id="L114" title="3 of 4 branches missed.">        if (this.annotationData != null &amp;&amp; this.annotationData.getBoolean(&quot;exposeConfigurer&quot;)) {</span>
+<span class="nc" id="L115">            this.exposedConfigurer = configurer;</span>
+        }
+<span class="fc" id="L117">        return new ConfigurableComponentsPostProcessor(configurer);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WatchableConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config</a> &gt; <span class="el_source">WatchableConfig.java</span></div><h1>WatchableConfig.java</h1><pre class="source lang-java linenums">package dev.orne.config;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.util.Set;
+
+import javax.validation.constraints.NotNull;
+
+import org.apiguardian.api.API;
+
+import dev.orne.config.impl.ConfigSubset;
+
+/**
+ * Watchable mutable configuration properties provider.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-04
+ * @since 1.0
+ * @see MutableConfig
+ */
+@API(status = API.Status.STABLE, since = &quot;1.0&quot;)
+public interface WatchableConfig
+extends MutableConfig {
+
+    /**
+     * Registers the specified configuration change events listener.
+     * 
+     * @param listener The listener to be called on configuration changes.
+     * @throws IllegalStateException If the configuration type does not support
+     * event listeners.
+     * 
+     */
+    void addListener(
+            @NotNull Listener listener);
+
+    /**
+     * Unregisters the specified configuration change events listener.
+     * 
+     * @param listener The listener to previously registered.
+     * 
+     */
+    void removeListener(
+            @NotNull Listener listener);
+
+    /**
+     * Creates a subset configuration containing only the properties
+     * with the specified prefix.
+     * 
+     * @param prefix The prefix for configuration keys.
+     * @return The subset configuration.
+     */
+    @Override
+    default @NotNull WatchableConfig subset(
+            final @NotNull String prefix) {
+<span class="nc" id="L75">        return ConfigSubset.create(this, prefix);</span>
+    }
+
+    /**
+     * Mutable configuration changes listener.
+     * 
+     * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+     * @version 1.0, 2025-05
+     * @since 1.0
+     */
+    @FunctionalInterface
+    @API(status = API.Status.STABLE, since = &quot;1.0&quot;)
+    interface Listener {
+
+        /**
+         * Callback for configuration change events.
+         * 
+         * @param config The modified configuration instance.
+         * @param keys The modified configuration properties.
+         */
+        void configurationChanged(
+                @NotNull MutableConfig config,
+                @NotNull Set&lt;String&gt; keys);
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

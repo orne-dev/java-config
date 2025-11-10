@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CryptoProviderBuilderImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">CryptoProviderBuilderImpl.java</span></div><h1>CryptoProviderBuilderImpl.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import javax.crypto.SecretKey;
+import javax.validation.constraints.NotNull;
+
+import org.apiguardian.api.API;
+
+import dev.orne.config.ConfigCryptoEngine;
+import dev.orne.config.ConfigCryptoProvider;
+import dev.orne.config.CryptoProviderBuilder;
+import dev.orne.config.CryptoProviderEngineBuilder;
+import dev.orne.config.CryptoProviderKeyBuilder;
+
+/**
+ * Implementation of configuration values cryptography transformations provider
+ * builder.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-05
+ * @since 1.0
+ * @see ConfigCryptoProvider
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public class CryptoProviderBuilderImpl
+implements CryptoProviderEngineBuilder, CryptoProviderKeyBuilder, CryptoProviderBuilder{
+
+    /** The cryptography transformations provider options. */
+    private final CryptoProviderOptions options;
+
+    /**
+     * Empty constructor.
+     */
+    public CryptoProviderBuilderImpl() {
+<span class="fc" id="L56">        super();</span>
+<span class="fc" id="L57">        this.options = new CryptoProviderOptions();</span>
+<span class="fc" id="L58">    }</span>
+
+    /**
+     * Copy constructor.
+     * 
+     * @param copy The instance to copy.
+     */
+    public CryptoProviderBuilderImpl(
+            final @NotNull CryptoProviderBuilderImpl copy) {
+<span class="nc" id="L67">        super();</span>
+<span class="nc" id="L68">        this.options = new CryptoProviderOptions(copy.options);</span>
+<span class="nc" id="L69">    }</span>
+
+    /**
+     * Copy constructor.
+     * 
+     * @param options The cryptography transformations provider options to copy.
+     */
+    public CryptoProviderBuilderImpl(
+            final @NotNull CryptoProviderOptions options) {
+<span class="nc" id="L78">        super();</span>
+<span class="nc" id="L79">        this.options = new CryptoProviderOptions(options);</span>
+<span class="nc" id="L80">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull CryptoProviderBuilderImpl withEngine(
+            final @NotNull ConfigCryptoEngine engine,
+            final boolean destroyEngine) {
+<span class="fc" id="L89">        this.options.setEngine(engine);</span>
+<span class="fc" id="L90">        this.options.setDestroyEngine(destroyEngine);</span>
+<span class="fc" id="L91">        return this;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull CryptoProviderBuilderImpl withAesGcmEngine(
+            final @NotNull byte[] salt,
+            final boolean destroyEngine) {
+<span class="fc" id="L101">        this.options.setEngine(new ConfigCryptoAesGcmEngine(salt));</span>
+<span class="fc" id="L102">        this.options.setDestroyEngine(destroyEngine);</span>
+<span class="fc" id="L103">        return this;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull CryptoProviderBuilderImpl withSecretKey(
+            final @NotNull char[] password) {
+<span class="fc" id="L112">        this.options.setKey(</span>
+<span class="fc" id="L113">                this.options.engine.createSecretKey(password));</span>
+<span class="fc" id="L114">        return this;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull CryptoProviderBuilderImpl withSecretKey(
+            final @NotNull SecretKey key) {
+<span class="fc" id="L123">        this.options.setKey(key);</span>
+<span class="fc" id="L124">        return this;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull CryptoProviderBuilderImpl pooled() {
+<span class="fc" id="L132">        this.options.setPooled(true);</span>
+<span class="fc" id="L133">        return this;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull ConfigCryptoProvider build() {
+        final ConfigCryptoProvider instance;
+<span class="fc bfc" id="L142" title="All 2 branches covered.">        if (this.options.isPooled()) {</span>
+<span class="fc" id="L143">            instance = new PooledConfigCryptoProvider(this.options);</span>
+        } else {
+<span class="fc" id="L145">            instance = new DefaultConfigCryptoProvider(this.options);</span>
+        }
+<span class="fc" id="L147">        return instance;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

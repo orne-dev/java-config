@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EventsHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">EventsHandler.java</span></div><h1>EventsHandler.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.validation.constraints.NotNull;
+
+import org.apiguardian.api.API;
+
+import dev.orne.config.MutableConfig;
+import dev.orne.config.WatchableConfig.Listener;
+
+/**
+ * Utility class for watchable configuration events handling.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-05
+ * @since 1.0
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public class EventsHandler {
+
+    /** The listeners of configuration property changes. */
+<span class="nc" id="L50">    private final @NotNull List&lt;@NotNull Listener&gt; listeners =</span>
+            new ArrayList&lt;&gt;();
+
+    /**
+     * Creates a new instance.
+     */
+    public EventsHandler() {
+<span class="nc" id="L57">        super();</span>
+<span class="nc" id="L58">    }</span>
+
+    /**
+     * Returns the list of registered configuration changed event listeners.
+     * 
+     * @return The list of registered configuration changed event listeners.
+     */
+    protected @NotNull List&lt;@NotNull Listener&gt; getListeners() {
+<span class="nc" id="L66">        return this.listeners;</span>
+    }
+
+    /**
+     * Registers the specified configuration changed event listener.
+     * 
+     * @param listener The configuration changed event listener.
+     */
+    public void add(
+            final @NotNull Listener listener) {
+<span class="nc" id="L76">        this.listeners.add(listener);</span>
+<span class="nc" id="L77">    }</span>
+
+    /**
+     * Unregisters the specified configuration changed event listener.
+     * 
+     * @param listener The configuration changed event listener.
+     * @return If the specified listener was found and unregistered.
+     */
+    public boolean remove(
+            final @NotNull Listener listener) {
+<span class="nc" id="L87">        return this.listeners.remove(listener);</span>
+    }
+
+
+    /**
+     * Calls all registered configuration properties changed event callbacks.
+     * 
+     * @param instance The modified configuration instance.
+     * @param keys The changed properties.
+     */
+    public void notify(
+            final @NotNull MutableConfig instance,
+            final @NotNull String... keys) {
+<span class="nc bnc" id="L100" title="All 2 branches missed.">        if (!this.listeners.isEmpty()) {</span>
+<span class="nc" id="L101">            notify(instance, Stream.of(keys).collect(Collectors.toSet()));</span>
+        }
+<span class="nc" id="L103">    }</span>
+
+    /**
+     * Calls all registered configuration properties changed event callbacks.
+     * 
+     * @param instance The modified configuration instance.
+     * @param keys The changed properties.
+     */
+    public synchronized void notify(
+            final @NotNull MutableConfig instance,
+            final @NotNull Set&lt;String&gt; keys) {
+<span class="nc bnc" id="L114" title="All 2 branches missed.">        if (!this.listeners.isEmpty()) {</span>
+<span class="nc" id="L115">            final Set&lt;String&gt; unmodif = Collections.unmodifiableSet(keys);</span>
+<span class="nc bnc" id="L116" title="All 2 branches missed.">            for (final Listener listener: this.listeners) {</span>
+<span class="nc" id="L117">                listener.configurationChanged(instance, unmodif);</span>
+<span class="nc" id="L118">            }</span>
+        }
+<span class="nc" id="L120">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

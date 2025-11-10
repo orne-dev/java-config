@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConfigPropertySourcePostProcessor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.spring</a> &gt; <span class="el_source">ConfigPropertySourcePostProcessor.java</span></div><h1>ConfigPropertySourcePostProcessor.java</h1><pre class="source lang-java linenums">package dev.orne.config.spring;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import javax.validation.constraints.NotNull;
+
+import org.apiguardian.api.API;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactoryUtils;
+import org.springframework.beans.factory.BeanInitializationException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefinition;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.context.EnvironmentAware;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.ResolvableType;
+import org.springframework.core.annotation.AnnotationAttributes;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.Environment;
+import org.springframework.core.type.AnnotationMetadata;
+
+import dev.orne.config.Config;
+
+/**
+ * Spring bean factory post processor that adds to the Spring environment
+ * the property sources defined by {@code @ConfigPropertySource} annotations
+ * on {@code @Configuration} beans.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-08
+ * @since 1.0
+ * @see ConfigPropertySource
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public class ConfigPropertySourcePostProcessor
+implements EnvironmentAware, BeanFactoryPostProcessor {
+
+    /** The class logger. */
+<span class="nc" id="L63">    private static final Logger LOG = LoggerFactory.getLogger(ConfigPropertySourcePostProcessor.class);</span>
+
+    /** The Spring environment. */
+    protected ConfigurableEnvironment environment;
+
+    /**
+     * Creates a new instance.
+     */
+    public ConfigPropertySourcePostProcessor() {
+<span class="nc" id="L72">        super();</span>
+<span class="nc" id="L73">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setEnvironment(
+            final @NotNull Environment environment) {
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        if (environment instanceof ConfigurableEnvironment) {</span>
+<span class="nc" id="L82">            this.environment = (ConfigurableEnvironment) environment;</span>
+        }
+<span class="nc" id="L84">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void postProcessBeanFactory(
+            final ConfigurableListableBeanFactory beanFactory)
+    throws BeansException {
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        if (this.environment == null) {</span>
+<span class="nc" id="L94">            throw new BeanInitializationException(</span>
+                    &quot;@ConfigPropertySource cannot be used without a ConfigurableEnvironment&quot;);
+        }
+<span class="nc bnc" id="L97" title="All 2 branches missed.">        for (final String beanName : beanFactory.getBeanDefinitionNames()) {</span>
+<span class="nc" id="L98">            final BeanDefinition def = beanFactory.getBeanDefinition(beanName);</span>
+<span class="nc bnc" id="L99" title="All 2 branches missed.">            if (def instanceof AnnotatedGenericBeanDefinition) {</span>
+<span class="nc" id="L100">                final AnnotatedGenericBeanDefinition agbd = (AnnotatedGenericBeanDefinition) def;</span>
+<span class="nc" id="L101">                final AnnotationMetadata annotations = agbd.getMetadata();</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">                if (annotations.hasAnnotation(Configuration.class.getName())) {</span>
+<span class="nc" id="L103">                    processConfigurationBean(beanFactory, beanName, annotations);</span>
+                }
+            }
+        }
+<span class="nc" id="L107">    }</span>
+
+    /**
+     * Process the {@code @ConfigPropertySource} annotations on the given
+     * configuration bean and add the corresponding property sources to the
+     * environment.
+     * 
+     * @param beanFactory The bean factory to retrieve configuration beans from.
+     * @param configurationBean The name of the configuration bean.
+     * @param annotations The {@code Configuration} bean annotation metadata
+     *                    to process.
+     * @throws BeanInitializationException If the configuration bean cannot be
+     *         found and {@code optional} is {@code false}, or if
+     *         multiple configuration beans of the specified type are found.
+     */
+    protected void processConfigurationBean(
+            final ConfigurableListableBeanFactory beanFactory,
+            final String configurationBean,
+            final AnnotationMetadata annotations) {
+<span class="nc" id="L126">        processSingleAnnotations(beanFactory, configurationBean, annotations);</span>
+<span class="nc" id="L127">        processAggregateAnnotations(beanFactory, configurationBean, annotations);</span>
+<span class="nc" id="L128">    }</span>
+
+    /**
+     * Process single {@code @ConfigPropertySource} annotations on the given
+     * class and add the corresponding property sources to the environment.
+     * 
+     * @param beanFactory The bean factory to retrieve configuration beans from.
+     * @param configurationBean The name of the configuration bean.
+     * @param annotations The {@code Configuration} bean annotation metadata.
+     * @throws BeanInitializationException If the configuration bean cannot be
+     *         found and {@code optional} is {@code false}, or if
+     *         multiple configuration beans of the specified type are found.
+     */
+    protected void processSingleAnnotations(
+            final ConfigurableListableBeanFactory beanFactory,
+            final String configurationBean,
+            final AnnotationMetadata annotations) {
+<span class="nc" id="L145">        AnnotationAttributes annotation = AnnotationAttributes.fromMap(</span>
+<span class="nc" id="L146">                annotations.getAnnotationAttributes(ConfigPropertySource.class.getName()));</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">        if (annotation != null) {</span>
+<span class="nc" id="L148">            processSource(beanFactory, configurationBean, annotation);</span>
+        }
+<span class="nc" id="L150">    }</span>
+
+    /**
+     * Process aggregated {@code @ConfigPropertySources} annotations on the
+     * given class and add the corresponding property sources to the
+     * environment.
+     * 
+     * @param beanFactory The bean factory to retrieve configuration beans from.
+     * @param configurationBean The name of the configuration bean.
+     * @param annotations The {@code Configuration} bean annotation metadata.
+     * @throws BeanInitializationException If the configuration bean cannot be
+     *         found and {@code optional} is {@code false}, or if
+     *         multiple configuration beans of the specified type are found.
+     */
+    protected void processAggregateAnnotations(
+            final @NotNull ConfigurableListableBeanFactory beanFactory,
+            final @NotNull String configurationBean,
+            final @NotNull AnnotationMetadata annotations) {
+<span class="nc" id="L168">        AnnotationAttributes aggregator = AnnotationAttributes.fromMap(</span>
+<span class="nc" id="L169">                annotations.getAnnotationAttributes(ConfigPropertySources.class.getName()));</span>
+<span class="nc bnc" id="L170" title="All 2 branches missed.">        if (aggregator != null) {</span>
+<span class="nc" id="L171">            final AnnotationAttributes[] childs = aggregator.getAnnotationArray(</span>
+                    &quot;value&quot;);
+<span class="nc bnc" id="L173" title="All 2 branches missed.">            for (final AnnotationAttributes annotation: childs) {</span>
+<span class="nc" id="L174">                processSource(beanFactory, configurationBean, annotation);</span>
+            }
+        }
+<span class="nc" id="L177">    }</span>
+
+    /**
+     * Process a single {@code @ConfigPropertySource} annotation and add the
+     * corresponding property source to the environment.
+     * 
+     * @param beanFactory The bean factory to retrieve configuration beans from.
+     * @param configurationBean The name of the configuration bean.
+     * @param annotation The {@code ConfigPropertySource} annotation data
+     *                   to process.
+     * @throws BeanInitializationException If the configuration bean cannot be
+     *         found and {@code optional} is {@code false}, or if
+     *         multiple configuration beans of the specified type are found.
+     */
+    protected void processSource(
+            final @NotNull ConfigurableListableBeanFactory beanFactory,
+            final @NotNull String configurationBean,
+            final @NotNull AnnotationAttributes annotation) {
+<span class="nc" id="L195">        String configName = annotation.getString(&quot;name&quot;);</span>
+<span class="nc bnc" id="L196" title="All 2 branches missed.">        if (configName.isEmpty()) {</span>
+<span class="nc" id="L197">            configName = annotation.getString(&quot;value&quot;);</span>
+        }
+<span class="nc" id="L199">        final boolean ignoreMissing = annotation.getBoolean(&quot;optional&quot;);</span>
+<span class="nc" id="L200">        final Class&lt;? extends Config&gt; configType = annotation.getClass(&quot;type&quot;);</span>
+        final String beanName;
+<span class="nc bnc" id="L202" title="All 2 branches missed.">        if (configName.isEmpty()) {</span>
+<span class="nc bnc" id="L203" title="All 2 branches missed.">            if (ConfigPropertySource.Unconfigured.class.equals(configType)) {</span>
+<span class="nc" id="L204">                throw new BeanInitializationException(String.format(</span>
+                        &quot;No Config type or name specified in @ConfigPropertySource on '%s'. &quot;
+                        + &quot;Either specify a unique Config bean name with \&quot;name\&quot;, &quot;
+                        + &quot;or a Config bean type with \&quot;type\&quot; or \&quot;value\&quot;.&quot;,
+                        configurationBean));
+            }
+<span class="nc" id="L210">            beanName = findBeanByType(beanFactory, configType, ignoreMissing);</span>
+        } else {
+<span class="nc bnc" id="L212" title="All 2 branches missed.">            if (!ConfigPropertySource.Unconfigured.class.equals(configType)) {</span>
+<span class="nc" id="L213">                throw new BeanInitializationException(String.format(</span>
+                        &quot;Both Config type or name specified in @ConfigPropertySource on '%s'. &quot;
+                        + &quot;Either specify a unique Config bean name with \&quot;name\&quot;, &quot;
+                        + &quot;or a Config bean type with \&quot;type\&quot; or \&quot;value\&quot;.&quot;,
+                        configurationBean));
+            }
+<span class="nc" id="L219">            beanName = validateConfigName(beanFactory, configName, ignoreMissing);</span>
+        }
+<span class="nc bnc" id="L221" title="All 2 branches missed.">        if (beanName != null) {</span>
+<span class="nc" id="L222">            final String sourceName = ConfigPropertySource.SOURCE_PREFIX + beanName;</span>
+<span class="nc" id="L223">            final ConfigLazyPropertySource propertySource = new ConfigLazyPropertySource(</span>
+                    sourceName, beanFactory, beanName);
+<span class="nc bnc" id="L225" title="All 2 branches missed.">            if (this.environment.getPropertySources().contains(sourceName)) {</span>
+<span class="nc" id="L226">                LOG.debug(&quot;Replacing '{}' property source...&quot;,</span>
+                        sourceName);
+<span class="nc" id="L228">                this.environment.getPropertySources().remove(sourceName);</span>
+<span class="nc" id="L229">                this.environment.getPropertySources().addFirst(propertySource);</span>
+            } else {
+<span class="nc" id="L231">                LOG.debug(&quot;Adding '{}' property source...&quot;,</span>
+                        sourceName);
+<span class="nc" id="L233">                this.environment.getPropertySources().addFirst(propertySource);</span>
+            }
+        }
+<span class="nc" id="L236">    }</span>
+
+    /**
+     * Validates the the specified bean name corresponds to a {@code Config}
+     * bean, and returns the name if valid.
+     * 
+     * @param beanFactory The bean factory to retrieve configuration beans from.
+     * @param configName The name of the configuration bean.
+     * @param ignoreMissing Whether to ignore a missing configuration bean.
+     * @return The configuration bean name, or {@code null} if not found and
+     *         {@code ignoreMissing} is {@code true}.
+     * @throws BeanInitializationException If no configuration bean is found
+     *         and {@code ignoreMissing} is {@code false}.
+     */
+    protected String validateConfigName(
+            final @NotNull ConfigurableListableBeanFactory beanFactory,
+            final @NotNull String configName,
+            final boolean ignoreMissing) {
+        try {
+<span class="nc" id="L255">            final BeanDefinition configDef = beanFactory.getMergedBeanDefinition(configName);</span>
+<span class="nc" id="L256">            final ResolvableType beanType = configDef.getResolvableType();</span>
+<span class="nc bnc" id="L257" title="All 2 branches missed.">            if (beanType.as(Config.class) != ResolvableType.NONE) {</span>
+<span class="nc" id="L258">                return configName;</span>
+            } else {
+<span class="nc" id="L260">                throw new BeanInitializationException(</span>
+<span class="nc" id="L261">                        &quot;Bean with name '&quot; + configName + &quot;' is not of type Config (&quot; + configDef.getBeanClassName() + &quot;). &quot; +</span>
+                        &quot;Ensure that the specified bean is a Config bean.&quot;);
+            }
+<span class="nc" id="L264">        } catch (final NoSuchBeanDefinitionException e) {</span>
+<span class="nc bnc" id="L265" title="All 2 branches missed.">            if (ignoreMissing) {</span>
+<span class="nc" id="L266">                LOG.debug(&quot;No Config bean found with name '{}', but ignoring missing as requested.&quot;,</span>
+                        configName);
+<span class="nc" id="L268">                return null;</span>
+            } else {
+<span class="nc" id="L270">                throw new BeanInitializationException(</span>
+                        &quot;No Config bean found with name '&quot; + configName + &quot;'. &quot; +
+                        &quot;Ensure that a Config bean is defined with the specified name.&quot;,
+                        e);
+            }
+        }
+    }
+
+    /**
+     * Finds a unique bean of the specified configuration type, and returns
+     * its name.
+     * &lt;p&gt;
+     * Does consider prototypes and objects created by FactoryBeans, which
+     * means that FactoryBeans will get initialized.
+     * If the object created by the FactoryBean doesn't match, the raw
+     * FactoryBean itself will be matched against the type.
+     * 
+     * @param beanFactory The bean factory to retrieve configuration beans from.
+     * @param configType The type of the configuration bean.
+     * @param ignoreMissing Whether to ignore a missing configuration bean.
+     * @return The configuration bean name, or {@code null} if not found and
+     *         {@code ignoreMissing} is {@code true}.
+     * @throws BeanInitializationException If multiple configuration beans of
+     *         the specified type are found, or if no configuration bean is
+     *         found and {@code ignoreMissing} is {@code false}.
+     */
+    protected String findBeanByType(
+            final @NotNull ConfigurableListableBeanFactory beanFactory,
+            final @NotNull Class&lt;? extends Config&gt; configType,
+            final boolean ignoreMissing) {
+<span class="nc" id="L300">        final String[] beanNames = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(</span>
+                beanFactory,
+                configType);
+<span class="nc bnc" id="L303" title="All 2 branches missed.">        if (beanNames.length &gt; 1) {</span>
+<span class="nc" id="L304">            throw new BeanInitializationException(</span>
+<span class="nc" id="L305">                    &quot;Multiple Config beans found of type '&quot; + configType.getName() + &quot;'. &quot; +</span>
+                    &quot;Specify a unique bean name with \&quot;name\&quot; to disambiguate.&quot;);
+<span class="nc bnc" id="L307" title="All 2 branches missed.">        } else if (beanNames.length == 0) {</span>
+<span class="nc bnc" id="L308" title="All 2 branches missed.">            if (ignoreMissing) {</span>
+<span class="nc" id="L309">                LOG.debug(&quot;No Config bean found of type '{}', but ignoring missing as requested.&quot;,</span>
+<span class="nc" id="L310">                        configType.getName());</span>
+<span class="nc" id="L311">                return null;</span>
+            } else {
+<span class="nc" id="L313">                throw new BeanInitializationException(</span>
+<span class="nc" id="L314">                        &quot;No Config bean found of type '&quot; + configType.getName() + &quot;'. &quot; +</span>
+                        &quot;Ensure that a Config bean of the specified type is defined.&quot;);
+            }
+        } else {
+<span class="nc" id="L318">            return beanNames[0];</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

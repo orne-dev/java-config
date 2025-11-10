@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PropertiesConfigOptions.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">PropertiesConfigOptions.java</span></div><h1>PropertiesConfigOptions.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Enumeration;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import org.apiguardian.api.API;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Options of {@code Properties} based configuration builder.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-05
+ * @since 1.0
+ * @see PropertiesConfigImpl
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public class PropertiesConfigOptions {
+
+    /** The class logger. */
+<span class="nc" id="L56">    private static final Logger LOG =</span>
+<span class="nc" id="L57">            LoggerFactory.getLogger(PropertiesConfigOptions.class);</span>
+
+    /** Error message for not found resources. */
+    private static final String RESOURCE_NOT_FOUND_ERR =
+            &quot;Configuration resource not found: {}&quot;;
+    /** Properties file read error message. */
+    private static final String READ_ERR =
+            &quot;Error reading configuration resource: {}&quot;;
+
+    /** The configuration properties. */
+    private final @NotNull Properties properties;
+
+    /**
+     * Empty constructor.
+     */
+    public PropertiesConfigOptions() {
+<span class="nc" id="L73">        super();</span>
+<span class="nc" id="L74">        this.properties = new Properties();</span>
+<span class="nc" id="L75">    }</span>
+
+    /**
+     * Copy constructor.
+     * 
+     * @param copy The instance to copy.
+     */
+    public PropertiesConfigOptions(
+            final @NotNull PropertiesConfigOptions copy) {
+<span class="nc" id="L84">        super();</span>
+<span class="nc" id="L85">        this.properties = new Properties();</span>
+<span class="nc" id="L86">        this.properties.putAll(copy.properties);</span>
+<span class="nc" id="L87">    }</span>
+
+    /**
+     * Returns the configuration properties.
+     * 
+     * @return The configuration properties.
+     */
+    public @NotNull Properties getProperties() {
+<span class="nc" id="L95">        return this.properties;</span>
+    }
+
+    /**
+     * Adds the specified configuration properties to the configuration
+     * properties.
+     * 
+     * @param values The configuration properties.
+     */
+    public void add(
+            final @NotNull Properties values) {
+<span class="nc" id="L106">        this.properties.putAll(values);</span>
+<span class="nc" id="L107">    }</span>
+
+    /**
+     * Adds the specified configuration properties to the configuration
+     * properties.
+     * 
+     * @param values The configuration properties.
+     */
+    public void add(
+            final @NotNull Map&lt;@NotEmpty String, @NotNull String&gt; values) {
+<span class="nc" id="L117">        this.properties.putAll(values);</span>
+<span class="nc" id="L118">    }</span>
+
+    /**
+     * Loads the configuration properties from the specified ClassLoader
+     * resource.
+     * 
+     * @param path The ClassLoader resource path.
+     */
+    public void load(
+            final @NotNull String path) {
+        try {
+            final Enumeration&lt;URL&gt; resources =
+<span class="nc" id="L130">                    Thread.currentThread()</span>
+<span class="nc" id="L131">                            .getContextClassLoader()</span>
+<span class="nc" id="L132">                            .getResources(path);</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">            if (!resources.hasMoreElements()) {</span>
+<span class="nc" id="L134">                LOG.warn(RESOURCE_NOT_FOUND_ERR, path);</span>
+            }
+<span class="nc bnc" id="L136" title="All 2 branches missed.">            while (resources.hasMoreElements()) {</span>
+<span class="nc" id="L137">                load(resources.nextElement());</span>
+            }
+<span class="nc" id="L139">        } catch (final IOException e) {</span>
+<span class="nc" id="L140">            LOG.warn(READ_ERR, path, e);</span>
+<span class="nc" id="L141">        }</span>
+<span class="nc" id="L142">    }</span>
+
+    /**
+     * Loads the configuration properties from the file in the specified
+     * path.
+     * 
+     * @param path The file path.
+     */
+    public void load(
+            final @NotNull Path path) {
+<span class="nc bnc" id="L152" title="All 2 branches missed.">        if (!Files.exists(path)) {</span>
+<span class="nc" id="L153">            LOG.warn(RESOURCE_NOT_FOUND_ERR, path);</span>
+        }
+<span class="nc" id="L155">        try (final InputStream fileIS = Files.newInputStream(path)) {</span>
+<span class="nc" id="L156">            this.properties.load(fileIS);</span>
+<span class="nc" id="L157">        } catch (final IOException e) {</span>
+<span class="nc" id="L158">            LOG.warn(READ_ERR, path, e);</span>
+<span class="nc" id="L159">        }</span>
+<span class="nc" id="L160">    }</span>
+
+    /**
+     * Loads the configuration properties from the specified file.
+     * 
+     * @param file The file to load.
+     */
+    public void load(
+            final @NotNull File file) {
+<span class="nc" id="L169">        try (final InputStream fileIS = new FileInputStream(file)) {</span>
+<span class="nc" id="L170">            this.properties.load(fileIS);</span>
+<span class="nc" id="L171">        } catch (final FileNotFoundException e) {</span>
+<span class="nc" id="L172">            LOG.warn(RESOURCE_NOT_FOUND_ERR, file, e);</span>
+<span class="nc" id="L173">        } catch (final IOException e) {</span>
+<span class="nc" id="L174">            LOG.warn(READ_ERR, file, e);</span>
+<span class="nc" id="L175">        }</span>
+<span class="nc" id="L176">    }</span>
+
+    /**
+     * Loads the configuration properties from the specified URL.
+     * 
+     * @param url The URL to load.
+     */
+    public void load(
+            final @NotNull URL url) {
+<span class="nc" id="L185">        try (final InputStream urlIS = url.openStream()) {</span>
+<span class="nc" id="L186">            this.properties.load(urlIS);</span>
+<span class="nc" id="L187">        } catch (final IOException e) {</span>
+<span class="nc" id="L188">            LOG.warn(READ_ERR, url, e);</span>
+<span class="nc" id="L189">        }</span>
+<span class="nc" id="L190">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

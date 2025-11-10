@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SpringEnvironmentConfigImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">SpringEnvironmentConfigImpl.java</span></div><h1>SpringEnvironmentConfigImpl.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.util.Objects;
+import java.util.stream.Stream;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import org.apiguardian.api.API;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.EnumerablePropertySource;
+import org.springframework.core.env.Environment;
+
+import dev.orne.config.Config;
+import dev.orne.config.NonIterableConfigException;
+
+/**
+ * Implementation of {@code Config} based on Spring {@code Environment}.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-09
+ * @since 0.1
+ * @see Config
+ * @see Environment
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public class SpringEnvironmentConfigImpl
+extends AbstractConfig {
+
+    /** The Spring environment to use as storage of configuration properties. */
+    private final @NotNull Environment environment;
+    /** If this instance must support property keys iteration. */
+    private final boolean iterable;
+
+    /**
+     * Creates a new instance.
+     * 
+     * @param options The configuration builder options.
+     * @param springOptions The Spring environment based configuration options.
+     */
+    public SpringEnvironmentConfigImpl(
+            final @NotNull ConfigOptions options,
+            final @NotNull SpringEnvironmentConfigOptions springOptions) {
+<span class="fc" id="L66">        super(options);</span>
+<span class="fc" id="L67">        Objects.requireNonNull(springOptions);</span>
+<span class="fc" id="L68">        this.environment = Objects.requireNonNull(springOptions.getEnvironment());</span>
+<span class="fc" id="L69">        this.iterable = springOptions.isIterableKeys();</span>
+<span class="fc" id="L70">    }</span>
+
+    /**
+     * Returns the Spring environment used as storage of configuration
+     * properties.
+     * 
+     * @return The Spring environment.
+     */
+    public @NotNull Environment getEnvironment() {
+<span class="fc" id="L79">        return this.environment;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean isEmptyInt() {
+<span class="fc" id="L87">        return false;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean containsInt(
+            final @NotBlank String key) {
+<span class="fc" id="L96">        return this.environment.containsProperty(key);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected @NotNull Stream&lt;String&gt; getKeysInt() {
+<span class="pc bpc" id="L104" title="1 of 4 branches missed.">        if (this.iterable &amp;&amp; this.environment instanceof ConfigurableEnvironment) {</span>
+<span class="fc" id="L105">            return ((ConfigurableEnvironment) this.environment).getPropertySources()</span>
+<span class="fc" id="L106">                    .stream()</span>
+<span class="fc" id="L107">                    .filter(EnumerablePropertySource.class::isInstance)</span>
+<span class="fc" id="L108">                    .map(ps -&gt; ((EnumerablePropertySource&lt;?&gt;) ps).getPropertyNames())</span>
+<span class="fc" id="L109">                    .flatMap(Stream::of)</span>
+<span class="fc" id="L110">                    .distinct();</span>
+        } else {
+<span class="fc" id="L112">            throw new NonIterableConfigException(</span>
+                    &quot;Spring Environment configuration property keys cannot be iterated.&quot;);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getInt(
+            final @NotBlank String key) {
+<span class="fc" id="L123">        return this.environment.getProperty(key);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

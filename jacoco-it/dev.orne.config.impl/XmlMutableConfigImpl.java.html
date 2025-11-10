@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>XmlMutableConfigImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">XmlMutableConfigImpl.java</span></div><h1>XmlMutableConfigImpl.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Objects;
+import java.util.stream.Stream;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.xml.XMLConstants;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.apiguardian.api.API;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+
+import dev.orne.config.Config;
+import dev.orne.config.FileWatchableConfig;
+
+/**
+ * Implementation of {@code WatchableConfig} based on a XML document.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-07
+ * @since 1.0
+ * @see Config
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public class XmlMutableConfigImpl
+extends AbstractWatchableConfig
+implements FileWatchableConfig {
+
+    /** The class logger. */
+<span class="nc" id="L63">    private static final Logger LOG = LoggerFactory.getLogger(XmlMutableConfigImpl.class);</span>
+
+    /** The transformer factory for XML documents. */
+    private static final TransformerFactory TRANS_FACT;
+    static {
+<span class="nc" id="L68">        TRANS_FACT = TransformerFactory.newInstance();</span>
+        try {
+<span class="nc" id="L70">            TRANS_FACT.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);</span>
+<span class="nc" id="L71">        } catch (final TransformerConfigurationException e) {</span>
+<span class="nc" id="L72">            LOG.warn(&quot;Error setting secure processing feature on XML DocumentBuilderFactory&quot;, e);</span>
+<span class="nc" id="L73">        }</span>
+        try {
+<span class="nc" id="L75">            TRANS_FACT.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, &quot;&quot;);</span>
+<span class="nc" id="L76">        } catch (final IllegalArgumentException e) {</span>
+<span class="nc" id="L77">            LOG.debug(&quot;Error disabling external DTD access on XML DocumentBuilderFactory&quot;, e);</span>
+<span class="nc" id="L78">        }</span>
+        try {
+<span class="nc" id="L80">            TRANS_FACT.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, &quot;&quot;);</span>
+<span class="nc" id="L81">        } catch (final IllegalArgumentException e) {</span>
+<span class="nc" id="L82">            LOG.debug(&quot;Error disabling external stylesheet access on XML DocumentBuilderFactory&quot;, e);</span>
+<span class="nc" id="L83">        }</span>
+<span class="nc" id="L84">    }</span>
+    
+
+    /** The XML document with the configuration options. */
+    private final @NotNull Document document;
+    /** The configuration nested properties separator. */
+    private final @NotBlank String propertySeparator;
+    /** The XML attributes references prefix. */
+    private final @NotBlank String attributePrefix;
+
+    /**
+     * Creates a new instance.
+     * 
+     * @param options The configuration builder options.
+     * @param mutableOptions The mutable configuration builder options.
+     * @param xmlOptions The XML based configuration builder options.
+     */
+    public XmlMutableConfigImpl(
+            final @NotNull ConfigOptions options,
+            final @NotNull MutableConfigOptions mutableOptions,
+            final @NotNull XmlConfigOptions xmlOptions) {
+<span class="nc" id="L105">        super(options, mutableOptions);</span>
+<span class="nc" id="L106">        Objects.requireNonNull(xmlOptions);</span>
+<span class="nc" id="L107">        Objects.requireNonNull(xmlOptions);</span>
+<span class="nc" id="L108">        this.document = Objects.requireNonNull(xmlOptions.getDocument());</span>
+<span class="nc" id="L109">        this.propertySeparator = Objects.requireNonNull(xmlOptions.getPropertySeparator());</span>
+<span class="nc" id="L110">        this.attributePrefix = Objects.requireNonNull(xmlOptions.getAttributePrefix());</span>
+<span class="nc" id="L111">    }</span>
+
+    /**
+     * Returns the XML document with the configuration options.
+     * 
+     * @return The XML document with the configuration options.
+     */
+    protected @NotNull Document getDocument() {
+<span class="nc" id="L119">        return this.document;</span>
+    }
+
+    /**
+     * Returns the configuration nested properties separator.
+     * 
+     * @return The configuration nested properties separator.
+     */
+    protected @NotBlank String getPropertySeparator() {
+<span class="nc" id="L128">        return this.propertySeparator;</span>
+    }
+
+    /**
+     * Returns the XML attributes references prefix.
+     * 
+     * @return The XML attributes references prefix.
+     */
+    protected @NotBlank String getAttributePrefix() {
+<span class="nc" id="L137">        return this.attributePrefix;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean isEmptyInt() {
+<span class="nc bnc" id="L145" title="All 2 branches missed.">        return !this.document.getDocumentElement().hasAttributes()</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">                &amp;&amp; !this.document.getDocumentElement().hasChildNodes();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean containsInt(@NotBlank String key) {
+<span class="nc" id="L154">        return XmlUtils.contains(</span>
+                this.document,
+                key,
+                this.propertySeparator,
+                this.attributePrefix);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected @NotNull Stream&lt;String&gt; getKeysInt() {
+<span class="nc" id="L166">        return XmlUtils.extractKeys(</span>
+                this.document,
+                this.propertySeparator,
+                this.attributePrefix);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getInt(@NotBlank String key) {
+<span class="nc" id="L177">        return XmlUtils.getValue(</span>
+                this.document,
+                key,
+                this.propertySeparator,
+                attributePrefix)
+<span class="nc" id="L182">                .orElse(null);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void setInt(
+            final @NotBlank String key,
+            final @NotNull String value) {
+<span class="nc" id="L192">        XmlUtils.setValue(</span>
+                this.document,
+                key,
+                this.propertySeparator,
+                this.attributePrefix,
+                value);
+<span class="nc" id="L198">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void removeInt(
+            final @NotBlank String... keys) {
+<span class="nc bnc" id="L206" title="All 2 branches missed.">        for (final String key : keys) {</span>
+<span class="nc" id="L207">            XmlUtils.setValue(</span>
+                    this.document,
+                    key,
+                    this.propertySeparator,
+                    this.attributePrefix,
+                    null);
+        }
+<span class="nc" id="L214">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void save(
+            final @NotNull Writer destination)
+    throws IOException {
+        try {
+<span class="nc" id="L224">            final Transformer transformer = TRANS_FACT.newTransformer();</span>
+<span class="nc" id="L225">            transformer.setOutputProperty(OutputKeys.INDENT, &quot;yes&quot;);</span>
+<span class="nc" id="L226">            transformer.setOutputProperty(&quot;{http://xml.apache.org/xslt}indent-amount&quot;, &quot;4&quot;);</span>
+<span class="nc" id="L227">            final DOMSource source = new DOMSource(this.document);</span>
+<span class="nc" id="L228">            final StreamResult result = new StreamResult(destination);</span>
+<span class="nc" id="L229">            transformer.transform(source, result);</span>
+<span class="nc" id="L230">        } catch (final TransformerException e) {</span>
+<span class="nc" id="L231">            throw new IOException(&quot;Error saving XML configuration&quot;, e);</span>
+<span class="nc" id="L232">        }</span>
+<span class="nc" id="L233">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

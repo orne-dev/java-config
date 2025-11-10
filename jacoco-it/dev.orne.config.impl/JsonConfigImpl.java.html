@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JsonConfigImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">JsonConfigImpl.java</span></div><h1>JsonConfigImpl.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.util.Objects;
+import java.util.WeakHashMap;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import org.apiguardian.api.API;
+
+import com.fasterxml.jackson.core.JsonPointer;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import dev.orne.config.Config;
+
+/**
+ * Jackson {@code ObjectNode} based configuration.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-07
+ * @since 1.0
+ * @see Config
+ * @see ObjectNode
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public class JsonConfigImpl
+extends AbstractConfig {
+
+    /** The JSON object with the configuration properties. */
+    private final @NotNull ObjectNode jsonObject;
+    /** The configuration nested properties separator. */
+    private final @NotEmpty String propertySeparator;
+    /** The property key to JSON pointers cache. */
+<span class="nc" id="L61">    private final WeakHashMap&lt;String, JsonPointer&gt; cache = new WeakHashMap&lt;&gt;();</span>
+
+    /**
+     * Creates a new instance.
+     * 
+     * @param options The configuration builder options.
+     * @param jsonOptions The JSON based configuration builder options.
+     */
+    public JsonConfigImpl(
+            final @NotNull ConfigOptions options,
+            final @NotNull JsonConfigOptions jsonOptions) {
+<span class="nc" id="L72">        super(options);</span>
+<span class="nc" id="L73">        Objects.requireNonNull(jsonOptions);</span>
+<span class="nc" id="L74">        this.jsonObject = jsonOptions.getJsonObject();</span>
+<span class="nc" id="L75">        this.propertySeparator = jsonOptions.getPropertySeparator();</span>
+<span class="nc" id="L76">    }</span>
+
+    /**
+     * Returns the JSON object with the configuration properties.
+     * 
+     * @return The JSON object with the configuration properties.
+     */
+    protected @NotNull ObjectNode getJsonObject() {
+<span class="nc" id="L84">        return this.jsonObject;</span>
+    }
+
+    /**
+     * Returns the configuration nested properties separator.
+     * 
+     * @return The configuration nested properties separator.
+     */
+    protected @NotEmpty String getPropertySeparator() {
+<span class="nc" id="L93">        return this.propertySeparator;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean isEmptyInt() {
+<span class="nc" id="L101">        return this.jsonObject.isEmpty();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected @NotNull Stream&lt;String&gt; getKeysInt() {
+<span class="nc" id="L109">        return this.jsonObject.propertyStream()</span>
+<span class="nc" id="L110">                .flatMap(entry -&gt;</span>
+<span class="nc" id="L111">                    keysFlattener(</span>
+                        this.propertySeparator,
+                        &quot;&quot;,
+<span class="nc" id="L114">                        entry.getKey(),</span>
+<span class="nc" id="L115">                        entry.getValue()));</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean containsInt(
+            final @NotBlank String key) {
+<span class="nc" id="L124">        final JsonNode node = this.jsonObject.at(propertyToPointer(key));</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">        return !node.isMissingNode();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getInt(
+            final @NotBlank String key) {
+<span class="nc" id="L134">        final JsonNode node = this.jsonObject.at(propertyToPointer(key));</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">        if (node.isValueNode()) {</span>
+<span class="nc" id="L136">            return node.asText();</span>
+        } else {
+<span class="nc" id="L138">            return null;</span>
+        }
+    }
+
+    /**
+     * Resolves configuration keys to JSON pointer expressions by replacing
+     * properties separator with the JSON pointer segment separator.
+     * 
+     * @param key The configuration key.
+     * @return The JSON pointer expression.
+     */
+    protected @NotBlank JsonPointer propertyToPointer(
+            final @NotBlank String key) {
+<span class="nc" id="L151">        Objects.requireNonNull(key);</span>
+<span class="nc" id="L152">        return cache.computeIfAbsent(key, k -&gt;</span>
+<span class="nc" id="L153">                JacksonUtils.propertyToPointer(k, this.propertySeparator));</span>
+    }
+
+    /**
+     * Flattens the JSON object properties to a stream of keys.
+     * 
+     * @param separator The properties separator to use.
+     * @param prefix The prefix for the keys.
+     * @param key The current key being processed.
+     * @param node The JSON object node entry.
+     * @return A stream of flattened keys.
+     */
+    protected static @NotNull Stream&lt;String&gt; keysFlattener(
+            final @NotBlank String separator,
+            final @NotNull String prefix,
+            final @NotNull String key,
+            final @NotNull JsonNode node) {
+<span class="nc bnc" id="L170" title="All 2 branches missed.">        if (node.isObject()) {</span>
+<span class="nc" id="L171">            final ObjectNode obj = (ObjectNode) node;</span>
+            final String nestedPrefix;
+<span class="nc bnc" id="L173" title="All 2 branches missed.">            if (prefix.isEmpty()) {</span>
+<span class="nc" id="L174">                nestedPrefix = key + separator;</span>
+            } else {
+<span class="nc" id="L176">                nestedPrefix = prefix + key + separator;</span>
+            }
+<span class="nc" id="L178">            return obj.propertyStream()</span>
+<span class="nc" id="L179">                    .flatMap(entry -&gt; keysFlattener(separator, nestedPrefix, entry.getKey(), entry.getValue()));</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">        } else if (node.isArray()) {</span>
+<span class="nc" id="L181">            final ArrayNode obj = (ArrayNode) node;</span>
+            final String nestedPrefix;
+<span class="nc bnc" id="L183" title="All 2 branches missed.">            if (prefix.isEmpty()) {</span>
+<span class="nc" id="L184">                nestedPrefix = key + separator;</span>
+            } else {
+<span class="nc" id="L186">                nestedPrefix = prefix + key + separator;</span>
+            }
+<span class="nc" id="L188">            return IntStream.range(0, obj.size())</span>
+<span class="nc" id="L189">                    .mapToObj(String::valueOf)</span>
+<span class="nc" id="L190">                    .flatMap(index -&gt; keysFlattener(separator, nestedPrefix, index, obj.get(index)));</span>
+        } else {
+<span class="nc" id="L192">            return Stream.of(prefix + key);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

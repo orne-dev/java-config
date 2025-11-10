@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Config.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config</a> &gt; <span class="el_source">Config.java</span></div><h1>Config.java</h1><pre class="source lang-java linenums">package dev.orne.config;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import org.apache.commons.lang3.ObjectUtils;
+import org.apiguardian.api.API;
+
+import dev.orne.config.impl.CommonsConfigBuilderImpl;
+import dev.orne.config.impl.ConfigSubtype;
+import dev.orne.config.impl.ConfigSubset;
+import dev.orne.config.impl.EnvironmentConfigBuilderImpl;
+import dev.orne.config.impl.JsonConfigBuilderImpl;
+import dev.orne.config.impl.PreferencesConfigBuilderImpl;
+import dev.orne.config.impl.PropertiesConfigBuilderImpl;
+import dev.orne.config.impl.SpringEnvironmentConfigBuilderImpl;
+import dev.orne.config.impl.SystemConfigBuilderImpl;
+import dev.orne.config.impl.XmlConfigBuilderImpl;
+import dev.orne.config.impl.YamlConfigBuilderImpl;
+
+/**
+ * Configuration properties provider.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2019-07
+ * @version 2.0, 2025-05
+ * @since 0.1
+ */
+@API(status = API.Status.STABLE, since = &quot;1.0&quot;)
+public interface Config {
+
+    /**
+     * Creates a new environment variables based configuration builder.
+     * 
+     * @return The configuration builder.
+     */
+    static @NotNull EnvironmentConfigBuilder fromEnvironmentVariables() {
+<span class="fc" id="L64">        return new EnvironmentConfigBuilderImpl();</span>
+    }
+
+    /**
+     * Creates a new system properties based configuration builder.
+     * 
+     * @return The configuration builder.
+     */
+    static @NotNull SystemConfigBuilder fromSystemProperties() {
+<span class="fc" id="L73">        return new SystemConfigBuilderImpl();</span>
+    }
+
+    /**
+     * Creates a new {@code Properties} based configuration builder.
+     * 
+     * @return The configuration builder.
+     */
+    static @NotNull PropertiesConfigBuilder fromProperties() {
+<span class="fc" id="L82">        return new PropertiesConfigBuilderImpl();</span>
+    }
+
+    /**
+     * Creates a new JSON based configuration builder.
+     * 
+     * @return The configuration builder.
+     */
+    static @NotNull JsonConfigBuilder fromJson() {
+<span class="fc" id="L91">        return new JsonConfigBuilderImpl();</span>
+    }
+
+    /**
+     * Creates a new YAML based configuration builder.
+     * 
+     * @return The configuration builder.
+     */
+    static @NotNull YamlConfigBuilder fromYaml() {
+<span class="fc" id="L100">        return new YamlConfigBuilderImpl();</span>
+    }
+
+    /**
+     * Creates a new XML based configuration builder.
+     * 
+     * @return The configuration builder.
+     */
+    static @NotNull XmlConfigBuilder fromXml() {
+<span class="fc" id="L109">        return new XmlConfigBuilderImpl();</span>
+    }
+
+    /**
+     * Creates a new {@code Preferences} based configuration builder.
+     * 
+     * @return The configuration builder.
+     */
+    static @NotNull PreferencesConfigInitialBuilder fromJavaPreferences() {
+<span class="fc" id="L118">        return new PreferencesConfigBuilderImpl();</span>
+    }
+
+    /**
+     * Creates a new Apache Commons Configuration based configuration
+     * builder.
+     * 
+     * @return The configuration builder.
+     */
+    static @NotNull CommonsConfigBuilder fromApacheCommons() {
+<span class="fc" id="L128">        return new CommonsConfigBuilderImpl();</span>
+    }
+
+    /**
+     * Creates a new Spring Environment based configuration
+     * builder.
+     * 
+     * @return The configuration builder.
+     */
+    static @NotNull SpringEnvironmentConfigInitialBuilder fromSpringEnvironment() {
+<span class="fc" id="L138">        return new SpringEnvironmentConfigBuilderImpl();</span>
+    }
+
+    /**
+     * Creates a configuration proxy of the specified type.
+     * &lt;p&gt;
+     * The configuration proxy will delegate all method calls to the
+     * underlying configuration instance, except for the default methods
+     * defined in the specified type interface, which will be invoked directly
+     * on the interface.
+     * 
+     * @param &lt;T&gt; The configuration type.
+     * @param config The proxied configuration instance.
+     * @param type The configuration type interface to create a proxy for.
+     * @return The proxy of the specified configuration type.
+     */
+    static &lt;T extends Config&gt; T as(
+            final @NotNull Config config,
+            final @NotNull Class&lt;T&gt; type) {
+<span class="fc bfc" id="L157" title="All 2 branches covered.">        if (type.isInstance(config)) {</span>
+<span class="fc" id="L158">            return type.cast(config);</span>
+        } else {
+<span class="fc" id="L160">            return ConfigSubtype.create(config, type);</span>
+        }
+    }
+
+    /**
+     * Returns the parent configuration, if any.
+     * 
+     * @return The parent configuration
+     */
+    default Config getParent() {
+<span class="fc" id="L170">        return null;</span>
+    }
+
+    /**
+     * Returns {@code true} if the configuration contains no property.
+     * 
+     * @return Returns {@code true} if the configuration contains no property.
+     * @throws NonIterableConfigException If the configuration property keys
+     * cannot be iterated.
+     * @throws ConfigException If an error occurs accessing the configuration.
+     */
+    default boolean isEmpty() {
+<span class="fc bfc" id="L182" title="All 2 branches covered.">        return !getKeys().iterator().hasNext();</span>
+    }
+
+    /**
+     * Returns {@code true} if the property with the key passed as argument
+     * has been configured.
+     * 
+     * @param key The configuration property.
+     * @return Returns {@code true} if the property has been configured.
+     */
+    default boolean contains(
+            @NotBlank String key) {
+<span class="fc bfc" id="L194" title="All 2 branches covered.">        return get(key) != null;</span>
+    }
+
+    /**
+     * Returns the configuration property keys contained in this configuration.
+     * 
+     * @return The configuration property keys.
+     * @throws NonIterableConfigException If the configuration property keys
+     * cannot be iterated.
+     * @throws ConfigException If an error occurs accessing the configuration.
+     */
+    default @NotNull Stream&lt;String&gt; getKeys() {
+<span class="fc" id="L206">        throw new NonIterableConfigException(</span>
+                &quot;Configuration property keys cannot be iterated.&quot;);
+    }
+
+    /**
+     * Returns the configuration property keys contained in this configuration
+     * that match the specified predicate.
+     * 
+     * @param filter The predicate to filter the property keys with.
+     * @return The configuration property keys that match the predicate.
+     * @throws NonIterableConfigException If the configuration property keys
+     * cannot be iterated.
+     * @throws ConfigException If an error occurs accessing the configuration.
+     */
+    default @NotNull Stream&lt;String&gt; getKeys(
+            final @NotNull Predicate&lt;String&gt; filter) {
+<span class="fc" id="L222">        return getKeys().filter(filter);</span>
+    }
+
+    /**
+     * Returns the configuration property keys contained in this configuration
+     * that start with the specified prefix.
+     * 
+     * @param prefix The predicate to filter the property keys with.
+     * @return The configuration property keys that match the predicate.
+     * @throws NonIterableConfigException If the configuration property keys
+     * cannot be iterated.
+     * @throws ConfigException If an error occurs accessing the configuration.
+     */
+    default @NotNull Stream&lt;String&gt; getKeys(
+            final @NotNull String prefix) {
+<span class="fc" id="L237">        return getKeys(key -&gt; key.startsWith(prefix));</span>
+    }
+
+    /**
+     * Returns the value of the configuration parameter as {@code String}.
+     * 
+     * @param key The configuration property
+     * @return The configuration parameter value as {@code String}
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
+     */
+    String get(
+            @NotBlank String key);
+
+    /**
+     * Returns the value of the configuration parameter as {@code String}
+     * without applying any decoration or transformation.
+     * 
+     * @param key The configuration property
+     * @return The configuration parameter value as {@code String}
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
+     */
+    default String getUndecored(
+            @NotBlank String key) {
+<span class="fc" id="L262">        return get(key);</span>
+    }
+
+    /**
+     * Returns the value of the configuration parameter as {@code String}.
+     * 
+     * @param key The key of the configuration parameter
+     * @param defaultValue The default value to return if the configuration
+     * parameter is not set or is {@code null}.
+     * @return The configuration parameter value as {@code String}
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
+     */
+    default String get(
+            @NotBlank String key,
+            String defaultValue) {
+<span class="fc" id="L278">        return ObjectUtils.firstNonNull(get(key), defaultValue);</span>
+    }
+
+    /**
+     * Returns the value of the configuration parameter as {@code String}.
+     * 
+     * @param key The key of the configuration parameter
+     * @param defaultValue The default value supplier if the configuration
+     * parameter is not set or is {@code null}.
+     * @return The configuration parameter value as {@code String}
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
+     */
+    default String get(
+            @NotBlank String key,
+            @NotNull Supplier&lt;String&gt; defaultValue) {
+<span class="fc" id="L294">        return ObjectUtils.getFirstNonNull(() -&gt; get(key), defaultValue);</span>
+    }
+
+    /**
+     * Returns the value of the configuration parameter as {@code Boolean}.
+     * 
+     * @param key The key of the configuration parameter
+     * @return The configuration parameter value as {@code Boolean}
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
+     */
+    default Boolean getBoolean(
+            @NotBlank String key) {
+<span class="fc" id="L307">        final String value = get(key);</span>
+<span class="fc bfc" id="L308" title="All 2 branches covered.">        return value == null ? null : Boolean.parseBoolean(value); </span>
+    }
+
+    /**
+     * Returns the value of the configuration parameter as {@code Boolean}.
+     * 
+     * @param key The key of the configuration parameter
+     * @param defaultValue The default value to return if the configuration
+     * parameter is not set or is {@code null}.
+     * @return The configuration parameter value as {@code Boolean}
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
+     */
+    default boolean getBoolean(
+            @NotBlank String key,
+            boolean defaultValue) {
+<span class="fc" id="L324">        return ObjectUtils.firstNonNull(getBoolean(key), defaultValue);</span>
+    }
+
+    /**
+     * Returns the value of the configuration parameter as {@code Boolean}.
+     * 
+     * @param key The key of the configuration parameter
+     * @param defaultValue The default value supplier if the configuration
+     * parameter is not set or is {@code null}.
+     * @return The configuration parameter value as {@code Boolean}
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
+     */
+    default Boolean getBoolean(
+            @NotBlank String key,
+            @NotNull Supplier&lt;Boolean&gt; defaultValue) {
+<span class="fc" id="L340">        return ObjectUtils.getFirstNonNull(() -&gt; getBoolean(key), defaultValue);</span>
+    }
+
+    /**
+     * Returns the integer value of the specified configuration property,
+     * with variable substitution.
+     * 
+     * @param key The configuration property.
+     * @return The value configuration property, if any.
+     * @throws NumberFormatException If the configuration value cannot be
+     * parsed as an integer.
+     */
+    default Integer getInteger(
+            @NotNull String key) {
+<span class="fc" id="L354">        final String strValue = get(key);</span>
+<span class="fc bfc" id="L355" title="All 2 branches covered.">        return strValue == null ? null : Integer.valueOf(strValue);</span>
+    }
+
+    /**
+     * Returns the integer value of the specified configuration property,
+     * with variable substitution.
+     * 
+     * @param key The configuration property.
+     * @param defaultValue The default value to return if the configuration
+     * parameter is not set or is {@code null}.
+     * @return The value configuration property, if any.
+     * @throws NumberFormatException If the configuration value cannot be
+     * parsed as an integer.
+     */
+    default int getInteger(
+            @NotNull String key,
+            int defaultValue) {
+<span class="fc" id="L372">        return Integer.parseInt(get(key, String.valueOf(defaultValue)));</span>
+    }
+
+    /**
+     * Returns the value of the configuration parameter as {@code Boolean}.
+     * 
+     * @param key The key of the configuration parameter
+     * @param defaultValue The default value supplier if the configuration
+     * parameter is not set or is {@code null}.
+     * @return The configuration parameter value as {@code Boolean}
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
+     */
+    default Integer getInteger(
+            @NotBlank String key,
+            @NotNull Supplier&lt;Integer&gt; defaultValue) {
+<span class="fc" id="L388">        return ObjectUtils.getFirstNonNull(() -&gt; getInteger(key), defaultValue);</span>
+    }
+
+    /**
+     * Returns the integer value of the specified configuration property,
+     * with variable substitution.
+     * 
+     * @param key The configuration property.
+     * @return The value configuration property, if any.
+     * @throws NumberFormatException If the configuration value cannot be
+     * parsed as an long.
+     */
+    default Long getLong(
+            @NotNull String key) {
+<span class="fc" id="L402">        final String strValue = get(key);</span>
+<span class="fc bfc" id="L403" title="All 2 branches covered.">        return strValue == null ? null : Long.valueOf(strValue);</span>
+    }
+
+    /**
+     * Returns the integer value of the specified configuration property,
+     * with variable substitution.
+     * 
+     * @param key The configuration property.
+     * @param defaultValue The default value to return if the configuration
+     * parameter is not set or is {@code null}.
+     * @return The value configuration property, if any.
+     * @throws NumberFormatException If the configuration value cannot be
+     * parsed as an long.
+     */
+    default long getLong(
+            @NotNull String key,
+            long defaultValue) {
+<span class="fc" id="L420">        return Long.parseLong(get(key, String.valueOf(defaultValue)));</span>
+    }
+
+    /**
+     * Returns the value of the configuration parameter as {@code Boolean}.
+     * 
+     * @param key The key of the configuration parameter
+     * @param defaultValue The default value supplier if the configuration
+     * parameter is not set or is {@code null}.
+     * @return The configuration parameter value as {@code Boolean}
+     * @throws ConfigException If an error occurs retrieving the configuration
+     * property value
+     */
+    default Long getLong(
+            @NotBlank String key,
+            @NotNull Supplier&lt;Long&gt; defaultValue) {
+<span class="fc" id="L436">        return ObjectUtils.getFirstNonNull(() -&gt; getLong(key), defaultValue);</span>
+    }
+
+    /**
+     * Creates a configuration proxy of the specified type.
+     * &lt;p&gt;
+     * The configuration proxy will delegate all method calls to this
+     * configuration instance, except for the default methods
+     * defined in the specified type interface, which will be invoked directly
+     * on the interface.
+     * 
+     * @param &lt;T&gt; The configuration type.
+     * @param type The configuration type interface to create a proxy for.
+     * @return The proxy of the specified configuration type.
+     * @see #as(Config, Class)
+     */
+    default &lt;T extends Config&gt; T as(
+            final @NotNull Class&lt;T&gt; type) {
+<span class="fc" id="L454">        return Config.as(this, type);</span>
+    }
+
+    /**
+     * Creates a subset configuration containing only the properties
+     * with the specified prefix.
+     * 
+     * @param prefix The prefix for configuration keys.
+     * @return The subset configuration.
+     */
+    default @NotNull Config subset(
+            final @NotNull String prefix) {
+<span class="fc" id="L466">        return ConfigSubset.create(this, prefix);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

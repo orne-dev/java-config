@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SpringBootAutoConfigurer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.spring</a> &gt; <span class="el_source">SpringBootAutoConfigurer.java</span></div><h1>SpringBootAutoConfigurer.java</h1><pre class="source lang-java linenums">package dev.orne.config.spring;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.util.ArrayList;
+
+import javax.validation.constraints.NotNull;
+
+import org.apiguardian.api.API;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.EnvironmentAware;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ImportSelector;
+import org.springframework.core.env.Environment;
+import org.springframework.core.type.AnnotationMetadata;
+
+/**
+ * Spring Boot auto configuration for Orne Config integration.
+ * &lt;p&gt;
+ * By default enables all the features as if {@code EnableOrneConfig} was used.
+ * Set environment property {@value #ENABLED} to {@code false} to disable
+ * the auto configuration.
+ * &lt;p&gt;
+ * To disable specific features, set the following environment properties
+ * to {@code false}:
+ * &lt;ul&gt;
+ *   &lt;li&gt;{@value #INJECTION_ENABLED}: Disable preferred {@code Config}
+ *   injection.&lt;/li&gt;
+ *  &lt;li&gt;{@value #CONFIGURABLE_ENABLED}: Disable configurable components
+ *  support.&lt;/li&gt;
+ * &lt;/ul&gt;
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-11
+ * @since 1.0
+ * @see EnableOrneConfig
+ */
+@AutoConfiguration
+@ConditionalOnProperty(
+        name = SpringBootAutoConfigurer.ENABLED,
+        matchIfMissing = true)
+@Import(SpringBootAutoConfigurer.FeaturesSelector.class)
+@API(status = API.Status.STABLE, since = &quot;1.0&quot;)
+public class SpringBootAutoConfigurer {
+
+    /** The configuration properties prefix. */
+    private static final String PROPERTY_PREFIX =
+            &quot;orne.config.spring.boot.starter.&quot;;
+    /** The property to enable or disable the auto configuration. */
+    @API(status = API.Status.STABLE, since = &quot;1.0&quot;)
+    public static final String ENABLED =
+            PROPERTY_PREFIX + &quot;enabled&quot;;
+    /** The property to enable or disable preferred configuration injection. */
+    @API(status = API.Status.STABLE, since = &quot;1.0&quot;)
+    public static final String INJECTION_ENABLED =
+            PROPERTY_PREFIX + &quot;injection.enabled&quot;;
+    /** The property to enable or disable configurable components. */
+    @API(status = API.Status.STABLE, since = &quot;1.0&quot;)
+    public static final String CONFIGURABLE_ENABLED =
+            PROPERTY_PREFIX + &quot;configurable.enabled&quot;;
+
+    /**
+     * Creates a new instance.
+     */
+    public SpringBootAutoConfigurer() {
+<span class="fc" id="L87">        super();</span>
+<span class="fc" id="L88">    }</span>
+
+    /**
+     * Import selector for the features to enable based on environment
+     * properties.
+     * 
+     * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+     * @version 1.0, 2025-11
+     * @since 1.0
+     */
+    @API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+    public static class FeaturesSelector
+    implements ImportSelector, EnvironmentAware {
+
+        /** The Spring environment. */
+        private Environment environment;
+
+        /**
+         * Creates a new instance.
+         */
+        public FeaturesSelector() {
+<span class="fc" id="L109">            super();</span>
+<span class="fc" id="L110">        }</span>
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void setEnvironment(
+                final @NotNull Environment environment) {
+<span class="fc" id="L118">            this.environment = environment;</span>
+<span class="fc" id="L119">        }</span>
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String[] selectImports(
+                final AnnotationMetadata importingClassMetadata) {
+<span class="fc" id="L127">            final String injectionEnabled =</span>
+<span class="fc" id="L128">                    environment.getProperty(INJECTION_ENABLED);</span>
+<span class="fc" id="L129">            final String configurableEnabled =</span>
+<span class="fc" id="L130">                    environment.getProperty(CONFIGURABLE_ENABLED);</span>
+<span class="fc" id="L131">            final ArrayList&lt;String&gt; configurations = new ArrayList&lt;&gt;();</span>
+<span class="pc bpc" id="L132" title="3 of 4 branches missed.">            if (injectionEnabled == null || Boolean.valueOf(injectionEnabled)) {</span>
+<span class="fc" id="L133">                configurations.add(ConfigAutowireCandidateResolverConfigurer.class.getName());</span>
+            }
+<span class="pc bpc" id="L135" title="3 of 4 branches missed.">            if (configurableEnabled == null || Boolean.valueOf(configurableEnabled)) {</span>
+<span class="fc" id="L136">                configurations.add(ConfigurableComponentsConfigurer.class.getName());</span>
+            }
+<span class="fc" id="L138">            return configurations.toArray(new String[0]);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

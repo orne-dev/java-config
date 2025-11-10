@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConfigProviderImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">ConfigProviderImpl.java</span></div><h1>ConfigProviderImpl.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.lang.reflect.Proxy;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.validation.constraints.NotNull;
+
+import org.apache.commons.lang3.Validate;
+import org.apiguardian.api.API;
+
+import dev.orne.config.Config;
+import dev.orne.config.ConfigProvider;
+import dev.orne.config.PreferredConfig;
+
+/**
+ * Default implementation of {@code ConfigProvider}.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2019-07
+ * @version 2.0, 2025-07
+ * @since 0.1
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public class ConfigProviderImpl
+implements ConfigProvider {
+
+    /** Error message for null default configuration. */
+    private static final String NULL_DEFAULT_ERR =
+            &quot;Default config is required.&quot;;
+    /** Error message for null configuration register attempt. */
+    private static final String NULL_CONFIG_ERR =
+            &quot;Cannot register a null configuration.&quot;;
+    /** Error message for null preferred configuration. */
+    private static final String NULL_PREFERRED_ERR =
+            &quot;Unexpected null preferred configuration.&quot;;
+
+    /** The default configuration. */
+    private final Config defaultConfig;
+    /** The available configurations mappings. */
+    private final Map&lt;Class&lt;?&gt;, Config&gt; mappings;
+
+    /**
+     * Creates a new instance.
+     * 
+     * @param defaultConfig The default configuration
+     */
+    public ConfigProviderImpl(
+            final @NotNull Config defaultConfig) {
+<span class="fc" id="L73">        super();</span>
+<span class="fc" id="L74">        Validate.notNull(defaultConfig, NULL_DEFAULT_ERR);</span>
+<span class="fc" id="L75">        this.defaultConfig = defaultConfig;</span>
+<span class="fc" id="L76">        this.mappings = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L77">        mapConfigType(defaultConfig.getClass(), defaultConfig);</span>
+<span class="fc" id="L78">    }</span>
+
+    /**
+     * Registers a new configuration available for bean configuration.
+     * 
+     * @param config The configuration to register
+     */
+    public void registerConfig(
+            final @NotNull Config config) {
+<span class="nc" id="L87">        Validate.notNull(config, NULL_CONFIG_ERR);</span>
+<span class="nc" id="L88">        mapConfigType(config.getClass(), config);</span>
+<span class="nc" id="L89">    }</span>
+
+    /**
+     * Maps configuration type and all its interfaces to the instance
+     * passed as argument. If the type has super class different of
+     * {@code Object} repeats the mapping for it.
+     * 
+     * @param type The type of configuration to scan
+     * @param config The configuration instance
+     */
+    protected void mapConfigType(
+            final @NotNull Class&lt;?&gt; type,
+            final @NotNull Config config) {
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">        if (Proxy.isProxyClass(type)) {</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">            for (final Class&lt;?&gt; iface : type.getInterfaces()) {</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">                if (Config.class.isAssignableFrom(iface)) {</span>
+<span class="nc" id="L105">                    mapConfigType(iface, config);</span>
+                }
+            }
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">        } else if (this.mappings.putIfAbsent(type, config) == null) {</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">            for (final Class&lt;?&gt; iface : type.getInterfaces()) {</span>
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">                if (Config.class.isAssignableFrom(iface)) {</span>
+<span class="fc" id="L111">                    mapConfigType(iface, config);</span>
+                }
+            }
+<span class="fc" id="L114">            final Class&lt;?&gt; superType = type.getSuperclass();</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">            if (superType != null</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">                    &amp;&amp; Config.class.isAssignableFrom(superType)) {</span>
+<span class="fc" id="L117">                mapConfigType(superType, config);</span>
+            }
+        }
+<span class="fc" id="L120">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull Config getDefaultConfig() {
+<span class="fc" id="L127">        return this.defaultConfig;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Config selectConfig(
+            final PreferredConfig preferences) {
+<span class="nc" id="L136">        Config result = null;</span>
+<span class="nc bnc" id="L137" title="All 4 branches missed.">        if (preferences == null || preferences.value().length == 0) {</span>
+<span class="nc" id="L138">            result = this.defaultConfig;</span>
+        } else {
+<span class="nc bnc" id="L140" title="All 2 branches missed.">            for (final Class&lt;?&gt; preferred : preferences.value()) {</span>
+<span class="nc" id="L141">                Validate.notNull(preferred, NULL_PREFERRED_ERR);</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">                if (this.mappings.containsKey(preferred)) {</span>
+<span class="nc" id="L143">                    result = this.mappings.get(preferred);</span>
+<span class="nc" id="L144">                    break;</span>
+                }
+            }
+<span class="nc bnc" id="L147" title="All 4 branches missed.">            if (result == null &amp;&amp; preferences.fallbackToDefaultConfig()) {</span>
+<span class="nc" id="L148">                result = this.defaultConfig;</span>
+            }
+        }
+<span class="nc" id="L151">        return result;</span>
+    }
+
+    public @NotNull Optional&lt;Config&gt; getConfig(
+            final @NotNull Class&lt;? extends Config&gt; type) {
+<span class="nc" id="L156">        return Optional.ofNullable(this.mappings.get(type));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ValueEncoder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config</a> &gt; <span class="el_source">ValueEncoder.java</span></div><h1>ValueEncoder.java</h1><pre class="source lang-java linenums">package dev.orne.config;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.util.Objects;
+
+import javax.validation.constraints.NotNull;
+
+import org.apiguardian.api.API;
+
+/**
+ * Interface of configuration property values encoders.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-05
+ * @since 1.0
+ */
+@API(status = API.Status.STABLE, since = &quot;1.0&quot;)
+@FunctionalInterface
+public interface ValueEncoder {
+
+    /** Default identity configuration property value encoder. */
+<span class="nc" id="L43">    static ValueEncoder DEFAULT = t -&gt; t;</span>
+
+    /**
+     * Encodes the configuration property value.
+     *
+     * @param value The configuration property value.
+     * @return The encoded configuration property value.
+     */
+    String encode(String value);
+
+    /**
+     * Returns a composed encoder that first applies the {@code before} encoder
+     * to its input, and then applies this encoder to the result.
+     * If evaluation of either encoder throws an exception, it is relayed to
+     * the caller of the composed encoder.
+     *
+     * @param before The encoder to apply before this encoder is applied.
+     * @return A composed encoder that first applies the {@code before}
+     * encoder and then applies this encoder.
+     * @throws NullPointerException If before is null;
+     *
+     * @see #andThen(ValueEncoder)
+     */
+    default @NotNull ValueEncoder compose(
+            final @NotNull ValueEncoder before) {
+<span class="nc" id="L68">        Objects.requireNonNull(before);</span>
+<span class="nc" id="L69">        return v -&gt; encode(before.encode(v));</span>
+    }
+
+    /**
+     * Returns a composed encoder that first applies this encoder to
+     * its input, and then applies the {@code after} encoder to the result.
+     * If evaluation of either encoder throws an exception, it is relayed to
+     * the caller of the composed encoder.
+     *
+     * @param after The encoder to apply after this encoder is applied.
+     * @return A composed encoder that first applies this encoder and then
+     * applies the {@code after} encoder.
+     * @throws NullPointerException If after is null.
+     *
+     * @see #compose(ValueEncoder)
+     */
+    default @NotNull ValueEncoder andThen(
+            final @NotNull ValueEncoder after) {
+<span class="nc" id="L87">        Objects.requireNonNull(after);</span>
+<span class="nc" id="L88">        return v -&gt; after.encode(encode(v));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractMutableConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">AbstractMutableConfig.java</span></div><h1>AbstractMutableConfig.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.util.Objects;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import org.apache.commons.lang3.Validate;
+import org.apiguardian.api.API;
+
+import dev.orne.config.ConfigException;
+import dev.orne.config.MutableConfig;
+import dev.orne.config.ValueEncoder;
+
+/**
+ * Base abstract implementation of mutable configuration properties provider.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-04
+ * @since 1.0
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public abstract class AbstractMutableConfig
+extends AbstractConfig
+implements MutableConfig {
+
+    /** The configuration properties values encoder. */
+    private final @NotNull ValueEncoder encoder;
+
+    /**
+     * Returns the configuration properties values encoder.
+     * 
+     * @return The configuration properties values encoder.
+     */
+    protected @NotNull ValueEncoder getEncoder() {
+<span class="nc" id="L58">        return this.encoder;</span>
+    }
+
+    /**
+     * Creates a new instance.
+     * 
+     * @param options The configuration builder options.
+     * @param mutableOptions The mutable configuration builder options.
+     */
+    protected AbstractMutableConfig(
+            final @NotNull ConfigOptions options,
+            final @NotNull MutableConfigOptions mutableOptions) {
+<span class="nc" id="L70">        super(options);</span>
+<span class="nc" id="L71">        Objects.requireNonNull(mutableOptions);</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        if (options.getCryptoProvider() != null) {</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">            if (mutableOptions.getEncoder() == null) {</span>
+<span class="nc" id="L74">                mutableOptions.setEncoder(options.getCryptoProvider()::encrypt);</span>
+            } else {
+<span class="nc" id="L76">                mutableOptions.setEncoder(</span>
+<span class="nc" id="L77">                        mutableOptions.getEncoder().andThen(options.getCryptoProvider()::encrypt));</span>
+            }
+        }
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        if (mutableOptions.getEncoder() == null) {</span>
+<span class="nc" id="L81">            mutableOptions.setEncoder(ValueEncoder.DEFAULT);</span>
+        }
+<span class="nc" id="L83">        this.encoder = mutableOptions.getEncoder();</span>
+<span class="nc" id="L84">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void set(
+            final @NotBlank String key,
+            final String value) {
+<span class="nc" id="L93">        Validate.notBlank(key, KEY_BLANK_ERR);</span>
+<span class="nc" id="L94">        String encoded = this.encoder.encode(value);</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">        if (encoded == null) {</span>
+<span class="nc" id="L96">            removeInt(key);</span>
+        } else {
+<span class="nc" id="L98">            setInt(key, encoded);</span>
+        }
+<span class="nc" id="L100">        getResolver().ifPresent(r -&gt; r.clearCache());</span>
+<span class="nc" id="L101">    }</span>
+
+    /**
+     * Sets the value of the specified configuration property.
+     * 
+     * @param key The configuration property.
+     * @param value The value to set
+     * @throws ConfigException If an error occurs setting the configuration
+     * property value
+     */
+    protected abstract void setInt(
+            @NotBlank String key,
+            @NotNull String value);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void remove(@NotBlank String... keys) {
+<span class="nc bnc" id="L120" title="All 2 branches missed.">        for (final String key : keys) {</span>
+<span class="nc" id="L121">            Validate.notBlank(key, KEY_BLANK_ERR);</span>
+        }
+<span class="nc" id="L123">        removeInt(keys);</span>
+<span class="nc" id="L124">        getResolver().ifPresent(r -&gt; r.clearCache());</span>
+<span class="nc" id="L125">    }</span>
+    /**
+     * Removes the specified configuration properties.
+     * 
+     * @param keys The configuration properties.
+     * @throws ConfigException If an error occurs removing the configuration
+     * properties.
+     */
+    protected abstract void removeInt(
+            @NotBlank String... keys);
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConfigSubtype.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">ConfigSubtype.java</span></div><h1>ConfigSubtype.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
+import java.util.List;
+import java.util.Objects;
+
+import javax.validation.constraints.NotNull;
+
+import org.apiguardian.api.API;
+
+import dev.orne.config.Config;
+import dev.orne.config.ConfigException;
+import dev.orne.config.MutableConfig;
+import dev.orne.config.WatchableConfig;
+
+/**
+ * Invocation handler for configuration proxies.
+ * Invokes configuration subtype default methods directly on the extended
+ * interface, delegating other method calls to the underlying configuration
+ * instance.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-08
+ * @since 1.0
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public class ConfigSubtype
+implements InvocationHandler {
+
+    /** The list of classes proxied to the configuration instance. */
+<span class="fc" id="L59">    private static final List&lt;Class&lt;?&gt;&gt; PROXYED_TYPES = List.of(</span>
+            Config.class,
+            MutableConfig.class,
+            WatchableConfig.class);
+    /** Cached {@code Object.equals()} for performance optimization. */
+    private static final Method OBJECT_EQUALS;
+    static {
+        try {
+<span class="fc" id="L67">            OBJECT_EQUALS = Object.class.getMethod(</span>
+                    &quot;equals&quot;,
+                    Object.class);
+<span class="nc" id="L70">        } catch (final NoSuchMethodException e) {</span>
+<span class="nc" id="L71">            throw new ExceptionInInitializerError(e);</span>
+<span class="fc" id="L72">        }</span>
+<span class="fc" id="L73">    }</span>
+
+    /** The configuration instance. */
+    private final @NotNull Config instance;
+    /** The type of the extended configuration interface. */
+    private final @NotNull Class&lt;? extends Config&gt; extendedType;
+    /** The method handles lookup. */
+    private final @NotNull MethodHandles.Lookup lookup;
+
+    /**
+     * Creates a new instance.
+     *
+     * @param instance The configuration instance to be proxied.
+     * @param extendedType The type of extended configuration interface.
+     */
+    protected ConfigSubtype(
+            final @NotNull Config instance,
+<span class="fc" id="L90">            final @NotNull Class&lt;? extends Config&gt; extendedType) {</span>
+<span class="fc" id="L91">        this.instance = instance;</span>
+<span class="fc" id="L92">        this.extendedType = extendedType;</span>
+        MethodHandles.Lookup lookupInstance;
+        try {
+<span class="fc" id="L95">            lookupInstance = MethodHandles.privateLookupIn(extendedType, MethodHandles.lookup());</span>
+<span class="nc" id="L96">        } catch (final IllegalAccessException e) {</span>
+<span class="nc" id="L97">            lookupInstance = MethodHandles.lookup();</span>
+<span class="fc" id="L98">        }</span>
+<span class="fc" id="L99">        this.lookup = lookupInstance;</span>
+<span class="fc" id="L100">    }</span>
+
+    /**
+     * Creates a new configuration proxy instance with the specified configuration.
+     *
+     * @param &lt;T&gt; The type of the configuration interface.
+     * @param config The proxied configuration instance.
+     * @param type The configuration type interface to create a proxy for.
+     * @return A new configuration proxy instance.
+     */
+    public static &lt;T extends Config&gt; @NotNull T create(
+            final @NotNull Config config,
+            final @NotNull Class&lt;T&gt; type) {
+<span class="fc" id="L113">        return create(</span>
+<span class="fc" id="L114">                type.getClassLoader(),</span>
+                config,
+                type);
+    }
+
+    /**
+     * Creates a new configuration proxy instance with the specified configuration.
+     *
+     * @param &lt;T&gt; The type of the configuration interface.
+     * @param classLoader The class loader to be used for the proxy.
+     * @param config The proxied configuration instance.
+     * @param type The configuration type interface to create a proxy for.
+     * @return A new configuration proxy instance.
+     */
+    public static &lt;T extends Config&gt; @NotNull T create(
+            final @NotNull ClassLoader classLoader,
+            final @NotNull Config config,
+            final @NotNull Class&lt;T&gt; type) {
+<span class="fc" id="L132">        Objects.requireNonNull(classLoader, &quot;The class loader must not be null&quot;);</span>
+<span class="fc" id="L133">        Objects.requireNonNull(config, &quot;The configuration instance must not be null&quot;);</span>
+<span class="fc" id="L134">        Objects.requireNonNull(type, &quot;The configuration subtype must be an interface.&quot;);</span>
+<span class="fc" id="L135">        validateSubtypeInterface(type);</span>
+<span class="fc bfc" id="L136" title="All 4 branches covered.">        if (WatchableConfig.class.isAssignableFrom(type)</span>
+                &amp;&amp; !(config instanceof WatchableConfig)) {
+<span class="fc" id="L138">            throw new ConfigException(</span>
+                    &quot;The proxied configuration instance must extend WatchableConfig.&quot;);
+<span class="fc bfc" id="L140" title="All 4 branches covered.">        } else if (MutableConfig.class.isAssignableFrom(type)</span>
+                &amp;&amp; !(config instanceof MutableConfig)) {
+<span class="fc" id="L142">            throw new ConfigException(</span>
+                    &quot;The proxied configuration instance must extend MutableConfig.&quot;);
+        }
+<span class="fc" id="L145">        final ConfigSubtype handler = new ConfigSubtype(config, type);</span>
+<span class="fc" id="L146">        return type.cast(Proxy.newProxyInstance(</span>
+                classLoader,
+                new Class&lt;?&gt;[] { type },
+                handler));
+    }
+
+    /**
+     * Validates the configuration subtype interface.
+     *
+     * @param configInterface The configuration interface class to validate.
+     * @throws ConfigException If the interface is not valid.
+     */
+    private static void validateSubtypeInterface(
+            final @NotNull Class&lt;?&gt; configInterface) {
+<span class="fc bfc" id="L160" title="All 2 branches covered.">        if (!configInterface.isInterface()) {</span>
+<span class="fc" id="L161">            throw new ConfigException(</span>
+                    &quot;The configuration subtype must be an interface.&quot;);
+        }
+<span class="fc bfc" id="L164" title="All 2 branches covered.">        for (final Method method : configInterface.getDeclaredMethods()) {</span>
+<span class="fc bfc" id="L165" title="All 2 branches covered.">            if (Modifier.isStatic(method.getModifiers())) {</span>
+<span class="fc" id="L166">                continue;</span>
+            }
+<span class="fc bfc" id="L168" title="All 2 branches covered.">            if (!method.isDefault()) {</span>
+<span class="fc" id="L169">                throw new ConfigException(</span>
+                        &quot;The configuration subtype must only contain default methods. &quot; + method);
+            }
+        }
+<span class="fc bfc" id="L173" title="All 2 branches covered.">        for (final Class&lt;?&gt; iface : configInterface.getInterfaces()) {</span>
+<span class="fc bfc" id="L174" title="All 2 branches covered.">            if (!Config.class.equals(iface)</span>
+<span class="fc bfc" id="L175" title="All 2 branches covered.">                    &amp;&amp; !MutableConfig.class.equals(iface)</span>
+<span class="fc bfc" id="L176" title="All 2 branches covered.">                    &amp;&amp; !WatchableConfig.class.equals(iface)) {</span>
+<span class="fc" id="L177">                validateSubtypeInterface(iface);</span>
+            }
+        }
+<span class="fc" id="L180">    }</span>
+
+    /**
+     * {@inheritDoc}
+    */
+    @Override
+    public Object invoke(
+            final Object proxy,
+            final @NotNull Method method,
+            final @NotNull Object[] args)
+    throws Throwable {
+<span class="fc" id="L191">        final Class&lt;?&gt; declaringClass = method.getDeclaringClass();</span>
+<span class="fc bfc" id="L192" title="All 2 branches covered.">        if (Object.class.equals(declaringClass)) {</span>
+<span class="fc" id="L193">            return handleObjectMethod(method, args);</span>
+        }
+<span class="fc bfc" id="L195" title="All 2 branches covered.">        if (!PROXYED_TYPES.contains(declaringClass)) {</span>
+<span class="fc" id="L196">            return this.lookup</span>
+<span class="fc" id="L197">                    .findSpecial(</span>
+                            declaringClass,
+<span class="fc" id="L199">                            method.getName(),</span>
+<span class="fc" id="L200">                            MethodType.methodType(</span>
+<span class="fc" id="L201">                                method.getReturnType(),</span>
+<span class="fc" id="L202">                                method.getParameterTypes()),</span>
+                            this.extendedType)
+<span class="fc" id="L204">                    .bindTo(proxy)</span>
+<span class="fc" id="L205">                    .invokeWithArguments(args);</span>
+        }
+        try {
+<span class="fc" id="L208">            return method.invoke(this.instance, args);</span>
+<span class="fc" id="L209">        } catch (final  InvocationTargetException e) {</span>
+<span class="pc bpc" id="L210" title="1 of 2 branches missed.">            if (e.getCause() instanceof RuntimeException) {</span>
+<span class="fc" id="L211">                throw (RuntimeException) e.getCause();</span>
+            } else {
+<span class="nc" id="L213">                throw new ConfigException(e.getCause());</span>
+            }
+        }
+    }
+
+    /**
+     * Handles {@code Object} methods invocations.
+     * 
+     * @param method The invoked method.
+     * @param args The method arguments.
+     * @return The method invocation result.
+     * @throws ReflectiveOperationException If an error occurs during method
+     * invocation.
+     */
+    protected Object handleObjectMethod(
+            final @NotNull Method method,
+            final Object[] args)
+    throws ReflectiveOperationException {
+        final Object result;
+<span class="fc bfc" id="L232" title="All 2 branches covered.">        if (OBJECT_EQUALS.equals(method)) {</span>
+<span class="fc" id="L233">            result = proxyEquals(args[0]);</span>
+        } else {
+<span class="fc" id="L235">            result = method.invoke(this, args);</span>
+        }
+<span class="fc" id="L237">        return result;</span>
+    }
+
+    /**
+     * Checks equality with another proxy instance.
+     * 
+     * @param other The other proxy instance.
+     * @return {@code true} if both proxies are equal,
+     *         {@code false} otherwise.
+     */
+    protected boolean proxyEquals(
+            final Object other) {
+<span class="pc bpc" id="L249" title="1 of 2 branches missed.">        if (this == other) {</span>
+<span class="nc" id="L250">            return true;</span>
+        }
+<span class="fc bfc" id="L252" title="All 4 branches covered.">        if (other == null || !Proxy.isProxyClass(other.getClass())) {</span>
+<span class="fc" id="L253">            return false;</span>
+        }
+<span class="fc" id="L255">        return this.equals(Proxy.getInvocationHandler(other));</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+<span class="fc" id="L263">        return Objects.hash(</span>
+                this.instance,
+                this.extendedType);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj) {
+<span class="fc bfc" id="L273" title="All 2 branches covered.">        if (this == obj) {</span>
+<span class="fc" id="L274">            return true;</span>
+        }
+<span class="pc bpc" id="L276" title="1 of 2 branches missed.">        if (obj == null) {</span>
+<span class="nc" id="L277">            return false;</span>
+        }
+<span class="pc bpc" id="L279" title="1 of 2 branches missed.">        if (getClass() != obj.getClass()) {</span>
+<span class="nc" id="L280">            return false;</span>
+        }
+<span class="fc" id="L282">        ConfigSubtype other = (ConfigSubtype) obj;</span>
+<span class="fc bfc" id="L283" title="All 2 branches covered.">        return Objects.equals(this.instance, other.instance)</span>
+<span class="fc bfc" id="L284" title="All 2 branches covered.">                &amp;&amp; Objects.equals(this.extendedType, other.extendedType);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+<span class="fc" id="L292">        return &quot;ConfigSubtype [instance=&quot; + this.instance + &quot;, extendedType=&quot; + this.extendedType + &quot;]&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

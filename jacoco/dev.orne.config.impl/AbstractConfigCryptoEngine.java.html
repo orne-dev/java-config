@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractConfigCryptoEngine.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">AbstractConfigCryptoEngine.java</span></div><h1>AbstractConfigCryptoEngine.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKeyFactory;
+import javax.validation.constraints.NotNull;
+
+import org.apiguardian.api.API;
+
+import dev.orne.config.ConfigCryptoEngine;
+import dev.orne.config.ConfigCryptoProviderException;
+
+/**
+ * Abstract base implementation of {@code ConfigCryptoEngine}.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2020-08
+ * @since 0.2
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public abstract class AbstractConfigCryptoEngine
+implements ConfigCryptoEngine {
+
+    /** The default secret key salt length. */
+    public static final int DEFAULT_SECRET_KEY_SALT_SIZE =
+            8;
+
+    /** Message for {@code SecureRandom} creation error. */
+    private static final String RANDOM_CREATION_ERROR =
+            &quot;Error creating secure random&quot;;
+    /** Message for {@code SecretKeyFactory} retrieval error. */
+    private static final String SECRET_KEY_FACTORY_ALG_ERROR =
+            &quot;Cannot retrieve secret key factory for algorithm: %s&quot;;
+    /** Message for {@code Cipher} creation error. */
+    private static final String CIPHER_CREATION_ERROR =
+            &quot;Cannot creathe cipher for algorithm: %s&quot;;
+
+    /** The {@code SecureRandom} instance. */
+    private SecureRandom secureRandom;
+    /** If the engine has been destroyed. */
+    private boolean destroyed;
+
+    /**
+     * Creates new instance.
+     */
+    protected AbstractConfigCryptoEngine() {
+<span class="fc" id="L72">        super();</span>
+<span class="fc" id="L73">    }</span>
+
+    /**
+     * Returns the {@code SecureRandom} instance of this instance.
+     * 
+     * @return The {@code SecureRandom} instance
+     * @throws ConfigCryptoProviderException If an error occurs creating
+     * the {@code SecureRandom} instance
+     */
+    @NotNull
+    public SecureRandom getSecureRandom()
+    throws ConfigCryptoProviderException {
+<span class="fc" id="L85">        synchronized(this) {</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">            if (this.secureRandom == null) {</span>
+<span class="fc" id="L87">                this.secureRandom = createSecureRandom();</span>
+            }
+<span class="fc" id="L89">            return this.secureRandom;</span>
+        }
+    }
+
+    /**
+     * Sets the {@code SecureRandom} instance of this instance.
+     * 
+     * @param secureRandom The {@code SecureRandom} instance
+     */
+    @NotNull
+    public void setSecureRandom(
+            final SecureRandom secureRandom) {
+<span class="fc" id="L101">        synchronized(this) {</span>
+<span class="fc" id="L102">            this.secureRandom = secureRandom;</span>
+<span class="fc" id="L103">        }</span>
+<span class="fc" id="L104">    }</span>
+
+    /**
+     * Creates a new {@code SecureRandom} instance.
+     * 
+     * @return The new {@code SecureRandom} instance
+     * @throws ConfigCryptoProviderException If an error occurs creating
+     * the {@code SecureRandom} instance
+     */
+    @NotNull
+    public SecureRandom createSecureRandom()
+    throws ConfigCryptoProviderException {
+        try {
+<span class="fc" id="L117">            return SecureRandom.getInstanceStrong();</span>
+<span class="fc" id="L118">        } catch (final NoSuchAlgorithmException nsae) {</span>
+<span class="fc" id="L119">            throw new ConfigCryptoProviderException(RANDOM_CREATION_ERROR, nsae);</span>
+        }
+    }
+
+    /**
+     * Gets a {@code SecretKeyFactory} for the specified algorithm.
+     * 
+     * @param algorithm The algorithm to use
+     * @return The {@code SecretKeyFactory} for the algorithm
+     * @throws ConfigCryptoProviderException If an error occurs
+     * retrieving the {@code SecretKeyFactory}
+     */
+    @NotNull
+    public SecretKeyFactory getSecretKeyFactory(
+            @NotNull
+            final String algorithm)
+    throws ConfigCryptoProviderException {
+        try {
+<span class="fc" id="L137">            return SecretKeyFactory.getInstance(algorithm);</span>
+<span class="fc" id="L138">        } catch (final NoSuchAlgorithmException nsae) {</span>
+<span class="fc" id="L139">            throw new ConfigCryptoProviderException(</span>
+<span class="fc" id="L140">                    String.format(SECRET_KEY_FACTORY_ALG_ERROR, algorithm),</span>
+                    nsae);
+        }
+    }
+
+    /**
+     * Creates a {@code Cipher} for the specified algorithm.
+     * 
+     * @param algorithm The encryption algorithm to use
+     * @return The created {@code Cipher}
+     * @throws ConfigCryptoProviderException If an error occurs
+     * creating the {@code Cipher}
+     */
+    @NotNull
+    public Cipher createCipher(
+            @NotNull
+            final String algorithm)
+    throws ConfigCryptoProviderException {
+        try {
+<span class="fc" id="L159">            return Cipher.getInstance(algorithm);</span>
+<span class="fc" id="L160">        } catch (final GeneralSecurityException gse) {</span>
+<span class="fc" id="L161">            throw new ConfigCryptoProviderException(</span>
+<span class="fc" id="L162">                    String.format(CIPHER_CREATION_ERROR, algorithm),</span>
+                    gse);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void destroy() {
+<span class="fc" id="L172">        this.destroyed = true;</span>
+<span class="fc" id="L173">    }</span>
+
+    /**
+     * Returns {@code true} if the cryptographic engine has been destroyed.
+     * 
+     * @return If the cryptographic engine has been destroyed.
+     */
+    public boolean isDestroyed() {
+<span class="nc" id="L181">        return this.destroyed;</span>
+    }
+
+    /**
+     * Checks if the cryptographic engine has been destroyed.
+     * 
+     * @throws IllegalStateException If the cryptographic engine has been
+     * destroyed.
+     */
+    protected void checkDestroyed() {
+<span class="fc bfc" id="L191" title="All 2 branches covered.">        if (this.destroyed) {</span>
+<span class="fc" id="L192">            throw new IllegalStateException(&quot;The cryptographic engine has been destroyed.&quot;);</span>
+        }
+<span class="fc" id="L194">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

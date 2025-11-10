@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VariableResolver.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">VariableResolver.java</span></div><h1>VariableResolver.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.util.Objects;
+import java.util.WeakHashMap;
+
+import javax.validation.constraints.NotNull;
+
+import org.apache.commons.text.StringSubstitutor;
+import org.apiguardian.api.API;
+
+import dev.orne.config.Config;
+import dev.orne.config.ValueDecorator;
+
+/**
+ * {@code StringSubstitutor} based configuration property values variable
+ * resolver.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-04
+ * @since 1.0
+ * @see StringSubstitutor
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public class VariableResolver
+implements ValueDecorator {
+
+    /** The configuration properties variables substitutor. */
+    private final @NotNull StringSubstitutor substitutor;
+    /** The resolved configuration properties cache. */
+<span class="fc" id="L52">    private final WeakHashMap&lt;String, String&gt; cache = new WeakHashMap&lt;&gt;();</span>
+
+    /**
+     * Creates a new instance base on the specified configuration.
+     * 
+     * @param config The configuration instance.
+     */
+    public VariableResolver(
+            final @NotNull Config config) {
+<span class="fc" id="L61">        this(new StringSubstitutor(config::get));</span>
+<span class="fc" id="L62">    }</span>
+
+    /**
+     * Creates a new instance using the specified string substitutor.
+     * 
+     * @param substitutor The string substitutor to use.
+     */
+    public VariableResolver(
+<span class="fc" id="L70">            final @NotNull StringSubstitutor substitutor) {</span>
+<span class="fc" id="L71">        this.substitutor = Objects.requireNonNull(substitutor);</span>
+<span class="fc" id="L72">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String decorate(
+            final String value) {
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        if (value == null) {</span>
+<span class="fc" id="L81">            return null;</span>
+        } else {
+<span class="fc" id="L83">            return this.cache.computeIfAbsent(value, substitutor::replace);</span>
+        }
+    }
+
+    /**
+     * Clears the resolved values cache.
+     */
+    public void clearCache() {
+<span class="fc" id="L91">        this.cache.clear();</span>
+<span class="fc" id="L92">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

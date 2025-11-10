@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>XmlConfigOptions.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">XmlConfigOptions.java</span></div><h1>XmlConfigOptions.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Enumeration;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.commons.lang3.Validate;
+import org.apiguardian.api.API;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
+
+import dev.orne.config.ConfigException;
+import dev.orne.config.XmlConfigBaseBuilder;
+
+/**
+ * Options of XML based configuration builder.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-07
+ * @since 1.0
+ * @see XmlConfigImpl
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public class XmlConfigOptions {
+
+    /** The class logger. */
+<span class="nc" id="L67">    private static final Logger LOG = LoggerFactory.getLogger(XmlConfigOptions.class);</span>
+
+    /** Error message for not found resources. */
+    private static final String RESOURCE_NOT_FOUND_ERR =
+            &quot;Configuration resource not found: {}&quot;;
+    /** JSON file read error message. */
+    private static final String READ_ERR =
+            &quot;Error reading configuration resource: {}&quot;;
+    /** XML document parse error message. */
+    private static final String PARSE_ERR =
+            &quot;Error parsing configuration XML document&quot;;
+    /** XML documents merge error message. */
+    private static final String MERGE_ERR =
+            &quot;Error mergin configuration XML documents&quot;;
+
+    /** The XML document builder factory. */
+    private static final @NotNull DocumentBuilderFactory DOC_BUILDER_FACTORY;
+    static {
+<span class="nc" id="L85">        DOC_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();</span>
+        try {
+<span class="nc" id="L87">            DOC_BUILDER_FACTORY.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);</span>
+<span class="nc" id="L88">        } catch (final ParserConfigurationException e) {</span>
+<span class="nc" id="L89">            LOG.warn(&quot;Error setting secure processing feature on XML DocumentBuilderFactory&quot;, e);</span>
+<span class="nc" id="L90">        }</span>
+        try {
+<span class="nc" id="L92">            DOC_BUILDER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, &quot;&quot;);</span>
+<span class="nc" id="L93">        } catch (final IllegalArgumentException e) {</span>
+<span class="nc" id="L94">            LOG.debug(&quot;Error disabling external DTD access on XML DocumentBuilderFactory&quot;, e);</span>
+<span class="nc" id="L95">        }</span>
+        try {
+<span class="nc" id="L97">            DOC_BUILDER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, &quot;&quot;);</span>
+<span class="nc" id="L98">        } catch (final IllegalArgumentException e) {</span>
+<span class="nc" id="L99">            LOG.debug(&quot;Error disabling external stylesheet access on XML DocumentBuilderFactory&quot;, e);</span>
+<span class="nc" id="L100">        }</span>
+<span class="nc" id="L101">    }</span>
+
+    /** The XML document builder. */
+    private final @NotNull DocumentBuilder builder;
+    /** The XML document with the configuration properties. */
+    private final @NotNull Document document;
+    /** The configuration nested properties separator. */
+    private @NotBlank String propertySeparator;
+    /** The XML attributes references prefix. */
+    private @NotBlank String attributePrefix;
+
+    /**
+     * Empty constructor.
+     */
+    public XmlConfigOptions() {
+<span class="nc" id="L116">        super();</span>
+        try {
+<span class="nc" id="L118">            this.builder = DOC_BUILDER_FACTORY.newDocumentBuilder();</span>
+<span class="nc" id="L119">        } catch (final ParserConfigurationException e) {</span>
+<span class="nc" id="L120">            throw new ConfigException(&quot;Error creating XML document builder&quot;, e);</span>
+<span class="nc" id="L121">        }</span>
+<span class="nc" id="L122">        this.document = builder.newDocument();</span>
+<span class="nc" id="L123">        this.propertySeparator = XmlConfigBaseBuilder.DEFAULT_SEPARATOR;</span>
+<span class="nc" id="L124">        this.attributePrefix = XmlConfigBaseBuilder.DEFAULT_ATTRIBUTE_PREFIX;</span>
+<span class="nc" id="L125">    }</span>
+
+    /**
+     * Copy constructor.
+     * 
+     * @param copy The instance to copy.
+     */
+    public XmlConfigOptions(
+            final @NotNull XmlConfigOptions copy) {
+<span class="nc" id="L134">        super();</span>
+        try {
+<span class="nc" id="L136">            this.builder = DOC_BUILDER_FACTORY.newDocumentBuilder();</span>
+<span class="nc" id="L137">        } catch (final ParserConfigurationException e) {</span>
+<span class="nc" id="L138">            throw new ConfigException(&quot;Error creating XML document builder&quot;, e);</span>
+<span class="nc" id="L139">        }</span>
+<span class="nc" id="L140">        this.document = builder.newDocument();</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">        if (copy.document.getDocumentElement() != null) {</span>
+<span class="nc" id="L142">            final Node rootCopy = this.document.importNode(copy.document.getDocumentElement(), true);</span>
+<span class="nc" id="L143">            this.document.appendChild(rootCopy);</span>
+        }
+<span class="nc" id="L145">        this.propertySeparator = copy.propertySeparator;</span>
+<span class="nc" id="L146">        this.attributePrefix = copy.attributePrefix;</span>
+<span class="nc" id="L147">    }</span>
+
+    /**
+     * Returns the XML document with the configuration properties.
+     * 
+     * @return The XML document with the configuration properties.
+     */
+    public @NotNull Document getDocument() {
+<span class="nc" id="L155">        return this.document;</span>
+    }
+
+    /**
+     * Returns the configuration nested properties separator.
+     * 
+     * @return The configuration nested properties separator.
+     */
+    public @NotBlank String getPropertySeparator() {
+<span class="nc" id="L164">        return this.propertySeparator;</span>
+    }
+
+    /**
+     * Sets the configuration nested properties separator.
+     * 
+     * @param separator The configuration nested properties separator.
+     */
+    public void setPropertySeparator(
+            final @NotBlank String separator) {
+<span class="nc" id="L174">        Validate.notBlank(separator, &quot;Property separator cannot be blank&quot;);</span>
+<span class="nc" id="L175">        this.propertySeparator = separator;</span>
+<span class="nc" id="L176">    }</span>
+
+    /**
+     * Returns the XML attributes references prefix.
+     * 
+     * @return The XML attributes references prefix.
+     */
+    public @NotBlank String getAttributePrefix() {
+<span class="nc" id="L184">        return this.attributePrefix;</span>
+    }
+
+    /**
+     * Sets the XML attributes references prefix.
+     * 
+     * @param prefix The XML attributes references prefix.
+     */
+    public void setAttributePrefix(
+            final @NotBlank String prefix) {
+<span class="nc" id="L194">        Validate.notBlank(prefix, &quot;Property separator cannot be blank&quot;);</span>
+<span class="nc" id="L195">        this.attributePrefix = prefix;</span>
+<span class="nc" id="L196">    }</span>
+
+    /**
+     * Creates an empty XML document with the specified root element name
+     * as configuration properties container.
+     * &lt;p&gt;
+     * Note that any XML document loaded through {@code load()} methods
+     * must match the same root element name.
+     * 
+     * @param namespaceURI The XML document namespace URI, or {@code null}
+     * if the XML document does not use namespaces.
+     * @param localName The root element name of the XML document to create.
+     */
+    public void setRootElement(
+            final String namespaceURI,
+            final @NotNull String localName) {
+<span class="nc bnc" id="L212" title="All 2 branches missed.">        if (this.document.getDocumentElement() != null) {</span>
+<span class="nc" id="L213">            this.document.removeChild(this.document.getDocumentElement());</span>
+        }
+        final Element root;
+<span class="nc bnc" id="L216" title="All 2 branches missed.">        if (namespaceURI == null) {</span>
+<span class="nc" id="L217">            root = this.document.createElement(localName);</span>
+        } else {
+<span class="nc" id="L219">            root = this.document.createElementNS(</span>
+                    namespaceURI,
+                    localName);
+        }
+<span class="nc" id="L223">        this.document.appendChild(root);</span>
+<span class="nc" id="L224">    }</span>
+
+    /**
+     * Adds the specified configuration properties to the configuration
+     * properties.
+     * 
+     * @param values The configuration properties.
+     */
+    public void add(
+            final @NotNull Document values) {
+        try {
+<span class="nc" id="L235">            final Element docRoot = values.getDocumentElement();</span>
+<span class="nc" id="L236">            Element cfgRoot = this.document.getDocumentElement();</span>
+<span class="nc bnc" id="L237" title="All 2 branches missed.">            if (cfgRoot == null) {</span>
+<span class="nc bnc" id="L238" title="All 2 branches missed.">                if (docRoot.getNamespaceURI() == null) {</span>
+<span class="nc" id="L239">                    cfgRoot = this.document.createElement(</span>
+<span class="nc" id="L240">                            docRoot.getTagName());</span>
+                } else {
+<span class="nc" id="L242">                    cfgRoot = this.document.createElementNS(</span>
+<span class="nc" id="L243">                            docRoot.getNamespaceURI(),</span>
+<span class="nc" id="L244">                            docRoot.getTagName());</span>
+                }
+<span class="nc" id="L246">                this.document.appendChild(cfgRoot);</span>
+            } else {
+<span class="nc bnc" id="L248" title="All 2 branches missed.">                if (!docRoot.getNamespaceURI().equals(cfgRoot.getNamespaceURI())</span>
+<span class="nc bnc" id="L249" title="All 2 branches missed.">                        || !docRoot.getLocalName().equals(cfgRoot.getLocalName())) {</span>
+<span class="nc" id="L250">                    throw new ConfigException(</span>
+                            &quot;Configuration root element mismatch: expected &quot;
+<span class="nc" id="L252">                                    + cfgRoot.getNamespaceURI()</span>
+                                    + &quot;:&quot;
+<span class="nc" id="L254">                                    + cfgRoot.getLocalName()</span>
+                                    + &quot;, found &quot;
+<span class="nc" id="L256">                                    + docRoot.getNamespaceURI()</span>
+                                    + &quot;:&quot;
+<span class="nc" id="L258">                                    + docRoot.getLocalName());</span>
+                }
+            }
+<span class="nc bnc" id="L261" title="All 2 branches missed.">            while (docRoot.hasChildNodes()) {</span>
+<span class="nc" id="L262">                final Node child = docRoot.getFirstChild();</span>
+<span class="nc" id="L263">                docRoot.removeChild(child);</span>
+<span class="nc" id="L264">                cfgRoot.appendChild(this.document.importNode(child, true));</span>
+<span class="nc" id="L265">            }</span>
+<span class="nc" id="L266">        } catch (final DOMException e) {</span>
+<span class="nc" id="L267">            LOG.warn(MERGE_ERR, e);</span>
+<span class="nc" id="L268">        }</span>
+<span class="nc" id="L269">    }</span>
+
+    /**
+     * Loads the configuration properties from the specified ClassLoader
+     * resource.
+     * 
+     * @param path The ClassLoader resource path.
+     */
+    public void load(
+            final @NotNull String path) {
+        try {
+            final Enumeration&lt;URL&gt; resources =
+<span class="nc" id="L281">                    Thread.currentThread()</span>
+<span class="nc" id="L282">                            .getContextClassLoader()</span>
+<span class="nc" id="L283">                            .getResources(path);</span>
+<span class="nc bnc" id="L284" title="All 2 branches missed.">            if (!resources.hasMoreElements()) {</span>
+<span class="nc" id="L285">                LOG.warn(RESOURCE_NOT_FOUND_ERR, path);</span>
+            }
+<span class="nc bnc" id="L287" title="All 2 branches missed.">            while (resources.hasMoreElements()) {</span>
+<span class="nc" id="L288">                load(resources.nextElement());</span>
+            }
+<span class="nc" id="L290">        } catch (final IOException e) {</span>
+<span class="nc" id="L291">            LOG.warn(READ_ERR, path, e);</span>
+<span class="nc" id="L292">        }</span>
+<span class="nc" id="L293">    }</span>
+
+    /**
+     * Loads the configuration properties from the file in the specified
+     * path.
+     * 
+     * @param path The file path.
+     */
+    public void load(
+            final @NotNull Path path) {
+<span class="nc bnc" id="L303" title="All 2 branches missed.">        if (!Files.exists(path)) {</span>
+<span class="nc" id="L304">            LOG.warn(RESOURCE_NOT_FOUND_ERR, path);</span>
+        }
+<span class="nc" id="L306">        try (final InputStream fileIS = Files.newInputStream(path)) {</span>
+<span class="nc" id="L307">            load(fileIS);</span>
+<span class="nc" id="L308">        } catch (final IOException e) {</span>
+<span class="nc" id="L309">            LOG.warn(READ_ERR, path, e);</span>
+<span class="nc" id="L310">        }</span>
+<span class="nc" id="L311">    }</span>
+
+    /**
+     * Loads the configuration properties from the specified file.
+     * 
+     * @param file The file to load.
+     */
+    public void load(
+            final @NotNull File file) {
+<span class="nc" id="L320">        try (final InputStream fileIS = new FileInputStream(file)) {</span>
+<span class="nc" id="L321">            load(fileIS);</span>
+<span class="nc" id="L322">        } catch (final FileNotFoundException e) {</span>
+<span class="nc" id="L323">            LOG.warn(RESOURCE_NOT_FOUND_ERR, file, e);</span>
+<span class="nc" id="L324">        } catch (final IOException e) {</span>
+<span class="nc" id="L325">            LOG.warn(READ_ERR, file, e);</span>
+<span class="nc" id="L326">        }</span>
+<span class="nc" id="L327">    }</span>
+
+    /**
+     * Loads the configuration properties from the specified URL.
+     * 
+     * @param url The URL to load.
+     */
+    public void load(
+            final @NotNull URL url) {
+<span class="nc" id="L336">        try (final InputStream urlIS = url.openStream()) {</span>
+<span class="nc" id="L337">            load(urlIS);</span>
+<span class="nc" id="L338">        } catch (final IOException e) {</span>
+<span class="nc" id="L339">            LOG.warn(READ_ERR, url, e);</span>
+<span class="nc" id="L340">        }</span>
+<span class="nc" id="L341">    }</span>
+
+    /**
+     * Loads the configuration properties from the specified
+     * {@code InputStream}.
+     * 
+     * @param docIS The XML document input stream.
+     */
+    public void load(
+            final @NotNull InputStream docIS) {
+        try {
+<span class="nc" id="L352">            final Document doc = this.builder.parse(docIS);</span>
+<span class="nc" id="L353">            add(doc);</span>
+<span class="nc" id="L354">        } catch (final SAXException | IOException e) {</span>
+<span class="nc" id="L355">            LOG.warn(PARSE_ERR, e);</span>
+<span class="nc" id="L356">        }</span>
+<span class="nc" id="L357">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

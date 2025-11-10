@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConfigCryptoAesGcmEngine.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">ConfigCryptoAesGcmEngine.java</span></div><h1>ConfigCryptoAesGcmEngine.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
+import java.security.spec.KeySpec;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
+
+import javax.crypto.AEADBadTagException;
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
+import javax.validation.constraints.NotNull;
+
+import org.apiguardian.api.API;
+
+import dev.orne.config.ConfigCryptoProviderException;
+import dev.orne.config.ConfigCryptoWrongKeyException;
+
+/**
+ * Implementation of {@code ConfigCryptoEngine} based on
+ * Java Cryptography Architecture using AES with GCM symmetric algorithm.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2020-08
+ * @since 0.2
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public class ConfigCryptoAesGcmEngine
+extends AbstractConfigCryptoEngine {
+
+    /** The default {@code SecretKeyFactory} algorithm. */
+    public static final String DEFAULT_KEY_FACTORY_ALGORITHM = &quot;PBKDF2WithHmacSHA256&quot;;
+    /** The default {@code SecretKey} algorithm. */
+    public static final String DEFAULT_KEY_ALGORITHM = &quot;AES&quot;;
+    /** The default {@code Cipher} algorithm. */
+    public static final String DEFAULT_CIPHER_ALGORITHM = &quot;AES/GCM/NoPadding&quot;;
+    /** The default {@code SecretKey} salt iterations. */
+    public static final int DEFAULT_SECRET_KEY_ITERATIONS = 65536;
+    /** The default {@code SecretKey} length. */
+    public static final int DEFAULT_SECRET_KEY_LENGTH = 256;
+    /** The default GCM initial vector length. */
+    public static final int DEFAULT_GCM_IV_LENGTH = 12;
+    /** The default GCM tag length. */
+    public static final int DEFAULT_GCM_TAG_LENGTH = 16;
+
+    /** Message for {@code SecretKey} creation errors. */
+    private static final String SECRET_KEY_CREATION_ERROR =
+            &quot;Error creating secret key&quot;;
+    /** Message for encryption errors. */
+    private static final String ENCRYPTION_ERROR =
+            &quot;Error encrypting secret value&quot;;
+    /** Message for decryption errors. */
+    private static final String DECRYPTION_ERROR =
+            &quot;Error decrypting secret value&quot;;
+    /** Message for decryption errors caused by invalid GCM tag validations. */
+    private static final String DECRYPTION_WRONG_KEY_ERROR = 
+            &quot;Error decrypting secret value. Original value encrypted with another key?&quot;;
+
+    /** The {@code SecretKeyFactory} algorithm. */
+    private final @NotNull String secretKeyFactoryAlgorithm;
+    /** The generated {@code SecretKey} salt iterations. */
+<span class="nc" id="L89">    private int secretKeyIterations = DEFAULT_SECRET_KEY_ITERATIONS;</span>
+    /** The generated {@code SecretKey} length. */
+<span class="nc" id="L91">    private int secretKeyLength = DEFAULT_SECRET_KEY_LENGTH;</span>
+    /** The {@code SecretKey} algorithm. */
+    private final @NotNull String secretKeyAlgorithm;
+    /** The salt used for the {@code SecretKey} creations. */
+    private final @NotNull byte[] secretKeySalt;
+    /** The {@code Cipher} algorithm. */
+    private final @NotNull String cipherAlgorithm;
+    /** The GCM initial vector length. */
+<span class="nc" id="L99">    private int gcmInitVectorLength = DEFAULT_GCM_IV_LENGTH;</span>
+    /** The GCM tag length. */
+<span class="nc" id="L101">    private int gcmTagLength = DEFAULT_GCM_TAG_LENGTH;</span>
+
+    /**
+     * Creates a new instance with the default {@code SecretKeyFactory},
+     * {@code SecretKey} and {@code Cipher} algorithms.
+     * 
+     * @param secretKeySalt The salt used for the {@code SecretKey} creations.
+     */
+    public ConfigCryptoAesGcmEngine(
+            final @NotNull byte[] secretKeySalt) {
+<span class="nc" id="L111">        this(DEFAULT_KEY_FACTORY_ALGORITHM, DEFAULT_KEY_ALGORITHM, secretKeySalt, DEFAULT_CIPHER_ALGORITHM);</span>
+<span class="nc" id="L112">    }</span>
+
+    /**
+     * Creates a new instance with the specified {@code SecretKeyFactory},
+     * {@code SecretKey} and {@code Cipher} algorithms.
+     * 
+     * @param secretKeyFactoryAlgorithm The {@code SecretKeyFactory} algorithm
+     * @param secretKeyAlgorithm The {@code SecretKey} algorithm
+     * @param secretKeySalt The salt used for the {@code SecretKey} creations.
+     * @param cipherAlgorithm The {@code Cipher} algorithm
+     */
+    public ConfigCryptoAesGcmEngine(
+            final @NotNull String secretKeyFactoryAlgorithm,
+            final @NotNull String secretKeyAlgorithm,
+            final @NotNull byte[] secretKeySalt,
+            final @NotNull String cipherAlgorithm) {
+<span class="nc" id="L128">        super();</span>
+<span class="nc" id="L129">        this.secretKeyFactoryAlgorithm = Objects.requireNonNull(secretKeyFactoryAlgorithm);</span>
+<span class="nc" id="L130">        this.secretKeyAlgorithm = Objects.requireNonNull(secretKeyAlgorithm);</span>
+<span class="nc" id="L131">        this.secretKeySalt = Objects.requireNonNull(secretKeySalt);</span>
+<span class="nc" id="L132">        this.cipherAlgorithm = Objects.requireNonNull(cipherAlgorithm);</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">        if (this.secretKeySalt.length == 0) {</span>
+<span class="nc" id="L134">            throw new IllegalArgumentException(&quot;Secret key salt cannot be empty&quot;);</span>
+        }
+<span class="nc" id="L136">    }</span>
+
+    /**
+     * Returns the {@code SecretKeyFactory} algorithm.
+     * 
+     * @return The {@code SecretKeyFactory} algorithm.
+     */
+    public @NotNull String getSecretKeyFactoryAlgorithm() {
+<span class="nc" id="L144">        return this.secretKeyFactoryAlgorithm;</span>
+    }
+
+    /**
+     * Returns the {@code SecretKey} salt iterations.
+     * 
+     * @return The {@code SecretKey} salt iterations
+     */
+    public int getSecretKeyIterations() {
+<span class="nc" id="L153">        return this.secretKeyIterations;</span>
+    }
+
+    /**
+     * Sets the generated {@code SecretKey} salt iterations.
+     * 
+     * @param iterations The generated {@code SecretKey} salt iterations
+     */
+    public void setSecretKeyIterations(final int iterations) {
+<span class="nc" id="L162">        this.secretKeyIterations = iterations;</span>
+<span class="nc" id="L163">    }</span>
+
+    /**
+     * Returns the generated {@code SecretKey} length.
+     * 
+     * @return The generated {@code SecretKey} length
+     */
+    public int getSecretKeyLength() {
+<span class="nc" id="L171">        return this.secretKeyLength;</span>
+    }
+
+    /**
+     * Sets the generated {@code SecretKey} length.
+     * 
+     * @param length The generated {@code SecretKey} length
+     */
+    public void setSecretKeyLength(final int length) {
+<span class="nc" id="L180">        this.secretKeyLength = length;</span>
+<span class="nc" id="L181">    }</span>
+
+    /**
+     * Returns the {@code SecretKey} algorithm.
+     * 
+     * @return The {@code SecretKey} algorithm
+     */
+    public @NotNull String getSecretKeyAlgorithm() {
+<span class="nc" id="L189">        return this.secretKeyAlgorithm;</span>
+    }
+
+    /**
+     * Returns the {@code Cipher} algorithm.
+     * 
+     * @return The {@code Cipher} algorithm
+     */
+    public @NotNull String getCipherAlgorithm() {
+<span class="nc" id="L198">        return this.cipherAlgorithm;</span>
+    }
+
+    /**
+     * Returns the GCM initial vector length.
+     * 
+     * @return The GCM initial vector length
+     */
+    public int getGcmInitVectorLength() {
+<span class="nc" id="L207">        return this.gcmInitVectorLength;</span>
+    }
+
+    /**
+     * Sets the GCM initial vector length.
+     * 
+     * @param length The GCM initial vector length
+     */
+    public void setGcmInitVectorLength(final int length) {
+<span class="nc" id="L216">        this.gcmInitVectorLength = length;</span>
+<span class="nc" id="L217">    }</span>
+
+    /**
+     * Returns the GCM tag length.
+     * 
+     * @return The GCM tag length
+     */
+    public int getGcmTagLength() {
+<span class="nc" id="L225">        return this.gcmTagLength;</span>
+    }
+
+    /**
+     * Sets the GCM tag length.
+     * 
+     * @param length The GCM tag length
+     */
+    public void setGcmTagLength(final int length) {
+<span class="nc" id="L234">        this.gcmTagLength = length;</span>
+<span class="nc" id="L235">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull SecretKey createSecretKey(
+            final @NotNull char[] password)
+    throws ConfigCryptoProviderException {
+<span class="nc" id="L244">        checkDestroyed();</span>
+        try {
+<span class="nc" id="L246">            final SecretKeyFactory factory = getSecretKeyFactory(</span>
+<span class="nc" id="L247">                    getSecretKeyFactoryAlgorithm());</span>
+<span class="nc" id="L248">            final KeySpec spec = createKeySpec(password);</span>
+<span class="nc" id="L249">            final SecretKey tmp = factory.generateSecret(spec);</span>
+<span class="nc" id="L250">            return new SecretKeySpec(tmp.getEncoded(),</span>
+<span class="nc" id="L251">                    getSecretKeyAlgorithm());</span>
+<span class="nc" id="L252">        } catch (final GeneralSecurityException gse) {</span>
+<span class="nc" id="L253">            throw new ConfigCryptoProviderException(SECRET_KEY_CREATION_ERROR, gse);</span>
+        }
+    }
+
+    /**
+     * Generates the secret key specification for the specified password
+     * and the 
+     * 
+     * @param password The password
+     * @return The secret key specification
+     * @throws ConfigCryptoProviderException If an error occurs when creating
+     * the specification
+     */
+    protected @NotNull KeySpec createKeySpec(
+            final @NotNull char[] password)
+    throws ConfigCryptoProviderException {
+        try {
+<span class="nc" id="L270">            return new PBEKeySpec(</span>
+                    password,
+                    this.secretKeySalt,
+<span class="nc" id="L273">                    getSecretKeyIterations(),</span>
+<span class="nc" id="L274">                    getSecretKeyLength());</span>
+<span class="nc" id="L275">        } catch (final IllegalArgumentException iae) {</span>
+<span class="nc" id="L276">            throw new ConfigCryptoProviderException(SECRET_KEY_CREATION_ERROR, iae);</span>
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull Cipher createCipher()
+    throws ConfigCryptoProviderException {
+<span class="nc" id="L286">        checkDestroyed();</span>
+<span class="nc" id="L287">        return createCipher(getCipherAlgorithm());</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull String encrypt(
+            final @NotNull String value,
+            final @NotNull SecretKey key,
+            final @NotNull Cipher cipher)
+    throws ConfigCryptoProviderException {
+<span class="nc" id="L299">        checkDestroyed();</span>
+<span class="nc" id="L300">        final byte[] valueBytes = value.getBytes(StandardCharsets.UTF_8);</span>
+<span class="nc" id="L301">        final byte[] initVector = new byte[getGcmInitVectorLength()];</span>
+<span class="nc" id="L302">        getSecureRandom().nextBytes(initVector);</span>
+<span class="nc" id="L303">        final GCMParameterSpec spec = new GCMParameterSpec(</span>
+<span class="nc" id="L304">                getGcmTagLength() * java.lang.Byte.SIZE,</span>
+                initVector);
+        try {
+<span class="nc" id="L307">            cipher.init(Cipher.ENCRYPT_MODE, key, spec, getSecureRandom());</span>
+<span class="nc" id="L308">            final int resultBytes = initVector.length + cipher.getOutputSize(valueBytes.length);</span>
+<span class="nc" id="L309">            final byte[] ciphertext = new byte[resultBytes];</span>
+<span class="nc" id="L310">            System.arraycopy(initVector, 0, ciphertext, 0, initVector.length);</span>
+<span class="nc" id="L311">            cipher.doFinal(valueBytes, 0, valueBytes.length, ciphertext, initVector.length);</span>
+<span class="nc" id="L312">            return Base64.getEncoder().encodeToString(ciphertext);</span>
+<span class="nc" id="L313">        } catch (final GeneralSecurityException gse) {</span>
+<span class="nc" id="L314">            throw new ConfigCryptoProviderException(ENCRYPTION_ERROR, gse);</span>
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull String decrypt(
+            final @NotNull String value,
+            final @NotNull SecretKey key,
+            final @NotNull Cipher cipher)
+    throws ConfigCryptoProviderException {
+<span class="nc" id="L327">        checkDestroyed();</span>
+<span class="nc" id="L328">        final byte[] cipherBytes = Base64.getDecoder().decode(value);</span>
+<span class="nc" id="L329">        final GCMParameterSpec gcmSpec = new GCMParameterSpec(</span>
+<span class="nc" id="L330">                getGcmTagLength() * java.lang.Byte.SIZE,</span>
+                cipherBytes,
+                0,
+<span class="nc" id="L333">                getGcmInitVectorLength());</span>
+        try {
+<span class="nc" id="L335">            cipher.init(Cipher.DECRYPT_MODE, key, gcmSpec, getSecureRandom());</span>
+<span class="nc" id="L336">            final byte[] valueBytes = cipher.doFinal(</span>
+                    cipherBytes,
+<span class="nc" id="L338">                    getGcmInitVectorLength(),</span>
+<span class="nc" id="L339">                    cipherBytes.length - getGcmInitVectorLength());</span>
+<span class="nc" id="L340">            return new String(valueBytes, StandardCharsets.UTF_8);</span>
+<span class="nc" id="L341">        } catch (final AEADBadTagException bte) {</span>
+<span class="nc" id="L342">            throw new ConfigCryptoWrongKeyException(DECRYPTION_WRONG_KEY_ERROR, bte);</span>
+<span class="nc" id="L343">        } catch (final GeneralSecurityException gse) {</span>
+<span class="nc" id="L344">            throw new ConfigCryptoProviderException(DECRYPTION_ERROR, gse);</span>
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void destroy() {
+<span class="nc" id="L353">        Arrays.fill(this.secretKeySalt, (byte) 0);</span>
+<span class="nc" id="L354">        super.destroy();</span>
+<span class="nc" id="L355">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

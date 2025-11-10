@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>XmlUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">XmlUtils.java</span></div><h1>XmlUtils.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
+
+/*-
+ * #%L
+ * Orne Config
+ * %%
+ * Copyright (C) 2019 - 2025 Orne Developments
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * &lt;http://www.gnu.org/licenses/lgpl-3.0.html&gt;.
+ * #L%
+ */
+
+import java.io.StringWriter;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.xml.XMLConstants;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apiguardian.api.API;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
+
+import dev.orne.config.ConfigException;
+
+/**
+ * Utility class for XML operations.
+ * 
+ * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
+ * @version 1.0, 2025-07
+ * @since 1.0
+ */
+@API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
+public final class XmlUtils {
+
+    /** The class logger. */
+<span class="fc" id="L70">    private static final Logger LOG = LoggerFactory.getLogger(XmlUtils.class);</span>
+
+    /** The XML transformer factory instance. */
+<span class="fc" id="L73">    private static final TransformerFactory TRANSFORMER_FACTORY = TransformerFactory.newInstance();</span>
+    static {
+        try {
+<span class="fc" id="L76">            TRANSFORMER_FACTORY.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);</span>
+<span class="nc" id="L77">        } catch (final TransformerConfigurationException e) {</span>
+<span class="nc" id="L78">            LOG.warn(&quot;Error setting secure processing feature on XML TransformerFactory&quot;, e);</span>
+<span class="fc" id="L79">        }</span>
+        try {
+<span class="fc" id="L81">            TRANSFORMER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, &quot;&quot;);</span>
+<span class="nc" id="L82">        } catch (final IllegalArgumentException e) {</span>
+<span class="nc" id="L83">            LOG.debug(&quot;Error disabling external DTD access on XML TransformerFactory&quot;, e);</span>
+<span class="fc" id="L84">        }</span>
+        try {
+<span class="fc" id="L86">            TRANSFORMER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, &quot;&quot;);</span>
+<span class="nc" id="L87">        } catch (final IllegalArgumentException e) {</span>
+<span class="nc" id="L88">            LOG.debug(&quot;Error disabling external stylesheet access on XML TransformerFactory&quot;, e);</span>
+<span class="fc" id="L89">        }</span>
+<span class="fc" id="L90">    }</span>
+
+    /**
+     * Private constructor to prevent instantiation of this utility class.
+     */
+    private XmlUtils() {
+        // Utility class
+    }
+
+    /**
+     * Checks if the given XML document contains a specific property.
+     * 
+     * @param document The XML document to search within.
+     * @param property The property name, which may include nested properties.
+     * @param propertySeparator The separator used for nested properties.
+     * @param attributePrefix The prefix used for attributes.
+     * @return {@code true} if the property exists, {@code false} otherwise.
+     */
+    static boolean contains(
+            final @NotNull Document document,
+            final @NotNull String property,
+            final @NotNull String propertySeparator,
+            final @NotNull String attributePrefix) {
+<span class="fc" id="L113">        final Element root = document.getDocumentElement();</span>
+<span class="fc" id="L114">        final Pair&lt;List&lt;String&gt;, String&gt; split = splitProperty(property, propertySeparator);</span>
+<span class="fc" id="L115">        final List&lt;String&gt; parts = split.getLeft();</span>
+<span class="fc" id="L116">        final String leaf = split.getRight();</span>
+<span class="fc" id="L117">        return findElement(root, parts)</span>
+<span class="fc" id="L118">                .flatMap(n -&gt; findLeaf(n, leaf, attributePrefix))</span>
+<span class="fc" id="L119">                .isPresent();</span>
+    }
+
+    /**
+     * Extracts the keys from the XML document.
+     * &lt;p&gt;
+     * Recursively traverses the XML document, extracting keys
+     * from the element's tag name (when element contains text content),
+     * its attributes, and its child elements.
+     * 
+     * @param document The XML document to extract keys from.
+     * @param propertySeparator The separator used for nested properties.
+     * @param attributePrefix The prefix used for attributes.
+     * @return A stream of keys extracted from the document.
+     */
+    static @NotNull Stream&lt;String&gt; extractKeys(
+            final @NotNull Document document,
+            final @NotNull String propertySeparator,
+            final @NotNull String attributePrefix) {
+<span class="fc" id="L138">        final NodeList children = document.getDocumentElement().getChildNodes();</span>
+<span class="fc" id="L139">        return IntStream.range(0, children.getLength())</span>
+<span class="fc" id="L140">                .mapToObj(children::item)</span>
+<span class="fc" id="L141">                .filter(Element.class::isInstance)</span>
+<span class="fc" id="L142">                .map(Element.class::cast)</span>
+<span class="fc" id="L143">                .flatMap(child -&gt; extractKeys(</span>
+                        child,
+                        &quot;&quot;,
+                        propertySeparator,
+                        attributePrefix));
+    }
+
+    /**
+     * Extracts the keys from the XML element and its children.
+     * &lt;p&gt;
+     * Recursively traverses the XML element, extracting keys
+     * from the element's tag name (when element contains text content),
+     * its attributes, and its child elements.
+     * 
+     * @param element The XML element to extract keys from.
+     * @param prefix The prefix to prepend to the keys.
+     * @return A stream of keys extracted from the element and its children.
+     */
+    static @NotNull Stream&lt;String&gt; extractKeys(
+            final @NotNull Element element,
+            final @NotNull String prefix,
+            final @NotNull String propertySeparator,
+            final @NotNull String attributePrefix) {
+<span class="fc" id="L166">        final String value = XmlUtils.getValue(element);</span>
+        final Stream&lt;String&gt; elementKey;
+<span class="fc bfc" id="L168" title="All 2 branches covered.">        if (value == null) {</span>
+<span class="fc" id="L169">            elementKey = Stream.of();</span>
+        } else {
+<span class="fc" id="L171">            elementKey = Stream.of(prefix + element.getTagName());</span>
+        }
+<span class="fc" id="L173">        final String childPrefix = prefix + element.getTagName() + propertySeparator;</span>
+<span class="fc" id="L174">        final NamedNodeMap attributes = element.getAttributes();</span>
+<span class="fc" id="L175">        final Stream&lt;String&gt; attrKeys = IntStream.range(0, attributes.getLength())</span>
+<span class="fc" id="L176">                .mapToObj(attributes::item)</span>
+<span class="fc" id="L177">                .filter(Attr.class::isInstance)</span>
+<span class="pc" id="L178">                .map(node -&gt; childPrefix + attributePrefix + node.getLocalName());</span>
+<span class="fc" id="L179">        final NodeList children = element.getChildNodes();</span>
+<span class="fc" id="L180">        final Stream&lt;String&gt; childKeys = IntStream.range(0, children.getLength())</span>
+<span class="fc" id="L181">                .mapToObj(children::item)</span>
+<span class="fc" id="L182">                .filter(Element.class::isInstance)</span>
+<span class="fc" id="L183">                .map(Element.class::cast)</span>
+<span class="fc" id="L184">                .flatMap(child -&gt; extractKeys(child, childPrefix, propertySeparator, attributePrefix));</span>
+<span class="fc" id="L185">        return Stream.concat(</span>
+<span class="fc" id="L186">                Stream.concat(</span>
+                    elementKey,
+                    attrKeys),
+                childKeys);
+    }
+
+    /**
+     * Returns the value of a property in the given XML document.
+     * 
+     * @param element The XML element to search within.
+     * @param property The property name, which may include nested properties.
+     * @param propertySeparator The separator used for nested properties.
+     * @param attributePrefix The prefix used for attributes.
+     * @return An Optional containing the value of the property, or empty if not found.
+     */
+    static Optional&lt;String&gt; getValue(
+            final @NotNull Document document,
+            final @NotNull String property,
+            final @NotNull String propertySeparator,
+            final @NotNull String attributePrefix) {
+<span class="fc" id="L206">        final Element root = document.getDocumentElement();</span>
+<span class="fc" id="L207">        final Pair&lt;List&lt;String&gt;, String&gt; split = splitProperty(property, propertySeparator);</span>
+<span class="fc" id="L208">        final List&lt;String&gt; parts = split.getLeft();</span>
+<span class="fc" id="L209">        final String leaf = split.getRight();</span>
+<span class="fc" id="L210">        return findElement(root, parts)</span>
+<span class="fc" id="L211">                .flatMap(n -&gt; findLeaf(n, leaf, attributePrefix))</span>
+<span class="fc" id="L212">                .map(XmlUtils::getLeafValue);</span>
+        
+    }
+
+    /**
+     * Sets the value of a property in the given XML document.
+     * If the value is null, it removes the leaf node value.
+     * 
+     * @param element The XML element to set the property in.
+     * @param property The property name, which may include nested properties.
+     * @param propertySeparator The separator used for nested properties.
+     * @param attributePrefix The prefix used for attributes.
+     * @param value The value to set, or null to remove the leaf node.
+     */
+    static void setValue(
+            final @NotNull Document document,
+            final @NotNull String property,
+            final @NotNull String propertySeparator,
+            final @NotNull String attributePrefix,
+            final String value) {
+<span class="fc" id="L232">        final Element root = document.getDocumentElement();</span>
+<span class="fc" id="L233">        final Pair&lt;List&lt;String&gt;, String&gt; split = splitProperty(property, propertySeparator);</span>
+<span class="fc" id="L234">        final List&lt;String&gt; parts = split.getLeft();</span>
+<span class="fc" id="L235">        final String leaf = split.getRight();</span>
+<span class="fc bfc" id="L236" title="All 2 branches covered.">        if (value == null) {</span>
+<span class="fc" id="L237">            findElement(root, parts)</span>
+<span class="fc" id="L238">                    .flatMap(n -&gt; findLeaf(n, leaf, attributePrefix))</span>
+<span class="fc" id="L239">                    .ifPresent(XmlUtils::removeLeafValue);</span>
+        } else {
+<span class="fc" id="L241">            setLeafValue(</span>
+<span class="fc" id="L242">                    getLeaf(</span>
+<span class="fc" id="L243">                        getElement(root, parts),</span>
+                        leaf,
+                        attributePrefix),
+                    value);
+        }
+<span class="fc" id="L248">    }</span>
+
+    /**
+     * Returns an Optional containing the element for the given parent and a
+     * list of parts representing the path to the element.
+     * 
+     * @param parent The parent element to search within.
+     * @param parts The list of parts representing the path to the element.
+     * @return An Optional containing the found element, or empty if not found.
+     */
+    static @NotNull Optional&lt;Element&gt; findElement(
+            final @NotNull Element parent,
+            final @NotNull List&lt;String&gt; parts) {
+<span class="fc bfc" id="L261" title="All 2 branches covered.">        if (parts.isEmpty()) {</span>
+<span class="fc" id="L262">            return Optional.of(parent);</span>
+        } else {
+<span class="fc" id="L264">            final String childName = parts.get(0);</span>
+<span class="fc" id="L265">            final List&lt;String&gt; remainingParts = parts.subList(1, parts.size());</span>
+<span class="fc" id="L266">            return getChild(parent, childName)</span>
+<span class="fc" id="L267">                    .flatMap(child -&gt; findElement(child, remainingParts));</span>
+        }
+    }
+
+    /**
+     * Returns the element for the given parent and a list of parts.
+     * If the element does not exist, it will be created.
+     * 
+     * @param parent The parent element to which the new child will be added.
+     * @param parts The list of parts representing the path to the element.
+     * @return The found or newly created element.
+     */
+    static @NotNull Element getElement(
+            final @NotNull Element parent,
+            final @NotNull List&lt;String&gt; parts) {
+<span class="fc bfc" id="L282" title="All 2 branches covered.">        if (parts.isEmpty()) {</span>
+<span class="fc" id="L283">            return parent;</span>
+        } else {
+<span class="fc" id="L285">            final String childName = parts.get(0);</span>
+<span class="fc" id="L286">            final List&lt;String&gt; remainingParts = parts.subList(1, parts.size());</span>
+<span class="fc" id="L287">            return getElement(</span>
+<span class="fc" id="L288">                    getChild(parent, childName)</span>
+<span class="fc" id="L289">                        .orElseGet(() -&gt; createChild(parent, childName)),</span>
+                    remainingParts);
+        }
+    }
+
+    /**
+     * Creates a new child element with the specified name, appending it to the
+     * given parent element.
+     * 
+     * @param parent The parent element to which the new child will be added.
+     * @param name The local name of the new child element.
+     * @return The newly created child element.
+     */
+    static @NotNull Element createChild(
+            final @NotNull Element parent,
+            final @NotNull String name) {
+<span class="fc" id="L305">        return createChild(parent, parent.getNamespaceURI(), name);</span>
+    }
+
+    /**
+     * Creates a new child element with the specified name and namespace,
+     * appending it to the given parent element.
+     * 
+     * @param parent The parent element to which the new child will be added.
+     * @param namespace The namespace URI for the new child element.
+     * @param name The local name of the new child element.
+     * @return The newly created child element.
+     */
+    static @NotNull Element createChild(
+            final @NotNull Element parent,
+            final String namespace,
+            final @NotNull String name) {
+        final Element child;
+<span class="pc bpc" id="L322" title="1 of 2 branches missed.">        if (namespace == null) {</span>
+<span class="fc" id="L323">            child = parent.getOwnerDocument().createElement(name);</span>
+        } else {
+<span class="nc" id="L325">            child = parent.getOwnerDocument().createElementNS(namespace, name);</span>
+        }
+<span class="fc" id="L327">        parent.appendChild(child);</span>
+<span class="fc" id="L328">        return child;</span>
+    }
+
+    /**
+     * Returns an Optional containing the first child element with the specified
+     * name from the parent element, or an empty Optional if no such child exists.
+     * 
+     * @param parent The parent element to search for the child.
+     * @param name The local name of the child element to find.
+     * @return An Optional containing the found child element, or empty if not found.
+     */
+    static @NotNull Optional&lt;Element&gt; getChild(
+            final @NotNull Element parent,
+            final @NotNull String name) {
+<span class="fc" id="L342">        final NodeList children = parent.getChildNodes();</span>
+<span class="fc" id="L343">        return IntStream.range(0, children.getLength())</span>
+<span class="fc" id="L344">                .mapToObj(children::item)</span>
+<span class="fc" id="L345">                .filter(Element.class::isInstance)</span>
+<span class="fc" id="L346">                .map(Element.class::cast)</span>
+<span class="fc" id="L347">                .filter(elem -&gt; elem.getTagName().equals(name))</span>
+<span class="fc" id="L348">                .findFirst();</span>
+    }
+
+    /**
+     * Finds a leaf node (either an attribute or an element) for the given
+     * parent element and name.
+     * 
+     * @param parent The parent element to which the leaf belongs.
+     * @param name The name of the leaf node.
+     * @param attributePrefix The prefix used to identify attributes.
+     * @return An Optional containing the leaf node if found, or empty if not found.
+     */
+    static Optional&lt;Node&gt; findLeaf(
+            final @NotNull Element parent,
+            final @NotNull String name,
+            final @NotNull String attributePrefix) {
+<span class="pc bpc" id="L364" title="1 of 2 branches missed.">        if (name.startsWith(attributePrefix)) {</span>
+<span class="nc" id="L365">            final String attrName = name.substring(attributePrefix.length());</span>
+<span class="nc" id="L366">            return Optional.ofNullable(parent.getAttributeNode(attrName));</span>
+        } else {
+<span class="fc" id="L368">            return getChild(parent, name)</span>
+<span class="fc" id="L369">                    .map(Node.class::cast);</span>
+        }
+    }
+
+    /**
+     * Returns a leaf node (either an attribute or an element) for the given
+     * parent element and name. If the leaf does not exist, it will be created.
+     * 
+     * @param parent The parent element to which the leaf belongs.
+     * @param name The name of the leaf node.
+     * @param attributePrefix The prefix used to identify attributes.
+     * @return The leaf node, either an attribute or an element.
+     */
+    static Node getLeaf(
+            final @NotNull Element parent,
+            final @NotNull String name,
+            final @NotNull String attributePrefix) {
+<span class="pc bpc" id="L386" title="1 of 2 branches missed.">        if (name.startsWith(attributePrefix)) {</span>
+<span class="nc" id="L387">            final String attrName = name.substring(attributePrefix.length());</span>
+<span class="nc" id="L388">            Attr attr = parent.getAttributeNode(attrName);</span>
+<span class="nc bnc" id="L389" title="All 2 branches missed.">            if (attr == null) {</span>
+<span class="nc" id="L390">                attr = parent.getOwnerDocument().createAttributeNS(parent.getNamespaceURI(), attrName);</span>
+<span class="nc" id="L391">                parent.setAttributeNode(attr);</span>
+            }
+<span class="nc" id="L393">            return attr;</span>
+        } else {
+<span class="fc" id="L395">            return getChild(parent, name)</span>
+<span class="fc" id="L396">                    .orElseGet(() -&gt; createChild(parent, name));</span>
+        }
+    }
+
+    /**
+     * Returns the value of the given XML node.
+     * 
+     * @param leaf The XML node to extract the value from.
+     * @return The value of the node, or {@code null} if the node is not an
+     * attribute or element with a text value.
+     */
+    static String getLeafValue(
+            final @NotNull Node leaf) {
+<span class="pc bpc" id="L409" title="1 of 2 branches missed.">        if (leaf instanceof Attr) {</span>
+<span class="nc" id="L410">            return ((Attr) leaf).getValue();</span>
+<span class="pc bpc" id="L411" title="1 of 2 branches missed.">        } else if (leaf instanceof Element) {</span>
+<span class="fc" id="L412">            return getValue((Element) leaf);</span>
+        } else {
+<span class="nc" id="L414">            return null;</span>
+        }
+    }
+
+    /**
+     * Sets the value of the given XML node.
+     * 
+     * @param leaf The XML node to set the value for.
+     * @param value The value to set.
+     */
+    static void setLeafValue(
+            final @NotNull Node leaf,
+            final @NotNull String value) {
+<span class="pc bpc" id="L427" title="1 of 2 branches missed.">        if (leaf instanceof Attr) {</span>
+<span class="nc" id="L428">            ((Attr) leaf).setValue(value);</span>
+<span class="pc bpc" id="L429" title="1 of 2 branches missed.">        } else if (leaf instanceof Element) {</span>
+<span class="fc" id="L430">            setValue((Element) leaf, value);</span>
+        }
+<span class="fc" id="L432">    }</span>
+
+    /**
+     * Removes the value from the given XML node.
+     * 
+     * @param leaf The XML node from which to remove the value.
+     */
+    static void removeLeafValue(
+            final @NotNull Node leaf) {
+<span class="pc bpc" id="L441" title="1 of 2 branches missed.">        if (leaf instanceof Attr) {</span>
+<span class="nc" id="L442">            leaf.getParentNode().removeChild(leaf);</span>
+<span class="pc bpc" id="L443" title="1 of 2 branches missed.">        } else if (leaf instanceof Element) {</span>
+<span class="fc" id="L444">            removeValue((Element) leaf);</span>
+        }
+<span class="fc" id="L446">    }</span>
+
+    /**
+     * Returns the text value of the given XML element.
+     * 
+     * @param element The XML element to extract the value from.
+     * @return The trimmed text value of the element, or {@code null} if no text is found.
+     */
+    static String getValue(
+            final @NotNull Element element) {
+<span class="fc" id="L456">        final NodeList children = element.getChildNodes();</span>
+<span class="fc" id="L457">        final String value = IntStream.range(0, children.getLength())</span>
+<span class="fc" id="L458">                .mapToObj(children::item)</span>
+<span class="fc" id="L459">                .filter(Text.class::isInstance)</span>
+<span class="fc" id="L460">                .map(Node::getNodeValue)</span>
+<span class="fc" id="L461">                .filter(Objects::nonNull)</span>
+<span class="fc" id="L462">                .collect(Collectors.joining());</span>
+<span class="fc bfc" id="L463" title="All 2 branches covered.">        if (StringUtils.isAllBlank(value)) {</span>
+<span class="fc" id="L464">            return null;</span>
+        } else {
+<span class="fc" id="L466">            return value.trim();</span>
+        }
+    }
+
+    /**
+     * Sets the text value of the given XML element.
+     * 
+     * @param element The XML element to set the value for.
+     * @param value The value to set.
+     */
+    static void setValue(
+            final @NotNull Element element,
+            final @NotNull String value) {
+<span class="fc" id="L479">        removeValue(element);</span>
+<span class="fc" id="L480">        final Text textNode = element.getOwnerDocument().createTextNode(value);</span>
+<span class="fc" id="L481">        element.appendChild(textNode);</span>
+<span class="fc" id="L482">    }</span>
+
+    /**
+     * Removes all text nodes from the given XML element.
+     * 
+     * @param element The XML element from which to remove text nodes.
+     */
+    static void removeValue(
+            final @NotNull Element element) {
+<span class="fc" id="L491">        final NodeList children = element.getChildNodes();</span>
+<span class="fc" id="L492">        IntStream.range(0, children.getLength())</span>
+<span class="fc" id="L493">                .mapToObj(children::item)</span>
+<span class="fc" id="L494">                .filter(Text.class::isInstance)</span>
+<span class="fc" id="L495">                .forEach(element::removeChild);</span>
+<span class="fc" id="L496">    }</span>
+
+    /**
+     * Splits a property string into its parent elements' names and
+     * leaf node name.
+     * 
+     * @param property The property string to split.
+     * @param propertySeparator The separator used to split the property.
+     * @return A pair containing the list of parent elements' names and the
+     * leaf node name.
+     * @throws IllegalArgumentException If the property is null or empty.
+     */
+    static @NotNull Pair&lt;List&lt;String&gt;, String&gt; splitProperty(
+            final @NotBlank String property,
+            final @NotBlank String propertySeparator) {
+<span class="fc" id="L511">        final List&lt;String&gt; parts = Arrays.asList(</span>
+<span class="fc" id="L512">                StringUtils.splitByWholeSeparator(property, propertySeparator));</span>
+<span class="pc bpc" id="L513" title="1 of 2 branches missed.">        if (parts.isEmpty()) {</span>
+<span class="nc" id="L514">            throw new IllegalArgumentException(&quot;Property must not be null or empty&quot;);</span>
+        }
+<span class="fc" id="L516">        final String leaf = parts.get(parts.size() - 1);</span>
+<span class="fc" id="L517">        return Pair.of(parts.subList(0, parts.size() - 1), leaf);</span>
+    }
+
+    /**
+     * Converts the given XML document to its string representation.
+     * 
+     * @param document The XML document to convert.
+     * @return The string representation of the XML document.
+     * @throws ConfigException If an error occurs during the transformation.
+     */
+    static @NotNull String getXml(
+            final @NotNull Document document) {
+        try {
+<span class="nc" id="L530">            final Transformer transformer = TRANSFORMER_FACTORY.newTransformer();</span>
+<span class="nc" id="L531">            final DOMSource source = new DOMSource(document);</span>
+<span class="nc" id="L532">            final StringWriter writer = new StringWriter();</span>
+<span class="nc" id="L533">            transformer.transform(source, new StreamResult(writer));</span>
+<span class="nc" id="L534">            return writer.toString();</span>
+<span class="nc" id="L535">        } catch (final TransformerException e) {</span>
+<span class="nc" id="L536">            throw new ConfigException(&quot;Error converting XML document to string&quot;, e);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
