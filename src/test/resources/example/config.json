@@ -1,0 +1,12 @@
+{
+    "host": "localhost",
+    "port": 8080,
+    "username": "user",
+    "timeout": 300000,
+    "enabled": true,
+    "external": {
+        "sampleService": {
+            "url": "https://api.example.com"
+        }
+    }
+}

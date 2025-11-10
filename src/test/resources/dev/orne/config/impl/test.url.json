@@ -1,0 +1,18 @@
+{
+    "test": {
+        "type": "url",
+        "url": {
+            "type": "url"
+        },
+        "prop": "ssss",
+        "prop1": "\u0000",
+        "array": [
+            {
+                "prop": "array1"
+            },
+            {
+                "prop": "array2"
+            }
+        ]
+    }
+}

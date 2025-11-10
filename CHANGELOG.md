@@ -1,17 +1,168 @@
-# :package: 0.1.0
+# Orne Java configuration utilities - Changelog
 
-01. :gift: Added dev.orne.config.Config
-01. :gift: Added dev.orne.config.AbstractConfig
-01. :gift: Added dev.orne.config.HierarchicalConfig
-01. :gift: Added dev.orne.config.AbstractStringConfig
-01. :gift: Added dev.orne.config.SystemConfig
-01. :gift: Added dev.orne.config.MutableConfig
-01. :gift: Added dev.orne.config.AbstractMutableStringConfig
-01. :gift: Added dev.orne.config.PropertiesConfig
-01. :gift: Added dev.orne.config.Configurable
-01. :gift: Added dev.orne.config.ConfigurableProperty
-01. :gift: Added dev.orne.config.ConfigurationOptions
-01. :gift: Added dev.orne.config.Configurer
-01. :gift: Added dev.orne.config.ConfigProvider
-01. :gift: Added dev.orne.config.DefaultConfigurer
-01. :gift: Added dev.orne.config.DefaultConfigProvider
+## 1.0.0 - 2025-11-10
+
+- **Requires Java 11 or newer.**
+- **Major API compatibility break.**
+
+### Changed
+
+- Bump `org.apache.commons:commons-lang3` to 3.19.0.
+- Bump `commons-beanutils:commons-beanutils` to 1.10.1.
+- **Breaking:** Simplify base configuration API.
+    - Make `Config` a functional interface with a `String get(String)` method.
+    - Limit supported value types to String, Boolean, Integer and Long.
+    - Add `Stream<String> getKeys()` method to `Config` for properties scanning.
+
+### Added
+
+- Add optional dependency with `org.apache.commons:commons-pool2` 2.12.1.
+- Add optional dependency with `org.apache.commons:commons-configuration2` 2.12.0.
+- Add optional dependency with `com.fasterxml.jackson.core:jackson-databind` 2.20.1.
+- Add optional dependency with `com.fasterxml.jackson.dataformat:jackson-dataformat-yaml` 2.20.1.
+- Add optional dependency with `org.springframework:spring-context` 5.3.39.
+- Add optional dependency with `org.springframework.boot:spring-boot-autoconfigure` 2.7.18.
+- Add configuration exceptions hierarchy.
+    - `dev.orne.config.ConfigException` runtime exception.
+    - `dev.orne.config.NonIterableConfigException` runtime exception.
+    - `dev.orne.config.ConfigCryptoProviderException` runtime exception.
+    - `dev.orne.config.ConfigCryptoWrongKeyException` runtime exception.
+- Add configuration values processing support.
+    - `dev.orne.config.ValueDecoder` interface.
+    - `dev.orne.config.ValueDecorator` interface.
+    - `dev.orne.config.ValueEncoder` interface.
+- Add mutable configuration change events support.
+    - `dev.orne.config.WatchableConfig` interface.
+- Add mutable configuration persistence API.
+    - `dev.orne.config.FileMutableConfig` interface.
+    - `dev.orne.config.FileWatchableConfig` interface.
+- Add support and fluent configuration API for configuration properties encryption.
+    - `dev.orne.config.ConfigCryptoEngine` interface.
+    - `dev.orne.config.ConfigCryptoProvider` interface.
+- Add fluent configuration base API.
+    - `dev.orne.config.ConfigBuilder` interface.
+    - `dev.orne.config.MutableCapableConfigBuilder` interface.
+    - `dev.orne.config.MutableConfigBuilder` interface.
+- Add variable resolution support.
+    - Add `dev.orne.config.ConfigBuilder.withVariableResolution()` method.
+- Add fluent configuration API for environment variables based configuration.
+    - `dev.orne.config.EnvironmentConfigBuilder` interface.
+    - Add `dev.orne.config.Config.fromEnvironmentVariables()` method.
+- Add fluent configuration API for System properties based configuration.
+    - `dev.orne.config.SystemConfigBuilder` interface.
+    - Add `dev.orne.config.Config.fromSystemProperties()` method.
+- Add fluent configuration API for Java `Properties` based configuration.
+    - `dev.orne.config.PropertiesConfigBaseBuilder` interface.
+    - `dev.orne.config.PropertiesConfigBuilder` interface.
+    - `dev.orne.config.PropertiesMutableConfigBuilder` interface.
+    - Add `dev.orne.config.Config.fromProperties()` method.
+- Add fluent configuration API for Java `Preferences` based configuration.
+    - `dev.orne.config.PreferencesConfigInitialBuilder` interface.
+    - `dev.orne.config.PreferencesConfigBuilder` interface.
+    - `dev.orne.config.PreferencesMutableConfig` interface.
+    - `dev.orne.config.PreferencesMutableConfigBuilder` interface.
+    - Add `dev.orne.config.Config.fromJavaPreferences()` method.
+- Add support and fluent configuration API for JSON based configuration based on Jackson.
+    - `dev.orne.config.JsonConfigBaseBuilder` interface.
+    - `dev.orne.config.JsonConfigBuilder` class.
+    - `dev.orne.config.JsonMutableConfigBuilder` interface.
+    - Add `dev.orne.config.Config.fromJson()` method.
+- Add support and fluent configuration API for YAML based configuration based on Jackson.
+    - `dev.orne.config.YamlConfigBaseBuilder` interface.
+    - `dev.orne.config.YamlConfigBuilder` class.
+    - `dev.orne.config.YamlMutableConfigBuilder` interface.
+    - Add `dev.orne.config.Config.fromYaml()` method.
+- Add support and fluent configuration API for XML based configuration based on Jackson.
+    - `dev.orne.config.XmlConfigBaseBuilder` interface.
+    - `dev.orne.config.XmlConfigBuilder` class.
+    - `dev.orne.config.XmlMutableConfigBuilder` interface.
+    - Add `dev.orne.config.Config.fromXml()` method.
+- Add support and fluent configuration API for Commons Configuration 2.x based configuration.
+    - `dev.orne.config.CommonsConfigBuilder` interface.
+    - `dev.orne.config.CommonsConfigNodeBuilder` interface.
+    - `dev.orne.config.CommonsMutableConfigBuilder` interface.
+    - Add `dev.orne.config.Config.fromJavaPreferences()` method.
+- Add support and fluent configuration API for Spring Environment based configuration.
+    - `dev.orne.config.SpringEnvironmentConfigInitialBuilder` interface.
+    - `dev.orne.config.SpringEnvironmentConfigBuilder` interface.
+    - Add `dev.orne.config.Config.fromSpringEnvironment()` method.
+- Add support to use `Config` as Apache Commons Configuration 2.x `ImmutableConfiguration`.
+    - `dev.orne.config.commons.DelegatedOrneConfiguration` class.
+- Add support to use `MutableConfig` as Apache Commons Configuration 2.x `Configuration`.
+    - `dev.orne.config.commons.DelegatedOrneMutableConfiguration` class.
+- Add support to use `ConfigCryptoProvider` as Apache Commons Configuration 2.x `ConfigurationDecoder`.
+    - `dev.orne.config.commons.DelegatedOrneConfigurationDecoder` class.
+- Add support for configuration subsets.
+    - Add `dev.orne.config.Config.subset()` method.
+    - Add `dev.orne.config.MutableConfig.subset()` method.
+    - Add `dev.orne.config.WatchableConfig.subset()` method.
+- Add support for configuration subtypes.
+    - Add `dev.orne.config.Config.as()` method.
+- Add support for configuration delegation.
+    - `dev.orne.config.DelegatedConfig` class.
+    - `dev.orne.config.DelegatedMutableConfig` class.
+    - `dev.orne.config.DelegatedWatchableConfig` class.
+- Add fluent configuration API for configurable componentes management.
+    - `dev.orne.config.ConfigProviderBuilder` interface.
+    - Add `dev.orne.config.ConfigProvider.builder(Config)` method.
+    - Add `dev.orne.config.Configurer.fromProvider(ConfigProvider)` method.
+- Add preferred configurations support.
+    - Add `dev.orne.config.PreferredConfig` annotation.
+- Add Spring integration.
+    - `dev.orne.config.spring.ConfigProviderCustomizer` interface.
+    - Support of usage of `Config` beans as `PropertySource`s on Spring applications.
+        - `dev.orne.config.spring.ConfigPropertySource` annotation.
+        - `dev.orne.config.spring.ConfigPropertySources` annotation.
+    - Support for automatic configuration of Configurable beans
+        - `dev.orne.config.spring.EnableConfigurableComponents` annotation.
+    - Support for `PreferredConfig` based injection of `Config` instances into Spring beans.
+        - `dev.orne.config.spring.EnablePreferredConfigInjection` annotation.
+    - All featues activation through a single annotation.
+        - `dev.orne.config.spring.EnableOrneConfig` annotation.
+    - Add Spring Boot auto configuration.
+        - `dev.orne.config.spring.SpringBootAutoConfigurer` class.
+
+### Removed
+
+- **Breaking:** Remove obsolete API.
+    - `dev.orne.config.HierarchicalConfig` interface.
+- **Breaking:** Remove `ConfigurationOptions` preferred configuration properties in favor of `PreferredConfig`.
+- **Breaking:** Changed `ConfigurationOptions.configureNestedBeans` default value to `false`.
+- **Breaking:** Remove and made internal implementation classes.
+    - `dev.orne.config.AbstractConfig` class.
+    - `dev.orne.config.AbstractStringConfig` class.
+    - `dev.orne.config.SystemConfig` class.
+    - `dev.orne.config.AbstractMutableStringConfig` class.
+    - `dev.orne.config.PropertiesConfig` class.
+    - `dev.orne.config.PreferencesConfig` class.
+    - `dev.orne.config.DefaultConfigurer` class.
+    - `dev.orne.config.DefaultConfigProvider` class.
+
+## 0.1.0 - 2020-04-28
+
+_First experimental release._
+
+### Added
+
+- Add dependency with `org.apache.commons:commons-lang3` 3.9.
+- Add dependency with `commons-beanutils:commons-beanutils` 1.9.4.
+- Add base configuration API.
+    - `dev.orne.config.Config` interface.
+    - `dev.orne.config.MutableConfig` interface.
+    - `dev.orne.config.HierarchicalConfig` interface.
+- Add basic configuration implementations.
+    - `dev.orne.config.AbstractConfig` class.
+    - `dev.orne.config.AbstractStringConfig` class.
+    - `dev.orne.config.SystemConfig` class.
+    - `dev.orne.config.AbstractMutableStringConfig` class.
+    - `dev.orne.config.PropertiesConfig` class.
+    - `dev.orne.config.PreferencesConfig` class.
+- Add configurable componentes API.
+    - `dev.orne.config.Configurable` annotation.
+    - `dev.orne.config.ConfigurableProperty` annotation.
+    - `dev.orne.config.ConfigurationOptions` annotation.
+- Add configurable componentes management.
+    - `dev.orne.config.Configurer` interface.
+    - `dev.orne.config.ConfigProvider` interface.
+    - `dev.orne.config.DefaultConfigurer` class.
+    - `dev.orne.config.DefaultConfigProvider` class.

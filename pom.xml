@@ -6,24 +6,23 @@
   <parent>
     <groupId>dev.orne</groupId>
     <artifactId>java-root-pom</artifactId>
-    <version>0.1.0</version>
+    <version>1.1.1</version>
     <relativePath />
   </parent>
 
-  <groupId>dev.orne</groupId>
   <artifactId>config</artifactId>
-  <version>0.1.0</version>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
 
   <name>Orne Config</name>
   <description>Orne configuration utilities</description>
   <inceptionYear>2019</inceptionYear>
-  <url>http://projects.orne.dev/java/orne-config/</url>
+  <url>https://orne-dev.github.io/java-config/</url>
 
   <licenses>
     <license>
-      <name>GNU General Public License (GPL) version 3.0</name>
-      <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+      <name>GNU Lesser General Public License (LGPL) version 3.0</name>
+      <url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
@@ -31,27 +30,36 @@
     <developer>
       <id>wamphiry</id>
       <name>(w) Iker Hernaez</name>
-      <email>i.hernaez@orne.dev</email>
+      <url>https://github.com/ihernaez</url>
     </developer>
   </developers>
 
-  <scm>
-    <url>http://github.com/orne-dev/java-config/tree/master</url>
-    <connection>scm:git:git://github.com/orne-dev/java-config.git</connection>
-    <developerConnection>scm:git:ssh://github.com:orne-dev/java-config.git</developerConnection>
-    <tag>HEAD</tag>
-  </scm>
-
   <properties>
-    <java.version>1.8</java.version>
-    <target.java.version>1.8</target.java.version>
-    <license.licenseName>gpl_v3</license.licenseName>
+    <java.version>11</java.version>
+    <java.module.name>dev.orne.config</java.module.name>
+    <license.licenseName>lgpl_v3</license.licenseName>
+    <license.excludes>
+        test/**/*.properties,
+        test/**/*.json,
+        test/**/*.yaml
+    </license.excludes>
 
-    <commons.lang.version>3.9</commons.lang.version>
-    <commons.beanutils.version>1.9.4</commons.beanutils.version>
+    <commons.lang.version>3.19.0</commons.lang.version>
+    <commons.beanutils.version>1.11.0</commons.beanutils.version>
 
     <javax.validation.version>2.0.1.Final</javax.validation.version>
-    <jsr305.version>3.0.2</jsr305.version>
+    <commons.pool.version>2.12.1</commons.pool.version>
+    <commons.configuration.version>2.12.0</commons.configuration.version>
+    <fasterxml.jackson.version>2.20.1</fasterxml.jackson.version>
+    <spring.framework.version>5.3.39</spring.framework.version>
+    <spring.boot.version>2.7.18</spring.boot.version>
+
+    <awaitility.version>4.3.0</awaitility.version>
+    <assertj.version>3.27.6</assertj.version>
+
+    <jakarta.transform.skip>true</jakarta.transform.skip>
+    <github.project.id>java-config</github.project.id>
+    <sonar.projectKey>orne-dev_java-config</sonar.projectKey>
   </properties>
 
   <dependencies>
@@ -81,15 +89,56 @@
     </dependency>
 
     <dependency>
+      <groupId>org.apiguardian</groupId>
+      <artifactId>apiguardian-api</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
       <version>${javax.validation.version}</version>
       <optional>true</optional>
     </dependency>
     <dependency>
-      <groupId>com.google.code.findbugs</groupId>
-      <artifactId>jsr305</artifactId>
-      <version>${jsr305.version}</version>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-pool2</artifactId>
+      <version>${commons.pool.version}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-configuration2</artifactId>
+      <version>${commons.configuration.version}</version>
+      <optional>true</optional>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${fasterxml.jackson.version}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-yaml</artifactId>
+      <version>${fasterxml.jackson.version}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>${spring.framework.version}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
+      <version>${spring.boot.version}</version>
       <optional>true</optional>
     </dependency>
 
@@ -104,8 +153,37 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.junit-pioneer</groupId>
+      <artifactId>junit-pioneer</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.awaitility</groupId>
+      <artifactId>awaitility</artifactId>
+      <version>${awaitility.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <version>${spring.framework.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-test</artifactId>
+      <version>${spring.boot.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>${assertj.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -127,16 +205,21 @@
             <groups>it</groups>
           </configuration>
         </plugin>
-        <plugin>
-          <groupId>com.amashchenko.maven.plugin</groupId>
-          <artifactId>gitflow-maven-plugin</artifactId>
-          <configuration>
-            <postReleaseGoals>clean verify deploy -Prelease,major-release</postReleaseGoals>
-            <postHotfixGoals>clean verify deploy -Prelease,major-release</postHotfixGoals>
-          </configuration>
-        </plugin>
       </plugins>
     </pluginManagement>
   </build>
+
+  <scm>
+    <connection>${github.scm.connection}</connection>
+    <developerConnection>${github.scm.connection.dev}</developerConnection>
+    <url>${github.scm.url}</url>
+  </scm>
+  <distributionManagement>
+    <site>
+      <id>github</id>
+      <name>Github Project Pages</name>
+      <url>${project.url}</url>
+    </site>
+  </distributionManagement>
 
 </project>
