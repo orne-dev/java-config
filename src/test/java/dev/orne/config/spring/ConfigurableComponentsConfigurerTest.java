@@ -38,14 +38,12 @@ import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
 
-import java.util.Optional;
-
 /**
  * Unit tests for {@link ConfigurableComponentsConfigurer}.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0
- * @since 0.1
+ * @since 1.0
  */
 @Tag("ut")
 class ConfigurableComponentsConfigurerTest {
@@ -88,58 +86,59 @@ class ConfigurableComponentsConfigurerTest {
     }
 
     /**
-     * Tests that when {@code exposeConfigurer} annotation property is false,
+     * Tests that when {@code exposedConfigurer} has not been set,
      * {@code configurableComponentsConfigurer} returns an empty optional.
      */
     @Test
-    void givenExposeConfigurerFalse_whenConfigurableComponentsConfigurer_thenDontExposeConfigurer() {
-        configurer.annotationData = mock(AnnotationAttributes.class);
-        configurer.springConfigProvider = springConfigProvider;
-        when(configurer.annotationData.getBoolean("exposeConfigurer")).thenReturn(false);
-        assertTrue(configurer.configurableComponentsConfigurer().isEmpty());
+    void givenNotExposedConfigurer_whenConfigurableComponentsConfigurer_thenDontExposeConfigurer() {
+        assertNull(configurer.configurableComponentsConfigurer());
     }
 
     /**
-     * Tests that when {@code exposeConfigurer} annotation property is true,
+     * Tests that when {@code exposedConfigurer} has been set,
      * {@code configurableComponentsConfigurer} returns a non-empty optional.
      */
     @Test
-    void givenExposeConfigurerTrue_whenConfigurableComponentsConfigurer_thenExposeConfigurer() {
-        configurer.annotationData = mock(AnnotationAttributes.class);
-        configurer.springConfigProvider = springConfigProvider;
-        when(configurer.annotationData.getBoolean("exposeConfigurer")).thenReturn(true);
-        assertTrue(configurer.configurableComponentsConfigurer().isPresent());
+    void givenExposedConfigurer_whenConfigurableComponentsConfigurer_thenExposeConfigurer() {
+        configurer.exposedConfigurer = mock(Configurer.class);
+        assertNotNull(configurer.configurableComponentsConfigurer());
+        assertSame(
+                configurer.exposedConfigurer,
+                configurer.configurableComponentsConfigurer());
     }
 
     /**
-     * Tests that when a custom {@code Configurer} is provided,
-     * {@code configurableComponentsPostProcessor()} uses it.
+     * Tests that when {@code exposeConfigurer} annotation property is false,
+     * {@code configurableComponentsPostProcessor()} creates a new one
+     * but does not expose.
      */
     @Test
-    void givenCustomConfigurer_thenConfigurableComponentsPostProcessor_thenUseCustomConfigurer() {
-        final Configurer customConfigurer = mock(Configurer.class);
+    void givenExposeConfigurerFalse_thenConfigurableComponentsPostProcessor_thenCreatesNewConfigurer() {
         configurer.annotationData = mock(AnnotationAttributes.class);
+        given(configurer.annotationData.getBoolean("exposeConfigurer")).willReturn(false);
         configurer.springConfigProvider = springConfigProvider;
         final ConfigurableComponentsPostProcessor result = assertInstanceOf(
                 ConfigurableComponentsPostProcessor.class,
-                configurer.configurableComponentsPostProcessor(
-                        Optional.of(customConfigurer)));
-        assertSame(customConfigurer, result.getConfigurer());
-    }
-
-    /**
-     * Tests that when no custom {@code Configurer} is provided,
-     * {@code configurableComponentsPostProcessor()} creates a new one.
-     */
-    @Test
-    void givenNoCustomConfigurer_thenConfigurableComponentsPostProcessor_thenCreateNewConfigurer() {
-        configurer.annotationData = mock(AnnotationAttributes.class);
-        configurer.springConfigProvider = springConfigProvider;
-        final ConfigurableComponentsPostProcessor result = assertInstanceOf(
-                ConfigurableComponentsPostProcessor.class,
-                configurer.configurableComponentsPostProcessor(
-                        Optional.empty()));
+                configurer.configurableComponentsPostProcessor());
         assertNotNull(result.getConfigurer());
+        assertNull(configurer.exposedConfigurer);
+    }
+
+    /**
+     * Tests that when {@code exposeConfigurer} annotation property is false,
+     * {@code configurableComponentsPostProcessor()} creates a new one
+     * and saves it to be exposed.
+     */
+    @Test
+    void givenExposeConfigurerTrue_thenConfigurableComponentsPostProcessor_thenCreatesAndExposesNewConfigurer() {
+        configurer.annotationData = mock(AnnotationAttributes.class);
+        given(configurer.annotationData.getBoolean("exposeConfigurer")).willReturn(true);
+        configurer.springConfigProvider = springConfigProvider;
+        final ConfigurableComponentsPostProcessor result = assertInstanceOf(
+                ConfigurableComponentsPostProcessor.class,
+                configurer.configurableComponentsPostProcessor());
+        assertNotNull(result.getConfigurer());
+        assertSame(result.getConfigurer(), configurer.exposedConfigurer);
     }
 
     interface ExtConfig extends Config {

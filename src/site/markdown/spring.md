@@ -57,6 +57,11 @@ class AppConfig {
 }
 ```
 
+**Note:** Do not add `Environment` based `Config` instances to the hierarchy
+of `PropertySource`s, as this would create a circular dependency and result
+in a `StackOverflowError` when resolving properties from the Spring
+`Environment`.
+
 ### `PreferredConfig` based injection
 
 The `PreferredConfig` based injection of `Config` instances into Spring beans
@@ -68,7 +73,9 @@ can be activated through the `EnablePreferredConfigInjection` annotation:
 class AppConfig {
 
     @Bean
-    public ConfigSubtype myConfig() {
+    public ConfigSubtype myConfig(
+            // Injection of default Config instance is supported too
+            Config config) {
         return Config.as(
             ...,
             ConfigSubtype.class);
@@ -134,8 +141,8 @@ By default the library creates a `Config` instance based on the Spring
 `Environment` and registers all `Config` beans found on the Spring context
 as additional configurations.
 
-This means that when a `Config` instance is requested the default,
-environment based, `Config` instance is used, unless a more specific `Config`
+This means that when a `Config` instance is requested the default
+`Environment` based `Config` instance is used, unless a more specific `Config`
 type is requested through the `PreferredConfig` annotation.
 
 When additional `Config` beans are registered, they are mapped to the
@@ -178,11 +185,99 @@ class AppConfiguration implements ConfigProviderCustomizer {
 }
 ```
 
+If more control is needed applications can provide their own
+`ConfigProvider` bean implementation, bypassing the creation of the
+internal `ConfigProvider`:
+
+```java
+@Configuration
+class AppConfiguration {
+
+    @Bean
+    public ConfigProvider configProvider() {
+        // Create and return a custom ConfigProvider instance.
+    }
+}
+```
+
 ## Context hierarchies
 
 Features and customizations are enabled on a per Spring context basis,
 allowing different configurations to be applied on different contexts in case
 of context hierarchies.
-This means that child context **do not inherit** configurations from parent
+This means that child context **do not inherit** features enabled in parent
 contexts, and must be configured independently.
 
+The following will not work as expected:
+
+```java
+@Configuration
+@EnableOrneConfig
+class ParentConfig {
+
+    @Bean
+    public MyComponent parentComponent(
+            Config config) {
+        // No problem. Default Environment based configuration used
+        ...
+    }
+}
+
+@Configuration
+class ChildConfig {
+
+    @Bean
+    public MyComponent myComponent(
+            @PreferredConfig(ConfigSubtype.class)
+            Config config) {
+        // No Config instance is available for injection here
+        // and no PreferredConfig based injection is supported
+        ...
+    }
+}
+```
+
+Thus, if preferred `Config` instances should be injected into beans in a child
+context, the child context must also enable the `PreferredConfig` based
+injection feature through the `EnableOrneConfig` or
+`EnablePreferredConfigInjection` annotation.
+The same applies to the automatic configuration of `Configurable`
+beans, which must be enabled in each context through the
+`EnableOrneConfig` or `EnableConfigurableComponents` annotation.
+
+Instances of `Config` created in a parent context are still visible
+to child contexts, so they can be injected or used to configure
+`Configurable` beans in child contexts.
+
+```java
+@Configuration
+@EnableOrneConfig
+class ParentConfig {
+
+    @Bean
+    public ConfigSubtype myConfig(
+            Config config) {
+        return Config.as(
+            ...,
+            ConfigSubtype.class);
+    }
+}
+
+@Configuration
+@EnableOrneConfig
+class ChildConfig {
+
+    @Bean
+    public MyComponent myComponent(
+            @PreferredConfig(ConfigSubtype.class)
+            Config config) {
+        // Injected preferred Config instance comes from parent context
+        ...
+    }
+}
+```
+
+Same applies to `ConfigProviderCustomizer` and application provided
+`ConfigProvider` based customizations.
+Customizations applied in a parent context do not affect child contexts,
+which must provide their own customization if needed.

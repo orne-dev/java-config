@@ -22,8 +22,6 @@ package dev.orne.config.spring;
  * #L%
  */
 
-import java.util.Optional;
-
 import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
@@ -61,6 +59,8 @@ implements ImportAware {
     protected AnnotationAttributes annotationData;
     /** The {@code ConfigProvider} supplier for current Spring context. */
     protected ConfigProviderConfigurer springConfigProvider;
+    /** The exposed configurable components {@code Configurer}, if any. */
+    protected Configurer exposedConfigurer;
 
     /**
      * Creates a new instance.
@@ -101,13 +101,8 @@ implements ImportAware {
      * @return The configurable components configurer.
      */
     @Bean(name=CONFIGURER)
-    public @NotNull Optional<Configurer> configurableComponentsConfigurer() {
-        if (this.annotationData.getBoolean("exposeConfigurer")) {
-            return Optional.of(Configurer.fromProvider(
-                    this.springConfigProvider.getConfigProvider()));
-        } else {
-            return Optional.empty();
-        }
+    public Configurer configurableComponentsConfigurer() {
+        return this.exposedConfigurer;
     }
 
     /**
@@ -118,14 +113,12 @@ implements ImportAware {
      * @return The configurable components post-processor.
      */
     @Bean(name=POST_PROCESSOR)
-    public @NotNull ConfigurableComponentsPostProcessor configurableComponentsPostProcessor(
-            final @NotNull Optional<Configurer> configurer) {
-        if (configurer.isPresent()) {
-            return new ConfigurableComponentsPostProcessor(configurer.get());
-        } else {
-            return new ConfigurableComponentsPostProcessor(
-                    Configurer.fromProvider(
-                        this.springConfigProvider.getConfigProvider()));
+    public @NotNull ConfigurableComponentsPostProcessor configurableComponentsPostProcessor() {
+        final Configurer configurer = Configurer.fromProvider(
+                this.springConfigProvider.getConfigProvider());
+        if (this.annotationData.getBoolean("exposeConfigurer")) {
+            this.exposedConfigurer = configurer;
         }
+        return new ConfigurableComponentsPostProcessor(configurer);
     }
 }

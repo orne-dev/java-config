@@ -30,6 +30,8 @@ import javax.validation.constraints.NotNull;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.FatalBeanException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -38,8 +40,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 import dev.orne.config.Config;
+import dev.orne.config.ConfigProvider;
 import dev.orne.config.Configurable;
 import dev.orne.config.ConfigurableProperty;
+import dev.orne.config.Configurer;
 import dev.orne.config.PreferredConfig;
 import dev.orne.config.spring.ConfigPropertySource;
 import dev.orne.config.spring.ConfigProviderCustomizer;
@@ -67,8 +71,10 @@ class SpringExamplesTest {
     private static final String CFG_ID_PROP = "cfg.id";
     private static final String DEFAULT_CFG_ID = "env";
     private static final String CUSTOM_CFG_ID = "custom";
+    private static final String CUSTOM_CHILD_CFG_ID = "customChild";
     private static final String SUBTYPE_CFG_ID = "subtype";
     private static final String CUSTOM_SUBTYPE_CFG_ID = "customSubtype";
+    private static final String CUSTOM_CHILD_SUBTYPE_CFG_ID = "customChildSubtype";
 
     private static final String SOURCE_PROP = "config.source.prop";
     private static final String SOURCE_PROP_VALUE = "fromConfig";
@@ -105,41 +111,6 @@ class SpringExamplesTest {
             assertEquals(SUBTYPE_CFG_ID, prefConfigurableBean.cfgId);
             assertEquals(DEFAULT_CFG_ID, prefConfigurableBean.envCfgId);
             assertEquals(SUBTYPE_CFG_ID, prefConfigurableBean.propCfgId);
-        }
-    }
-
-    /**
-     * Example of full features activation with configuration provider customization.
-     */
-    @Test
-    void exampleOfCustomEnableFullFeatures() {
-        try (final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
-            context.register(CustomizedFullFeaturesExample.class);
-            context.refresh();
-            
-            assertEquals(DEFAULT_CFG_ID, context.getEnvironment().getProperty(CFG_ID_PROP));
-            assertEquals(SOURCE_PROP_VALUE, context.getEnvironment().getProperty(SOURCE_PROP));
-            final ConfigConstructorBean defConstructorBean = context.getBean(
-                    NO_QUALIFIER_BEAN,
-                    ConfigConstructorBean.class);
-            assertEquals(CUSTOM_CFG_ID, defConstructorBean.cfgId);
-            final ConfigConstructorBean prefConstructorBean = context.getBean(
-                    QUALIFIER_BEAN,
-                    ConfigConstructorBean.class);
-            assertEquals(CUSTOM_SUBTYPE_CFG_ID, prefConstructorBean.cfgId);
-
-            final ConfigurableBean defConfigurableBean = context.getBean(
-                    NO_QUALIFIER_CONFIGURABLE_BEAN,
-                    ConfigurableBean.class);
-            assertEquals(CUSTOM_CFG_ID, defConfigurableBean.cfgId);
-            assertEquals(DEFAULT_CFG_ID, defConfigurableBean.envCfgId);
-            assertEquals(CUSTOM_CFG_ID, defConfigurableBean.propCfgId);
-            final ConfigurableBean prefConfigurableBean = context.getBean(
-                    QUALIFIER_CONFIGURABLE_BEAN,
-                    ConfigurableBean.class);
-            assertEquals(CUSTOM_SUBTYPE_CFG_ID, prefConfigurableBean.cfgId);
-            assertEquals(DEFAULT_CFG_ID, prefConfigurableBean.envCfgId);
-            assertEquals(CUSTOM_SUBTYPE_CFG_ID, prefConfigurableBean.propCfgId);
         }
     }
 
@@ -199,6 +170,413 @@ class SpringExamplesTest {
             assertEquals(SUBTYPE_CFG_ID, prefConfigurableBean.cfgId);
             assertEquals(DEFAULT_CFG_ID, prefConfigurableBean.envCfgId);
             assertEquals(SUBTYPE_CFG_ID, prefConfigurableBean.propCfgId);
+            
+            assertThrows(
+                    NoSuchBeanDefinitionException.class,
+                    () -> context.getBean(Configurer.class));
+        }
+    }
+
+    /**
+     * Example of full features activation.
+     */
+    @Test
+    void exampleOfEnableConfigurableComponentsExposedConfigurer() {
+        try (final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
+            context.register(EnableConfigurableExposedExample.class);
+            context.refresh();
+            
+            assertEquals(DEFAULT_CFG_ID, context.getEnvironment().getProperty(CFG_ID_PROP));
+            final ConfigurableBean defConfigurableBean = context.getBean(
+                    NO_QUALIFIER_CONFIGURABLE_BEAN,
+                    ConfigurableBean.class);
+            assertEquals(DEFAULT_CFG_ID, defConfigurableBean.cfgId);
+            assertEquals(DEFAULT_CFG_ID, defConfigurableBean.envCfgId);
+            assertEquals(DEFAULT_CFG_ID, defConfigurableBean.propCfgId);
+            final ConfigurableBean prefConfigurableBean = context.getBean(
+                    QUALIFIER_CONFIGURABLE_BEAN,
+                    ConfigurableBean.class);
+            assertEquals(SUBTYPE_CFG_ID, prefConfigurableBean.cfgId);
+            assertEquals(DEFAULT_CFG_ID, prefConfigurableBean.envCfgId);
+            assertEquals(SUBTYPE_CFG_ID, prefConfigurableBean.propCfgId);
+            
+            assertNotNull(context.getBean(Configurer.class));
+        }
+    }
+
+    /**
+     * Example of full features activation with configuration provider customization.
+     */
+    @Test
+    void exampleOfCustomizer() {
+        try (final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
+            context.register(CustomizerExample.class);
+            context.refresh();
+            
+            assertEquals(DEFAULT_CFG_ID, context.getEnvironment().getProperty(CFG_ID_PROP));
+            assertEquals(SOURCE_PROP_VALUE, context.getEnvironment().getProperty(SOURCE_PROP));
+            final ConfigConstructorBean defConstructorBean = context.getBean(
+                    NO_QUALIFIER_BEAN,
+                    ConfigConstructorBean.class);
+            assertEquals(CUSTOM_CFG_ID, defConstructorBean.cfgId);
+            final ConfigConstructorBean prefConstructorBean = context.getBean(
+                    QUALIFIER_BEAN,
+                    ConfigConstructorBean.class);
+            assertEquals(CUSTOM_SUBTYPE_CFG_ID, prefConstructorBean.cfgId);
+
+            final ConfigurableBean defConfigurableBean = context.getBean(
+                    NO_QUALIFIER_CONFIGURABLE_BEAN,
+                    ConfigurableBean.class);
+            assertEquals(CUSTOM_CFG_ID, defConfigurableBean.cfgId);
+            assertEquals(DEFAULT_CFG_ID, defConfigurableBean.envCfgId);
+            assertEquals(CUSTOM_CFG_ID, defConfigurableBean.propCfgId);
+            final ConfigurableBean prefConfigurableBean = context.getBean(
+                    QUALIFIER_CONFIGURABLE_BEAN,
+                    ConfigurableBean.class);
+            assertEquals(CUSTOM_SUBTYPE_CFG_ID, prefConfigurableBean.cfgId);
+            assertEquals(DEFAULT_CFG_ID, prefConfigurableBean.envCfgId);
+            assertEquals(CUSTOM_SUBTYPE_CFG_ID, prefConfigurableBean.propCfgId);
+        }
+    }
+
+    /**
+     * Example of full features activation with custom {@code ConfigProvider}.
+     */
+    @Test
+    void exampleOfOwnConfigProvider() {
+        try (final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
+            context.register(OwnConfigProviderExample.class);
+            context.refresh();
+            
+            assertEquals(DEFAULT_CFG_ID, context.getEnvironment().getProperty(CFG_ID_PROP));
+            assertEquals(SOURCE_PROP_VALUE, context.getEnvironment().getProperty(SOURCE_PROP));
+            final ConfigConstructorBean defConstructorBean = context.getBean(
+                    NO_QUALIFIER_BEAN,
+                    ConfigConstructorBean.class);
+            assertEquals(CUSTOM_CFG_ID, defConstructorBean.cfgId);
+            final ConfigConstructorBean prefConstructorBean = context.getBean(
+                    QUALIFIER_BEAN,
+                    ConfigConstructorBean.class);
+            assertEquals(CUSTOM_SUBTYPE_CFG_ID, prefConstructorBean.cfgId);
+
+            final ConfigurableBean defConfigurableBean = context.getBean(
+                    NO_QUALIFIER_CONFIGURABLE_BEAN,
+                    ConfigurableBean.class);
+            assertEquals(CUSTOM_CFG_ID, defConfigurableBean.cfgId);
+            assertEquals(DEFAULT_CFG_ID, defConfigurableBean.envCfgId);
+            assertEquals(CUSTOM_CFG_ID, defConfigurableBean.propCfgId);
+            final ConfigurableBean prefConfigurableBean = context.getBean(
+                    QUALIFIER_CONFIGURABLE_BEAN,
+                    ConfigurableBean.class);
+            assertEquals(CUSTOM_SUBTYPE_CFG_ID, prefConfigurableBean.cfgId);
+            assertEquals(DEFAULT_CFG_ID, prefConfigurableBean.envCfgId);
+            assertEquals(CUSTOM_SUBTYPE_CFG_ID, prefConfigurableBean.propCfgId);
+        }
+    }
+
+    /**
+     * Example of misconfigured hierarchy of contexts.
+     */
+    @Test
+    void exampleOfWrongContextHierarchy() {
+        try (final AnnotationConfigApplicationContext parentContext = new AnnotationConfigApplicationContext();
+                final AnnotationConfigApplicationContext childContext = new AnnotationConfigApplicationContext()) {
+            parentContext.register(WrongHierarchyParentExample.class);
+            parentContext.refresh();
+            childContext.setParent(parentContext);
+            childContext.register(WrongHierarchyChildExample.class);
+            assertThrows(FatalBeanException.class, childContext::refresh);
+        }
+    }
+
+    /**
+     * Example of hierarchy of contexts.
+     */
+    @Test
+    void exampleOfContextHierarchy() {
+        try (final AnnotationConfigApplicationContext parentContext = new AnnotationConfigApplicationContext();
+                final AnnotationConfigApplicationContext childContext = new AnnotationConfigApplicationContext()) {
+            parentContext.register(HierarchyParentExample.class);
+            parentContext.refresh();
+            childContext.setParent(parentContext);
+            childContext.register(HierarchyChildExample.class);
+            childContext.refresh();
+            
+            assertEquals(DEFAULT_CFG_ID, childContext.getEnvironment().getProperty(CFG_ID_PROP));
+            assertEquals(SOURCE_PROP_VALUE, childContext.getEnvironment().getProperty(SOURCE_PROP));
+            final ConfigConstructorBean defConstructorBean = childContext.getBean(
+                    NO_QUALIFIER_BEAN,
+                    ConfigConstructorBean.class);
+            assertEquals(DEFAULT_CFG_ID, defConstructorBean.cfgId);
+            final ConfigConstructorBean prefConstructorBean = childContext.getBean(
+                    QUALIFIER_BEAN,
+                    ConfigConstructorBean.class);
+            assertEquals(SUBTYPE_CFG_ID, prefConstructorBean.cfgId);
+
+            final ConfigurableBean defConfigurableBean = childContext.getBean(
+                    NO_QUALIFIER_CONFIGURABLE_BEAN,
+                    ConfigurableBean.class);
+            assertEquals(DEFAULT_CFG_ID, defConfigurableBean.cfgId);
+            assertEquals(DEFAULT_CFG_ID, defConfigurableBean.envCfgId);
+            assertEquals(DEFAULT_CFG_ID, defConfigurableBean.propCfgId);
+            final ConfigurableBean prefConfigurableBean = childContext.getBean(
+                    QUALIFIER_CONFIGURABLE_BEAN,
+                    ConfigurableBean.class);
+            assertEquals(SUBTYPE_CFG_ID, prefConfigurableBean.cfgId);
+            assertEquals(DEFAULT_CFG_ID, prefConfigurableBean.envCfgId);
+            assertEquals(SUBTYPE_CFG_ID, prefConfigurableBean.propCfgId);
+        }
+    }
+
+    /**
+     * Example misconfigured of custom hierarchy of contexts.
+     */
+    @Test
+    void exampleOfWrongCustomContextHierarchy() {
+        try (final AnnotationConfigApplicationContext parentContext = new AnnotationConfigApplicationContext();
+                final AnnotationConfigApplicationContext childContext = new AnnotationConfigApplicationContext()) {
+            parentContext.register(CustomizerExample.class);
+            parentContext.refresh();
+            childContext.setParent(parentContext);
+            childContext.register(WrongCustomHierarchyChildExample.class);
+            childContext.refresh();
+            
+            assertEquals(DEFAULT_CFG_ID, parentContext.getEnvironment().getProperty(CFG_ID_PROP));
+            assertEquals(SOURCE_PROP_VALUE, parentContext.getEnvironment().getProperty(SOURCE_PROP));
+            final ConfigConstructorBean parentDefConstructorBean = parentContext.getBean(
+                    NO_QUALIFIER_BEAN,
+                    ConfigConstructorBean.class);
+            assertEquals(CUSTOM_CFG_ID, parentDefConstructorBean.cfgId);
+            final ConfigConstructorBean parentPrefConstructorBean = parentContext.getBean(
+                    QUALIFIER_BEAN,
+                    ConfigConstructorBean.class);
+            assertEquals(CUSTOM_SUBTYPE_CFG_ID, parentPrefConstructorBean.cfgId);
+
+            final ConfigurableBean parentDefConfigurableBean = parentContext.getBean(
+                    NO_QUALIFIER_CONFIGURABLE_BEAN,
+                    ConfigurableBean.class);
+            assertEquals(CUSTOM_CFG_ID, parentDefConfigurableBean.cfgId);
+            assertEquals(DEFAULT_CFG_ID, parentDefConfigurableBean.envCfgId);
+            assertEquals(CUSTOM_CFG_ID, parentDefConfigurableBean.propCfgId);
+            final ConfigurableBean parentPrefConfigurableBean = parentContext.getBean(
+                    QUALIFIER_CONFIGURABLE_BEAN,
+                    ConfigurableBean.class);
+            assertEquals(CUSTOM_SUBTYPE_CFG_ID, parentPrefConfigurableBean.cfgId);
+            assertEquals(DEFAULT_CFG_ID, parentPrefConfigurableBean.envCfgId);
+            assertEquals(CUSTOM_SUBTYPE_CFG_ID, parentPrefConfigurableBean.propCfgId);
+            
+            assertEquals(DEFAULT_CFG_ID, childContext.getEnvironment().getProperty(CFG_ID_PROP));
+            assertEquals(SOURCE_PROP_VALUE, childContext.getEnvironment().getProperty(SOURCE_PROP));
+            final ConfigConstructorBean defConstructorBean = childContext.getBean(
+                    NO_QUALIFIER_BEAN,
+                    ConfigConstructorBean.class);
+            assertEquals(DEFAULT_CFG_ID, defConstructorBean.cfgId);
+            final ConfigConstructorBean prefConstructorBean = childContext.getBean(
+                    QUALIFIER_BEAN,
+                    ConfigConstructorBean.class);
+            assertEquals(SUBTYPE_CFG_ID, prefConstructorBean.cfgId);
+
+            final ConfigurableBean defConfigurableBean = childContext.getBean(
+                    NO_QUALIFIER_CONFIGURABLE_BEAN,
+                    ConfigurableBean.class);
+            assertEquals(DEFAULT_CFG_ID, defConfigurableBean.cfgId);
+            assertEquals(DEFAULT_CFG_ID, defConfigurableBean.envCfgId);
+            assertEquals(DEFAULT_CFG_ID, defConfigurableBean.propCfgId);
+            final ConfigurableBean prefConfigurableBean = childContext.getBean(
+                    QUALIFIER_CONFIGURABLE_BEAN,
+                    ConfigurableBean.class);
+            assertEquals(SUBTYPE_CFG_ID, prefConfigurableBean.cfgId);
+            assertEquals(DEFAULT_CFG_ID, prefConfigurableBean.envCfgId);
+            assertEquals(SUBTYPE_CFG_ID, prefConfigurableBean.propCfgId);
+        }
+    }
+
+    /**
+     * Example of custom hierarchy of contexts.
+     */
+    @Test
+    void exampleOfCustomContextHierarchy() {
+        try (final AnnotationConfigApplicationContext parentContext = new AnnotationConfigApplicationContext();
+                final AnnotationConfigApplicationContext childContext = new AnnotationConfigApplicationContext()) {
+            parentContext.register(CustomizerExample.class);
+            parentContext.refresh();
+            childContext.setParent(parentContext);
+            childContext.register(CustomHierarchyChildExample.class);
+            childContext.refresh();
+            
+            assertEquals(DEFAULT_CFG_ID, parentContext.getEnvironment().getProperty(CFG_ID_PROP));
+            assertEquals(SOURCE_PROP_VALUE, parentContext.getEnvironment().getProperty(SOURCE_PROP));
+            final ConfigConstructorBean parentDefConstructorBean = parentContext.getBean(
+                    NO_QUALIFIER_BEAN,
+                    ConfigConstructorBean.class);
+            assertEquals(CUSTOM_CFG_ID, parentDefConstructorBean.cfgId);
+            final ConfigConstructorBean parentPrefConstructorBean = parentContext.getBean(
+                    QUALIFIER_BEAN,
+                    ConfigConstructorBean.class);
+            assertEquals(CUSTOM_SUBTYPE_CFG_ID, parentPrefConstructorBean.cfgId);
+
+            final ConfigurableBean parentDefConfigurableBean = parentContext.getBean(
+                    NO_QUALIFIER_CONFIGURABLE_BEAN,
+                    ConfigurableBean.class);
+            assertEquals(CUSTOM_CFG_ID, parentDefConfigurableBean.cfgId);
+            assertEquals(DEFAULT_CFG_ID, parentDefConfigurableBean.envCfgId);
+            assertEquals(CUSTOM_CFG_ID, parentDefConfigurableBean.propCfgId);
+            final ConfigurableBean parentPrefConfigurableBean = parentContext.getBean(
+                    QUALIFIER_CONFIGURABLE_BEAN,
+                    ConfigurableBean.class);
+            assertEquals(CUSTOM_SUBTYPE_CFG_ID, parentPrefConfigurableBean.cfgId);
+            assertEquals(DEFAULT_CFG_ID, parentPrefConfigurableBean.envCfgId);
+            assertEquals(CUSTOM_SUBTYPE_CFG_ID, parentPrefConfigurableBean.propCfgId);
+            
+            assertEquals(DEFAULT_CFG_ID, childContext.getEnvironment().getProperty(CFG_ID_PROP));
+            assertEquals(SOURCE_PROP_VALUE, childContext.getEnvironment().getProperty(SOURCE_PROP));
+            final ConfigConstructorBean defConstructorBean = childContext.getBean(
+                    NO_QUALIFIER_BEAN,
+                    ConfigConstructorBean.class);
+            assertEquals(CUSTOM_CHILD_CFG_ID, defConstructorBean.cfgId);
+            final ConfigConstructorBean prefConstructorBean = childContext.getBean(
+                    QUALIFIER_BEAN,
+                    ConfigConstructorBean.class);
+            assertEquals(CUSTOM_CHILD_SUBTYPE_CFG_ID, prefConstructorBean.cfgId);
+
+            final ConfigurableBean defConfigurableBean = childContext.getBean(
+                    NO_QUALIFIER_CONFIGURABLE_BEAN,
+                    ConfigurableBean.class);
+            assertEquals(CUSTOM_CHILD_CFG_ID, defConfigurableBean.cfgId);
+            assertEquals(DEFAULT_CFG_ID, defConfigurableBean.envCfgId);
+            assertEquals(CUSTOM_CHILD_CFG_ID, defConfigurableBean.propCfgId);
+            final ConfigurableBean prefConfigurableBean = childContext.getBean(
+                    QUALIFIER_CONFIGURABLE_BEAN,
+                    ConfigurableBean.class);
+            assertEquals(CUSTOM_CHILD_SUBTYPE_CFG_ID, prefConfigurableBean.cfgId);
+            assertEquals(DEFAULT_CFG_ID, prefConfigurableBean.envCfgId);
+            assertEquals(CUSTOM_CHILD_SUBTYPE_CFG_ID, prefConfigurableBean.propCfgId);
+        }
+    }
+
+    /**
+     * Example of misconfonfigured custom {@ConfigProvider} hierarchy of contexts.
+     */
+    @Test
+    void exampleOfWrongCustomConfigProviderContextHierarchy() {
+        try (final AnnotationConfigApplicationContext parentContext = new AnnotationConfigApplicationContext();
+                final AnnotationConfigApplicationContext childContext = new AnnotationConfigApplicationContext()) {
+            parentContext.register(OwnConfigProviderExample.class);
+            parentContext.refresh();
+            childContext.setParent(parentContext);
+            childContext.register(WrongCustomHierarchyChildExample.class);
+            childContext.refresh();
+            
+            assertEquals(DEFAULT_CFG_ID, parentContext.getEnvironment().getProperty(CFG_ID_PROP));
+            assertEquals(SOURCE_PROP_VALUE, parentContext.getEnvironment().getProperty(SOURCE_PROP));
+            final ConfigConstructorBean parentDefConstructorBean = parentContext.getBean(
+                    NO_QUALIFIER_BEAN,
+                    ConfigConstructorBean.class);
+            assertEquals(CUSTOM_CFG_ID, parentDefConstructorBean.cfgId);
+            final ConfigConstructorBean parentPrefConstructorBean = parentContext.getBean(
+                    QUALIFIER_BEAN,
+                    ConfigConstructorBean.class);
+            assertEquals(CUSTOM_SUBTYPE_CFG_ID, parentPrefConstructorBean.cfgId);
+
+            final ConfigurableBean parentDefConfigurableBean = parentContext.getBean(
+                    NO_QUALIFIER_CONFIGURABLE_BEAN,
+                    ConfigurableBean.class);
+            assertEquals(CUSTOM_CFG_ID, parentDefConfigurableBean.cfgId);
+            assertEquals(DEFAULT_CFG_ID, parentDefConfigurableBean.envCfgId);
+            assertEquals(CUSTOM_CFG_ID, parentDefConfigurableBean.propCfgId);
+            final ConfigurableBean parentPrefConfigurableBean = parentContext.getBean(
+                    QUALIFIER_CONFIGURABLE_BEAN,
+                    ConfigurableBean.class);
+            assertEquals(CUSTOM_SUBTYPE_CFG_ID, parentPrefConfigurableBean.cfgId);
+            assertEquals(DEFAULT_CFG_ID, parentPrefConfigurableBean.envCfgId);
+            assertEquals(CUSTOM_SUBTYPE_CFG_ID, parentPrefConfigurableBean.propCfgId);
+            
+            assertEquals(DEFAULT_CFG_ID, childContext.getEnvironment().getProperty(CFG_ID_PROP));
+            assertEquals(SOURCE_PROP_VALUE, childContext.getEnvironment().getProperty(SOURCE_PROP));
+            final ConfigConstructorBean defConstructorBean = childContext.getBean(
+                    NO_QUALIFIER_BEAN,
+                    ConfigConstructorBean.class);
+            assertEquals(DEFAULT_CFG_ID, defConstructorBean.cfgId);
+            final ConfigConstructorBean prefConstructorBean = childContext.getBean(
+                    QUALIFIER_BEAN,
+                    ConfigConstructorBean.class);
+            assertEquals(SUBTYPE_CFG_ID, prefConstructorBean.cfgId);
+
+            final ConfigurableBean defConfigurableBean = childContext.getBean(
+                    NO_QUALIFIER_CONFIGURABLE_BEAN,
+                    ConfigurableBean.class);
+            assertEquals(DEFAULT_CFG_ID, defConfigurableBean.cfgId);
+            assertEquals(DEFAULT_CFG_ID, defConfigurableBean.envCfgId);
+            assertEquals(DEFAULT_CFG_ID, defConfigurableBean.propCfgId);
+            final ConfigurableBean prefConfigurableBean = childContext.getBean(
+                    QUALIFIER_CONFIGURABLE_BEAN,
+                    ConfigurableBean.class);
+            assertEquals(SUBTYPE_CFG_ID, prefConfigurableBean.cfgId);
+            assertEquals(DEFAULT_CFG_ID, prefConfigurableBean.envCfgId);
+            assertEquals(SUBTYPE_CFG_ID, prefConfigurableBean.propCfgId);
+        }
+    }
+
+    /**
+     * Example of custom child {@ConfigProvider} hierarchy of contexts.
+     */
+    @Test
+    void exampleOfCustomChildConfigProviderContextHierarchy() {
+        try (final AnnotationConfigApplicationContext parentContext = new AnnotationConfigApplicationContext();
+                final AnnotationConfigApplicationContext childContext = new AnnotationConfigApplicationContext()) {
+            parentContext.register(OwnConfigProviderExample.class);
+            parentContext.refresh();
+            childContext.setParent(parentContext);
+            childContext.register(OwnConfigProviderHierarchyChildExample.class);
+            childContext.refresh();
+            
+            assertEquals(DEFAULT_CFG_ID, parentContext.getEnvironment().getProperty(CFG_ID_PROP));
+            assertEquals(SOURCE_PROP_VALUE, parentContext.getEnvironment().getProperty(SOURCE_PROP));
+            final ConfigConstructorBean parentDefConstructorBean = parentContext.getBean(
+                    NO_QUALIFIER_BEAN,
+                    ConfigConstructorBean.class);
+            assertEquals(CUSTOM_CFG_ID, parentDefConstructorBean.cfgId);
+            final ConfigConstructorBean parentPrefConstructorBean = parentContext.getBean(
+                    QUALIFIER_BEAN,
+                    ConfigConstructorBean.class);
+            assertEquals(CUSTOM_SUBTYPE_CFG_ID, parentPrefConstructorBean.cfgId);
+
+            final ConfigurableBean parentDefConfigurableBean = parentContext.getBean(
+                    NO_QUALIFIER_CONFIGURABLE_BEAN,
+                    ConfigurableBean.class);
+            assertEquals(CUSTOM_CFG_ID, parentDefConfigurableBean.cfgId);
+            assertEquals(DEFAULT_CFG_ID, parentDefConfigurableBean.envCfgId);
+            assertEquals(CUSTOM_CFG_ID, parentDefConfigurableBean.propCfgId);
+            final ConfigurableBean parentPrefConfigurableBean = parentContext.getBean(
+                    QUALIFIER_CONFIGURABLE_BEAN,
+                    ConfigurableBean.class);
+            assertEquals(CUSTOM_SUBTYPE_CFG_ID, parentPrefConfigurableBean.cfgId);
+            assertEquals(DEFAULT_CFG_ID, parentPrefConfigurableBean.envCfgId);
+            assertEquals(CUSTOM_SUBTYPE_CFG_ID, parentPrefConfigurableBean.propCfgId);
+            
+            assertEquals(DEFAULT_CFG_ID, childContext.getEnvironment().getProperty(CFG_ID_PROP));
+            assertEquals(SOURCE_PROP_VALUE, childContext.getEnvironment().getProperty(SOURCE_PROP));
+            final ConfigConstructorBean defConstructorBean = childContext.getBean(
+                    NO_QUALIFIER_BEAN,
+                    ConfigConstructorBean.class);
+            assertEquals(CUSTOM_CHILD_CFG_ID, defConstructorBean.cfgId);
+            final ConfigConstructorBean prefConstructorBean = childContext.getBean(
+                    QUALIFIER_BEAN,
+                    ConfigConstructorBean.class);
+            assertEquals(CUSTOM_CHILD_SUBTYPE_CFG_ID, prefConstructorBean.cfgId);
+
+            final ConfigurableBean defConfigurableBean = childContext.getBean(
+                    NO_QUALIFIER_CONFIGURABLE_BEAN,
+                    ConfigurableBean.class);
+            assertEquals(CUSTOM_CHILD_CFG_ID, defConfigurableBean.cfgId);
+            assertEquals(DEFAULT_CFG_ID, defConfigurableBean.envCfgId);
+            assertEquals(CUSTOM_CHILD_CFG_ID, defConfigurableBean.propCfgId);
+            final ConfigurableBean prefConfigurableBean = childContext.getBean(
+                    QUALIFIER_CONFIGURABLE_BEAN,
+                    ConfigurableBean.class);
+            assertEquals(CUSTOM_CHILD_SUBTYPE_CFG_ID, prefConfigurableBean.cfgId);
+            assertEquals(DEFAULT_CFG_ID, prefConfigurableBean.envCfgId);
+            assertEquals(CUSTOM_CHILD_SUBTYPE_CFG_ID, prefConfigurableBean.propCfgId);
         }
     }
 
@@ -313,38 +691,6 @@ class SpringExamplesTest {
     }
 
     @Configuration
-    @EnableOrneConfig
-    @PropertySource("classpath:dev/orne/config/spring/config.autowire.test.properties")
-    @ConfigPropertySource(CONFIG_SOURCE_BEAN)
-    static class CustomizedFullFeaturesExample
-    extends FullFeaturesExample
-    implements ConfigProviderCustomizer {
-
-        @Override
-        public Config configureDefaultConfig(
-                @NotNull Map<String, Config> configs) {
-            return Config.fromProperties()
-                    .add(Map.of(
-                            CFG_ID_PROP, CUSTOM_CFG_ID))
-                    .build();
-        }
-
-        @Override
-        public void registerAdditionalConfigs(
-                ConfigRegistry regitry,
-                Map<String, Config> configs) {
-            regitry.add(
-                    Config.fromProperties()
-                        .withParent(configs.get("subtypeConfig"))
-                        .withOverrideParentProperties()
-                        .add(Map.of(
-                                CFG_ID_PROP, CUSTOM_SUBTYPE_CFG_ID))
-                        .as(ConfigSubtype.class));
-            ConfigProviderCustomizer.super.registerAdditionalConfigs(regitry, configs);
-        }
-    }
-
-    @Configuration
     @ConfigPropertySource(CONFIG_SOURCE_BEAN)
     static class ConfigPropertySourceExample {
 
@@ -399,6 +745,291 @@ class SpringExamplesTest {
                     .add(Map.of(
                             CFG_ID_PROP, SUBTYPE_CFG_ID))
                     .as(ConfigSubtype.class);
+        }
+
+        @Bean(NO_QUALIFIER_CONFIGURABLE_BEAN)
+        public ConfigurableBean configurableBean() {
+            return new ConfigurableBean();
+        }
+
+        @Bean(QUALIFIER_CONFIGURABLE_BEAN)
+        public PreferredConfigurableBean preferredConfigurableBean() {
+            return new PreferredConfigurableBean();
+        }
+    }
+
+    @Configuration
+    @PropertySource("classpath:dev/orne/config/spring/config.autowire.test.properties")
+    @EnableConfigurableComponents(exposeConfigurer = true)
+    static class EnableConfigurableExposedExample {
+
+        @Bean
+        public ConfigSubtype subtypeConfig() {
+            // No parent config here, requires injection
+            return Config.fromProperties()
+                    .add(Map.of(
+                            CFG_ID_PROP, SUBTYPE_CFG_ID))
+                    .as(ConfigSubtype.class);
+        }
+
+        @Bean(NO_QUALIFIER_CONFIGURABLE_BEAN)
+        public ConfigurableBean configurableBean() {
+            return new ConfigurableBean();
+        }
+
+        @Bean(QUALIFIER_CONFIGURABLE_BEAN)
+        public PreferredConfigurableBean preferredConfigurableBean() {
+            return new PreferredConfigurableBean();
+        }
+    }
+
+    @Configuration
+    @EnableOrneConfig
+    @PropertySource("classpath:dev/orne/config/spring/config.autowire.test.properties")
+    @ConfigPropertySource(CONFIG_SOURCE_BEAN)
+    static class CustomizerExample
+    extends FullFeaturesExample
+    implements ConfigProviderCustomizer {
+
+        @Override
+        public Config configureDefaultConfig(
+                @NotNull Map<String, Config> configs) {
+            return Config.fromProperties()
+                    .add(Map.of(
+                            CFG_ID_PROP, CUSTOM_CFG_ID))
+                    .build();
+        }
+
+        @Override
+        public void registerAdditionalConfigs(
+                ConfigRegistry regitry,
+                Map<String, Config> configs) {
+            regitry.add(
+                    Config.fromProperties()
+                        .withParent(configs.get("subtypeConfig"))
+                        .withOverrideParentProperties()
+                        .add(Map.of(
+                                CFG_ID_PROP, CUSTOM_SUBTYPE_CFG_ID))
+                        .as(ConfigSubtype.class));
+            ConfigProviderCustomizer.super.registerAdditionalConfigs(regitry, configs);
+        }
+    }
+
+    @Configuration
+    @EnableOrneConfig
+    @PropertySource("classpath:dev/orne/config/spring/config.autowire.test.properties")
+    @ConfigPropertySource(CONFIG_SOURCE_BEAN)
+    static class OwnConfigProviderExample
+    extends FullFeaturesExample {
+
+        @Bean
+        public ConfigProvider configProvider() {
+            final Config defaultConfig = Config.fromProperties()
+                    .add(Map.of(
+                            CFG_ID_PROP, CUSTOM_CFG_ID))
+                    .build();
+            final Config subtypeConfig = Config.fromProperties()
+                    .withParent(defaultConfig)
+                    .withOverrideParentProperties()
+                    .add(Map.of(
+                            CFG_ID_PROP, CUSTOM_SUBTYPE_CFG_ID))
+                    .as(ConfigSubtype.class);
+            return ConfigProvider.builder(defaultConfig)
+                    .addConfig(subtypeConfig)
+                    .build();
+        }
+    }
+
+    @Configuration
+    @EnableOrneConfig
+    static class WrongHierarchyParentExample {
+        // No extra beans
+    }
+
+    @Configuration
+    static class WrongHierarchyChildExample {
+
+        @Bean
+        public ConfigConstructorBean defaultConfigConstructorBean(
+                final Config config) {
+            return new ConfigConstructorBean(config);
+        }
+    }
+
+    @Configuration
+    @EnableOrneConfig
+    @PropertySource("classpath:dev/orne/config/spring/config.autowire.test.properties")
+    @ConfigPropertySource(CONFIG_SOURCE_BEAN)
+    static class HierarchyParentExample {
+
+        @Bean(CONFIG_SOURCE_BEAN)
+        public Config configSource() {
+            return Config.fromProperties()
+                    .add(Map.of(
+                            SOURCE_PROP, SOURCE_PROP_VALUE))
+                    .build();
+        }
+
+        @Bean
+        public ConfigSubtype subtypeConfig(
+                Config defaultConfig) {
+            return Config.fromProperties()
+                    .withParent(defaultConfig)
+                    .withOverrideParentProperties()
+                    .add(Map.of(
+                            CFG_ID_PROP, SUBTYPE_CFG_ID))
+                    .as(ConfigSubtype.class);
+        }
+    }
+
+    @Configuration
+    @EnableOrneConfig
+    static class HierarchyChildExample {
+
+        @Bean(NO_QUALIFIER_BEAN)
+        public ConfigConstructorBean defaultConfigConstructorBean(
+                final Config config) {
+            return new ConfigConstructorBean(config);
+        }
+
+        @Bean(QUALIFIER_BEAN)
+        public ConfigConstructorBean configConstructorBean(
+                @Value("${" + CFG_ID_PROP + ":#{null}}")
+                final String envId,
+                @PreferredConfig(ConfigSubtype.class)
+                final Config config) {
+            return new ConfigConstructorBean(config);
+        }
+
+        @Bean(NO_QUALIFIER_CONFIGURABLE_BEAN)
+        public ConfigurableBean configurableBean() {
+            return new ConfigurableBean();
+        }
+
+        @Bean(QUALIFIER_CONFIGURABLE_BEAN)
+        public PreferredConfigurableBean preferredConfigurableBean() {
+            return new PreferredConfigurableBean();
+        }
+    }
+
+    @Configuration
+    @EnableOrneConfig
+    static class WrongCustomHierarchyChildExample {
+
+        @Bean(NO_QUALIFIER_BEAN)
+        public ConfigConstructorBean defaultConfigConstructorBean(
+                final Config config) {
+            return new ConfigConstructorBean(config);
+        }
+
+        @Bean(QUALIFIER_BEAN)
+        public ConfigConstructorBean configConstructorBean(
+                @Value("${" + CFG_ID_PROP + ":#{null}}")
+                final String envId,
+                @PreferredConfig(ConfigSubtype.class)
+                final Config config) {
+            return new ConfigConstructorBean(config);
+        }
+
+        @Bean(NO_QUALIFIER_CONFIGURABLE_BEAN)
+        public ConfigurableBean configurableBean() {
+            return new ConfigurableBean();
+        }
+
+        @Bean(QUALIFIER_CONFIGURABLE_BEAN)
+        public PreferredConfigurableBean preferredConfigurableBean() {
+            return new PreferredConfigurableBean();
+        }
+    }
+
+    @Configuration
+    @EnableOrneConfig
+    static class CustomHierarchyChildExample
+    implements ConfigProviderCustomizer {
+
+        @Override
+        public Config configureDefaultConfig(
+                @NotNull Map<String, Config> configs) {
+            return Config.fromProperties()
+                    .add(Map.of(
+                            CFG_ID_PROP, CUSTOM_CHILD_CFG_ID))
+                    .build();
+        }
+
+        @Override
+        public void registerAdditionalConfigs(
+                ConfigRegistry regitry,
+                Map<String, Config> configs) {
+            regitry.add(
+                    Config.fromProperties()
+                        .withParent(configs.get("subtypeConfig"))
+                        .withOverrideParentProperties()
+                        .add(Map.of(
+                                CFG_ID_PROP, CUSTOM_CHILD_SUBTYPE_CFG_ID))
+                        .as(ConfigSubtype.class));
+            ConfigProviderCustomizer.super.registerAdditionalConfigs(regitry, configs);
+        }
+
+        @Bean(NO_QUALIFIER_BEAN)
+        public ConfigConstructorBean defaultConfigConstructorBean(
+                final Config config) {
+            return new ConfigConstructorBean(config);
+        }
+
+        @Bean(QUALIFIER_BEAN)
+        public ConfigConstructorBean configConstructorBean(
+                @Value("${" + CFG_ID_PROP + ":#{null}}")
+                final String envId,
+                @PreferredConfig(ConfigSubtype.class)
+                final Config config) {
+            return new ConfigConstructorBean(config);
+        }
+
+        @Bean(NO_QUALIFIER_CONFIGURABLE_BEAN)
+        public ConfigurableBean configurableBean() {
+            return new ConfigurableBean();
+        }
+
+        @Bean(QUALIFIER_CONFIGURABLE_BEAN)
+        public PreferredConfigurableBean preferredConfigurableBean() {
+            return new PreferredConfigurableBean();
+        }
+    }
+
+    @Configuration
+    @EnableOrneConfig
+    static class OwnConfigProviderHierarchyChildExample  {
+
+        @Bean
+        public ConfigProvider configProvider() {
+            final Config defaultConfig = Config.fromProperties()
+                    .add(Map.of(
+                            CFG_ID_PROP, CUSTOM_CHILD_CFG_ID))
+                    .build();
+            final Config subtypeConfig = Config.fromProperties()
+                    .withParent(defaultConfig)
+                    .withOverrideParentProperties()
+                    .add(Map.of(
+                            CFG_ID_PROP, CUSTOM_CHILD_SUBTYPE_CFG_ID))
+                    .as(ConfigSubtype.class);
+            return ConfigProvider.builder(defaultConfig)
+                    .addConfig(subtypeConfig)
+                    .build();
+        }
+
+        @Bean(NO_QUALIFIER_BEAN)
+        public ConfigConstructorBean defaultConfigConstructorBean(
+                final Config config) {
+            return new ConfigConstructorBean(config);
+        }
+
+        @Bean(QUALIFIER_BEAN)
+        public ConfigConstructorBean configConstructorBean(
+                @Value("${" + CFG_ID_PROP + ":#{null}}")
+                final String envId,
+                @PreferredConfig(ConfigSubtype.class)
+                final Config config) {
+            return new ConfigConstructorBean(config);
         }
 
         @Bean(NO_QUALIFIER_CONFIGURABLE_BEAN)
