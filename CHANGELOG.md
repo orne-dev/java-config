@@ -7,7 +7,7 @@
 
 ### Changed
 
-- Bump `org.apache.commons:commons-lang3` to 3.18.0.
+- Bump `org.apache.commons:commons-lang3` to 3.19.0.
 - Bump `commons-beanutils:commons-beanutils` to 1.10.1.
 - **Breaking:** Simplify base configuration API.
     - Make `Config` a functional interface with a `String get(String)` method.
@@ -18,9 +18,10 @@
 
 - Add optional dependency with `org.apache.commons:commons-pool2` 2.12.1.
 - Add optional dependency with `org.apache.commons:commons-configuration2` 2.12.0.
-- Add optional dependency with `com.fasterxml.jackson.core:jackson-databind` 2.19.1.
-- Add optional dependency with `com.fasterxml.jackson.dataformat:jackson-dataformat-yaml` 2.19.1.
-- Add optional dependency with `org.springframework:spring-context` 5.3.31.
+- Add optional dependency with `com.fasterxml.jackson.core:jackson-databind` 2.20.1.
+- Add optional dependency with `com.fasterxml.jackson.dataformat:jackson-dataformat-yaml` 2.20.1.
+- Add optional dependency with `org.springframework:spring-context` 5.3.39.
+- Add optional dependency with `org.springframework.boot:spring-boot-autoconfigure` 2.7.18.
 - Add configuration exceptions hierarchy.
     - `dev.orne.config.ConfigException` runtime exception.
     - `dev.orne.config.NonIterableConfigException` runtime exception.
