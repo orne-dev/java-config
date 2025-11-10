@@ -25,7 +25,6 @@ package dev.orne.config.spring;
 import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
-import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -77,10 +76,6 @@ implements ImportAware {
             final @NotNull AnnotationMetadata importMetadata) {
         annotationData = AnnotationAttributes.fromMap(
                 importMetadata.getAnnotationAttributes(EnableConfigurableComponents.class.getName()));
-        if (annotationData == null) {
-            throw new BeanInitializationException(
-                    "@EnableConfigurableComponents is not present on importing class " + importMetadata.getClassName());
-        }
     }
 
     /**
@@ -116,7 +111,7 @@ implements ImportAware {
     public @NotNull ConfigurableComponentsPostProcessor configurableComponentsPostProcessor() {
         final Configurer configurer = Configurer.fromProvider(
                 this.springConfigProvider.getConfigProvider());
-        if (this.annotationData.getBoolean("exposeConfigurer")) {
+        if (this.annotationData != null && this.annotationData.getBoolean("exposeConfigurer")) {
             this.exposedConfigurer = configurer;
         }
         return new ConfigurableComponentsPostProcessor(configurer);

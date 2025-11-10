@@ -9,7 +9,27 @@ This means that child contexts **do not inherit** configurations from parent
 contexts, and must be configured independently.
 See the [context hierarchies](#Context_hierarchies) section for more details.
 
-## Full features activation
+## Spring boot auto-configuration
+
+The libray comes with a Spring Boot auto-configuration class that
+enables all features provided by the library by default.
+To use it, simply add the library dependency to the
+application dependencies.
+
+The auto-configuration can be disabled through the
+standard `spring.autoconfigure.exclude` property,
+excluding the `dev.orne.config.spring.SpringBootAutoConfigurer` class,
+or the library specific `orne.config.spring.boot.starter.enabled` property.
+
+Additionally, each feature can be disabled independently
+through the following properties:
+
+| Property                                               | Feature                                         |
+|--------------------------------------------------------|-------------------------------------------------|
+| `orne.config.spring.boot.starter.injection.enabled`    | `PreferredConfig` based injection               |
+| `orne.config.spring.boot.starter.configurable.enabled` | Configurable components automatic configuration |
+
+## Annotation based Full features activation
 
 To enable all features provided by the library in Spring Framework add
 the `EnableOrneConfig` annotation to the Java configuration class:

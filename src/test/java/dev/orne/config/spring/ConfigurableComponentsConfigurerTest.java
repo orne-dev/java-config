@@ -34,7 +34,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
 
@@ -73,16 +72,6 @@ class ConfigurableComponentsConfigurerTest {
         when(annotationMetadata.getAnnotationAttributes(EnableConfigurableComponents.class.getName())).thenReturn(attrs);
         configurer.setImportMetadata(annotationMetadata);
         assertSame(attrs, configurer.annotationData);
-    }
-
-    /**
-     * Tests that when the {@link EnableConfigurableComponents} annotation is
-     * not present, an {@code BeanInitializationException} is thrown.
-     */
-    @Test
-    void givenNoAnnotation_whenSetImportMetadata_thenThrowException() {
-        when(annotationMetadata.getAnnotationAttributes(anyString())).thenReturn(null);
-        assertThrows(BeanInitializationException.class, () -> configurer.setImportMetadata(annotationMetadata));
     }
 
     /**

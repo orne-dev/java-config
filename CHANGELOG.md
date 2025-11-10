@@ -118,6 +118,8 @@
         - `dev.orne.config.spring.EnablePreferredConfigInjection` annotation.
     - All featues activation through a single annotation.
         - `dev.orne.config.spring.EnableOrneConfig` annotation.
+    - Add Spring Boot auto configuration.
+        - `dev.orne.config.spring.SpringBootAutoConfigurer` class.
 
 ### Removed
 
