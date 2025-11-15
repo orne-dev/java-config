@@ -57,7 +57,6 @@
     <awaitility.version>4.3.0</awaitility.version>
     <assertj.version>3.27.6</assertj.version>
 
-    <jakarta.transform.skip>true</jakarta.transform.skip>
     <github.project.id>java-config</github.project.id>
     <sonar.projectKey>orne-dev_java-config</sonar.projectKey>
   </properties>
