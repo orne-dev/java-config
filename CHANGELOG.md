@@ -1,6 +1,14 @@
 # Orne Java configuration utilities - Changelog
 
-## 1.0.0 - 2025-11-10
+## 1.0.0 - 2026-03-29
+
+- **Maven coordinates change.**
+
+### Changed
+
+- Changed Maven coordinates from `dev.orne:config` to `dev.orne:orne-config`.
+
+## dev.orne:config - 1.0.0 - 2025-11-10
 
 - **Requires Java 11 or newer.**
 - **Major API compatibility break.**
@@ -138,7 +146,7 @@
     - `dev.orne.config.DefaultConfigurer` class.
     - `dev.orne.config.DefaultConfigProvider` class.
 
-## 0.1.0 - 2020-04-28
+## dev.orne:config - 0.1.0 - 2020-04-28
 
 _First experimental release._
 
