@@ -3,7 +3,7 @@ $dash Orne configuration utilities.
 
 $dash$dash Specifications
 
-- **Maven coordinates:** `dev.orne:config`
+- **Maven coordinates:** `${project.groupId}:${project.artifactId}`
 - **License:** LGPL v3
 - **Required Java version:** 11+
 - **JavaEE/JakartaEE dependencies:** None
@@ -13,7 +13,7 @@ $dash$dash Specifications
 $dash$dash Usage
 
 The binaries can be obtained from [Maven Central][maven search] with the
-`dev.orne:config` coordinates.
+`${project.groupId}:${project.artifactId}` coordinates.
 
 Add dependency to your Maven `pom.xml`:
 

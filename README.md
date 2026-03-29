@@ -43,7 +43,7 @@ The binaries can be obtained from [Maven Central][status.maven] with the
 ```xml
 <dependency>
   <groupId>dev.orne</groupId>
-  <artifactId>config</artifactId>
+  <artifactId>orne-config</artifactId>
   <version>1.0.0</version>
 </dependency>
 ```
@@ -54,7 +54,7 @@ For further information refer to the [Maven Site][site] and [Javadoc][javadoc].
 
 [site]: https://orne-dev.github.io/java-config/
 [javadoc]: https://javadoc.io/doc/dev.orne/config
-[status.license]: http://www.gnu.org/licenses/gpl-3.0.txt
+[status.license]: https://www.gnu.org/licenses/gpl-3.0.txt
 [status.license.badge]: https://img.shields.io/github/license/orne-dev/java-config
 [status.maven]: https://central.sonatype.com/artifact/dev.orne/config
 [status.maven.badge]: https://img.shields.io/maven-central/v/dev.orne/config.svg?label=Maven%20Central
