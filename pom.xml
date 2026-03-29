@@ -6,7 +6,7 @@
   <parent>
     <groupId>dev.orne</groupId>
     <artifactId>java-root-pom</artifactId>
-    <version>1.1.1</version>
+    <version>1.2.0</version>
     <relativePath />
   </parent>
 
@@ -55,13 +55,21 @@
     <spring.boot.version>2.7.18</spring.boot.version>
 
     <awaitility.version>4.3.0</awaitility.version>
-    <assertj.version>3.27.6</assertj.version>
+    <assertj.version>3.27.7</assertj.version>
 
     <github.project.id>java-config</github.project.id>
     <sonar.projectKey>orne-dev_java-config</sonar.projectKey>
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>org.apiguardian</groupId>
+      <artifactId>apiguardian-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jspecify</groupId>
+      <artifactId>jspecify</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
@@ -87,11 +95,6 @@
       </exclusions>
     </dependency>
 
-    <dependency>
-      <groupId>org.apiguardian</groupId>
-      <artifactId>apiguardian-api</artifactId>
-      <optional>true</optional>
-    </dependency>
     <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
