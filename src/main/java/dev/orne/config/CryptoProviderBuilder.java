@@ -22,8 +22,6 @@ package dev.orne.config;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 /**
@@ -42,12 +40,12 @@ public interface CryptoProviderBuilder {
      * 
      * @return This builder, for method chaining.
      */
-    @NotNull CryptoProviderBuilder pooled();
+    CryptoProviderBuilder pooled();
 
     /**
      * Creates a new cryptography transformations provider.
      * 
      * @return The cryptography transformations provider.
      */
-    @NotNull ConfigCryptoProvider build();
+    ConfigCryptoProvider build();
 }

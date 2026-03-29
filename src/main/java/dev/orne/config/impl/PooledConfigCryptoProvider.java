@@ -27,7 +27,6 @@ import java.util.NoSuchElementException;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
-import javax.validation.constraints.NotNull;
 
 import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.ObjectPool;
@@ -36,6 +35,7 @@ import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.PooledSoftReference;
 import org.apache.commons.pool2.impl.SoftReferenceObjectPool;
 import org.apiguardian.api.API;
+import org.springframework.lang.Nullable;
 
 import dev.orne.config.ConfigCryptoEngine;
 import dev.orne.config.ConfigCryptoProviderException;
@@ -55,7 +55,7 @@ public class PooledConfigCryptoProvider
 extends AbstractConfigCryptoProvider {
 
     /** The pool of {@code Cipher} instances to use. */
-    private final @NotNull ObjectPool<Cipher> ciphersPool;
+    private final ObjectPool<Cipher> ciphersPool;
 
     /**
      * Creates a new instance with specified builder configuration options.
@@ -63,7 +63,7 @@ extends AbstractConfigCryptoProvider {
      * @param options The configured builder options.
      */
     public PooledConfigCryptoProvider(
-            final @NotNull CryptoProviderOptions options) {
+            final CryptoProviderOptions options) {
         super(options);
         this.ciphersPool = new SoftReferenceObjectPool<>(new PooledCipherFactory(options.getEngine()));
     }
@@ -77,10 +77,10 @@ extends AbstractConfigCryptoProvider {
      * @param pool The pool of {@code Cipher} instances to use.
      */
     protected PooledConfigCryptoProvider(
-            final @NotNull ConfigCryptoEngine engine,
+            final ConfigCryptoEngine engine,
             final boolean destroyEngine,
-            final @NotNull SecretKey secretKey,
-            final @NotNull ObjectPool<Cipher> pool) {
+            final SecretKey secretKey,
+            final ObjectPool<Cipher> pool) {
         super(engine, destroyEngine, secretKey);
         this.ciphersPool = pool;
     }
@@ -92,7 +92,7 @@ extends AbstractConfigCryptoProvider {
      * @return The pool of {@code Cipher}s to use during encryption and
      * decryption
      */
-    protected @NotNull ObjectPool<Cipher> getCiphersPool() {
+    protected ObjectPool<Cipher> getCiphersPool() {
         return this.ciphersPool;
     }
 
@@ -100,8 +100,8 @@ extends AbstractConfigCryptoProvider {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull String encrypt(
-            final @NotNull String value)
+    public String encrypt(
+            final @Nullable String value)
     throws ConfigCryptoProviderException {
         checkDestroyed();
         ConfigCryptoProviderException encryptException = null;
@@ -135,8 +135,8 @@ extends AbstractConfigCryptoProvider {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull String decrypt(
-            final @NotNull String value)
+    public String decrypt(
+            final @Nullable String value)
     throws ConfigCryptoProviderException {
         checkDestroyed();
         ConfigCryptoProviderException decryptException = null;
@@ -180,7 +180,7 @@ extends AbstractConfigCryptoProvider {
     extends BasePooledObjectFactory<Cipher> {
 
         /** The cryptographic engine. */
-        private final @NotNull ConfigCryptoEngine engine;
+        private final ConfigCryptoEngine engine;
 
         /**
          * Creates a new instance.
@@ -188,7 +188,7 @@ extends AbstractConfigCryptoProvider {
          * @param engine The cryptographic engine
          */
         public PooledCipherFactory(
-                final @NotNull ConfigCryptoEngine engine) {
+                final ConfigCryptoEngine engine) {
             super();
             this.engine = engine;
         }
@@ -198,7 +198,7 @@ extends AbstractConfigCryptoProvider {
          * 
          * @return The cryptographic engine
          */
-        protected @NotNull ConfigCryptoEngine getEngine() {
+        protected ConfigCryptoEngine getEngine() {
             return engine;
         }
 
@@ -206,7 +206,7 @@ extends AbstractConfigCryptoProvider {
          * {@inheritDoc}
          */
         @Override
-        public @NotNull Cipher create()
+        public Cipher create()
         throws ConfigCryptoProviderException {
             return this.engine.createCipher();
         }
@@ -215,7 +215,8 @@ extends AbstractConfigCryptoProvider {
          * {@inheritDoc}
          */
         @Override
-        public @NotNull PooledObject<Cipher> wrap(final @NotNull Cipher obj) {
+        public PooledObject<Cipher> wrap(
+                final Cipher obj) {
             return new PooledSoftReference<>(new SoftReference<>(obj));
         }
     }

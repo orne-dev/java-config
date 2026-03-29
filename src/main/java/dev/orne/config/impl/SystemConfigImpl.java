@@ -24,10 +24,9 @@ package dev.orne.config.impl;
 
 import java.util.Properties;
 import java.util.stream.Stream;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
+import org.springframework.lang.Nullable;
 
 import dev.orne.config.Config;
 
@@ -51,7 +50,7 @@ extends AbstractConfig {
      * @param options The configuration builder options.
      */
     public SystemConfigImpl(
-            final @NotNull ConfigOptions options) {
+            final ConfigOptions options) {
         super(options);
     }
 
@@ -68,7 +67,7 @@ extends AbstractConfig {
      */
     @Override
     protected boolean containsInt(
-            final @NotBlank String key) {
+            final String key) {
         return getSystemProperties().containsKey(key);
     }
 
@@ -76,7 +75,7 @@ extends AbstractConfig {
      * {@inheritDoc}
      */
     @Override
-    protected @NotNull Stream<String> getKeysInt() {
+    protected Stream<String> getKeysInt() {
         return getSystemProperties().stringPropertyNames().stream();
     }
 
@@ -84,8 +83,8 @@ extends AbstractConfig {
      * {@inheritDoc}
      */
     @Override
-    protected String getInt(
-            final @NotBlank String key) {
+    protected @Nullable String getInt(
+            final String key) {
         return getSystemProperties().getProperty(key);
     }
 

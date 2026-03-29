@@ -22,8 +22,6 @@ package dev.orne.config;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 import org.springframework.core.env.Environment;
 
@@ -47,6 +45,6 @@ public interface SpringEnvironmentConfigInitialBuilder {
      * @param environment The Spring {@code Environment}.
      * @return Next builder, for method chaining.
      */
-    @NotNull SpringEnvironmentConfigBuilder ofEnvironment(
-            @NotNull Environment environment);
+    SpringEnvironmentConfigBuilder ofEnvironment(
+            Environment environment);
 }

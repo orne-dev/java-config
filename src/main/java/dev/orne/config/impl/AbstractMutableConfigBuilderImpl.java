@@ -22,9 +22,8 @@ package dev.orne.config.impl;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.MutableConfigBuilder;
 import dev.orne.config.ValueEncoder;
@@ -44,7 +43,7 @@ extends AbstractConfigBuilderImpl<S>
 implements MutableConfigBuilder<S> {
 
     /** The configuration options. */
-    protected final @NotNull MutableConfigOptions mutableOptions;
+    protected final MutableConfigOptions mutableOptions;
 
     /**
      * Copy constructor.
@@ -53,8 +52,8 @@ implements MutableConfigBuilder<S> {
      * @param mutableOptions The mutable configuration options to copy.
      */
     protected AbstractMutableConfigBuilderImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions) {
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions) {
         super(options);
         this.mutableOptions = new MutableConfigOptions(mutableOptions);
     }
@@ -63,8 +62,8 @@ implements MutableConfigBuilder<S> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull S withEncoder(
-            final ValueEncoder encoder) {
+    public S withEncoder(
+            final @Nullable ValueEncoder encoder) {
         this.mutableOptions.setEncoder(encoder);
         return thisBuilder();
     }

@@ -36,7 +36,6 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
 
@@ -84,17 +83,17 @@ extends AbstractConfigCryptoEngine {
             "Error decrypting secret value. Original value encrypted with another key?";
 
     /** The {@code SecretKeyFactory} algorithm. */
-    private final @NotNull String secretKeyFactoryAlgorithm;
+    private final String secretKeyFactoryAlgorithm;
     /** The generated {@code SecretKey} salt iterations. */
     private int secretKeyIterations = DEFAULT_SECRET_KEY_ITERATIONS;
     /** The generated {@code SecretKey} length. */
     private int secretKeyLength = DEFAULT_SECRET_KEY_LENGTH;
     /** The {@code SecretKey} algorithm. */
-    private final @NotNull String secretKeyAlgorithm;
+    private final String secretKeyAlgorithm;
     /** The salt used for the {@code SecretKey} creations. */
-    private final @NotNull byte[] secretKeySalt;
+    private final byte[] secretKeySalt;
     /** The {@code Cipher} algorithm. */
-    private final @NotNull String cipherAlgorithm;
+    private final String cipherAlgorithm;
     /** The GCM initial vector length. */
     private int gcmInitVectorLength = DEFAULT_GCM_IV_LENGTH;
     /** The GCM tag length. */
@@ -107,7 +106,7 @@ extends AbstractConfigCryptoEngine {
      * @param secretKeySalt The salt used for the {@code SecretKey} creations.
      */
     public ConfigCryptoAesGcmEngine(
-            final @NotNull byte[] secretKeySalt) {
+            final byte[] secretKeySalt) {
         this(DEFAULT_KEY_FACTORY_ALGORITHM, DEFAULT_KEY_ALGORITHM, secretKeySalt, DEFAULT_CIPHER_ALGORITHM);
     }
 
@@ -121,10 +120,10 @@ extends AbstractConfigCryptoEngine {
      * @param cipherAlgorithm The {@code Cipher} algorithm
      */
     public ConfigCryptoAesGcmEngine(
-            final @NotNull String secretKeyFactoryAlgorithm,
-            final @NotNull String secretKeyAlgorithm,
-            final @NotNull byte[] secretKeySalt,
-            final @NotNull String cipherAlgorithm) {
+            final String secretKeyFactoryAlgorithm,
+            final String secretKeyAlgorithm,
+            final byte[] secretKeySalt,
+            final String cipherAlgorithm) {
         super();
         this.secretKeyFactoryAlgorithm = Objects.requireNonNull(secretKeyFactoryAlgorithm);
         this.secretKeyAlgorithm = Objects.requireNonNull(secretKeyAlgorithm);
@@ -140,7 +139,7 @@ extends AbstractConfigCryptoEngine {
      * 
      * @return The {@code SecretKeyFactory} algorithm.
      */
-    public @NotNull String getSecretKeyFactoryAlgorithm() {
+    public String getSecretKeyFactoryAlgorithm() {
         return this.secretKeyFactoryAlgorithm;
     }
 
@@ -158,7 +157,8 @@ extends AbstractConfigCryptoEngine {
      * 
      * @param iterations The generated {@code SecretKey} salt iterations
      */
-    public void setSecretKeyIterations(final int iterations) {
+    public void setSecretKeyIterations(
+            final int iterations) {
         this.secretKeyIterations = iterations;
     }
 
@@ -176,7 +176,8 @@ extends AbstractConfigCryptoEngine {
      * 
      * @param length The generated {@code SecretKey} length
      */
-    public void setSecretKeyLength(final int length) {
+    public void setSecretKeyLength(
+            final int length) {
         this.secretKeyLength = length;
     }
 
@@ -185,7 +186,7 @@ extends AbstractConfigCryptoEngine {
      * 
      * @return The {@code SecretKey} algorithm
      */
-    public @NotNull String getSecretKeyAlgorithm() {
+    public String getSecretKeyAlgorithm() {
         return this.secretKeyAlgorithm;
     }
 
@@ -194,7 +195,7 @@ extends AbstractConfigCryptoEngine {
      * 
      * @return The {@code Cipher} algorithm
      */
-    public @NotNull String getCipherAlgorithm() {
+    public String getCipherAlgorithm() {
         return this.cipherAlgorithm;
     }
 
@@ -212,7 +213,8 @@ extends AbstractConfigCryptoEngine {
      * 
      * @param length The GCM initial vector length
      */
-    public void setGcmInitVectorLength(final int length) {
+    public void setGcmInitVectorLength(
+            final int length) {
         this.gcmInitVectorLength = length;
     }
 
@@ -230,7 +232,8 @@ extends AbstractConfigCryptoEngine {
      * 
      * @param length The GCM tag length
      */
-    public void setGcmTagLength(final int length) {
+    public void setGcmTagLength(
+            final int length) {
         this.gcmTagLength = length;
     }
 
@@ -238,8 +241,8 @@ extends AbstractConfigCryptoEngine {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull SecretKey createSecretKey(
-            final @NotNull char[] password)
+    public SecretKey createSecretKey(
+            final char[] password)
     throws ConfigCryptoProviderException {
         checkDestroyed();
         try {
@@ -263,8 +266,8 @@ extends AbstractConfigCryptoEngine {
      * @throws ConfigCryptoProviderException If an error occurs when creating
      * the specification
      */
-    protected @NotNull KeySpec createKeySpec(
-            final @NotNull char[] password)
+    protected KeySpec createKeySpec(
+            final char[] password)
     throws ConfigCryptoProviderException {
         try {
             return new PBEKeySpec(
@@ -281,7 +284,7 @@ extends AbstractConfigCryptoEngine {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull Cipher createCipher()
+    public Cipher createCipher()
     throws ConfigCryptoProviderException {
         checkDestroyed();
         return createCipher(getCipherAlgorithm());
@@ -291,10 +294,10 @@ extends AbstractConfigCryptoEngine {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull String encrypt(
-            final @NotNull String value,
-            final @NotNull SecretKey key,
-            final @NotNull Cipher cipher)
+    public String encrypt(
+            final String value,
+            final SecretKey key,
+            final Cipher cipher)
     throws ConfigCryptoProviderException {
         checkDestroyed();
         final byte[] valueBytes = value.getBytes(StandardCharsets.UTF_8);
@@ -319,10 +322,10 @@ extends AbstractConfigCryptoEngine {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull String decrypt(
-            final @NotNull String value,
-            final @NotNull SecretKey key,
-            final @NotNull Cipher cipher)
+    public String decrypt(
+            final String value,
+            final SecretKey key,
+            final Cipher cipher)
     throws ConfigCryptoProviderException {
         checkDestroyed();
         final byte[] cipherBytes = Base64.getDecoder().decode(value);

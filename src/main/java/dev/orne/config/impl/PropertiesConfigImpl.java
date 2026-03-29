@@ -26,10 +26,8 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.stream.Stream;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.springframework.lang.Nullable;
 
 import dev.orne.config.Config;
 
@@ -48,7 +46,7 @@ public class PropertiesConfigImpl
 extends AbstractConfig {
 
     /** The configuration properties. */
-    private final @NotNull Properties config;
+    private final Properties config;
 
     /**
      * Creates a new instance.
@@ -57,8 +55,8 @@ extends AbstractConfig {
      * @param propertyOptions The properties based configuration builder options.
      */
     public PropertiesConfigImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull PropertiesConfigOptions propertyOptions) {
+            final ConfigOptions options,
+            final PropertiesConfigOptions propertyOptions) {
         super(options);
         Objects.requireNonNull(propertyOptions);
         this.config = Objects.requireNonNull(propertyOptions.getProperties());
@@ -69,7 +67,7 @@ extends AbstractConfig {
      * 
      * @return The configuration properties.
      */
-    protected @NotNull Properties getProperties() {
+    protected Properties getProperties() {
         return this.config;
     }
 
@@ -86,7 +84,7 @@ extends AbstractConfig {
      */
     @Override
     protected boolean containsInt(
-            final @NotBlank String key) {
+            final String key) {
         return this.config.containsKey(key);
     }
 
@@ -94,7 +92,7 @@ extends AbstractConfig {
      * {@inheritDoc}
      */
     @Override
-    protected @NotNull Stream<String> getKeysInt() {
+    protected Stream<String> getKeysInt() {
         return this.config.stringPropertyNames().stream();
     }
 
@@ -102,8 +100,8 @@ extends AbstractConfig {
      * {@inheritDoc}
      */
     @Override
-    protected String getInt(
-            final @NotBlank String key) {
+    protected @Nullable String getInt(
+            final String key) {
         return this.config.getProperty(key);
     }
 }

@@ -22,8 +22,6 @@ package dev.orne.config.spring;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -44,7 +42,7 @@ public class ConfigurableComponentsPostProcessor
 implements BeanPostProcessor {
 
     /** The configurable components configurer. */
-    private final @NotNull Configurer configurer;
+    private final Configurer configurer;
 
     /**
      * Creates a new instance.
@@ -52,7 +50,7 @@ implements BeanPostProcessor {
      * @param configurer The configurable components configurer.
      */
     public ConfigurableComponentsPostProcessor(
-            final @NotNull Configurer configurer) {
+            final Configurer configurer) {
         this.configurer = configurer;
     }
 
@@ -61,7 +59,7 @@ implements BeanPostProcessor {
      * 
      * @return The configurable components configurer.
      */
-    protected @NotNull Configurer getConfigurer() {
+    protected Configurer getConfigurer() {
         return this.configurer;
     }
 
@@ -70,8 +68,8 @@ implements BeanPostProcessor {
      */
     @Override
     public Object postProcessBeforeInitialization(
-            final @NotNull Object bean,
-            final @NotNull String beanName)
+            final Object bean,
+            final String beanName)
     throws BeansException {
         if (bean instanceof Configurable) {
             this.configurer.configure((Configurable) bean);

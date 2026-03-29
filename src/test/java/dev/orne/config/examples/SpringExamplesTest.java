@@ -26,8 +26,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Map;
 
-import javax.validation.constraints.NotNull;
-
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.FatalBeanException;
@@ -613,7 +611,7 @@ class SpringExamplesTest {
 
         @Override
         public void configure(
-                final @NotNull Config config) {
+                final Config config) {
             this.cfgId = config.as(ConfigSubtype.class).getConfigId();
         }
 
@@ -793,7 +791,7 @@ class SpringExamplesTest {
 
         @Override
         public Config configureDefaultConfig(
-                @NotNull Map<String, Config> configs) {
+                Map<String, Config> configs) {
             return Config.fromProperties()
                     .add(Map.of(
                             CFG_ID_PROP, CUSTOM_CFG_ID))
@@ -949,7 +947,7 @@ class SpringExamplesTest {
 
         @Override
         public Config configureDefaultConfig(
-                @NotNull Map<String, Config> configs) {
+                Map<String, Config> configs) {
             return Config.fromProperties()
                     .add(Map.of(
                             CFG_ID_PROP, CUSTOM_CHILD_CFG_ID))

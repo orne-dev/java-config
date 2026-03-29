@@ -22,8 +22,6 @@ package dev.orne.config;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 /**
@@ -44,5 +42,5 @@ extends YamlConfigBaseBuilder<YamlMutableConfigBuilder>,
      * {@inheritDoc}
      */
     @Override
-    @NotNull FileWatchableConfig build();
+    FileWatchableConfig build();
 }

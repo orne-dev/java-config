@@ -1,7 +1,5 @@
 package dev.orne.config;
 
-import javax.validation.constraints.NotNull;
-
 /*-
  * #%L
  * Orne Config
@@ -56,5 +54,5 @@ extends ConfigBuilder<SpringEnvironmentConfigBuilder> {
      * @return This instance, for method chaining.
      * @see Config#getKeys()
      */
-    @NotNull SpringEnvironmentConfigBuilder withIterableKeys();
+    SpringEnvironmentConfigBuilder withIterableKeys();
 }

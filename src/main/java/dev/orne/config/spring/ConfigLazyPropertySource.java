@@ -24,12 +24,11 @@ package dev.orne.config.spring;
 
 import java.util.Objects;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.core.env.PropertySource;
+import org.springframework.lang.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigException;
@@ -50,9 +49,9 @@ public class ConfigLazyPropertySource
 extends PropertySource<String> {
 
     /** The bean factory. */
-    private final @NotNull BeanFactory beanFactory;
+    private final BeanFactory beanFactory;
     /** The configuration instance. */
-    private Config config;
+    private @Nullable Config config;
 
     /**
      * Creates a new instance.
@@ -62,9 +61,9 @@ extends PropertySource<String> {
      * @param beanName The name of the configuration bean.
      */
     public ConfigLazyPropertySource(
-            final @NotNull String name,
-            final @NotNull BeanFactory beanFactory,
-            final @NotNull String beanName) {
+            final String name,
+            final BeanFactory beanFactory,
+            final String beanName) {
         super(name, beanName);
         this.beanFactory = Objects.requireNonNull(beanFactory);
     }
@@ -74,7 +73,7 @@ extends PropertySource<String> {
      */
     @Override
     public boolean containsProperty(
-            final @NotNull String name) {
+            final String name) {
         return getConfig().contains(name);
     }
 
@@ -82,8 +81,8 @@ extends PropertySource<String> {
      * {@inheritDoc}
      */
     @Override
-    public String getProperty(
-            final @NotNull String name) {
+    public @Nullable String getProperty(
+            final String name) {
         return getConfig().getUndecored(name);
     }
 
@@ -92,7 +91,7 @@ extends PropertySource<String> {
      * 
      * @return The bean factory.
      */
-    protected @NotNull BeanFactory getBeanFactory() {
+    protected BeanFactory getBeanFactory() {
         return this.beanFactory;
     }
 
@@ -105,7 +104,7 @@ extends PropertySource<String> {
      * 
      * @return The configuration instance.
      */
-    protected @NotNull Config getConfig() {
+    protected Config getConfig() {
         if (this.config == null) {
             try {
                 this.config = this.beanFactory.getBean(getSource(), Config.class);

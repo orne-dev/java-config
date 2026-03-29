@@ -25,8 +25,6 @@ package dev.orne.config.impl;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.validation.constraints.NotNull;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.mockito.Mock;
@@ -68,7 +66,7 @@ extends AbstractConfigTest {
      */
     @Override
     protected ConfigBuilder<?> createBuilder(
-            final @NotNull Map<String, String> properties) {
+            final Map<String, String> properties) {
         System.getProperties().putAll(properties);
         return Config.fromSystemProperties();
     }

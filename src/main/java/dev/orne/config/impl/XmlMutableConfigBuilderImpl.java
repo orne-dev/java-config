@@ -27,10 +27,8 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.Map;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.springframework.lang.Nullable;
 import org.w3c.dom.Document;
 
 import dev.orne.config.ConfigException;
@@ -50,7 +48,7 @@ extends AbstractMutableConfigBuilderImpl<XmlMutableConfigBuilder>
 implements XmlMutableConfigBuilder {
 
     /** The XML based configuration options. */
-    protected final @NotNull XmlConfigOptions xmlOptions;
+    protected final XmlConfigOptions xmlOptions;
 
     /**
      * Copy constructor.
@@ -60,9 +58,9 @@ implements XmlMutableConfigBuilder {
      * @param xmlOptions The XML based configuration options to copy.
      */
     protected XmlMutableConfigBuilderImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions,
-            final @NotNull XmlConfigOptions xmlOptions) {
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final XmlConfigOptions xmlOptions) {
         super(options, mutableOptions);
         this.xmlOptions = new XmlConfigOptions(xmlOptions);
     }
@@ -71,8 +69,8 @@ implements XmlMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilder withSeparator(
-            final @NotEmpty String separator) {
+    public XmlMutableConfigBuilder withSeparator(
+            final String separator) {
         this.xmlOptions.setPropertySeparator(separator);
         return thisBuilder();
     }
@@ -81,8 +79,8 @@ implements XmlMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilder withAttributePrefix(
-            final @NotEmpty String prefix) {
+    public XmlMutableConfigBuilder withAttributePrefix(
+            final String prefix) {
         this.xmlOptions.setAttributePrefix(prefix);
         return thisBuilder();
     }
@@ -91,9 +89,9 @@ implements XmlMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilder withEmptyDocument(
-            final String namespaceURI,
-            final @NotNull String rootElementName) {
+    public XmlMutableConfigBuilder withEmptyDocument(
+            final @Nullable String namespaceURI,
+            final String rootElementName) {
         this.xmlOptions.setRootElement(namespaceURI, rootElementName);
         return thisBuilder();
     }
@@ -102,8 +100,8 @@ implements XmlMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilder add(
-            @NotNull Document values) {
+    public XmlMutableConfigBuilder add(
+            final Document values) {
         this.xmlOptions.add(values);
         return thisBuilder();
     }
@@ -112,8 +110,8 @@ implements XmlMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilder add(
-            final @NotNull Map<String, String> values) {
+    public XmlMutableConfigBuilder add(
+            final Map<String, String> values) {
         if (this.xmlOptions.getDocument().getDocumentElement() == null) {
             throw new ConfigException(
                     "Cannot add values to an empty XML document. "
@@ -134,8 +132,8 @@ implements XmlMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilder load(
-            final @NotNull String path) {
+    public XmlMutableConfigBuilder load(
+            final String path) {
         this.xmlOptions.load(path);
         return thisBuilder();
     }
@@ -144,8 +142,8 @@ implements XmlMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilder load(
-            final @NotNull Path path) {
+    public XmlMutableConfigBuilder load(
+            final Path path) {
         this.xmlOptions.load(path);
         return thisBuilder();
     }
@@ -154,8 +152,8 @@ implements XmlMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilder load(
-            final @NotNull File file) {
+    public XmlMutableConfigBuilder load(
+            final File file) {
         this.xmlOptions.load(file);
         return thisBuilder();
     }
@@ -164,8 +162,8 @@ implements XmlMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilder load(
-            final @NotNull URL url) {
+    public XmlMutableConfigBuilder load(
+            final URL url) {
         this.xmlOptions.load(url);
         return thisBuilder();
     }
@@ -174,7 +172,7 @@ implements XmlMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigImpl build() {
+    public XmlMutableConfigImpl build() {
         if (this.xmlOptions.getDocument().getDocumentElement() == null) {
             this.xmlOptions.setRootElement(null, "config");
         }

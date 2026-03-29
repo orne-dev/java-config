@@ -24,8 +24,6 @@ package dev.orne.config;
 
 import java.util.Properties;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 /**
@@ -48,5 +46,5 @@ extends PropertiesConfigBaseBuilder<PropertiesMutableConfigBuilder>,
      * {@inheritDoc}
      */
     @Override
-    @NotNull FileWatchableConfig build();
+    FileWatchableConfig build();
 }

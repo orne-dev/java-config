@@ -22,8 +22,6 @@ package dev.orne.config;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 /**
@@ -43,13 +41,13 @@ public interface ConfigProviderBuilder {
      * @param config The configuration to add
      * @return This builder for method chaining
      */
-    @NotNull ConfigProviderBuilder addConfig(
-            @NotNull Config config);
+    ConfigProviderBuilder addConfig(
+            Config config);
 
     /**
      * Builds the {@code ConfigProvider} instance.
      * 
      * @return The built {@code ConfigProvider} instance
      */
-    @NotNull ConfigProvider build();
+    ConfigProvider build();
 }

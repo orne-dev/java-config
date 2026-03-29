@@ -22,10 +22,8 @@ package dev.orne.config;
  * #L%
  */
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.impl.ConfigSubset;
 
@@ -51,8 +49,8 @@ extends Config {
      * property value
      */
     void set(
-            @NotBlank String key,
-            String value);
+            String key,
+            @Nullable String value);
 
     /**
      * Sets the value of the configuration parameter.
@@ -63,8 +61,8 @@ extends Config {
      * property value
      */
     default void set(
-            @NotBlank String key,
-            Boolean value) {
+            String key,
+            @Nullable Boolean value) {
         set(key, value == null ? null : String.valueOf(value));
     }
 
@@ -77,8 +75,8 @@ extends Config {
      * property value
      */
     default void set(
-            @NotBlank String key,
-            Integer value) {
+            String key,
+            @Nullable Integer value) {
         set(key, value == null ? null : String.valueOf(value));
     }
 
@@ -91,8 +89,8 @@ extends Config {
      * property value
      */
     default void set(
-            @NotBlank String key,
-            Long value) {
+            String key,
+            @Nullable Long value) {
         set(key, value == null ? null : String.valueOf(value));
     }
 
@@ -104,7 +102,7 @@ extends Config {
      * properties.
      */
     void remove(
-            @NotBlank String... keys);
+            String... keys);
 
     /**
      * Creates a subset configuration containing only the properties
@@ -114,8 +112,8 @@ extends Config {
      * @return The subset configuration.
      */
     @Override
-    default @NotNull MutableConfig subset(
-            final @NotNull String prefix) {
+    default MutableConfig subset(
+            final String prefix) {
         return ConfigSubset.create(this, prefix);
     }
 }

@@ -34,9 +34,6 @@ import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +61,7 @@ public class PropertiesConfigOptions {
             "Error reading configuration resource: {}";
 
     /** The configuration properties. */
-    private final @NotNull Properties properties;
+    private final Properties properties;
 
     /**
      * Empty constructor.
@@ -80,7 +77,7 @@ public class PropertiesConfigOptions {
      * @param copy The instance to copy.
      */
     public PropertiesConfigOptions(
-            final @NotNull PropertiesConfigOptions copy) {
+            final PropertiesConfigOptions copy) {
         super();
         this.properties = new Properties();
         this.properties.putAll(copy.properties);
@@ -91,7 +88,7 @@ public class PropertiesConfigOptions {
      * 
      * @return The configuration properties.
      */
-    public @NotNull Properties getProperties() {
+    public Properties getProperties() {
         return this.properties;
     }
 
@@ -102,7 +99,7 @@ public class PropertiesConfigOptions {
      * @param values The configuration properties.
      */
     public void add(
-            final @NotNull Properties values) {
+            final Properties values) {
         this.properties.putAll(values);
     }
 
@@ -113,7 +110,7 @@ public class PropertiesConfigOptions {
      * @param values The configuration properties.
      */
     public void add(
-            final @NotNull Map<@NotEmpty String, @NotNull String> values) {
+            final Map<String, String> values) {
         this.properties.putAll(values);
     }
 
@@ -124,7 +121,7 @@ public class PropertiesConfigOptions {
      * @param path The ClassLoader resource path.
      */
     public void load(
-            final @NotNull String path) {
+            final String path) {
         try {
             final Enumeration<URL> resources =
                     Thread.currentThread()
@@ -148,7 +145,7 @@ public class PropertiesConfigOptions {
      * @param path The file path.
      */
     public void load(
-            final @NotNull Path path) {
+            final Path path) {
         if (!Files.exists(path)) {
             LOG.warn(RESOURCE_NOT_FOUND_ERR, path);
         }
@@ -165,7 +162,7 @@ public class PropertiesConfigOptions {
      * @param file The file to load.
      */
     public void load(
-            final @NotNull File file) {
+            final File file) {
         try (final InputStream fileIS = new FileInputStream(file)) {
             this.properties.load(fileIS);
         } catch (final FileNotFoundException e) {
@@ -181,7 +178,7 @@ public class PropertiesConfigOptions {
      * @param url The URL to load.
      */
     public void load(
-            final @NotNull URL url) {
+            final URL url) {
         try (final InputStream urlIS = url.openStream()) {
             this.properties.load(urlIS);
         } catch (final IOException e) {

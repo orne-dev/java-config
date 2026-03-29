@@ -22,8 +22,6 @@ package dev.orne.config;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 /**
@@ -46,7 +44,7 @@ public interface Configurable {
      * @param config The config to apply
      */
     default void configure(
-            @NotNull Config config) {
+            Config config) {
         // NOP
     }
 

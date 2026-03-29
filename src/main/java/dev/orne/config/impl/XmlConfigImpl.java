@@ -25,10 +25,8 @@ package dev.orne.config.impl;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.springframework.lang.Nullable;
 import org.w3c.dom.Document;
 
 import dev.orne.config.Config;
@@ -46,11 +44,11 @@ public class XmlConfigImpl
 extends AbstractConfig {
 
     /** The XML document with the configuration options. */
-    private final @NotNull Document document;
+    private final Document document;
     /** The configuration nested properties separator. */
-    private final @NotBlank String propertySeparator;
+    private final String propertySeparator;
     /** The XML attributes references prefix. */
-    private final @NotBlank String attributePrefix;
+    private final String attributePrefix;
 
     /**
      * Creates a new instance.
@@ -59,8 +57,8 @@ extends AbstractConfig {
      * @param xmlOptions The XML based configuration builder options.
      */
     public XmlConfigImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull XmlConfigOptions xmlOptions) {
+            final ConfigOptions options,
+            final XmlConfigOptions xmlOptions) {
         super(options);
         Objects.requireNonNull(xmlOptions);
         this.document = Objects.requireNonNull(xmlOptions.getDocument());
@@ -73,7 +71,7 @@ extends AbstractConfig {
      * 
      * @return The XML document with the configuration options.
      */
-    protected @NotNull Document getDocument() {
+    protected Document getDocument() {
         return this.document;
     }
 
@@ -82,7 +80,7 @@ extends AbstractConfig {
      * 
      * @return The configuration nested properties separator.
      */
-    protected @NotBlank String getPropertySeparator() {
+    protected String getPropertySeparator() {
         return this.propertySeparator;
     }
 
@@ -91,7 +89,7 @@ extends AbstractConfig {
      * 
      * @return The XML attributes references prefix.
      */
-    protected @NotBlank String getAttributePrefix() {
+    protected String getAttributePrefix() {
         return this.attributePrefix;
     }
 
@@ -108,7 +106,8 @@ extends AbstractConfig {
      * {@inheritDoc}
      */
     @Override
-    protected boolean containsInt(@NotBlank String key) {
+    protected boolean containsInt(
+            final String key) {
         return XmlUtils.contains(
                 this.document,
                 key,
@@ -120,7 +119,7 @@ extends AbstractConfig {
      * {@inheritDoc}
      */
     @Override
-    protected @NotNull Stream<String> getKeysInt() {
+    protected Stream<String> getKeysInt() {
         return XmlUtils.extractKeys(
                 this.document,
                 this.propertySeparator,
@@ -131,7 +130,8 @@ extends AbstractConfig {
      * {@inheritDoc}
      */
     @Override
-    protected String getInt(@NotBlank String key) {
+    protected @Nullable String getInt(
+            final String key) {
         return XmlUtils.getValue(
                 this.document,
                 key,

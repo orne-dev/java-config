@@ -24,11 +24,9 @@ package dev.orne.config.impl;
 
 import java.util.Objects;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.lang3.Validate;
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.ConfigException;
 import dev.orne.config.MutableConfig;
@@ -47,14 +45,14 @@ extends AbstractConfig
 implements MutableConfig {
 
     /** The configuration properties values encoder. */
-    private final @NotNull ValueEncoder encoder;
+    private final ValueEncoder encoder;
 
     /**
      * Returns the configuration properties values encoder.
      * 
      * @return The configuration properties values encoder.
      */
-    protected @NotNull ValueEncoder getEncoder() {
+    protected ValueEncoder getEncoder() {
         return this.encoder;
     }
 
@@ -65,8 +63,8 @@ implements MutableConfig {
      * @param mutableOptions The mutable configuration builder options.
      */
     protected AbstractMutableConfig(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions) {
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions) {
         super(options);
         Objects.requireNonNull(mutableOptions);
         if (options.getCryptoProvider() != null) {
@@ -88,8 +86,8 @@ implements MutableConfig {
      */
     @Override
     public void set(
-            final @NotBlank String key,
-            final String value) {
+            final String key,
+            final @Nullable String value) {
         Validate.notBlank(key, KEY_BLANK_ERR);
         String encoded = this.encoder.encode(value);
         if (encoded == null) {
@@ -109,14 +107,15 @@ implements MutableConfig {
      * property value
      */
     protected abstract void setInt(
-            @NotBlank String key,
-            @NotNull String value);
+            String key,
+            String value);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void remove(@NotBlank String... keys) {
+    public void remove(
+            final String... keys) {
         for (final String key : keys) {
             Validate.notBlank(key, KEY_BLANK_ERR);
         }
@@ -131,5 +130,5 @@ implements MutableConfig {
      * properties.
      */
     protected abstract void removeInt(
-            @NotBlank String... keys);
+            String... keys);
 }

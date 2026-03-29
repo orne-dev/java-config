@@ -1,9 +1,5 @@
 package dev.orne.config.impl;
 
-import java.util.Objects;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
-
 /*-
  * #%L
  * Orne Config
@@ -26,8 +22,9 @@ import java.util.stream.StreamSupport;
  * #L%
  */
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import java.util.Objects;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
@@ -35,6 +32,7 @@ import org.apache.commons.configuration2.event.Event;
 import org.apache.commons.configuration2.event.EventSource;
 import org.apache.commons.configuration2.reloading.ReloadingEvent;
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Implementation of {@code MutableConfig} based on Apache Commons
@@ -50,7 +48,7 @@ public class CommonsMutableConfigImpl
 extends AbstractWatchableConfig {
 
     /** The delegated Apache Commons configuration. */
-    private final @NotNull Configuration config;
+    private final Configuration config;
     /** If local events must be suppressed. */
     private final boolean localEventsSuppressed;
 
@@ -62,9 +60,9 @@ extends AbstractWatchableConfig {
      * @param commonsOptions The Apache Commons based configuration options.
      */
     public CommonsMutableConfigImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions,
-            final @NotNull CommonsConfigOptions commonsOptions) {
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final CommonsConfigOptions commonsOptions) {
         super(options, mutableOptions);
         Objects.requireNonNull(commonsOptions);
         this.config = (Configuration) commonsOptions.getDelegated();
@@ -81,7 +79,7 @@ extends AbstractWatchableConfig {
      * 
      * @return The delegated Apache Commons configuration
      */
-    protected @NotNull Configuration getConfig() {
+    protected Configuration getConfig() {
         return this.config;
     }
 
@@ -106,7 +104,7 @@ extends AbstractWatchableConfig {
      * {@inheritDoc}
      */
     @Override
-    protected @NotNull Stream<String> getKeysInt() {
+    protected Stream<String> getKeysInt() {
         final Iterable<String> iterable = this.config::getKeys;
         return StreamSupport.stream(iterable.spliterator(), false);
     }
@@ -116,7 +114,7 @@ extends AbstractWatchableConfig {
      */
     @Override
     protected boolean containsInt(
-            final @NotBlank String key) {
+            final String key) {
         return this.config.containsKey(key);
     }
 
@@ -124,8 +122,8 @@ extends AbstractWatchableConfig {
      * {@inheritDoc}
      */
     @Override
-    protected String getInt(
-            final @NotBlank String key) {
+    protected @Nullable String getInt(
+            final String key) {
         return this.config.getString(key);
     }
 
@@ -134,8 +132,8 @@ extends AbstractWatchableConfig {
      */
     @Override
     protected void setInt(
-            final @NotBlank String key,
-            final @NotNull String value) {
+            final String key,
+            final String value) {
         this.config.setProperty(key, value);
     }
 
@@ -144,7 +142,7 @@ extends AbstractWatchableConfig {
      */
     @Override
     protected void removeInt(
-            final @NotBlank String... keys) {
+            final String... keys) {
         for (final String key : keys) {
             this.config.clearProperty(key);
         }
@@ -155,7 +153,7 @@ extends AbstractWatchableConfig {
      */
     @Override
     protected void notifyLocalChanges(
-            final @NotNull String... keys) {
+            final String... keys) {
         if (!this.localEventsSuppressed) {
             super.notifyLocalChanges(keys);
         }
@@ -167,7 +165,7 @@ extends AbstractWatchableConfig {
      * @param source The Apache Commons events source.
      */
     protected void configureCommonsEvents(
-            final @NotNull EventSource source) {
+            final EventSource source) {
         final EventSource commonsEvents = (EventSource) config;
         commonsEvents.addEventListener(
                 ConfigurationEvent.ADD_PROPERTY,
@@ -189,7 +187,7 @@ extends AbstractWatchableConfig {
      * @param event The Apache Commons event.
      */
     protected void processCommonsEvent(
-            final @NotNull Event event) {
+            final Event event) {
         if (event instanceof ConfigurationEvent) {
             final ConfigurationEvent propEvent = (ConfigurationEvent) event;
             if (propEvent.isBeforeUpdate()) {

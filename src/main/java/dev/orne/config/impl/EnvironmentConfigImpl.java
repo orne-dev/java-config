@@ -25,9 +25,6 @@ package dev.orne.config.impl;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import dev.orne.config.Config;
@@ -51,7 +48,7 @@ extends AbstractConfig {
      * @param options The configuration builder options.
      */
     public EnvironmentConfigImpl(
-            final @NotNull ConfigOptions options) {
+            final ConfigOptions options) {
         super(options);
     }
 
@@ -68,7 +65,7 @@ extends AbstractConfig {
      */
     @Override
     protected boolean containsInt(
-            final @NotBlank String key) {
+            final String key) {
         return getEnvironmentVariables().containsKey(key);
     }
 
@@ -76,7 +73,7 @@ extends AbstractConfig {
      * {@inheritDoc}
      */
     @Override
-    protected @NotNull Stream<String> getKeysInt() {
+    protected Stream<String> getKeysInt() {
         return getEnvironmentVariables().keySet()
                 .stream();
     }
@@ -86,7 +83,7 @@ extends AbstractConfig {
      */
     @Override
     protected String getInt(
-            final @NotBlank String key) {
+            final String key) {
         return getEnvironmentVariables().get(key);
     }
 
@@ -96,7 +93,7 @@ extends AbstractConfig {
      * @return The environment variables.
      * @see System#getenv()
      */
-    protected @NotNull Map<String, String> getEnvironmentVariables() {
+    protected Map<String, String> getEnvironmentVariables() {
         return System.getenv();
     }
 }

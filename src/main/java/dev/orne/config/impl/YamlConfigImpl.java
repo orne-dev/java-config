@@ -22,8 +22,6 @@ package dev.orne.config.impl;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -51,8 +49,8 @@ extends JsonConfigImpl {
      * @param yamlOptions The YAML based configuration builder options.
      */
     public YamlConfigImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull JsonConfigOptions yamlOptions) {
+            final ConfigOptions options,
+            final JsonConfigOptions yamlOptions) {
         super(options, yamlOptions);
     }
 }

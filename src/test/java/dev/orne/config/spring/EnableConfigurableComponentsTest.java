@@ -27,8 +27,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.validation.constraints.NotNull;
-
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -519,7 +517,7 @@ class EnableConfigurableComponentsTest {
         }
 
         @Override
-        public void configure(@NotNull Config config) {
+        public void configure(Config config) {
             this.grandpaCfgProp = config.get(GrandparentConfig.GRANDPA_CFG_PROP);
             configured = true;
         }
@@ -594,7 +592,7 @@ class EnableConfigurableComponentsTest {
         private String parentCfgProp;
 
         @Override
-        public void configure(@NotNull Config config) {
+        public void configure(Config config) {
             configured = true;
         }
 
@@ -689,8 +687,8 @@ class EnableConfigurableComponentsTest {
         static final String PARENT_PROP_VALUE = "parentPropValue";
 
         @Override
-        public @NotNull Config configureDefaultConfig(
-                final @NotNull Map<String, Config> configs) {
+        public Config configureDefaultConfig(
+                final Map<String, Config> configs) {
             return parentConfig(null);
         }
 
@@ -863,8 +861,8 @@ class EnableConfigurableComponentsTest {
         }
 
         @Override
-        public @NotNull Config configureDefaultConfig(
-                final @NotNull Map<String, Config> configs) {
+        public Config configureDefaultConfig(
+                final Map<String, Config> configs) {
             return childConfig(null);
         }
 

@@ -34,7 +34,6 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.validation.constraints.NotNull;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -150,7 +149,7 @@ extends AbstractConfigTest {
      */
     @Override
     protected ConfigBuilder<?> createBuilder(
-            final @NotNull Map<String, String> properties) {
+            final Map<String, String> properties) {
         return Config.fromXml()
                 .withEmptyDocument("config")
                 .add(properties);

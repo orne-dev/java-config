@@ -24,8 +24,6 @@ package dev.orne.config.impl;
 
 import java.util.Objects;
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.configuration2.ImmutableConfiguration;
 import org.apiguardian.api.API;
 
@@ -47,7 +45,7 @@ extends AbstractConfigBuilderImpl<CommonsConfigBuilder>
 implements CommonsConfigBuilder {
 
     /** The Apache Commons based configuration options. */
-    protected final @NotNull CommonsConfigOptions commonsOptions;
+    protected final CommonsConfigOptions commonsOptions;
 
     /**
      * Empty constructor.
@@ -61,8 +59,8 @@ implements CommonsConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull CommonsConfigBuilder ofDelegate(
-            final @NotNull ImmutableConfiguration delegate) {
+    public CommonsConfigBuilder ofDelegate(
+            final ImmutableConfiguration delegate) {
         this.commonsOptions.setDelegated(Objects.requireNonNull(delegate));
         return thisBuilder();
     }
@@ -71,7 +69,7 @@ implements CommonsConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull CommonsMutableConfigBuilderImpl mutable() {
+    public CommonsMutableConfigBuilderImpl mutable() {
         return new CommonsMutableConfigBuilderImpl(
                 this.options,
                 new MutableConfigOptions(),
@@ -82,7 +80,7 @@ implements CommonsConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull CommonsConfigImpl build() {
+    public CommonsConfigImpl build() {
         return new CommonsConfigImpl(
                 this.options,
                 this.commonsOptions);

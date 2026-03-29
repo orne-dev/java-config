@@ -28,9 +28,9 @@ import java.security.SecureRandom;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKeyFactory;
-import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.ConfigCryptoEngine;
 import dev.orne.config.ConfigCryptoProviderException;
@@ -61,7 +61,7 @@ implements ConfigCryptoEngine {
             "Cannot creathe cipher for algorithm: %s";
 
     /** The {@code SecureRandom} instance. */
-    private SecureRandom secureRandom;
+    private @Nullable SecureRandom secureRandom;
     /** If the engine has been destroyed. */
     private boolean destroyed;
 
@@ -79,7 +79,6 @@ implements ConfigCryptoEngine {
      * @throws ConfigCryptoProviderException If an error occurs creating
      * the {@code SecureRandom} instance
      */
-    @NotNull
     public SecureRandom getSecureRandom()
     throws ConfigCryptoProviderException {
         synchronized(this) {
@@ -95,9 +94,8 @@ implements ConfigCryptoEngine {
      * 
      * @param secureRandom The {@code SecureRandom} instance
      */
-    @NotNull
     public void setSecureRandom(
-            final SecureRandom secureRandom) {
+            final @Nullable SecureRandom secureRandom) {
         synchronized(this) {
             this.secureRandom = secureRandom;
         }
@@ -110,7 +108,6 @@ implements ConfigCryptoEngine {
      * @throws ConfigCryptoProviderException If an error occurs creating
      * the {@code SecureRandom} instance
      */
-    @NotNull
     public SecureRandom createSecureRandom()
     throws ConfigCryptoProviderException {
         try {
@@ -128,9 +125,7 @@ implements ConfigCryptoEngine {
      * @throws ConfigCryptoProviderException If an error occurs
      * retrieving the {@code SecretKeyFactory}
      */
-    @NotNull
     public SecretKeyFactory getSecretKeyFactory(
-            @NotNull
             final String algorithm)
     throws ConfigCryptoProviderException {
         try {
@@ -150,9 +145,7 @@ implements ConfigCryptoEngine {
      * @throws ConfigCryptoProviderException If an error occurs
      * creating the {@code Cipher}
      */
-    @NotNull
     public Cipher createCipher(
-            @NotNull
             final String algorithm)
     throws ConfigCryptoProviderException {
         try {

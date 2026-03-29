@@ -30,9 +30,8 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigException;
@@ -109,11 +108,11 @@ implements InvocationHandler {
     }
 
     /** The configuration instance. */
-    private final @NotNull Config instance;
+    private final Config instance;
     /** The prefix for configuration keys. */
-    private final @NotNull String prefix;
+    private final String prefix;
     /** The configuration change events handler. */
-    private final EventsHandler events;
+    private final @Nullable EventsHandler events;
 
     /**
      * Creates a new instance.
@@ -122,8 +121,8 @@ implements InvocationHandler {
      * @param prefix The prefix for configuration keys.
      */
     protected ConfigSubset(
-            final @NotNull Config instance,
-            final @NotNull String prefix) {
+            final Config instance,
+            final String prefix) {
         this.instance = Objects.requireNonNull(instance);
         this.prefix = Objects.requireNonNull(prefix);
         if (instance instanceof WatchableConfig) {
@@ -140,9 +139,9 @@ implements InvocationHandler {
      * @param prefix The prefix for configuration keys.
      * @return A new configuration proxy instance.
      */
-    public static @NotNull Config create(
-            final @NotNull Config config,
-            final @NotNull String prefix) {
+    public static Config create(
+            final Config config,
+            final String prefix) {
         return create(
                 config.getClass().getClassLoader(),
                 Config.class,
@@ -157,9 +156,9 @@ implements InvocationHandler {
      * @param prefix The prefix for configuration keys.
      * @return A new configuration proxy instance.
      */
-    public static @NotNull MutableConfig create(
-            final @NotNull MutableConfig config,
-            final @NotNull String prefix) {
+    public static MutableConfig create(
+            final MutableConfig config,
+            final String prefix) {
         return create(
                 config.getClass().getClassLoader(),
                 MutableConfig.class,
@@ -174,9 +173,9 @@ implements InvocationHandler {
      * @param prefix The prefix for configuration keys.
      * @return A new configuration proxy instance.
      */
-    public static @NotNull WatchableConfig create(
-            final @NotNull WatchableConfig config,
-            final @NotNull String prefix) {
+    public static WatchableConfig create(
+            final WatchableConfig config,
+            final String prefix) {
         return create(
                 config.getClass().getClassLoader(),
                 WatchableConfig.class,
@@ -194,11 +193,11 @@ implements InvocationHandler {
      * @param prefix The prefix for configuration keys.
      * @return A new configuration proxy instance.
      */
-    protected static <T extends Config> @NotNull T create(
-            final @NotNull ClassLoader classLoader,
-            final @NotNull Class<T> type,
-            final @NotNull T config,
-            final @NotNull String prefix) {
+    protected static <T extends Config> T create(
+            final ClassLoader classLoader,
+            final Class<T> type,
+            final T config,
+            final String prefix) {
         Objects.requireNonNull(classLoader, "The class loader must not be null");
         Objects.requireNonNull(config, "The configuration instance must not be null");
         Objects.requireNonNull(classLoader, "The configuration subtype must be an interface.");
@@ -224,7 +223,7 @@ implements InvocationHandler {
      * 
      * @return The proxied configuration instance.
      */
-    protected @NotNull Config getInstance() {
+    protected Config getInstance() {
         return this.instance;
     }
 
@@ -233,7 +232,7 @@ implements InvocationHandler {
      * 
      * @return The prefix for configuration keys.
      */
-    protected @NotNull String getPrefix() {
+    protected String getPrefix() {
         return this.prefix;
     }
 
@@ -242,7 +241,7 @@ implements InvocationHandler {
      * 
      * @return The configuration change events handler.
      */
-    protected EventsHandler getEvents() {
+    protected @Nullable EventsHandler getEvents() {
         return this.events;
     }
 
@@ -254,7 +253,7 @@ implements InvocationHandler {
      * @return The delegated configuration key.
      */
     protected String asConfigKey(
-            final @NotNull String key) {
+            final String key) {
         return this.prefix + key;
     }
 
@@ -267,7 +266,7 @@ implements InvocationHandler {
      *         {@code false} otherwise.
      */
     protected boolean isSubsetKey(
-            final @NotNull String key) {
+            final String key) {
         return key.startsWith(this.prefix);
     }
 
@@ -279,7 +278,7 @@ implements InvocationHandler {
      * @return The sub-set property key.
      */
     protected String asSubsetKey(
-            final @NotNull String key) {
+            final String key) {
         return key.substring(this.prefix.length());
     }
 
@@ -287,10 +286,10 @@ implements InvocationHandler {
      * {@inheritDoc}
     */
     @Override
-    public Object invoke(
-            final Object proxy,
-            final @NotNull Method method,
-            final Object[] args)
+    public @Nullable Object invoke(
+            final @Nullable Object proxy,
+            final Method method,
+            final @Nullable Object[] args)
     throws Throwable {
         try {
             final Class<?> declaringClass = method.getDeclaringClass();
@@ -325,9 +324,9 @@ implements InvocationHandler {
      * @throws ReflectiveOperationException If an error occurs during method
      * invocation.
      */
-    protected Object handleObjectMethod(
-            final @NotNull Method method,
-            final Object[] args)
+    protected @Nullable Object handleObjectMethod(
+            final Method method,
+            final @Nullable Object[] args)
     throws ReflectiveOperationException {
         final Object result;
         if (OBJECT_EQUALS.equals(method)) {
@@ -346,7 +345,7 @@ implements InvocationHandler {
      *         {@code false} otherwise.
      */
     protected boolean proxyEquals(
-            final Object other) {
+            final @Nullable Object other) {
         if (this == other) {
             return true;
         }
@@ -366,10 +365,10 @@ implements InvocationHandler {
      * @throws ReflectiveOperationException If an error occurs during method
      * invocation.
      */
-    protected Object handleConfigMethod(
-            final @NotNull Config proxy,
-            final @NotNull Method method,
-            final Object[] args)
+    protected @Nullable Object handleConfigMethod(
+            final Config proxy,
+            final Method method,
+            final @Nullable Object[] args)
     throws ReflectiveOperationException {
         final Object result;
         if (CONFIG_IS_EMPTY.equals(method)
@@ -409,9 +408,9 @@ implements InvocationHandler {
      * @throws ReflectiveOperationException If an error occurs during method
      * invocation.
      */
-    protected Object handleMutableMethod(
-            final @NotNull Method method,
-            final Object[] args)
+    protected @Nullable Object handleMutableMethod(
+            final Method method,
+            final @Nullable Object[] args)
     throws ReflectiveOperationException {
         final Object result;
         if (MUTABLE_SUBSET.equals(method)) {
@@ -437,9 +436,9 @@ implements InvocationHandler {
      * @throws ReflectiveOperationException If an error occurs during method
      * invocation.
      */
-    protected Object handleWatchableMethod(
-            final @NotNull Method method,
-            final Object[] args)
+    protected @Nullable Object handleWatchableMethod(
+            final Method method,
+            final @Nullable Object[] args)
     throws ReflectiveOperationException {
         final Object result;
         if (WATCHABLE_ADD_LISTENER.equals(method)) {
@@ -469,9 +468,9 @@ implements InvocationHandler {
      * @throws ReflectiveOperationException If an error occurs during method
      * invocation.
      */
-    protected Object getKeys(
-            final @NotNull Method method,
-            final Object[] args)
+    protected @Nullable Object getKeys(
+            final Method method,
+            final @Nullable Object[] args)
     throws ReflectiveOperationException {
         Object result;
         if (args == null || args.length == 0) {
@@ -507,7 +506,8 @@ implements InvocationHandler {
      * {@inheritDoc}
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(
+            final @Nullable Object obj) {
         if (this == obj) {
             return true;
         }

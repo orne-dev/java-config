@@ -33,9 +33,6 @@ import java.nio.file.Path;
 import java.util.Enumeration;
 import java.util.Objects;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.lang3.Validate;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
@@ -73,11 +70,11 @@ public class JsonConfigOptions {
             "Error mergin configuration JSON objects";
 
     /** The {@code ObjectMapper} instance used for JSON parsing. */
-    private @NotNull ObjectMapper mapper = new ObjectMapper();
+    private ObjectMapper mapper = new ObjectMapper();
     /** The JSON object with the configuration properties. */
-    private final @NotNull ObjectNode jsonObject;
+    private final ObjectNode jsonObject;
     /** The configuration nested properties separator. */
-    private @NotEmpty String propertySeparator;
+    private String propertySeparator;
 
     /**
      * Empty constructor.
@@ -96,7 +93,7 @@ public class JsonConfigOptions {
      * @param copy The instance to copy.
      */
     public JsonConfigOptions(
-            final @NotNull JsonConfigOptions copy) {
+            final JsonConfigOptions copy) {
         super();
         this.mapper = copy.mapper;
         this.jsonObject = copy.jsonObject.deepCopy();
@@ -108,7 +105,7 @@ public class JsonConfigOptions {
      * 
      * @return The {@code ObjectMapper} instance used for JSON parsing.
      */
-    public @NotNull ObjectMapper getMapper() {
+    public ObjectMapper getMapper() {
         return this.mapper;
     }
 
@@ -118,7 +115,7 @@ public class JsonConfigOptions {
      * @param mapper The {@code ObjectMapper} instance used for JSON parsing.
      */
     public void setMapper(
-            final @NotNull ObjectMapper mapper) {
+            final ObjectMapper mapper) {
         this.mapper = Objects.requireNonNull(mapper);
     }
 
@@ -127,7 +124,7 @@ public class JsonConfigOptions {
      * 
      * @return The JSON object with the configuration properties.
      */
-    public @NotNull ObjectNode getJsonObject() {
+    public ObjectNode getJsonObject() {
         return this.jsonObject;
     }
 
@@ -136,7 +133,7 @@ public class JsonConfigOptions {
      * 
      * @return The configuration nested properties separator.
      */
-    public @NotEmpty String getPropertySeparator() {
+    public String getPropertySeparator() {
         return this.propertySeparator;
     }
 
@@ -146,7 +143,7 @@ public class JsonConfigOptions {
      * @param separator The configuration nested properties separator.
      */
     public void setPropertySeparator(
-            final @NotEmpty String separator) {
+            final String separator) {
         Validate.notBlank(separator, "Property separator cannot be blank");
         this.propertySeparator = separator;
     }
@@ -158,7 +155,7 @@ public class JsonConfigOptions {
      * @param values The configuration properties.
      */
     public void add(
-            final @NotNull ObjectNode values) {
+            final ObjectNode values) {
         try {
             this.mapper.updateValue(this.jsonObject, values);
         } catch (final IOException e) {
@@ -173,7 +170,7 @@ public class JsonConfigOptions {
      * @param path The ClassLoader resource path.
      */
     public void load(
-            final @NotNull String path) {
+            final String path) {
         try {
             final Enumeration<URL> resources =
                     Thread.currentThread()
@@ -197,7 +194,7 @@ public class JsonConfigOptions {
      * @param path The file path.
      */
     public void load(
-            final @NotNull Path path) {
+            final Path path) {
         if (!Files.exists(path)) {
             LOG.warn(RESOURCE_NOT_FOUND_ERR, path);
         }
@@ -215,7 +212,7 @@ public class JsonConfigOptions {
      * @param file The file to load.
      */
     public void load(
-            final @NotNull File file) {
+            final File file) {
         try (final InputStream fileIS = new FileInputStream(file)) {
             final ObjectReader updater = this.mapper.readerForUpdating(this.jsonObject);
             updater.readTree(fileIS);
@@ -232,7 +229,7 @@ public class JsonConfigOptions {
      * @param url The URL to load.
      */
     public void load(
-            final @NotNull URL url) {
+            final URL url) {
         try (final InputStream urlIS = url.openStream()) {
             final ObjectReader updater = this.mapper.readerForUpdating(this.jsonObject);
             updater.readTree(urlIS);

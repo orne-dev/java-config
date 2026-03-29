@@ -34,8 +34,6 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.validation.constraints.NotNull;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
@@ -128,7 +126,7 @@ extends AbstractWatchableConfigTest {
      */
     @Override
     protected MutableConfigBuilder<?> createBuilder(
-            final @NotNull Map<String, String> properties) {
+            final Map<String, String> properties) {
         return Config.fromYaml()
                 .mutable()
                 .add(properties);

@@ -26,8 +26,6 @@ import static org.mockito.BDDMockito.*;
 
 import java.util.Map;
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
@@ -54,7 +52,7 @@ extends AbstractWatchableConfigTest {
      */
     @Override
     protected MutableConfigBuilder<?> createBuilder(
-            final @NotNull Map<String, String> properties) {
+            final Map<String, String> properties) {
         final PropertiesConfiguration delegated;
         try {
             delegated = new Configurations()

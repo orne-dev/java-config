@@ -26,11 +26,9 @@ import java.util.Objects;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.configuration2.ImmutableConfiguration;
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Implementation of {@code Config} based on Apache Commons
@@ -46,7 +44,7 @@ public class CommonsConfigImpl
 extends AbstractConfig {
 
     /** The delegated Apache Commons configuration. */
-    private final @NotNull ImmutableConfiguration config;
+    private final ImmutableConfiguration config;
 
     /**
      * Creates a new instance.
@@ -55,8 +53,8 @@ extends AbstractConfig {
      * @param commonsOptions The Apache Commons based configuration options.
      */
     public CommonsConfigImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull CommonsConfigOptions commonsOptions) {
+            final ConfigOptions options,
+            final CommonsConfigOptions commonsOptions) {
         super(options);
         Objects.requireNonNull(commonsOptions);
         this.config = Objects.requireNonNull(commonsOptions.getDelegated());
@@ -67,7 +65,7 @@ extends AbstractConfig {
      * 
      * @return The delegated Apache Commons configuration
      */
-    protected @NotNull ImmutableConfiguration getConfig() {
+    protected ImmutableConfiguration getConfig() {
         return this.config;
     }
 
@@ -84,7 +82,7 @@ extends AbstractConfig {
      */
     @Override
     protected boolean containsInt(
-            final @NotBlank String key) {
+            final String key) {
         return this.config.containsKey(key);
     }
 
@@ -92,7 +90,7 @@ extends AbstractConfig {
      * {@inheritDoc}
      */
     @Override
-    protected @NotNull Stream<String> getKeysInt() {
+    protected Stream<String> getKeysInt() {
         final Iterable<String> iterable = this.config::getKeys;
         return StreamSupport.stream(iterable.spliterator(), false);
     }
@@ -101,8 +99,8 @@ extends AbstractConfig {
      * {@inheritDoc}
      */
     @Override
-    protected String getInt(
-            final @NotBlank String key) {
+    protected @Nullable String getInt(
+            final String key) {
         return this.config.getString(key);
     }
 }

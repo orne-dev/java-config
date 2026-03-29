@@ -24,9 +24,8 @@ package dev.orne.config.impl;
 
 import java.util.prefs.Preferences;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.springframework.lang.Nullable;
 
 /**
  * Options of {@code Preferences} based configuration builder.
@@ -40,7 +39,7 @@ import org.apiguardian.api.API;
 public class PreferencesConfigOptions {
 
     /** The preferences node to use as storage of configuration properties. */
-    private Preferences preferences;
+    private @Nullable Preferences preferences;
 
     /**
      * Empty constructor.
@@ -55,7 +54,7 @@ public class PreferencesConfigOptions {
      * @param copy The instance to copy.
      */
     public PreferencesConfigOptions(
-            final @NotNull PreferencesConfigOptions copy) {
+            final PreferencesConfigOptions copy) {
         super();
         this.preferences = copy.preferences;
     }
@@ -67,7 +66,7 @@ public class PreferencesConfigOptions {
      * @return The preferences node to use as storage of configuration
      * properties.
      */
-    public @NotNull Preferences getPreferences() {
+    public @Nullable Preferences getPreferences() {
         return this.preferences;
     }
 
@@ -77,7 +76,8 @@ public class PreferencesConfigOptions {
      * @param preferences The preferences node to use as storage of configuration
      * properties.
      */
-    public void setPreferences(Preferences preferences) {
+    public void setPreferences(
+            final Preferences preferences) {
         this.preferences = preferences;
     }
 
@@ -99,7 +99,7 @@ public class PreferencesConfigOptions {
      * @see Preferences#node(String)
      */
     public void setUserPreferences(
-            final @NotNull String path) {
+            final String path) {
         this.preferences = Preferences.userRoot().node(path);
     }
 
@@ -111,7 +111,7 @@ public class PreferencesConfigOptions {
      * @see Preferences#userNodeForPackage(Class)
      */
     public void setUserPreferences(
-            final @NotNull Class<?> clazz) {
+            final Class<?> clazz) {
         this.preferences = Preferences.userNodeForPackage(clazz);
     }
 
@@ -126,8 +126,8 @@ public class PreferencesConfigOptions {
      * @see Preferences#node(String)
      */
     public void setUserPreferences(
-            final @NotNull Class<?> clazz,
-            final @NotNull String path) {
+            final Class<?> clazz,
+            final String path) {
         this.preferences = Preferences.userNodeForPackage(clazz).node(path);
     }
 
@@ -149,7 +149,7 @@ public class PreferencesConfigOptions {
      * @see Preferences#node(String)
      */
     public void setSystemPreferences(
-            final @NotNull String path) {
+            final String path) {
         this.preferences = Preferences.systemRoot().node(path);
     }
 
@@ -161,7 +161,7 @@ public class PreferencesConfigOptions {
      * @see Preferences#systemNodeForPackage(Class)
      */
     public void setSystemPreferences(
-            final @NotNull Class<?> clazz) {
+            final Class<?> clazz) {
         this.preferences = Preferences.systemNodeForPackage(clazz);
     }
 
@@ -176,8 +176,8 @@ public class PreferencesConfigOptions {
      * @see Preferences#node(String)
      */
     public void setSystemPreferences(
-            final @NotNull Class<?> clazz,
-            final @NotNull String path) {
+            final Class<?> clazz,
+            final String path) {
         this.preferences = Preferences.systemNodeForPackage(clazz).node(path);
     }
 }

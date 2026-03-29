@@ -2,13 +2,19 @@
 
 ## 1.1.0 - *Unreleased*
 
-### Added `jspecify` dependency for nullability annotations.
-
 ### Changed
 
 - Bump parent POM to 1.2.0.
 - Changed `apiguardian-api` dependency scope to `compile`.
 - Bump `org.assertj:assertj-core` to 3.27.7.
+
+### Added
+
+- Use `jspecify` dependency for nullability annotations.
+
+### Removed
+
+- Usage of `javax.validation` annotations in favor of `jspecify`.
 
 ## 1.0.0 - 2026-03-29
 

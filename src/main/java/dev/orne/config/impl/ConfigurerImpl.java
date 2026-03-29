@@ -28,14 +28,13 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.Validate;
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.MessageFormatter;
@@ -66,9 +65,9 @@ implements Configurer {
     private static final Logger LOG = LoggerFactory.getLogger(ConfigurerImpl.class);
 
     /** The configuration provider. */
-    private final @NotNull ConfigProvider configProvider;
+    private final ConfigProvider configProvider;
     /** The value converter. */
-    private final @NotNull ConvertUtilsBean converter;
+    private final ConvertUtilsBean converter;
 
     /**
      * Creates a new instance.
@@ -76,7 +75,7 @@ implements Configurer {
      * @param configProvider The configuration provider
      */
     public ConfigurerImpl(
-            final @NotNull ConfigProvider configProvider) {
+            final ConfigProvider configProvider) {
         this(configProvider, defaultConverter());
     }
 
@@ -87,8 +86,8 @@ implements Configurer {
      * @param converter The value converter.
      */
     public ConfigurerImpl(
-            final @NotNull ConfigProvider configProvider,
-            final @NotNull ConvertUtilsBean converter) {
+            final ConfigProvider configProvider,
+            final ConvertUtilsBean converter) {
         Validate.notNull(configProvider, "A valid configuration provider is required.");
         this.configProvider = configProvider;
         Validate.notNull(configProvider, "A valid value converter is required.");
@@ -108,7 +107,7 @@ implements Configurer {
      * 
      * @return A new value converter configured with the default settings
      */
-    public static @NotNull ConvertUtilsBean defaultConverter() {
+    public static ConvertUtilsBean defaultConverter() {
         final ConvertUtilsBean result = new ConvertUtilsBean();
         result.register(false, true, 0);
         return result;
@@ -119,7 +118,7 @@ implements Configurer {
      */
     @Override
     public void configure(
-            final @NotNull Configurable bean) {
+            final Configurable bean) {
         Validate.notNull(bean, "A not null bean is required.");
         final Class<?> componentClass = bean.getClass();
         final PreferredConfig preferences = componentClass.getAnnotation(
@@ -146,8 +145,8 @@ implements Configurer {
      * @param config The configuration to use
      */
     protected void configureProperties(
-            final @NotNull Configurable bean,
-            final @NotNull Config config) {
+            final Configurable bean,
+            final Config config) {
         final Collection<Field> fields = scanConfigurableProperties(bean.getClass());
         for (final Field field : fields) {
             configureProperty(bean, field, config);
@@ -161,7 +160,7 @@ implements Configurer {
      * @param targetClass The bean class to scan for configurable fields
      * @return The configurable fields detected
      */
-    protected @NotNull Collection<Field> scanConfigurableProperties(
+    protected Collection<Field> scanConfigurableProperties(
             final Class<?> targetClass) {
         final Set<Field> configurableFields = new HashSet<>();
         Class<?> currentClass = targetClass;
@@ -185,9 +184,9 @@ implements Configurer {
      * @param config The configuration to use
      */
     protected void configureProperty(
-            final @NotNull Object bean,
-            final @NotNull Field field,
-            final @NotNull Config config) {
+            final Object bean,
+            final Field field,
+            final Config config) {
         final ConfigurableProperty metadata = field.getAnnotation(ConfigurableProperty.class);
         final String key = metadata.value();
         final Class<?> type = field.getType();
@@ -241,9 +240,9 @@ implements Configurer {
      * @param value The value to set
      */
     protected void setPropertyValue(
-            final @NotNull Object bean,
-            final @NotNull Field field,
-            final Object value) {
+            final Object bean,
+            final Field field,
+            final @Nullable Object value) {
         try {
             PropertyUtils.setProperty(bean, field.getName(), value);
         } catch (final IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
@@ -262,8 +261,8 @@ implements Configurer {
      * @param config The configuration to use
      */
     protected void configureNestedBeans(
-            final @NotNull Configurable bean,
-            final @NotNull Config config) {
+            final Configurable bean,
+            final Config config) {
         final Collection<Configurable> nestedBeans = scanNestedComponents(bean);
         for (final Configurable nestedBean : nestedBeans) {
             if (!nestedBean.isConfigured()) {
@@ -279,8 +278,8 @@ implements Configurer {
      * @param bean The bean to scan for unconfigured nested beans
      * @return The nested beans detected
      */
-    protected @NotNull Collection<Configurable> scanNestedComponents(
-            final @NotNull Object bean) {
+    protected Collection<Configurable> scanNestedComponents(
+            final Object bean) {
         final Set<Configurable> nestedComponents = new HashSet<>();
         Class<?> currentClass = bean.getClass();
         while (currentClass != null) {

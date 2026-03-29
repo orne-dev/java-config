@@ -22,9 +22,8 @@ package dev.orne.config.impl;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigBuilder;
@@ -46,7 +45,7 @@ public abstract class AbstractConfigBuilderImpl<S extends ConfigBuilder<S>>
 implements ConfigBuilder<S> {
 
     /** The configuration options. */
-    protected final @NotNull ConfigOptions options;
+    protected final ConfigOptions options;
 
     /**
      * Empty constructor.
@@ -62,7 +61,7 @@ implements ConfigBuilder<S> {
      * @param options The configuration options to copy.
      */
     protected AbstractConfigBuilderImpl(
-            final @NotNull ConfigOptions options) {
+            final ConfigOptions options) {
         super();
         this.options = new ConfigOptions(options);
     }
@@ -71,8 +70,8 @@ implements ConfigBuilder<S> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull S withParent(
-            final Config parent) {
+    public S withParent(
+            final @Nullable Config parent) {
         this.options.setParent(parent);
         return thisBuilder();
     }
@@ -81,7 +80,7 @@ implements ConfigBuilder<S> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull S withOverrideParentProperties() {
+    public S withOverrideParentProperties() {
         this.options.setOverrideParentProperties(true);
         return thisBuilder();
     }
@@ -90,8 +89,8 @@ implements ConfigBuilder<S> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull S withEncryption(
-            final ConfigCryptoProvider provider) {
+    public S withEncryption(
+            final @Nullable ConfigCryptoProvider provider) {
         this.options.setCryptoProvider(provider);
         return thisBuilder();
     }
@@ -100,8 +99,8 @@ implements ConfigBuilder<S> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull S withDecoder(
-            final ValueDecoder decoder) {
+    public S withDecoder(
+            final @Nullable ValueDecoder decoder) {
         this.options.setDecoder(decoder);
         return thisBuilder();
     }
@@ -110,7 +109,7 @@ implements ConfigBuilder<S> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull S withVariableResolution() {
+    public S withVariableResolution() {
         this.options.setVariableResolutionEnabled(true);
         return thisBuilder();
     }
@@ -119,8 +118,8 @@ implements ConfigBuilder<S> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull S withDecorator(
-            final ValueDecorator decorator) {
+    public S withDecorator(
+            final @Nullable ValueDecorator decorator) {
         this.options.setDecorator(decorator);
         return thisBuilder();
     }
@@ -131,7 +130,7 @@ implements ConfigBuilder<S> {
      * @return This builder instance.
      */
     @SuppressWarnings("unchecked")
-    protected @NotNull S thisBuilder() {
+    protected S thisBuilder() {
         return (S) this;
     }
 }

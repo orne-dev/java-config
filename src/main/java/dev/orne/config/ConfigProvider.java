@@ -24,9 +24,8 @@ package dev.orne.config;
 
 import java.util.Optional;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.impl.ConfigProviderBuilderImpl;
 
@@ -48,8 +47,8 @@ public interface ConfigProvider {
      * @param defaultConfig The default configuration instance.
      * @return A new {@code ConfigProviderBuilder} instance
      */
-    static @NotNull ConfigProviderBuilder builder(
-            final @NotNull Config defaultConfig) {
+    static ConfigProviderBuilder builder(
+            final Config defaultConfig) {
         return new ConfigProviderBuilderImpl(defaultConfig);
     }
 
@@ -58,7 +57,7 @@ public interface ConfigProvider {
      * 
      * @return The default {@code Config} instance
      */
-    @NotNull Config getDefaultConfig();
+    Config getDefaultConfig();
 
     /**
      * Returns the registered {@code Config} for the specified type, if any.
@@ -66,8 +65,8 @@ public interface ConfigProvider {
      * @param type The configuration type.
      * @return The registered {@code Config}.
      */
-    @NotNull Optional<Config> getConfig(
-            @NotNull Class<? extends Config> type);
+    Optional<Config> getConfig(
+            Class<? extends Config> type);
 
     /**
      * Returns a suitable {@code Config} instance for the configuration
@@ -77,6 +76,6 @@ public interface ConfigProvider {
      * @return The selected {@code Config} instance, or {@code null} if no one
      * is suitable
      */
-    Config selectConfig(
-            PreferredConfig preferences);
+    @Nullable Config selectConfig(
+            @Nullable PreferredConfig preferences);
 }

@@ -22,8 +22,6 @@ package dev.orne.config.impl;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import dev.orne.config.PreferencesMutableConfigBuilder;
@@ -42,7 +40,7 @@ extends AbstractMutableConfigBuilderImpl<PreferencesMutableConfigBuilder>
 implements PreferencesMutableConfigBuilder {
 
     /** The preferences based configuration options. */
-    protected final @NotNull PreferencesConfigOptions preferencesOptions;
+    protected final PreferencesConfigOptions preferencesOptions;
 
     /**
      * Copy constructor.
@@ -53,9 +51,9 @@ implements PreferencesMutableConfigBuilder {
      * copy.
      */
     protected PreferencesMutableConfigBuilderImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions,
-            final @NotNull PreferencesConfigOptions preferencesOptions) {
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final PreferencesConfigOptions preferencesOptions) {
         super(options, mutableOptions);
         this.preferencesOptions = new PreferencesConfigOptions(preferencesOptions);
     }
@@ -64,7 +62,7 @@ implements PreferencesMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PreferencesMutableConfigImpl build() {
+    public PreferencesMutableConfigImpl build() {
         return new PreferencesMutableConfigImpl(
                 this.options,
                 this.mutableOptions,

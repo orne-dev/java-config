@@ -27,9 +27,6 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.Map;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -51,7 +48,7 @@ extends AbstractConfigBuilderImpl<JsonConfigBuilder>
 implements JsonConfigBuilder {
 
     /** The JSON based configuration options. */
-    protected final @NotNull JsonConfigOptions jsonOptions;
+    protected final JsonConfigOptions jsonOptions;
 
     /**
      * Empty constructor.
@@ -65,8 +62,8 @@ implements JsonConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonConfigBuilder withSeparator(
-            final @NotEmpty String separator) {
+    public JsonConfigBuilder withSeparator(
+            final String separator) {
         this.jsonOptions.setPropertySeparator(separator);
         return thisBuilder();
     }
@@ -75,8 +72,8 @@ implements JsonConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonConfigBuilder add(
-            final @NotNull Map<String, String> values) {
+    public JsonConfigBuilder add(
+            final Map<String, String> values) {
         if (!values.isEmpty()) {
             final ObjectNode data = JacksonUtils.NODE_FACTORY.objectNode();
             values.forEach((key, value) -> JacksonUtils.setNodeValue(
@@ -93,8 +90,8 @@ implements JsonConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonConfigBuilder load(
-            final @NotNull String path) {
+    public JsonConfigBuilder load(
+            final String path) {
         this.jsonOptions.load(path);
         return thisBuilder();
     }
@@ -103,8 +100,8 @@ implements JsonConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonConfigBuilder load(
-            final @NotNull Path path) {
+    public JsonConfigBuilder load(
+            final Path path) {
         this.jsonOptions.load(path);
         return thisBuilder();
     }
@@ -113,8 +110,8 @@ implements JsonConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonConfigBuilder load(
-            final @NotNull File file) {
+    public JsonConfigBuilder load(
+            final File file) {
         this.jsonOptions.load(file);
         return thisBuilder();
     }
@@ -123,8 +120,8 @@ implements JsonConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonConfigBuilder load(
-            final @NotNull URL url) {
+    public JsonConfigBuilder load(
+            final URL url) {
         this.jsonOptions.load(url);
         return thisBuilder();
     }
@@ -133,7 +130,7 @@ implements JsonConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonMutableConfigBuilderImpl mutable() {
+    public JsonMutableConfigBuilderImpl mutable() {
         return new JsonMutableConfigBuilderImpl(
                 this.options,
                 new MutableConfigOptions(),
@@ -144,7 +141,7 @@ implements JsonConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonConfigImpl build() {
+    public JsonConfigImpl build() {
         return new JsonConfigImpl(this.options, this.jsonOptions);
     }
 }

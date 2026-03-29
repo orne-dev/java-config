@@ -22,10 +22,9 @@ package dev.orne.config.impl;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 import org.springframework.core.env.Environment;
+import org.springframework.lang.Nullable;
 
 /**
  * Options of Spring {@code Environment} based configuration builder.
@@ -39,7 +38,7 @@ import org.springframework.core.env.Environment;
 public class SpringEnvironmentConfigOptions {
 
     /** The Spring environment. */
-    private @NotNull Environment environment;
+    private @Nullable Environment environment;
     /** If the configuration instance must support property keys iteration. */
     private boolean iterableKeys;
 
@@ -56,7 +55,7 @@ public class SpringEnvironmentConfigOptions {
      * @param copy The instance to copy.
      */
     public SpringEnvironmentConfigOptions(
-            final @NotNull SpringEnvironmentConfigOptions copy) {
+            final SpringEnvironmentConfigOptions copy) {
         super();
         this.environment = copy.environment;
         this.iterableKeys = copy.iterableKeys;
@@ -67,7 +66,7 @@ public class SpringEnvironmentConfigOptions {
      * 
      * @return The Spring environment.
      */
-    public @NotNull Environment getEnvironment() {
+    public @Nullable Environment getEnvironment() {
         return this.environment;
     }
 

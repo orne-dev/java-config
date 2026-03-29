@@ -27,10 +27,8 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A configuration that delegates all operations to another configuration.
@@ -47,7 +45,7 @@ public class DelegatedConfig
 implements Config {
 
     /** The configuration to delegate to. */
-    private final @NotNull Config delegate;
+    private final Config delegate;
 
     /**
      * Creates a new instance.
@@ -55,7 +53,7 @@ implements Config {
      * @param delegate The configuration to delegate to.
      */
     public DelegatedConfig(
-            final @NotNull Config delegate) {
+            final Config delegate) {
         super();
         this.delegate = Objects.requireNonNull(delegate);
     }
@@ -65,7 +63,7 @@ implements Config {
      *
      * @return The delegate configuration.
      */
-    protected @NotNull Config getDelegate() {
+    protected Config getDelegate() {
         return this.delegate;
     }
 
@@ -73,7 +71,7 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    public Config getParent() {
+    public @Nullable Config getParent() {
         return this.delegate.getParent();
     }
 
@@ -90,7 +88,7 @@ implements Config {
      */
     @Override
     public boolean contains(
-            final @NotBlank String key) {
+            final String key) {
         return this.delegate.contains(key);
     }
 
@@ -98,7 +96,7 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull Stream<String> getKeys() {
+    public Stream<String> getKeys() {
         return this.delegate.getKeys();
     }
 
@@ -106,8 +104,8 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull Stream<String> getKeys(
-            final @NotNull Predicate<String> filter) {
+    public Stream<String> getKeys(
+            final Predicate<String> filter) {
         return this.delegate.getKeys(filter);
     }
 
@@ -115,8 +113,8 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull Stream<String> getKeys(
-            final @NotNull String prefix) {
+    public Stream<String> getKeys(
+            final String prefix) {
         return this.delegate.getKeys(prefix);
     }
 
@@ -125,7 +123,7 @@ implements Config {
      */
     @Override
     public String get(
-            final @NotBlank String key) {
+            final String key) {
         return this.delegate.get(key);
     }
 
@@ -133,8 +131,8 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    public String getUndecored(
-            final @NotBlank String key) {
+    public @Nullable String getUndecored(
+            final String key) {
         return this.delegate.getUndecored(key);
     }
 
@@ -142,9 +140,9 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    public String get(
-            final @NotBlank String key,
-            final String defaultValue) {
+    public @Nullable String get(
+            final String key,
+            final @Nullable String defaultValue) {
         return this.delegate.get(key, defaultValue);
     }
 
@@ -152,9 +150,9 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    public String get(
-            final @NotBlank String key,
-            final @NotNull Supplier<String> defaultValue) {
+    public @Nullable String get(
+            final String key,
+            final Supplier<@Nullable String> defaultValue) {
         return this.delegate.get(key, defaultValue);
     }
 
@@ -162,8 +160,8 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    public Boolean getBoolean(
-            final @NotBlank String key) {
+    public @Nullable Boolean getBoolean(
+            final String key) {
         return this.delegate.getBoolean(key);
     }
 
@@ -172,7 +170,7 @@ implements Config {
      */
     @Override
     public boolean getBoolean(
-            final @NotBlank String key,
+            final String key,
             final boolean defaultValue) {
         return this.delegate.getBoolean(key, defaultValue);
     }
@@ -181,9 +179,9 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    public Boolean getBoolean(
-            final @NotBlank String key,
-            final @NotNull Supplier<Boolean> defaultValue) {
+    public @Nullable Boolean getBoolean(
+            final String key,
+            final Supplier<@Nullable Boolean> defaultValue) {
         return this.delegate.getBoolean(key, defaultValue);
     }
 
@@ -191,8 +189,8 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    public Integer getInteger(
-            final @NotNull String key) {
+    public @Nullable Integer getInteger(
+            final String key) {
         return this.delegate.getInteger(key);
     }
 
@@ -201,7 +199,7 @@ implements Config {
      */
     @Override
     public int getInteger(
-            final @NotNull String key,
+            final String key,
             final int defaultValue) {
         return this.delegate.getInteger(key, defaultValue);
     }
@@ -210,9 +208,9 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    public Integer getInteger(
-            final @NotBlank String key,
-            final @NotNull Supplier<Integer> defaultValue) {
+    public @Nullable Integer getInteger(
+            final String key,
+            final Supplier<@Nullable Integer> defaultValue) {
         return this.delegate.getInteger(key, defaultValue);
     }
 
@@ -220,8 +218,8 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    public Long getLong(
-            final @NotNull String key) {
+    public @Nullable Long getLong(
+            final String key) {
         return this.delegate.getLong(key);
     }
 
@@ -230,7 +228,7 @@ implements Config {
      */
     @Override
     public long getLong(
-            final @NotNull String key,
+            final String key,
             final long defaultValue) {
         return this.delegate.getLong(key, defaultValue);
     }
@@ -239,9 +237,9 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    public Long getLong(
-            final @NotBlank String key,
-            final @NotNull Supplier<Long> defaultValue) {
+    public @Nullable Long getLong(
+            final String key,
+            final Supplier<@Nullable Long> defaultValue) {
         return this.delegate.getLong(key, defaultValue);
     }
 }

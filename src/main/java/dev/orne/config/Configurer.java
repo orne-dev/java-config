@@ -22,8 +22,6 @@ package dev.orne.config;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import dev.orne.config.impl.ConfigurerImpl;
@@ -47,8 +45,8 @@ public interface Configurer {
      * @param provider The {@code ConfigProvider} to use.
      * @return A new {@code Configurer} instance.
      */
-    static @NotNull Configurer fromProvider(
-            final @NotNull ConfigProvider provider) {
+    static Configurer fromProvider(
+            final ConfigProvider provider) {
         return new ConfigurerImpl(provider);
     }
 
@@ -58,5 +56,5 @@ public interface Configurer {
      * @param bean The bean to configure.
      */
     void configure(
-            @NotNull Configurable bean);
+            Configurable bean);
 }

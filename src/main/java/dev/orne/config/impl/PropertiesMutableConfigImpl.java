@@ -1,9 +1,5 @@
 package dev.orne.config.impl;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Writer;
-
 /*-
  * #%L
  * Orne Config
@@ -26,14 +22,16 @@ import java.io.Writer;
  * #L%
  */
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Writer;
+
 import java.util.Objects;
 import java.util.Properties;
 import java.util.stream.Stream;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.springframework.lang.Nullable;
 
 import dev.orne.config.FileWatchableConfig;
 import dev.orne.config.MutableConfig;
@@ -53,7 +51,7 @@ extends AbstractWatchableConfig
 implements FileWatchableConfig {
 
     /** The configuration properties. */
-    private final @NotNull Properties config;
+    private final Properties config;
 
     /**
      * Creates a new instance.
@@ -63,9 +61,9 @@ implements FileWatchableConfig {
      * @param propertyOptions The properties based configuration builder options.
      */
     public PropertiesMutableConfigImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions,
-            final @NotNull PropertiesConfigOptions propertyOptions) {
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final PropertiesConfigOptions propertyOptions) {
         super(options, mutableOptions);
         Objects.requireNonNull(propertyOptions);
         this.config = Objects.requireNonNull(propertyOptions.getProperties());
@@ -76,7 +74,7 @@ implements FileWatchableConfig {
      * 
      * @return The configuration properties.
      */
-    protected @NotNull Properties getProperties() {
+    protected Properties getProperties() {
         return this.config;
     }
 
@@ -93,7 +91,7 @@ implements FileWatchableConfig {
      */
     @Override
     protected boolean containsInt(
-            final @NotBlank String key) {
+            final String key) {
         return this.config.containsKey(key);
     }
 
@@ -101,7 +99,7 @@ implements FileWatchableConfig {
      * {@inheritDoc}
      */
     @Override
-    protected @NotNull Stream<String> getKeysInt() {
+    protected Stream<String> getKeysInt() {
         return this.config.stringPropertyNames().stream();
     }
 
@@ -109,8 +107,8 @@ implements FileWatchableConfig {
      * {@inheritDoc}
      */
     @Override
-    protected String getInt(
-            final @NotBlank String key) {
+    protected @Nullable String getInt(
+            final String key) {
         return this.config.getProperty(key);
     }
 
@@ -119,8 +117,8 @@ implements FileWatchableConfig {
      */
     @Override
     protected void setInt(
-            final @NotBlank String key,
-            final @NotNull String value) {
+            final String key,
+            final String value) {
         this.config.setProperty(key, value);
     }
 
@@ -129,7 +127,7 @@ implements FileWatchableConfig {
      */
     @Override
     protected void removeInt(
-            final @NotBlank String... keys) {
+            final String... keys) {
         for (final String key : keys) {
             this.config.remove(key);
         }
@@ -140,7 +138,7 @@ implements FileWatchableConfig {
      */
     @Override
     public void save(
-            final @NotNull OutputStream destination)
+            final OutputStream destination)
     throws IOException {
         this.config.store(destination, null);
     }
@@ -150,7 +148,7 @@ implements FileWatchableConfig {
      */
     @Override
     public void save(
-            final @NotNull Writer destination)
+            final Writer destination)
     throws IOException {
         this.config.store(destination, null);
     }

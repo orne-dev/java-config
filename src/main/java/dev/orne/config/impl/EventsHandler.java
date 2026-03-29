@@ -29,8 +29,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import dev.orne.config.MutableConfig;
@@ -47,7 +45,7 @@ import dev.orne.config.WatchableConfig.Listener;
 public class EventsHandler {
 
     /** The listeners of configuration property changes. */
-    private final @NotNull List<@NotNull Listener> listeners =
+    private final List<Listener> listeners =
             new ArrayList<>();
 
     /**
@@ -62,7 +60,7 @@ public class EventsHandler {
      * 
      * @return The list of registered configuration changed event listeners.
      */
-    protected @NotNull List<@NotNull Listener> getListeners() {
+    protected List<Listener> getListeners() {
         return this.listeners;
     }
 
@@ -72,7 +70,7 @@ public class EventsHandler {
      * @param listener The configuration changed event listener.
      */
     public void add(
-            final @NotNull Listener listener) {
+            final Listener listener) {
         this.listeners.add(listener);
     }
 
@@ -83,7 +81,7 @@ public class EventsHandler {
      * @return If the specified listener was found and unregistered.
      */
     public boolean remove(
-            final @NotNull Listener listener) {
+            final Listener listener) {
         return this.listeners.remove(listener);
     }
 
@@ -95,8 +93,8 @@ public class EventsHandler {
      * @param keys The changed properties.
      */
     public void notify(
-            final @NotNull MutableConfig instance,
-            final @NotNull String... keys) {
+            final MutableConfig instance,
+            final String... keys) {
         if (!this.listeners.isEmpty()) {
             notify(instance, Stream.of(keys).collect(Collectors.toSet()));
         }
@@ -109,8 +107,8 @@ public class EventsHandler {
      * @param keys The changed properties.
      */
     public synchronized void notify(
-            final @NotNull MutableConfig instance,
-            final @NotNull Set<String> keys) {
+            final MutableConfig instance,
+            final Set<String> keys) {
         if (!this.listeners.isEmpty()) {
             final Set<String> unmodif = Collections.unmodifiableSet(keys);
             for (final Listener listener: this.listeners) {

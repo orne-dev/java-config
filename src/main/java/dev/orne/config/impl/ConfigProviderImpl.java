@@ -27,10 +27,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.lang3.Validate;
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigProvider;
@@ -69,7 +68,7 @@ implements ConfigProvider {
      * @param defaultConfig The default configuration
      */
     public ConfigProviderImpl(
-            final @NotNull Config defaultConfig) {
+            final Config defaultConfig) {
         super();
         Validate.notNull(defaultConfig, NULL_DEFAULT_ERR);
         this.defaultConfig = defaultConfig;
@@ -83,7 +82,7 @@ implements ConfigProvider {
      * @param config The configuration to register
      */
     public void registerConfig(
-            final @NotNull Config config) {
+            final Config config) {
         Validate.notNull(config, NULL_CONFIG_ERR);
         mapConfigType(config.getClass(), config);
     }
@@ -97,8 +96,8 @@ implements ConfigProvider {
      * @param config The configuration instance
      */
     protected void mapConfigType(
-            final @NotNull Class<?> type,
-            final @NotNull Config config) {
+            final Class<?> type,
+            final Config config) {
         if (Proxy.isProxyClass(type)) {
             for (final Class<?> iface : type.getInterfaces()) {
                 if (Config.class.isAssignableFrom(iface)) {
@@ -123,7 +122,7 @@ implements ConfigProvider {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull Config getDefaultConfig() {
+    public Config getDefaultConfig() {
         return this.defaultConfig;
     }
 
@@ -131,8 +130,8 @@ implements ConfigProvider {
      * {@inheritDoc}
      */
     @Override
-    public Config selectConfig(
-            final PreferredConfig preferences) {
+    public @Nullable Config selectConfig(
+            final @Nullable PreferredConfig preferences) {
         Config result = null;
         if (preferences == null || preferences.value().length == 0) {
             result = this.defaultConfig;
@@ -151,8 +150,8 @@ implements ConfigProvider {
         return result;
     }
 
-    public @NotNull Optional<Config> getConfig(
-            final @NotNull Class<? extends Config> type) {
+    public Optional<Config> getConfig(
+            final Class<? extends Config> type) {
         return Optional.ofNullable(this.mappings.get(type));
     }
 }

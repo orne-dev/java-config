@@ -28,7 +28,7 @@ import java.util.prefs.AbstractPreferences;
 import java.util.prefs.Preferences;
 import java.util.prefs.PreferencesFactory;
 
-import javax.validation.constraints.NotNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Mock {@code PreferencesFactory} implementation for testing classes
@@ -127,8 +127,8 @@ implements PreferencesFactory {
          * @param name The node name.
          */
         protected NopPreferences(
-                final @NotNull NopPreferences parent,
-                final @NotNull String name) {
+                final NopPreferences parent,
+                final String name) {
             super(parent, name);
         }
 
@@ -137,8 +137,8 @@ implements PreferencesFactory {
          */
         @Override
         protected void putSpi(
-                final @NotNull String key,
-                final @NotNull String value) {
+                final String key,
+                final String value) {
             // NOP
         }
 
@@ -146,8 +146,8 @@ implements PreferencesFactory {
          * {@inheritDoc}
          */
         @Override
-        protected String getSpi(
-                final @NotNull String key) {
+        protected @Nullable String getSpi(
+                final String key) {
             return null;
         }
 
@@ -156,7 +156,7 @@ implements PreferencesFactory {
          */
         @Override
         protected void removeSpi(
-                final @NotNull String key) {
+                final String key) {
             // NOP
         }
 
@@ -189,7 +189,7 @@ implements PreferencesFactory {
          */
         @Override
         protected AbstractPreferences childSpi(
-                final @NotNull String name) {
+                final String name) {
             return new NopPreferences(this, name);
         }
 
@@ -235,8 +235,8 @@ implements PreferencesFactory {
          * @param name The node name.
          */
         public InMemoryPreferences(
-                final @NotNull InMemoryPreferences parent,
-                final @NotNull String name) {
+                final InMemoryPreferences parent,
+                final String name) {
             super(parent, name);
             this.attributes = new HashMap<>();
             this.childs = new HashMap<>();
@@ -248,7 +248,7 @@ implements PreferencesFactory {
          * @param attributes The attributes to set
          */
         public void setAttributes(
-                final @NotNull Map<String, String> attributes) {
+                final Map<String, String> attributes) {
             this.attributes.clear();
             this.attributes.putAll(attributes);
         }
@@ -266,8 +266,8 @@ implements PreferencesFactory {
          */
         @Override
         protected void putSpi(
-                final @NotNull String key,
-                final @NotNull String value) {
+                final String key,
+                final String value) {
             this.attributes.put(key, value);
         }
 
@@ -275,8 +275,8 @@ implements PreferencesFactory {
          * {@inheritDoc}
          */
         @Override
-        protected String getSpi(
-                final @NotNull String key) {
+        protected @Nullable String getSpi(
+                final String key) {
             return this.attributes.get(key);
         }
 
@@ -285,7 +285,7 @@ implements PreferencesFactory {
          */
         @Override
         protected void removeSpi(
-                final @NotNull String key) {
+                final String key) {
             this.attributes.remove(key);
         }
 
@@ -318,7 +318,7 @@ implements PreferencesFactory {
          */
         @Override
         protected InMemoryPreferences childSpi(
-                final @NotNull String name) {
+                final String name) {
             if (!this.childs.containsKey(name)) {
                 this.childs.put(name, new InMemoryPreferences(this, name));
             }

@@ -22,8 +22,6 @@ package dev.orne.config.impl;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -56,7 +54,7 @@ extends JsonConfigOptions {
      * @param copy The instance to copy.
      */
     public YamlConfigOptions(
-            final @NotNull YamlConfigOptions copy) {
+            final YamlConfigOptions copy) {
         super(copy);
     }
 }

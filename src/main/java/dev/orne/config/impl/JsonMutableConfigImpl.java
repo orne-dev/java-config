@@ -28,11 +28,8 @@ import java.util.Objects;
 import java.util.WeakHashMap;
 import java.util.stream.Stream;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -57,9 +54,9 @@ extends AbstractWatchableConfig
 implements FileWatchableConfig {
 
     /** The JSON object with the configuration properties. */
-    private final @NotNull ObjectNode jsonObject;
+    private final ObjectNode jsonObject;
     /** The configuration nested properties separator. */
-    private final @NotEmpty String propertySeparator;
+    private final String propertySeparator;
     /** The property key to JSON pointers cache. */
     private final WeakHashMap<String, JsonPointer> cache = new WeakHashMap<>();
 
@@ -71,9 +68,9 @@ implements FileWatchableConfig {
      * @param jsonOptions The JSON based configuration builder options.
      */
     public JsonMutableConfigImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions,
-            final @NotNull JsonConfigOptions jsonOptions) {
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final JsonConfigOptions jsonOptions) {
         super(options, mutableOptions);
         Objects.requireNonNull(jsonOptions);
         this.jsonObject = jsonOptions.getJsonObject();
@@ -85,7 +82,7 @@ implements FileWatchableConfig {
      * 
      * @return The JSON object with the configuration properties.
      */
-    protected @NotNull ObjectNode getJsonObject() {
+    protected ObjectNode getJsonObject() {
         return this.jsonObject;
     }
 
@@ -94,7 +91,7 @@ implements FileWatchableConfig {
      * 
      * @return The configuration nested properties separator.
      */
-    protected @NotEmpty String getPropertySeparator() {
+    protected String getPropertySeparator() {
         return this.propertySeparator;
     }
 
@@ -110,7 +107,7 @@ implements FileWatchableConfig {
      * {@inheritDoc}
      */
     @Override
-    protected @NotNull Stream<String> getKeysInt() {
+    protected Stream<String> getKeysInt() {
         return this.jsonObject.propertyStream()
                 .flatMap(entry ->
                     JsonConfigImpl.keysFlattener(
@@ -125,7 +122,7 @@ implements FileWatchableConfig {
      */
     @Override
     protected boolean containsInt(
-            final @NotBlank String key) {
+            final String key) {
         final JsonNode node = this.jsonObject.at(propertyToPointer(key));
         return !node.isMissingNode();
     }
@@ -134,8 +131,8 @@ implements FileWatchableConfig {
      * {@inheritDoc}
      */
     @Override
-    protected String getInt(
-            final @NotBlank String key) {
+    protected @Nullable String getInt(
+            final String key) {
         final JsonNode node = this.jsonObject.at(propertyToPointer(key));
         if (node.isValueNode()) {
             return node.asText();
@@ -149,8 +146,8 @@ implements FileWatchableConfig {
      */
     @Override
     protected void setInt(
-            final @NotBlank String key,
-            final @NotNull String value) {
+            final String key,
+            final String value) {
         final JsonPointer pointer = propertyToPointer(key);
         JacksonUtils.setNodeValue(this.jsonObject, pointer, value);
     }
@@ -160,7 +157,7 @@ implements FileWatchableConfig {
      */
     @Override
     protected void removeInt(
-            final @NotBlank String... keys) {
+            final String... keys) {
         for (final String key : keys) {
             final JsonPointer pointer = propertyToPointer(key);
             JacksonUtils.removeNode(this.jsonObject, pointer);
@@ -174,8 +171,8 @@ implements FileWatchableConfig {
      * @param key The configuration key.
      * @return The JSON pointer expression.
      */
-    protected @NotBlank JsonPointer propertyToPointer(
-            final @NotBlank String key) {
+    protected JsonPointer propertyToPointer(
+            final String key) {
         Objects.requireNonNull(key);
         return cache.computeIfAbsent(key, k ->
                 JacksonUtils.propertyToPointer(key, this.propertySeparator));
@@ -186,7 +183,7 @@ implements FileWatchableConfig {
      */
     @Override
     public void save(
-            final @NotNull Writer destination)
+            final Writer destination)
     throws IOException {
         new ObjectMapper()
                 .writerWithDefaultPrettyPrinter()

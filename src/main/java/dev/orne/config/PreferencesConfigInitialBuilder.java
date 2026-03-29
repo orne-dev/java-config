@@ -24,8 +24,6 @@ package dev.orne.config;
 
 import java.util.prefs.Preferences;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 /**
@@ -46,7 +44,7 @@ public interface PreferencesConfigInitialBuilder {
      * @return Next builder, for method chaining.
      * @see Preferences#userRoot()
      */
-    @NotNull PreferencesConfigBuilder ofUserRoot();
+    PreferencesConfigBuilder ofUserRoot();
 
     /**
      * Selects the node with the specified path on the user preferences tree.
@@ -57,8 +55,8 @@ public interface PreferencesConfigInitialBuilder {
      * @see Preferences#userRoot()
      * @see Preferences#node(String)
      */
-    @NotNull PreferencesConfigBuilder ofUser(
-            final @NotNull String path);
+    PreferencesConfigBuilder ofUser(
+            String path);
 
     /**
      * Selects the node for the package of the specified class on the user
@@ -68,8 +66,8 @@ public interface PreferencesConfigInitialBuilder {
      * @return Next builder, for method chaining.
      * @see Preferences#userNodeForPackage(Class)
      */
-    @NotNull PreferencesConfigBuilder ofUser(
-            final @NotNull Class<?> clazz);
+    PreferencesConfigBuilder ofUser(
+            Class<?> clazz);
 
     /**
      * Selects the node with the specified path relative to the node for the
@@ -82,9 +80,9 @@ public interface PreferencesConfigInitialBuilder {
      * @see Preferences#userNodeForPackage(Class)
      * @see Preferences#node(String)
      */
-    @NotNull PreferencesConfigBuilder ofUser(
-            final @NotNull Class<?> clazz,
-            final @NotNull String path);
+    PreferencesConfigBuilder ofUser(
+            Class<?> clazz,
+            String path);
 
     /**
      * Selects the system preferences tree root node.
@@ -92,7 +90,7 @@ public interface PreferencesConfigInitialBuilder {
      * @return Next builder, for method chaining.
      * @see Preferences#systemRoot()
      */
-    @NotNull PreferencesConfigBuilder ofSystemRoot();
+    PreferencesConfigBuilder ofSystemRoot();
 
     /**
      * Selects the node with the specified path on the system preferences tree.
@@ -103,8 +101,8 @@ public interface PreferencesConfigInitialBuilder {
      * @see Preferences#systemRoot()
      * @see Preferences#node(String)
      */
-    @NotNull PreferencesConfigBuilder ofSystem(
-            final @NotNull String path);
+    PreferencesConfigBuilder ofSystem(
+            String path);
 
     /**
      * Selects the node for the package of the specified class on the system
@@ -114,8 +112,8 @@ public interface PreferencesConfigInitialBuilder {
      * @return Next builder, for method chaining.
      * @see Preferences#systemNodeForPackage(Class)
      */
-    @NotNull PreferencesConfigBuilder ofSystem(
-            final @NotNull Class<?> clazz);
+    PreferencesConfigBuilder ofSystem(
+            Class<?> clazz);
 
     /**
      * Selects the node with the specified path relative to the node for the
@@ -128,9 +126,9 @@ public interface PreferencesConfigInitialBuilder {
      * @see Preferences#systemNodeForPackage(Class)
      * @see Preferences#node(String)
      */
-    @NotNull PreferencesConfigBuilder ofSystem(
-            final @NotNull Class<?> clazz,
-            final @NotNull String path);
+    PreferencesConfigBuilder ofSystem(
+            Class<?> clazz,
+            String path);
 
     /**
      * Selects the specified preferences node.
@@ -138,6 +136,6 @@ public interface PreferencesConfigInitialBuilder {
      * @param preferences The {@code Preferences} node to use.
      * @return Next builder, for method chaining.
      */
-    @NotNull PreferencesConfigBuilder ofNode(
-            final @NotNull Preferences preferences);
+    PreferencesConfigBuilder ofNode(
+            Preferences preferences);
 }

@@ -32,9 +32,8 @@ import java.lang.reflect.Proxy;
 import java.util.List;
 import java.util.Objects;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigException;
@@ -73,11 +72,11 @@ implements InvocationHandler {
     }
 
     /** The configuration instance. */
-    private final @NotNull Config instance;
+    private final Config instance;
     /** The type of the extended configuration interface. */
-    private final @NotNull Class<? extends Config> extendedType;
+    private final Class<? extends Config> extendedType;
     /** The method handles lookup. */
-    private final @NotNull MethodHandles.Lookup lookup;
+    private final MethodHandles.Lookup lookup;
 
     /**
      * Creates a new instance.
@@ -86,8 +85,8 @@ implements InvocationHandler {
      * @param extendedType The type of extended configuration interface.
      */
     protected ConfigSubtype(
-            final @NotNull Config instance,
-            final @NotNull Class<? extends Config> extendedType) {
+            final Config instance,
+            final Class<? extends Config> extendedType) {
         this.instance = instance;
         this.extendedType = extendedType;
         MethodHandles.Lookup lookupInstance;
@@ -107,9 +106,9 @@ implements InvocationHandler {
      * @param type The configuration type interface to create a proxy for.
      * @return A new configuration proxy instance.
      */
-    public static <T extends Config> @NotNull T create(
-            final @NotNull Config config,
-            final @NotNull Class<T> type) {
+    public static <T extends Config> T create(
+            final Config config,
+            final Class<T> type) {
         return create(
                 type.getClassLoader(),
                 config,
@@ -125,10 +124,10 @@ implements InvocationHandler {
      * @param type The configuration type interface to create a proxy for.
      * @return A new configuration proxy instance.
      */
-    public static <T extends Config> @NotNull T create(
-            final @NotNull ClassLoader classLoader,
-            final @NotNull Config config,
-            final @NotNull Class<T> type) {
+    public static <T extends Config> T create(
+            final ClassLoader classLoader,
+            final Config config,
+            final Class<T> type) {
         Objects.requireNonNull(classLoader, "The class loader must not be null");
         Objects.requireNonNull(config, "The configuration instance must not be null");
         Objects.requireNonNull(type, "The configuration subtype must be an interface.");
@@ -156,7 +155,7 @@ implements InvocationHandler {
      * @throws ConfigException If the interface is not valid.
      */
     private static void validateSubtypeInterface(
-            final @NotNull Class<?> configInterface) {
+            final Class<?> configInterface) {
         if (!configInterface.isInterface()) {
             throw new ConfigException(
                     "The configuration subtype must be an interface.");
@@ -183,10 +182,10 @@ implements InvocationHandler {
      * {@inheritDoc}
     */
     @Override
-    public Object invoke(
-            final Object proxy,
-            final @NotNull Method method,
-            final @NotNull Object[] args)
+    public @Nullable Object invoke(
+            final @Nullable Object proxy,
+            final Method method,
+            final @Nullable Object[] args)
     throws Throwable {
         final Class<?> declaringClass = method.getDeclaringClass();
         if (Object.class.equals(declaringClass)) {
@@ -224,9 +223,9 @@ implements InvocationHandler {
      * @throws ReflectiveOperationException If an error occurs during method
      * invocation.
      */
-    protected Object handleObjectMethod(
-            final @NotNull Method method,
-            final Object[] args)
+    protected @Nullable Object handleObjectMethod(
+            final Method method,
+            final @Nullable Object[] args)
     throws ReflectiveOperationException {
         final Object result;
         if (OBJECT_EQUALS.equals(method)) {
@@ -245,7 +244,7 @@ implements InvocationHandler {
      *         {@code false} otherwise.
      */
     protected boolean proxyEquals(
-            final Object other) {
+            final @Nullable Object other) {
         if (this == other) {
             return true;
         }
@@ -269,7 +268,8 @@ implements InvocationHandler {
      * {@inheritDoc}
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(
+            final @Nullable Object obj) {
         if (this == obj) {
             return true;
         }

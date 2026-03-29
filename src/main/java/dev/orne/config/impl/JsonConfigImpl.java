@@ -27,11 +27,8 @@ import java.util.WeakHashMap;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -54,9 +51,9 @@ public class JsonConfigImpl
 extends AbstractConfig {
 
     /** The JSON object with the configuration properties. */
-    private final @NotNull ObjectNode jsonObject;
+    private final ObjectNode jsonObject;
     /** The configuration nested properties separator. */
-    private final @NotEmpty String propertySeparator;
+    private final String propertySeparator;
     /** The property key to JSON pointers cache. */
     private final WeakHashMap<String, JsonPointer> cache = new WeakHashMap<>();
 
@@ -67,8 +64,8 @@ extends AbstractConfig {
      * @param jsonOptions The JSON based configuration builder options.
      */
     public JsonConfigImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull JsonConfigOptions jsonOptions) {
+            final ConfigOptions options,
+            final JsonConfigOptions jsonOptions) {
         super(options);
         Objects.requireNonNull(jsonOptions);
         this.jsonObject = jsonOptions.getJsonObject();
@@ -80,7 +77,7 @@ extends AbstractConfig {
      * 
      * @return The JSON object with the configuration properties.
      */
-    protected @NotNull ObjectNode getJsonObject() {
+    protected ObjectNode getJsonObject() {
         return this.jsonObject;
     }
 
@@ -89,7 +86,7 @@ extends AbstractConfig {
      * 
      * @return The configuration nested properties separator.
      */
-    protected @NotEmpty String getPropertySeparator() {
+    protected String getPropertySeparator() {
         return this.propertySeparator;
     }
 
@@ -105,7 +102,7 @@ extends AbstractConfig {
      * {@inheritDoc}
      */
     @Override
-    protected @NotNull Stream<String> getKeysInt() {
+    protected Stream<String> getKeysInt() {
         return this.jsonObject.propertyStream()
                 .flatMap(entry ->
                     keysFlattener(
@@ -120,7 +117,7 @@ extends AbstractConfig {
      */
     @Override
     protected boolean containsInt(
-            final @NotBlank String key) {
+            final String key) {
         final JsonNode node = this.jsonObject.at(propertyToPointer(key));
         return !node.isMissingNode();
     }
@@ -129,8 +126,8 @@ extends AbstractConfig {
      * {@inheritDoc}
      */
     @Override
-    protected String getInt(
-            final @NotBlank String key) {
+    protected @Nullable String getInt(
+            final String key) {
         final JsonNode node = this.jsonObject.at(propertyToPointer(key));
         if (node.isValueNode()) {
             return node.asText();
@@ -146,8 +143,8 @@ extends AbstractConfig {
      * @param key The configuration key.
      * @return The JSON pointer expression.
      */
-    protected @NotBlank JsonPointer propertyToPointer(
-            final @NotBlank String key) {
+    protected JsonPointer propertyToPointer(
+            final String key) {
         Objects.requireNonNull(key);
         return cache.computeIfAbsent(key, k ->
                 JacksonUtils.propertyToPointer(k, this.propertySeparator));
@@ -162,11 +159,11 @@ extends AbstractConfig {
      * @param node The JSON object node entry.
      * @return A stream of flattened keys.
      */
-    protected static @NotNull Stream<String> keysFlattener(
-            final @NotBlank String separator,
-            final @NotNull String prefix,
-            final @NotNull String key,
-            final @NotNull JsonNode node) {
+    protected static Stream<String> keysFlattener(
+            final String separator,
+            final String prefix,
+            final String key,
+            final JsonNode node) {
         if (node.isObject()) {
             final ObjectNode obj = (ObjectNode) node;
             final String nestedPrefix;

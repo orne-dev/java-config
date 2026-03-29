@@ -24,8 +24,6 @@ package dev.orne.config.commons;
 
 import java.util.Objects;
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.configuration2.ConfigurationDecoder;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 
@@ -45,7 +43,7 @@ public class DelegatedOrneConfigurationDecoder
 implements ConfigurationDecoder {
 
     /** The cryptography transformations provider. */
-    private final @NotNull ConfigCryptoProvider provider;
+    private final ConfigCryptoProvider provider;
 
     /**
      * Creates a new instance.
@@ -53,7 +51,7 @@ implements ConfigurationDecoder {
      * @param provider The cryptography transformations provider
      */
     public DelegatedOrneConfigurationDecoder(
-            final @NotNull ConfigCryptoProvider provider) {
+            final ConfigCryptoProvider provider) {
         super();
         this.provider = Objects.requireNonNull(provider);
     }
@@ -62,7 +60,8 @@ implements ConfigurationDecoder {
      * {@inheritDoc}
      */
     @Override
-    public String decode(final @NotNull String value) {
+    public String decode(
+            final String value) {
         try {
             return this.provider.decrypt(value);
         } catch (final ConfigCryptoProviderException ccpe) {
@@ -75,7 +74,7 @@ implements ConfigurationDecoder {
      * 
      * @return The cryptography transformations provider
      */
-    protected @NotNull ConfigCryptoProvider getProvider() {
+    protected ConfigCryptoProvider getProvider() {
         return this.provider;
     }
 }

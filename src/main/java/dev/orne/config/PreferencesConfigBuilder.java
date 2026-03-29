@@ -24,8 +24,6 @@ package dev.orne.config;
 
 import java.util.prefs.Preferences;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 /**
@@ -45,5 +43,5 @@ extends MutableCapableConfigBuilder<PreferencesConfigBuilder> {
      * {@inheritDoc}
      */
     @Override
-    @NotNull PreferencesMutableConfigBuilder mutable();
+    PreferencesMutableConfigBuilder mutable();
 }

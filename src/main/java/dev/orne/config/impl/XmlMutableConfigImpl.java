@@ -27,8 +27,6 @@ import java.io.Writer;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.xml.XMLConstants;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -41,6 +39,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.lang.Nullable;
 import org.w3c.dom.Document;
 
 import dev.orne.config.Config;
@@ -85,11 +84,11 @@ implements FileWatchableConfig {
     
 
     /** The XML document with the configuration options. */
-    private final @NotNull Document document;
+    private final Document document;
     /** The configuration nested properties separator. */
-    private final @NotBlank String propertySeparator;
+    private final String propertySeparator;
     /** The XML attributes references prefix. */
-    private final @NotBlank String attributePrefix;
+    private final String attributePrefix;
 
     /**
      * Creates a new instance.
@@ -99,11 +98,10 @@ implements FileWatchableConfig {
      * @param xmlOptions The XML based configuration builder options.
      */
     public XmlMutableConfigImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions,
-            final @NotNull XmlConfigOptions xmlOptions) {
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final XmlConfigOptions xmlOptions) {
         super(options, mutableOptions);
-        Objects.requireNonNull(xmlOptions);
         Objects.requireNonNull(xmlOptions);
         this.document = Objects.requireNonNull(xmlOptions.getDocument());
         this.propertySeparator = Objects.requireNonNull(xmlOptions.getPropertySeparator());
@@ -115,7 +113,7 @@ implements FileWatchableConfig {
      * 
      * @return The XML document with the configuration options.
      */
-    protected @NotNull Document getDocument() {
+    protected Document getDocument() {
         return this.document;
     }
 
@@ -124,7 +122,7 @@ implements FileWatchableConfig {
      * 
      * @return The configuration nested properties separator.
      */
-    protected @NotBlank String getPropertySeparator() {
+    protected String getPropertySeparator() {
         return this.propertySeparator;
     }
 
@@ -133,7 +131,7 @@ implements FileWatchableConfig {
      * 
      * @return The XML attributes references prefix.
      */
-    protected @NotBlank String getAttributePrefix() {
+    protected String getAttributePrefix() {
         return this.attributePrefix;
     }
 
@@ -150,7 +148,8 @@ implements FileWatchableConfig {
      * {@inheritDoc}
      */
     @Override
-    protected boolean containsInt(@NotBlank String key) {
+    protected boolean containsInt(
+            final String key) {
         return XmlUtils.contains(
                 this.document,
                 key,
@@ -162,7 +161,7 @@ implements FileWatchableConfig {
      * {@inheritDoc}
      */
     @Override
-    protected @NotNull Stream<String> getKeysInt() {
+    protected Stream<String> getKeysInt() {
         return XmlUtils.extractKeys(
                 this.document,
                 this.propertySeparator,
@@ -173,7 +172,8 @@ implements FileWatchableConfig {
      * {@inheritDoc}
      */
     @Override
-    protected String getInt(@NotBlank String key) {
+    protected @Nullable String getInt(
+            final String key) {
         return XmlUtils.getValue(
                 this.document,
                 key,
@@ -187,8 +187,8 @@ implements FileWatchableConfig {
      */
     @Override
     protected void setInt(
-            final @NotBlank String key,
-            final @NotNull String value) {
+            final String key,
+            final String value) {
         XmlUtils.setValue(
                 this.document,
                 key,
@@ -202,7 +202,7 @@ implements FileWatchableConfig {
      */
     @Override
     protected void removeInt(
-            final @NotBlank String... keys) {
+            final String... keys) {
         for (final String key : keys) {
             XmlUtils.setValue(
                     this.document,
@@ -218,7 +218,7 @@ implements FileWatchableConfig {
      */
     @Override
     public void save(
-            final @NotNull Writer destination)
+            final Writer destination)
     throws IOException {
         try {
             final Transformer transformer = TRANS_FACT.newTransformer();

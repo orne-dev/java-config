@@ -23,6 +23,7 @@ package dev.orne.config;
  */
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Exception thrown when configuration property keys cannot be
@@ -57,7 +58,7 @@ extends ConfigException {
      *          later retrieval by the {@link #getMessage()} method.
      */
     public NonIterableConfigException(
-            final String message) {
+            final @Nullable String message) {
         super(message);
     }
 
@@ -75,7 +76,7 @@ extends ConfigException {
      *         unknown.)
      */
     public NonIterableConfigException(
-            final Throwable cause) {
+            final @Nullable Throwable cause) {
         super(cause);
     }
 
@@ -93,8 +94,8 @@ extends ConfigException {
      *         unknown.)
      */
     public NonIterableConfigException(
-            final String message,
-            final Throwable cause) {
+            final @Nullable String message,
+            final @Nullable Throwable cause) {
         super(message, cause);
     }
 
@@ -111,9 +112,9 @@ extends ConfigException {
      * @param writableStackTrace whether or not the stack trace should
      *                           be writable
      */
-    public NonIterableConfigException(
-            final String message,
-            final Throwable cause,
+    protected NonIterableConfigException(
+            final @Nullable String message,
+            final @Nullable Throwable cause,
             final boolean enableSuppression,
             final boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);

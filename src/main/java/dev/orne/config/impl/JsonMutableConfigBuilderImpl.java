@@ -27,9 +27,6 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.Map;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -52,7 +49,7 @@ extends AbstractMutableConfigBuilderImpl<JsonMutableConfigBuilder>
 implements JsonMutableConfigBuilder {
 
     /** The JSON based configuration options. */
-    protected final @NotNull JsonConfigOptions jsonOptions;
+    protected final JsonConfigOptions jsonOptions;
 
     /**
      * Copy constructor.
@@ -62,9 +59,9 @@ implements JsonMutableConfigBuilder {
      * @param jsonOptions The JSON based configuration options to copy.
      */
     protected JsonMutableConfigBuilderImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions,
-            final @NotNull JsonConfigOptions jsonOptions) {
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final JsonConfigOptions jsonOptions) {
         super(options, mutableOptions);
         this.jsonOptions = new JsonConfigOptions(jsonOptions);
     }
@@ -73,8 +70,8 @@ implements JsonMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonMutableConfigBuilder withSeparator(
-            final @NotEmpty String separator) {
+    public JsonMutableConfigBuilder withSeparator(
+            final String separator) {
         this.jsonOptions.setPropertySeparator(separator);
         return thisBuilder();
     }
@@ -83,8 +80,8 @@ implements JsonMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonMutableConfigBuilder add(
-            final @NotNull Map<String, String> values) {
+    public JsonMutableConfigBuilder add(
+            final Map<String, String> values) {
         if (!values.isEmpty()) {
             final ObjectNode data = JacksonUtils.NODE_FACTORY.objectNode();
             values.forEach((key, value) -> JacksonUtils.setNodeValue(
@@ -101,8 +98,8 @@ implements JsonMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonMutableConfigBuilder load(
-            final @NotNull String path) {
+    public JsonMutableConfigBuilder load(
+            final String path) {
         this.jsonOptions.load(path);
         return thisBuilder();
     }
@@ -111,8 +108,8 @@ implements JsonMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonMutableConfigBuilder load(
-            final @NotNull Path path) {
+    public JsonMutableConfigBuilder load(
+            final Path path) {
         this.jsonOptions.load(path);
         return thisBuilder();
     }
@@ -121,8 +118,8 @@ implements JsonMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonMutableConfigBuilder load(
-            final @NotNull File file) {
+    public JsonMutableConfigBuilder load(
+            final File file) {
         this.jsonOptions.load(file);
         return thisBuilder();
     }
@@ -131,8 +128,8 @@ implements JsonMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonMutableConfigBuilder load(
-            final @NotNull URL url) {
+    public JsonMutableConfigBuilder load(
+            final URL url) {
         this.jsonOptions.load(url);
         return thisBuilder();
     }
@@ -141,7 +138,7 @@ implements JsonMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonMutableConfigImpl build() {
+    public JsonMutableConfigImpl build() {
         return new JsonMutableConfigImpl(
                 this.options,
                 this.mutableOptions,

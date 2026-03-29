@@ -29,10 +29,8 @@ import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
 import java.util.stream.Stream;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.springframework.lang.Nullable;
 
 import dev.orne.config.ConfigException;
 import dev.orne.config.MutableConfig;
@@ -53,7 +51,7 @@ extends AbstractWatchableConfig
 implements PreferencesMutableConfig, PreferenceChangeListener {
 
     /** The preferences node to use as storage of configuration properties. */
-    private final @NotNull Preferences preferences;
+    private final Preferences preferences;
 
     /**
      * Creates a new instance.
@@ -64,9 +62,9 @@ implements PreferencesMutableConfig, PreferenceChangeListener {
      */
     @API(status = API.Status.INTERNAL, since = "1.0")
     public PreferencesMutableConfigImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions,
-            final @NotNull PreferencesConfigOptions preferencesOptions) {
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final PreferencesConfigOptions preferencesOptions) {
         super(options, mutableOptions);
         Objects.requireNonNull(preferencesOptions);
         this.preferences = Objects.requireNonNull(preferencesOptions.getPreferences());
@@ -79,7 +77,7 @@ implements PreferencesMutableConfig, PreferenceChangeListener {
      * 
      * @return The preferences node.
      */
-    protected @NotNull Preferences getPreferences() {
+    protected Preferences getPreferences() {
         return this.preferences;
     }
 
@@ -99,7 +97,8 @@ implements PreferencesMutableConfig, PreferenceChangeListener {
      * {@inheritDoc}
      */
     @Override
-    protected boolean containsInt(@NotBlank String key) {
+    protected boolean containsInt(
+            final String key) {
         try {
             return this.preferences.get(key, null) != null;
         } catch (final IllegalStateException ise) {
@@ -111,7 +110,7 @@ implements PreferencesMutableConfig, PreferenceChangeListener {
      * {@inheritDoc}
      */
     @Override
-    protected @NotNull Stream<String> getKeysInt() {
+    protected Stream<String> getKeysInt() {
         try {
             return Stream.of(this.preferences.keys());
         } catch (final IllegalStateException | BackingStoreException e) {
@@ -123,7 +122,8 @@ implements PreferencesMutableConfig, PreferenceChangeListener {
      * {@inheritDoc}
      */
     @Override
-    protected String getInt(@NotBlank String key) {
+    protected @Nullable String getInt(
+            final String key) {
         try {
             return this.preferences.get(key, null);
         } catch (final IllegalStateException ise) {
@@ -136,8 +136,8 @@ implements PreferencesMutableConfig, PreferenceChangeListener {
      */
     @Override
     protected void setInt(
-            final @NotBlank String key,
-            final @NotNull String value) {
+            final String key,
+            final String value) {
         try {
             getPreferences().put(key, value);
         } catch (final IllegalStateException ise) {
@@ -150,7 +150,7 @@ implements PreferencesMutableConfig, PreferenceChangeListener {
      */
     @Override
     protected void removeInt(
-            final @NotBlank String... keys) {
+            final String... keys) {
         for (final String key : keys) {
             try {
                 getPreferences().remove(key);
@@ -165,7 +165,7 @@ implements PreferencesMutableConfig, PreferenceChangeListener {
      */
     @Override
     public void preferenceChange(
-            final @NotNull PreferenceChangeEvent evt) {
+            final PreferenceChangeEvent evt) {
         getResolver().ifPresent(r -> r.clearCache());
         try {
             getEvents().notify(this, evt.getKey());
@@ -179,7 +179,7 @@ implements PreferencesMutableConfig, PreferenceChangeListener {
      */
     @Override
     protected void notifyLocalChanges(
-            final @NotNull String... keys) {
+            final String... keys) {
         // Prevent duplicated notifications for local changes later notified
         // by the preferences change listener.
     }

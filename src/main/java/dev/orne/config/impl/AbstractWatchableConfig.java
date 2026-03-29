@@ -24,10 +24,8 @@ package dev.orne.config.impl;
 
 import java.util.Set;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.WatchableConfig;
 
@@ -45,7 +43,7 @@ extends AbstractMutableConfig
 implements WatchableConfig {
 
     /** The configuration change events handler. */
-    private final @NotNull EventsHandler events;
+    private final EventsHandler events;
 
     /**
      * Creates a new instance.
@@ -54,8 +52,8 @@ implements WatchableConfig {
      * @param mutableOptions The mutable configuration builder options.
      */
     protected AbstractWatchableConfig(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions) {
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions) {
         super(options, mutableOptions);
         this.events = new EventsHandler();
         if (getParent() instanceof WatchableConfig) {
@@ -79,8 +77,8 @@ implements WatchableConfig {
      */
     @Override
     public void set(
-            final @NotBlank String key,
-            final String value) {
+            final String key,
+            final @Nullable String value) {
         super.set(key, value);
         notifyLocalChanges(key);
     }
@@ -89,7 +87,8 @@ implements WatchableConfig {
      * {@inheritDoc}
      */
     @Override
-    public void remove(@NotBlank String... keys) {
+    public void remove(
+            final String... keys) {
         super.remove(keys);
         notifyLocalChanges(keys);
     }
@@ -99,7 +98,7 @@ implements WatchableConfig {
      */
     @Override
     public void addListener(
-            final @NotNull Listener listener) {
+            final Listener listener) {
         this.events.add(listener);
     }
 
@@ -108,7 +107,7 @@ implements WatchableConfig {
      */
     @Override
     public void removeListener(
-            final @NotNull Listener listener) {
+            final Listener listener) {
         this.events.remove(listener);
     }
 
@@ -119,7 +118,7 @@ implements WatchableConfig {
      * @param keys The changed local properties.
      */
     protected void notifyLocalChanges(
-            final @NotNull String... keys) {
+            final String... keys) {
         this.events.notify(this, keys);
     }
 
@@ -130,7 +129,7 @@ implements WatchableConfig {
      * @param keys The changed parent properties.
      */
     protected void notifyParentChanges(
-            final @NotNull Set<String> keys) {
+            final Set<String> keys) {
         this.events.notify(this, keys);
     }
 }

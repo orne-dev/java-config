@@ -30,9 +30,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -105,11 +102,11 @@ class ConfigTest {
     void testKeyMethodsOverride() {
         final Config config = new Config() {
             @Override
-            public String get(@NotBlank String key) {
+            public String get(String key) {
                 throw new AssertionError("Should not be called");
             }
             @Override
-            public @NotNull Stream<String> getKeys() {
+            public Stream<String> getKeys() {
                 return Stream.of(TEST_KEY, NUMBER_KEY, BOOLEAN_KEY);
             }
         };
@@ -127,11 +124,11 @@ class ConfigTest {
     void testKeyMethodsEmptyOverride() {
         final Config config = new Config() {
             @Override
-            public String get(@NotBlank String key) {
+            public String get(String key) {
                 throw new AssertionError("Should not be called");
             }
             @Override
-            public @NotNull Stream<String> getKeys() {
+            public Stream<String> getKeys() {
                 return Stream.of();
             }
         };

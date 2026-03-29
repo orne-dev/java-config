@@ -22,9 +22,8 @@ package dev.orne.config;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Mutable configuration builder.
@@ -46,8 +45,8 @@ extends ConfigBuilder<S> {
      * @param encoder The configuration properties values encoder.
      * @return This instance, for method chaining.
      */
-    @NotNull S withEncoder(
-            ValueEncoder encoder);
+    S withEncoder(
+            @Nullable ValueEncoder encoder);
 
     /**
      * Creates the configuration instance.
@@ -55,5 +54,5 @@ extends ConfigBuilder<S> {
      * @return The configuration instance.
      */
     @Override
-    @NotNull MutableConfig build();
+    MutableConfig build();
 }

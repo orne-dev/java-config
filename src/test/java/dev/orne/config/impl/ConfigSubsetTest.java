@@ -32,11 +32,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.springframework.lang.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.MutableConfig;
@@ -128,19 +126,19 @@ class ConfigSubsetTest {
         values.put("db.user", "admin");
         final MutableConfig config = new MutableConfig() {
             @Override
-            public @NotNull Stream<String> getKeys() {
+            public Stream<String> getKeys() {
                 return values.keySet().stream();
             }
             @Override
-            public String get(@NotBlank String key) {
+            public @Nullable String get(String key) {
                 return values.get(key);
             }
             @Override
-            public void set(@NotBlank String key, String value) {
+            public void set(String key, @Nullable String value) {
                 values.put(key, value);
             }
             @Override
-            public void remove(@NotBlank String... keys) {
+            public void remove(String... keys) {
                 for (String key : keys) {
                     values.remove(key);
                 }
@@ -172,19 +170,19 @@ class ConfigSubsetTest {
         values.put("service.db.user", "admin");
         final MutableConfig config = new MutableConfig() {
             @Override
-            public @NotNull Stream<String> getKeys() {
+            public Stream<String> getKeys() {
                 return values.keySet().stream();
             }
             @Override
-            public String get(@NotBlank String key) {
+            public @Nullable String get(String key) {
                 return values.get(key);
             }
             @Override
-            public void set(@NotBlank String key, String value) {
+            public void set(String key, @Nullable String value) {
                 values.put(key, value);
             }
             @Override
-            public void remove(@NotBlank String... keys) {
+            public void remove(String... keys) {
                 for (String key : keys) {
                     values.remove(key);
                 }
@@ -325,9 +323,9 @@ class ConfigSubsetTest {
                 .add(values)
                 .build();
         final Config proxy = config.subset("db.");
-        assertFalse(proxy.equals(null));
-        assertTrue(proxy.equals(proxy));
-        assertTrue(proxy.equals(proxy));
+        assertEquals(proxy, proxy);
+        assertNotEquals(proxy, (Config) null);
+        assertNotEquals(proxy, new Object());
         final Config equalProxy = config.subset("db.");
         assertEquals(proxy.hashCode(), equalProxy.hashCode());
         assertEquals(proxy.toString(), equalProxy.toString());

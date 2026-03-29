@@ -23,6 +23,7 @@ package dev.orne.config;
  */
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Exception thrown during configuration operations.
@@ -56,7 +57,7 @@ extends RuntimeException {
      *          later retrieval by the {@link #getMessage()} method.
      */
     public ConfigException(
-            final String message) {
+            final @Nullable String message) {
         super(message);
     }
 
@@ -74,7 +75,7 @@ extends RuntimeException {
      *         unknown.)
      */
     public ConfigException(
-            final Throwable cause) {
+            final @Nullable Throwable cause) {
         super(cause);
     }
 
@@ -92,8 +93,8 @@ extends RuntimeException {
      *         unknown.)
      */
     public ConfigException(
-            final String message,
-            final Throwable cause) {
+            final @Nullable String message,
+            final @Nullable Throwable cause) {
         super(message, cause);
     }
 
@@ -111,8 +112,8 @@ extends RuntimeException {
      *                           be writable
      */
     public ConfigException(
-            final String message,
-            final Throwable cause,
+            final @Nullable String message,
+            final @Nullable Throwable cause,
             final boolean enableSuppression,
             final boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);

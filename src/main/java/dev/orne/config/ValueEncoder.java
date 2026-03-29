@@ -24,9 +24,8 @@ package dev.orne.config;
 
 import java.util.Objects;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Interface of configuration property values encoders.
@@ -48,7 +47,8 @@ public interface ValueEncoder {
      * @param value The configuration property value.
      * @return The encoded configuration property value.
      */
-    String encode(String value);
+    @Nullable String encode(
+            @Nullable String value);
 
     /**
      * Returns a composed encoder that first applies the {@code before} encoder
@@ -63,8 +63,8 @@ public interface ValueEncoder {
      *
      * @see #andThen(ValueEncoder)
      */
-    default @NotNull ValueEncoder compose(
-            final @NotNull ValueEncoder before) {
+    default ValueEncoder compose(
+            final ValueEncoder before) {
         Objects.requireNonNull(before);
         return v -> encode(before.encode(v));
     }
@@ -82,8 +82,8 @@ public interface ValueEncoder {
      *
      * @see #compose(ValueEncoder)
      */
-    default @NotNull ValueEncoder andThen(
-            final @NotNull ValueEncoder after) {
+    default ValueEncoder andThen(
+            final ValueEncoder after) {
         Objects.requireNonNull(after);
         return v -> after.encode(encode(v));
     }

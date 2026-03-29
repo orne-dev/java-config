@@ -22,9 +22,8 @@ package dev.orne.config;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.impl.CryptoProviderBuilderImpl;
 
@@ -43,7 +42,7 @@ public interface ConfigCryptoProvider {
      * 
      * @return The provider builder.
      */
-    static @NotNull CryptoProviderEngineBuilder builder() {
+    static CryptoProviderEngineBuilder builder() {
         return new CryptoProviderBuilderImpl();
     }
 
@@ -55,8 +54,8 @@ public interface ConfigCryptoProvider {
      * @throws ConfigCryptoProviderException If an exception occurs during the
      * encryption process
      */
-    String encrypt(
-            String value)
+    @Nullable String encrypt(
+            @Nullable String value)
     throws ConfigCryptoProviderException;
 
     /**
@@ -67,8 +66,8 @@ public interface ConfigCryptoProvider {
      * @throws ConfigCryptoProviderException If an exception occurs during the
      * decryption process
      */
-    String decrypt(
-            String value)
+    @Nullable String decrypt(
+            @Nullable String value)
     throws ConfigCryptoProviderException;
 
     /**

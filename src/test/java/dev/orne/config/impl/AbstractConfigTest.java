@@ -32,8 +32,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.validation.constraints.NotNull;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -88,7 +86,7 @@ abstract class AbstractConfigTest {
      * populated.
      */
     protected abstract ConfigBuilder<?> createBuilder(
-            @NotNull Map<String, String> properties);
+            Map<String, String> properties);
 
     /**
      * Indicates if the tested configuration implementation can iterate

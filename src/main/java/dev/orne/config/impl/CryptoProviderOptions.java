@@ -23,7 +23,6 @@ package dev.orne.config.impl;
  */
 
 import javax.crypto.SecretKey;
-import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
 
@@ -65,7 +64,7 @@ public class CryptoProviderOptions {
      * @param copy The instance to copy.
      */
     public CryptoProviderOptions(
-            final @NotNull CryptoProviderOptions copy) {
+            final CryptoProviderOptions copy) {
         super();
         this.engine = copy.engine;
         this.destroyEngine = copy.destroyEngine;
@@ -87,7 +86,8 @@ public class CryptoProviderOptions {
      * 
      * @param engine The cryptography engine to use.
      */
-    public void setEngine(ConfigCryptoEngine engine) {
+    public void setEngine(
+            final ConfigCryptoEngine engine) {
         this.engine = engine;
     }
 
@@ -109,7 +109,8 @@ public class CryptoProviderOptions {
      * @param destroyEngine If the cryptography engine must be destroyed on
      * provider destruction.
      */
-    public void setDestroyEngine(boolean destroyEngine) {
+    public void setDestroyEngine(
+            final boolean destroyEngine) {
         this.destroyEngine = destroyEngine;
     }
 
@@ -127,7 +128,8 @@ public class CryptoProviderOptions {
      * 
      * @param key The secret key to use.
      */
-    public void setKey(SecretKey key) {
+    public void setKey(
+            final SecretKey key) {
         this.key = key;
     }
 
@@ -147,7 +149,8 @@ public class CryptoProviderOptions {
      * @param pooled If multiple pooled {@code Cipher} instances should be
      * used.
      */
-    public void setPooled(boolean pooled) {
+    public void setPooled(
+            final boolean pooled) {
         this.pooled = pooled;
     }
 }

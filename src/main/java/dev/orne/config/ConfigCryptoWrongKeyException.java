@@ -1,7 +1,5 @@
 package dev.orne.config;
 
-import org.apiguardian.api.API;
-
 /*-
  * #%L
  * Orne Config
@@ -23,6 +21,9 @@ import org.apiguardian.api.API;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
+
+import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Exception exception thrown by providers of cryptography transformations for
@@ -58,7 +59,7 @@ extends ConfigCryptoProviderException {
      *          later retrieval by the {@link #getMessage()} method.
      */
     public ConfigCryptoWrongKeyException(
-            final String message) {
+            final @Nullable String message) {
         super(message);
     }
 
@@ -76,7 +77,7 @@ extends ConfigCryptoProviderException {
      *         unknown.)
      */
     public ConfigCryptoWrongKeyException(
-            final Throwable cause) {
+            final @Nullable Throwable cause) {
         super(cause);
     }
 
@@ -94,8 +95,8 @@ extends ConfigCryptoProviderException {
      *         unknown.)
      */
     public ConfigCryptoWrongKeyException(
-            final String message,
-            final Throwable cause) {
+            final @Nullable String message,
+            final @Nullable Throwable cause) {
         super(message, cause);
     }
 
@@ -112,9 +113,9 @@ extends ConfigCryptoProviderException {
      * @param writableStackTrace whether or not the stack trace should
      *                           be writable
      */
-    public ConfigCryptoWrongKeyException(
-            final String message,
-            final Throwable cause,
+    protected ConfigCryptoWrongKeyException(
+            final @Nullable String message,
+            final @Nullable Throwable cause,
             final boolean enableSuppression,
             final boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);

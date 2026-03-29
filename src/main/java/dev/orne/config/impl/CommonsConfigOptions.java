@@ -22,10 +22,9 @@ package dev.orne.config.impl;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.configuration2.ImmutableConfiguration;
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Options of Apache Commons Configuration based configuration builder.
@@ -39,7 +38,7 @@ import org.apiguardian.api.API;
 public class CommonsConfigOptions {
 
     /** The delegated Apache Commons configuration. */
-    protected ImmutableConfiguration delegated;
+    protected @Nullable ImmutableConfiguration delegated;
 
     /**
      * Empty constructor.
@@ -54,7 +53,7 @@ public class CommonsConfigOptions {
      * @param copy The instance to copy.
      */
     public CommonsConfigOptions(
-            final @NotNull CommonsConfigOptions copy) {
+            final CommonsConfigOptions copy) {
         super();
         this.delegated = copy.delegated;
     }
@@ -64,7 +63,7 @@ public class CommonsConfigOptions {
      * 
      * @return The delegated Apache Commons configuration.
      */
-    public ImmutableConfiguration getDelegated() {
+    public @Nullable ImmutableConfiguration getDelegated() {
         return this.delegated;
     }
 

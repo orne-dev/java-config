@@ -26,11 +26,9 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.lang3.ObjectUtils;
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.impl.CommonsConfigBuilderImpl;
 import dev.orne.config.impl.ConfigSubtype;
@@ -60,7 +58,7 @@ public interface Config {
      * 
      * @return The configuration builder.
      */
-    static @NotNull EnvironmentConfigBuilder fromEnvironmentVariables() {
+    static EnvironmentConfigBuilder fromEnvironmentVariables() {
         return new EnvironmentConfigBuilderImpl();
     }
 
@@ -69,7 +67,7 @@ public interface Config {
      * 
      * @return The configuration builder.
      */
-    static @NotNull SystemConfigBuilder fromSystemProperties() {
+    static SystemConfigBuilder fromSystemProperties() {
         return new SystemConfigBuilderImpl();
     }
 
@@ -78,7 +76,7 @@ public interface Config {
      * 
      * @return The configuration builder.
      */
-    static @NotNull PropertiesConfigBuilder fromProperties() {
+    static PropertiesConfigBuilder fromProperties() {
         return new PropertiesConfigBuilderImpl();
     }
 
@@ -87,7 +85,7 @@ public interface Config {
      * 
      * @return The configuration builder.
      */
-    static @NotNull JsonConfigBuilder fromJson() {
+    static JsonConfigBuilder fromJson() {
         return new JsonConfigBuilderImpl();
     }
 
@@ -96,7 +94,7 @@ public interface Config {
      * 
      * @return The configuration builder.
      */
-    static @NotNull YamlConfigBuilder fromYaml() {
+    static YamlConfigBuilder fromYaml() {
         return new YamlConfigBuilderImpl();
     }
 
@@ -105,7 +103,7 @@ public interface Config {
      * 
      * @return The configuration builder.
      */
-    static @NotNull XmlConfigBuilder fromXml() {
+    static XmlConfigBuilder fromXml() {
         return new XmlConfigBuilderImpl();
     }
 
@@ -114,7 +112,7 @@ public interface Config {
      * 
      * @return The configuration builder.
      */
-    static @NotNull PreferencesConfigInitialBuilder fromJavaPreferences() {
+    static PreferencesConfigInitialBuilder fromJavaPreferences() {
         return new PreferencesConfigBuilderImpl();
     }
 
@@ -124,7 +122,7 @@ public interface Config {
      * 
      * @return The configuration builder.
      */
-    static @NotNull CommonsConfigBuilder fromApacheCommons() {
+    static CommonsConfigBuilder fromApacheCommons() {
         return new CommonsConfigBuilderImpl();
     }
 
@@ -134,7 +132,7 @@ public interface Config {
      * 
      * @return The configuration builder.
      */
-    static @NotNull SpringEnvironmentConfigInitialBuilder fromSpringEnvironment() {
+    static SpringEnvironmentConfigInitialBuilder fromSpringEnvironment() {
         return new SpringEnvironmentConfigBuilderImpl();
     }
 
@@ -152,8 +150,8 @@ public interface Config {
      * @return The proxy of the specified configuration type.
      */
     static <T extends Config> T as(
-            final @NotNull Config config,
-            final @NotNull Class<T> type) {
+            final Config config,
+            final Class<T> type) {
         if (type.isInstance(config)) {
             return type.cast(config);
         } else {
@@ -166,7 +164,7 @@ public interface Config {
      * 
      * @return The parent configuration
      */
-    default Config getParent() {
+    default @Nullable Config getParent() {
         return null;
     }
 
@@ -190,7 +188,7 @@ public interface Config {
      * @return Returns {@code true} if the property has been configured.
      */
     default boolean contains(
-            @NotBlank String key) {
+            String key) {
         return get(key) != null;
     }
 
@@ -202,7 +200,7 @@ public interface Config {
      * cannot be iterated.
      * @throws ConfigException If an error occurs accessing the configuration.
      */
-    default @NotNull Stream<String> getKeys() {
+    default Stream<String> getKeys() {
         throw new NonIterableConfigException(
                 "Configuration property keys cannot be iterated.");
     }
@@ -217,8 +215,8 @@ public interface Config {
      * cannot be iterated.
      * @throws ConfigException If an error occurs accessing the configuration.
      */
-    default @NotNull Stream<String> getKeys(
-            final @NotNull Predicate<String> filter) {
+    default Stream<String> getKeys(
+            final Predicate<String> filter) {
         return getKeys().filter(filter);
     }
 
@@ -232,8 +230,8 @@ public interface Config {
      * cannot be iterated.
      * @throws ConfigException If an error occurs accessing the configuration.
      */
-    default @NotNull Stream<String> getKeys(
-            final @NotNull String prefix) {
+    default Stream<String> getKeys(
+            final String prefix) {
         return getKeys(key -> key.startsWith(prefix));
     }
 
@@ -245,8 +243,8 @@ public interface Config {
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value
      */
-    String get(
-            @NotBlank String key);
+    @Nullable String get(
+            String key);
 
     /**
      * Returns the value of the configuration parameter as {@code String}
@@ -257,8 +255,8 @@ public interface Config {
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value
      */
-    default String getUndecored(
-            @NotBlank String key) {
+    default @Nullable String getUndecored(
+            String key) {
         return get(key);
     }
 
@@ -272,9 +270,9 @@ public interface Config {
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value
      */
-    default String get(
-            @NotBlank String key,
-            String defaultValue) {
+    default @Nullable String get(
+            String key,
+            @Nullable String defaultValue) {
         return ObjectUtils.firstNonNull(get(key), defaultValue);
     }
 
@@ -288,9 +286,9 @@ public interface Config {
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value
      */
-    default String get(
-            @NotBlank String key,
-            @NotNull Supplier<String> defaultValue) {
+    default @Nullable String get(
+            String key,
+            Supplier<@Nullable String> defaultValue) {
         return ObjectUtils.getFirstNonNull(() -> get(key), defaultValue);
     }
 
@@ -302,8 +300,8 @@ public interface Config {
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value
      */
-    default Boolean getBoolean(
-            @NotBlank String key) {
+    default @Nullable Boolean getBoolean(
+            String key) {
         final String value = get(key);
         return value == null ? null : Boolean.parseBoolean(value); 
     }
@@ -319,7 +317,7 @@ public interface Config {
      * property value
      */
     default boolean getBoolean(
-            @NotBlank String key,
+            String key,
             boolean defaultValue) {
         return ObjectUtils.firstNonNull(getBoolean(key), defaultValue);
     }
@@ -334,9 +332,9 @@ public interface Config {
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value
      */
-    default Boolean getBoolean(
-            @NotBlank String key,
-            @NotNull Supplier<Boolean> defaultValue) {
+    default @Nullable Boolean getBoolean(
+            String key,
+            Supplier<@Nullable Boolean> defaultValue) {
         return ObjectUtils.getFirstNonNull(() -> getBoolean(key), defaultValue);
     }
 
@@ -349,8 +347,8 @@ public interface Config {
      * @throws NumberFormatException If the configuration value cannot be
      * parsed as an integer.
      */
-    default Integer getInteger(
-            @NotNull String key) {
+    default @Nullable Integer getInteger(
+            String key) {
         final String strValue = get(key);
         return strValue == null ? null : Integer.valueOf(strValue);
     }
@@ -367,7 +365,7 @@ public interface Config {
      * parsed as an integer.
      */
     default int getInteger(
-            @NotNull String key,
+            String key,
             int defaultValue) {
         return Integer.parseInt(get(key, String.valueOf(defaultValue)));
     }
@@ -382,9 +380,9 @@ public interface Config {
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value
      */
-    default Integer getInteger(
-            @NotBlank String key,
-            @NotNull Supplier<Integer> defaultValue) {
+    default @Nullable Integer getInteger(
+            String key,
+            Supplier<@Nullable Integer> defaultValue) {
         return ObjectUtils.getFirstNonNull(() -> getInteger(key), defaultValue);
     }
 
@@ -397,8 +395,8 @@ public interface Config {
      * @throws NumberFormatException If the configuration value cannot be
      * parsed as an long.
      */
-    default Long getLong(
-            @NotNull String key) {
+    default @Nullable Long getLong(
+            String key) {
         final String strValue = get(key);
         return strValue == null ? null : Long.valueOf(strValue);
     }
@@ -415,7 +413,7 @@ public interface Config {
      * parsed as an long.
      */
     default long getLong(
-            @NotNull String key,
+            String key,
             long defaultValue) {
         return Long.parseLong(get(key, String.valueOf(defaultValue)));
     }
@@ -430,9 +428,9 @@ public interface Config {
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value
      */
-    default Long getLong(
-            @NotBlank String key,
-            @NotNull Supplier<Long> defaultValue) {
+    default @Nullable Long getLong(
+            String key,
+            Supplier<@Nullable Long> defaultValue) {
         return ObjectUtils.getFirstNonNull(() -> getLong(key), defaultValue);
     }
 
@@ -450,7 +448,7 @@ public interface Config {
      * @see #as(Config, Class)
      */
     default <T extends Config> T as(
-            final @NotNull Class<T> type) {
+            final Class<T> type) {
         return Config.as(this, type);
     }
 
@@ -461,8 +459,8 @@ public interface Config {
      * @param prefix The prefix for configuration keys.
      * @return The subset configuration.
      */
-    default @NotNull Config subset(
-            final @NotNull String prefix) {
+    default Config subset(
+            final String prefix) {
         return ConfigSubset.create(this, prefix);
     }
 }

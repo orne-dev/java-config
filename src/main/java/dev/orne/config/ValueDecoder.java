@@ -24,9 +24,8 @@ package dev.orne.config;
 
 import java.util.Objects;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Interface of configuration property values decoders.
@@ -48,7 +47,8 @@ public interface ValueDecoder {
      * @param value The configuration property value.
      * @return The decoded configuration property value.
      */
-    String decode(String value);
+    @Nullable String decode(
+            @Nullable String value);
 
     /**
      * Returns a composed decoder that first applies the {@code before} decoder
@@ -63,8 +63,8 @@ public interface ValueDecoder {
      *
      * @see #andThen(ValueDecoder)
      */
-    default @NotNull ValueDecoder compose(
-            final @NotNull ValueDecoder before) {
+    default ValueDecoder compose(
+            final ValueDecoder before) {
         Objects.requireNonNull(before);
         return v -> decode(before.decode(v));
     }
@@ -82,8 +82,8 @@ public interface ValueDecoder {
      *
      * @see #compose(ValueDecoder)
      */
-    default @NotNull ValueDecoder andThen(
-            final @NotNull ValueDecoder after) {
+    default ValueDecoder andThen(
+            final ValueDecoder after) {
         Objects.requireNonNull(after);
         return v -> after.decode(decode(v));
     }

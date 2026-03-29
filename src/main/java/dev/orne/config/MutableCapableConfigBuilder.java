@@ -22,8 +22,6 @@ package dev.orne.config;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 /**
@@ -44,5 +42,5 @@ extends ConfigBuilder<S> {
      * 
      * @return This instance, for method chaining.
      */
-    @NotNull MutableConfigBuilder<?> mutable();
+    MutableConfigBuilder<?> mutable();
 }
