@@ -319,7 +319,12 @@ public interface Config {
     default boolean getBoolean(
             String key,
             boolean defaultValue) {
-        return ObjectUtils.firstNonNull(getBoolean(key), defaultValue);
+        final Boolean value = getBoolean(key);
+        if (value == null) {
+            return defaultValue;
+        } else {
+            return value;
+        }
     }
 
     /**

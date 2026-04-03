@@ -38,7 +38,7 @@ import org.apiguardian.api.API;
 @API(status = API.Status.STABLE, since = "1.0")
 public interface PropertiesConfigBuilder
 extends PropertiesConfigBaseBuilder<PropertiesConfigBuilder>,
-        MutableCapableConfigBuilder<PropertiesConfigBuilder> {
+        MutableCapableConfigBuilder<PropertiesConfigBuilder, PropertiesMutableConfigBuilder> {
 
     /**
      * {@inheritDoc}

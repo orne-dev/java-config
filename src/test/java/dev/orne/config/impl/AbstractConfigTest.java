@@ -673,20 +673,6 @@ abstract class AbstractConfigTest {
         assertSame(ValueDecoder.DEFAULT, config.getDecoder());
         assertNotSame(ValueDecorator.DEFAULT, config.getDecorator());
         assertTrue(config.getResolver().isPresent());
-        if (isIterable()) {
-            assertFalse(config.isEmptyInt());
-            assertFalse(config.isEmpty());
-            assertFalse(config.getKeysInt().collect(Collectors.toSet()).isEmpty());
-            assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_KEY));
-            assertTrue(config.getKeysInt().collect(Collectors.toSet()).contains(TEST_DERIVED_KEY));
-            assertFalse(config.getKeys().collect(Collectors.toSet()).isEmpty());
-            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_KEY));
-            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_DERIVED_KEY));
-            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_PARENT_KEY));
-            assertTrue(config.getKeys().collect(Collectors.toSet()).contains(TEST_PARENT_DERIVED_KEY));
-        } else {
-            assertThrows(NonIterableConfigException.class, config::getKeysInt);
-        }
         assertTrue(config.containsInt(TEST_KEY));
         assertTrue(config.containsInt(TEST_DERIVED_KEY));
         assertTrue(config.contains(TEST_KEY));

@@ -37,7 +37,7 @@ import org.apiguardian.api.API;
  */
 @API(status = API.Status.STABLE, since = "1.0")
 public interface PreferencesConfigBuilder
-extends MutableCapableConfigBuilder<PreferencesConfigBuilder> {
+extends MutableCapableConfigBuilder<PreferencesConfigBuilder, PreferencesMutableConfigBuilder> {
 
     /**
      * {@inheritDoc}

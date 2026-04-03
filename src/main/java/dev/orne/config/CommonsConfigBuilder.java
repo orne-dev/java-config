@@ -36,7 +36,7 @@ import org.apiguardian.api.API;
  */
 @API(status = API.Status.STABLE, since = "1.0")
 public interface CommonsConfigBuilder
-extends MutableCapableConfigBuilder<CommonsConfigBuilder> {
+extends MutableCapableConfigBuilder<CommonsConfigBuilder, CommonsMutableConfigBuilder> {
 
     /**
      * Selects the delegated Apache Commons configuration.

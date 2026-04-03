@@ -34,7 +34,8 @@ import org.apiguardian.api.API;
  */
 @API(status = API.Status.STABLE, since = "1.0")
 public interface JsonConfigBuilder
-extends JsonConfigBaseBuilder<JsonConfigBuilder>, MutableCapableConfigBuilder<JsonConfigBuilder> {
+extends JsonConfigBaseBuilder<JsonConfigBuilder>,
+        MutableCapableConfigBuilder<JsonConfigBuilder, JsonMutableConfigBuilder> {
 
     /**
      * {@inheritDoc}

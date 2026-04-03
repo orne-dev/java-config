@@ -24,7 +24,6 @@ package dev.orne.config.impl;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -52,27 +51,14 @@ import dev.orne.config.WatchableConfig;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class ConfigSubtype
-implements InvocationHandler {
+extends AbstractProxyHandler {
 
     /** The list of classes proxied to the configuration instance. */
     private static final List<Class<?>> PROXYED_TYPES = List.of(
             Config.class,
             MutableConfig.class,
             WatchableConfig.class);
-    /** Cached {@code Object.equals()} for performance optimization. */
-    private static final Method OBJECT_EQUALS;
-    static {
-        try {
-            OBJECT_EQUALS = Object.class.getMethod(
-                    "equals",
-                    Object.class);
-        } catch (final NoSuchMethodException e) {
-            throw new ExceptionInInitializerError(e);
-        }
-    }
 
-    /** The configuration instance. */
-    private final Config instance;
     /** The type of the extended configuration interface. */
     private final Class<? extends Config> extendedType;
     /** The method handles lookup. */
@@ -87,7 +73,7 @@ implements InvocationHandler {
     protected ConfigSubtype(
             final Config instance,
             final Class<? extends Config> extendedType) {
-        this.instance = instance;
+        super(instance);
         this.extendedType = extendedType;
         MethodHandles.Lookup lookupInstance;
         try {
@@ -215,52 +201,12 @@ implements InvocationHandler {
     }
 
     /**
-     * Handles {@code Object} methods invocations.
-     * 
-     * @param method The invoked method.
-     * @param args The method arguments.
-     * @return The method invocation result.
-     * @throws ReflectiveOperationException If an error occurs during method
-     * invocation.
-     */
-    protected @Nullable Object handleObjectMethod(
-            final Method method,
-            final @Nullable Object[] args)
-    throws ReflectiveOperationException {
-        final Object result;
-        if (OBJECT_EQUALS.equals(method)) {
-            result = proxyEquals(args[0]);
-        } else {
-            result = method.invoke(this, args);
-        }
-        return result;
-    }
-
-    /**
-     * Checks equality with another proxy instance.
-     * 
-     * @param other The other proxy instance.
-     * @return {@code true} if both proxies are equal,
-     *         {@code false} otherwise.
-     */
-    protected boolean proxyEquals(
-            final @Nullable Object other) {
-        if (this == other) {
-            return true;
-        }
-        if (other == null || !Proxy.isProxyClass(other.getClass())) {
-            return false;
-        }
-        return this.equals(Proxy.getInvocationHandler(other));
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
     public int hashCode() {
         return Objects.hash(
-                this.instance,
+                super.hashCode(),
                 this.extendedType);
     }
 
@@ -270,17 +216,11 @@ implements InvocationHandler {
     @Override
     public boolean equals(
             final @Nullable Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
+        if (obj == null || !super.equals(obj)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        ConfigSubtype other = (ConfigSubtype) obj;
-        return Objects.equals(this.instance, other.instance)
+        final ConfigSubtype other = (ConfigSubtype) obj;
+        return super.equals(obj)
                 && Objects.equals(this.extendedType, other.extendedType);
     }
 

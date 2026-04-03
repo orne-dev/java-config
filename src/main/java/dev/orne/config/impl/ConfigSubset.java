@@ -22,7 +22,6 @@ package dev.orne.config.impl;
  * #L%
  */
 
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
@@ -49,15 +48,13 @@ import dev.orne.config.WatchableConfig;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class ConfigSubset
-implements InvocationHandler {
+extends AbstractProxyHandler {
 
     /** The name of the getKeys methods. */
     private static final String GET_KEYS_METHOD = "getKeys";
     /** The name of the subset methods. */
     private static final String SUBSET_METHOD = "subset";
 
-    /** Cached {@code Object.equals()} for performance optimization. */
-    private static final Method OBJECT_EQUALS;
     /** Cached {@code Config.isEmpty()} for performance optimization. */
     private static final Method CONFIG_IS_EMPTY;
     /** Cached {@code Config.getKeys(Predicate)} for performance optimization. */
@@ -76,9 +73,6 @@ implements InvocationHandler {
     private static final Method WATCHABLE_SUBSET;
     static {
         try {
-            OBJECT_EQUALS = Object.class.getMethod(
-                    "equals",
-                    Object.class);
             CONFIG_IS_EMPTY = Config.class.getMethod(
                     "isEmpty");
             CONFIG_GET_KEYS_FILTERED = Config.class.getMethod(
@@ -107,8 +101,6 @@ implements InvocationHandler {
         }
     }
 
-    /** The configuration instance. */
-    private final Config instance;
     /** The prefix for configuration keys. */
     private final String prefix;
     /** The configuration change events handler. */
@@ -123,7 +115,7 @@ implements InvocationHandler {
     protected ConfigSubset(
             final Config instance,
             final String prefix) {
-        this.instance = Objects.requireNonNull(instance);
+        super(instance);
         this.prefix = Objects.requireNonNull(prefix);
         if (instance instanceof WatchableConfig) {
             this.events = new EventsHandler();
@@ -316,46 +308,6 @@ implements InvocationHandler {
     }
 
     /**
-     * Handles {@code Object} methods invocations.
-     * 
-     * @param method The invoked method.
-     * @param args The method arguments.
-     * @return The method invocation result.
-     * @throws ReflectiveOperationException If an error occurs during method
-     * invocation.
-     */
-    protected @Nullable Object handleObjectMethod(
-            final Method method,
-            final @Nullable Object[] args)
-    throws ReflectiveOperationException {
-        final Object result;
-        if (OBJECT_EQUALS.equals(method)) {
-            result = proxyEquals(args[0]);
-        } else {
-            result = method.invoke(this, args);
-        }
-        return result;
-    }
-
-    /**
-     * Checks equality with another proxy instance.
-     * 
-     * @param other The other proxy instance.
-     * @return {@code true} if both proxies are equal,
-     *         {@code false} otherwise.
-     */
-    protected boolean proxyEquals(
-            final @Nullable Object other) {
-        if (this == other) {
-            return true;
-        }
-        if (other == null || !Proxy.isProxyClass(other.getClass())) {
-            return false;
-        }
-        return this.equals(Proxy.getInvocationHandler(other));
-    }
-
-    /**
      * Handles {@code Config} methods invocations.
      * 
      * @param proxy The proxy instance.
@@ -497,7 +449,7 @@ implements InvocationHandler {
     @Override
     public int hashCode() {
         return Objects.hash(
-                this.instance,
+                super.hashCode(),
                 this.prefix,
                 this.events);
     }
@@ -508,18 +460,11 @@ implements InvocationHandler {
     @Override
     public boolean equals(
             final @Nullable Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
+        if (obj == null || !super.equals(obj)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        ConfigSubset other = (ConfigSubset) obj;
-        return Objects.equals(this.instance, other.instance)
-                && Objects.equals(this.prefix, other.prefix)
+        final ConfigSubset other = (ConfigSubset) obj;
+        return Objects.equals(this.prefix, other.prefix)
                 && Objects.equals(this.events, other.events);
     }
 

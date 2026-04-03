@@ -34,7 +34,9 @@ import org.apiguardian.api.API;
  * @see MutableConfig
  */
 @API(status = API.Status.STABLE, since = "1.0")
-public interface MutableCapableConfigBuilder<S extends MutableCapableConfigBuilder<S>>
+public interface MutableCapableConfigBuilder<
+        S extends MutableCapableConfigBuilder<S, M>,
+        M extends MutableConfigBuilder<M>>
 extends ConfigBuilder<S> {
 
     /**
@@ -42,5 +44,5 @@ extends ConfigBuilder<S> {
      * 
      * @return This instance, for method chaining.
      */
-    MutableConfigBuilder<?> mutable();
+    M mutable();
 }

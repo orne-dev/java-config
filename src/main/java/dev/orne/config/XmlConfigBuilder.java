@@ -35,7 +35,7 @@ import org.apiguardian.api.API;
 @API(status = API.Status.STABLE, since = "1.0")
 public interface XmlConfigBuilder
 extends XmlConfigBaseBuilder<XmlConfigBuilder>,
-        MutableCapableConfigBuilder<XmlConfigBuilder> {
+        MutableCapableConfigBuilder<XmlConfigBuilder, XmlMutableConfigBuilder> {
 
     /**
      * {@inheritDoc}

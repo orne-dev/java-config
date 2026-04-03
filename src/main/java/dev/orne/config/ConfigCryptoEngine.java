@@ -26,6 +26,7 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Engine of cryptography transformations for configuration values.
@@ -70,8 +71,8 @@ public interface ConfigCryptoEngine {
      * @throws ConfigCryptoProviderException If an exception occurs during the
      * encryption process
      */
-    String encrypt(
-            String value,
+    @Nullable String encrypt(
+            @Nullable String value,
             SecretKey key,
             Cipher cipher)
     throws ConfigCryptoProviderException;
@@ -86,8 +87,8 @@ public interface ConfigCryptoEngine {
      * @throws ConfigCryptoProviderException If an exception occurs during the
      * decryption process
      */
-    String decrypt(
-            String value,
+    @Nullable String decrypt(
+            @Nullable String value,
             SecretKey key,
             Cipher cipher)
     throws ConfigCryptoProviderException;
