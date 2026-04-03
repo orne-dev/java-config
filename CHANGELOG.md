@@ -22,6 +22,7 @@
 
 - Fix incorrect optional transitive dependency usage of
   `org.apache.commons:commons-text` for variable resolution support.
+- Fix `ConfigSubtype` support of lambdas in default methods.
 
 ## 1.0.0 - 2026-03-29
 

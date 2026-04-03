@@ -164,7 +164,7 @@ implements InvocationHandler {
             if (Modifier.isStatic(method.getModifiers())) {
                 continue;
             }
-            if (!method.isDefault()) {
+            if (!method.isDefault() && !method.isSynthetic()) {
                 throw new ConfigException(
                         "The configuration subtype must only contain default methods. " + method);
             }

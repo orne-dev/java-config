@@ -249,6 +249,22 @@ class ConfigSubtypeTest {
      * Test method for {@link Config#as(Config, Class)}.
      */
     @Test
+    void testLambdaProxy() {
+        final Properties properties = new Properties();
+        properties.setProperty(VALUE_PROP, "testValue");
+        properties.setProperty(INT_VALUE_PROP, "5");
+        final Config config = Config.fromProperties()
+                .add(properties)
+                .build();
+        final LambdaConfigSubtype configProxy = Config.as(config, LambdaConfigSubtype.class);
+        assertNotNull(configProxy);
+        assertEquals("testValue", configProxy.getLambdaValue());
+    }
+
+    /**
+     * Test method for {@link Config#as(Config, Class)}.
+     */
+    @Test
     void testErrorHandling() {
         final Properties properties = new Properties();
         properties.setProperty(VALUE_PROP, "testValue");
@@ -362,6 +378,12 @@ class ConfigSubtypeTest {
         }
         default String throwError() {
             throw new CustomError();
+        }
+    }
+
+    interface LambdaConfigSubtype extends Config {
+        default String getLambdaValue() {
+            return get("missing.prop", () -> get(VALUE_PROP));
         }
     }
 
