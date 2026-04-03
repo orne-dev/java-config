@@ -8,8 +8,6 @@ $dash$dash Specifications
 - **Required Java version:** 11+
 - **JavaEE/JakartaEE dependencies:** None
 
-  *Uses JSR 305 annotations for API documentation only.*
-
 $dash$dash Usage
 
 The binaries can be obtained from [Maven Central][maven search] with the
