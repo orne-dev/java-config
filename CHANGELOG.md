@@ -5,16 +5,23 @@
 ### Changed
 
 - Bump parent POM to 1.2.0.
-- Changed `apiguardian-api` dependency scope to `compile`.
+- Change `apiguardian-api` dependency scope to `compile`.
+- Bump `org.apache.commons:commons-lang3` to 3.20.0.
 - Bump `org.assertj:assertj-core` to 3.27.7.
 
 ### Added
 
-- Use `jspecify` dependency for nullability annotations.
+- Add dependency with `org.jspecify:jspecify` 1.0.0.
+- Add dependency with `org.apache.commons:commons-text` 1.15.0.
 
 ### Removed
 
-- Usage of `javax.validation` annotations in favor of `jspecify`.
+- Remove dependency with `javax.validation:validation-api` in favor of `jspecify`.
+
+### Fixed
+
+- Fix incorrect optional transitive dependency usage of
+  `org.apache.commons:commons-text` for variable resolution support.
 
 ## 1.0.0 - 2026-03-29
 
