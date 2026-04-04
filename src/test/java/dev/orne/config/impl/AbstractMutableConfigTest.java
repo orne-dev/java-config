@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 import dev.orne.config.ConfigCryptoProvider;
+import dev.orne.config.MutableConfig;
 import dev.orne.config.MutableConfigBuilder;
 import dev.orne.config.ValueDecoder;
 import dev.orne.config.ValueDecorator;
@@ -255,16 +256,18 @@ extends AbstractConfigTest {
         given(mockParent.contains(TEST_PARENT_DERIVED_KEY)).willReturn(true);
         given(mockParent.getUndecored(TEST_PARENT_KEY)).willReturn("testParentValue");
         given(mockParent.getUndecored(TEST_PARENT_DERIVED_KEY)).willReturn("Derived parent value: ${" + TEST_KEY + "}");
-        final AbstractMutableConfig config = assertInstanceOf(AbstractMutableConfig.class,
+        final MutableConfig config = assertInstanceOf(MutableConfig.class,
                 createBuilder(properties)
                     .withParent(mockParent)
                     .withVariableResolution()
                     .build());
+        final AbstractMutableConfig impl = assertInstanceOf(AbstractMutableConfig.class,
+                config);
         config.set(TEST_KEY, true);
-        assertEquals("true", config.getInt(TEST_KEY));
-        assertEquals("Derived value: ${" + TEST_PARENT_KEY + "}", config.getInt(TEST_DERIVED_KEY));
-        assertNull(config.getInt(TEST_PARENT_KEY));
-        assertNull(config.getInt(TEST_PARENT_DERIVED_KEY));
+        assertEquals("true", impl.getInt(TEST_KEY));
+        assertEquals("Derived value: ${" + TEST_PARENT_KEY + "}", impl.getInt(TEST_DERIVED_KEY));
+        assertNull(impl.getInt(TEST_PARENT_KEY));
+        assertNull(impl.getInt(TEST_PARENT_DERIVED_KEY));
         assertEquals("true", config.getUndecored(TEST_KEY));
         assertEquals("Derived value: ${" + TEST_PARENT_KEY + "}", config.getUndecored(TEST_DERIVED_KEY));
         assertEquals("testParentValue", config.getUndecored(TEST_PARENT_KEY));
@@ -289,16 +292,18 @@ extends AbstractConfigTest {
         given(mockParent.contains(TEST_PARENT_DERIVED_KEY)).willReturn(true);
         given(mockParent.getUndecored(TEST_PARENT_KEY)).willReturn("testParentValue");
         given(mockParent.getUndecored(TEST_PARENT_DERIVED_KEY)).willReturn("Derived parent value: ${" + TEST_KEY + "}");
-        final AbstractMutableConfig config = assertInstanceOf(AbstractMutableConfig.class,
+        final MutableConfig config = assertInstanceOf(MutableConfig.class,
                 createBuilder(properties)
                     .withParent(mockParent)
                     .withVariableResolution()
                     .build());
+        final AbstractMutableConfig impl = assertInstanceOf(AbstractMutableConfig.class,
+                config);
         config.set(TEST_KEY, (Boolean) null);
-        assertNull(config.getInt(TEST_KEY));
-        assertEquals("Derived value: ${" + TEST_PARENT_KEY + "}", config.getInt(TEST_DERIVED_KEY));
-        assertNull(config.getInt(TEST_PARENT_KEY));
-        assertNull(config.getInt(TEST_PARENT_DERIVED_KEY));
+        assertNull(impl.getInt(TEST_KEY));
+        assertEquals("Derived value: ${" + TEST_PARENT_KEY + "}", impl.getInt(TEST_DERIVED_KEY));
+        assertNull(impl.getInt(TEST_PARENT_KEY));
+        assertNull(impl.getInt(TEST_PARENT_DERIVED_KEY));
         assertNull(config.getUndecored(TEST_KEY));
         assertEquals("Derived value: ${" + TEST_PARENT_KEY + "}", config.getUndecored(TEST_DERIVED_KEY));
         assertEquals("testParentValue", config.getUndecored(TEST_PARENT_KEY));
@@ -323,16 +328,18 @@ extends AbstractConfigTest {
         given(mockParent.contains(TEST_PARENT_DERIVED_KEY)).willReturn(true);
         given(mockParent.getUndecored(TEST_PARENT_KEY)).willReturn("testParentValue");
         given(mockParent.getUndecored(TEST_PARENT_DERIVED_KEY)).willReturn("Derived parent value: ${" + TEST_KEY + "}");
-        final AbstractMutableConfig config = assertInstanceOf(AbstractMutableConfig.class,
+        final MutableConfig config = assertInstanceOf(MutableConfig.class,
                 createBuilder(properties)
                     .withParent(mockParent)
                     .withVariableResolution()
                     .build());
+        final AbstractMutableConfig impl = assertInstanceOf(AbstractMutableConfig.class,
+                config);
         config.set(TEST_KEY, 1000);
-        assertEquals("1000", config.getInt(TEST_KEY));
-        assertEquals("Derived value: ${" + TEST_PARENT_KEY + "}", config.getInt(TEST_DERIVED_KEY));
-        assertNull(config.getInt(TEST_PARENT_KEY));
-        assertNull(config.getInt(TEST_PARENT_DERIVED_KEY));
+        assertEquals("1000", impl.getInt(TEST_KEY));
+        assertEquals("Derived value: ${" + TEST_PARENT_KEY + "}", impl.getInt(TEST_DERIVED_KEY));
+        assertNull(impl.getInt(TEST_PARENT_KEY));
+        assertNull(impl.getInt(TEST_PARENT_DERIVED_KEY));
         assertEquals("1000", config.getUndecored(TEST_KEY));
         assertEquals("Derived value: ${" + TEST_PARENT_KEY + "}", config.getUndecored(TEST_DERIVED_KEY));
         assertEquals("testParentValue", config.getUndecored(TEST_PARENT_KEY));
@@ -357,16 +364,18 @@ extends AbstractConfigTest {
         given(mockParent.contains(TEST_PARENT_DERIVED_KEY)).willReturn(true);
         given(mockParent.getUndecored(TEST_PARENT_KEY)).willReturn("testParentValue");
         given(mockParent.getUndecored(TEST_PARENT_DERIVED_KEY)).willReturn("Derived parent value: ${" + TEST_KEY + "}");
-        final AbstractMutableConfig config = assertInstanceOf(AbstractMutableConfig.class,
+        final MutableConfig config = assertInstanceOf(MutableConfig.class,
                 createBuilder(properties)
                     .withParent(mockParent)
                     .withVariableResolution()
                     .build());
+        final AbstractMutableConfig impl = assertInstanceOf(AbstractMutableConfig.class,
+                config);
         config.set(TEST_KEY, (Integer) null);
-        assertNull(config.getInt(TEST_KEY));
-        assertEquals("Derived value: ${" + TEST_PARENT_KEY + "}", config.getInt(TEST_DERIVED_KEY));
-        assertNull(config.getInt(TEST_PARENT_KEY));
-        assertNull(config.getInt(TEST_PARENT_DERIVED_KEY));
+        assertNull(impl.getInt(TEST_KEY));
+        assertEquals("Derived value: ${" + TEST_PARENT_KEY + "}", impl.getInt(TEST_DERIVED_KEY));
+        assertNull(impl.getInt(TEST_PARENT_KEY));
+        assertNull(impl.getInt(TEST_PARENT_DERIVED_KEY));
         assertNull(config.getUndecored(TEST_KEY));
         assertEquals("Derived value: ${" + TEST_PARENT_KEY + "}", config.getUndecored(TEST_DERIVED_KEY));
         assertEquals("testParentValue", config.getUndecored(TEST_PARENT_KEY));
@@ -391,16 +400,18 @@ extends AbstractConfigTest {
         given(mockParent.contains(TEST_PARENT_DERIVED_KEY)).willReturn(true);
         given(mockParent.getUndecored(TEST_PARENT_KEY)).willReturn("testParentValue");
         given(mockParent.getUndecored(TEST_PARENT_DERIVED_KEY)).willReturn("Derived parent value: ${" + TEST_KEY + "}");
-        final AbstractMutableConfig config = assertInstanceOf(AbstractMutableConfig.class,
+        final MutableConfig config = assertInstanceOf(MutableConfig.class,
                 createBuilder(properties)
                     .withParent(mockParent)
                     .withVariableResolution()
                     .build());
+        final AbstractMutableConfig impl = assertInstanceOf(AbstractMutableConfig.class,
+                config);
         config.set(TEST_KEY, 1000L);
-        assertEquals("1000", config.getInt(TEST_KEY));
-        assertEquals("Derived value: ${" + TEST_PARENT_KEY + "}", config.getInt(TEST_DERIVED_KEY));
-        assertNull(config.getInt(TEST_PARENT_KEY));
-        assertNull(config.getInt(TEST_PARENT_DERIVED_KEY));
+        assertEquals("1000", impl.getInt(TEST_KEY));
+        assertEquals("Derived value: ${" + TEST_PARENT_KEY + "}", impl.getInt(TEST_DERIVED_KEY));
+        assertNull(impl.getInt(TEST_PARENT_KEY));
+        assertNull(impl.getInt(TEST_PARENT_DERIVED_KEY));
         assertEquals("1000", config.getUndecored(TEST_KEY));
         assertEquals("Derived value: ${" + TEST_PARENT_KEY + "}", config.getUndecored(TEST_DERIVED_KEY));
         assertEquals("testParentValue", config.getUndecored(TEST_PARENT_KEY));
@@ -425,16 +436,18 @@ extends AbstractConfigTest {
         given(mockParent.contains(TEST_PARENT_DERIVED_KEY)).willReturn(true);
         given(mockParent.getUndecored(TEST_PARENT_KEY)).willReturn("testParentValue");
         given(mockParent.getUndecored(TEST_PARENT_DERIVED_KEY)).willReturn("Derived parent value: ${" + TEST_KEY + "}");
-        final AbstractMutableConfig config = assertInstanceOf(AbstractMutableConfig.class,
+        final MutableConfig config = assertInstanceOf(MutableConfig.class,
                 createBuilder(properties)
                     .withParent(mockParent)
                     .withVariableResolution()
                     .build());
+        final AbstractMutableConfig impl = assertInstanceOf(AbstractMutableConfig.class,
+                config);
         config.set(TEST_KEY, (Long) null);
-        assertNull(config.getInt(TEST_KEY));
-        assertEquals("Derived value: ${" + TEST_PARENT_KEY + "}", config.getInt(TEST_DERIVED_KEY));
-        assertNull(config.getInt(TEST_PARENT_KEY));
-        assertNull(config.getInt(TEST_PARENT_DERIVED_KEY));
+        assertNull(impl.getInt(TEST_KEY));
+        assertEquals("Derived value: ${" + TEST_PARENT_KEY + "}", impl.getInt(TEST_DERIVED_KEY));
+        assertNull(impl.getInt(TEST_PARENT_KEY));
+        assertNull(impl.getInt(TEST_PARENT_DERIVED_KEY));
         assertNull(config.getUndecored(TEST_KEY));
         assertEquals("Derived value: ${" + TEST_PARENT_KEY + "}", config.getUndecored(TEST_DERIVED_KEY));
         assertEquals("testParentValue", config.getUndecored(TEST_PARENT_KEY));

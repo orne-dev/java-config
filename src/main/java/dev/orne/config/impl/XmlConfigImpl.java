@@ -41,7 +41,7 @@ import dev.orne.config.Config;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class XmlConfigImpl
-extends AbstractConfig {
+extends AbstractWatchableConfig {
 
     /** The XML document with the configuration options. */
     private final Document document;
@@ -59,7 +59,20 @@ extends AbstractConfig {
     public XmlConfigImpl(
             final ConfigOptions options,
             final XmlConfigOptions xmlOptions) {
-        super(options);
+        this(options, new MutableConfigOptions(), xmlOptions);
+    }
+    /**
+     * Creates a new instance.
+     * 
+     * @param options The configuration builder options.
+     * @param mutableOptions The mutable configuration builder options.
+     * @param xmlOptions The XML based configuration builder options.
+     */
+    protected XmlConfigImpl(
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final XmlConfigOptions xmlOptions) {
+        super(options, mutableOptions);
         Objects.requireNonNull(xmlOptions);
         this.document = Objects.requireNonNull(xmlOptions.getDocument());
         this.propertySeparator = Objects.requireNonNull(xmlOptions.getPropertySeparator());

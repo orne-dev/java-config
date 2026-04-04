@@ -41,7 +41,7 @@ import org.jspecify.annotations.Nullable;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class CommonsConfigImpl
-extends AbstractConfig {
+extends AbstractWatchableConfig {
 
     /** The delegated Apache Commons configuration. */
     private final ImmutableConfiguration config;
@@ -55,7 +55,21 @@ extends AbstractConfig {
     public CommonsConfigImpl(
             final ConfigOptions options,
             final CommonsConfigOptions commonsOptions) {
-        super(options);
+        this(options, new MutableConfigOptions(), commonsOptions);
+    }
+
+    /**
+     * Creates a new instance.
+     * 
+     * @param options The configuration builder options.
+     * @param mutableOptions The mutable configuration builder options.
+     * @param commonsOptions The Apache Commons based configuration options.
+     */
+    protected CommonsConfigImpl(
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final CommonsConfigOptions commonsOptions) {
+        super(options, mutableOptions);
         Objects.requireNonNull(commonsOptions);
         this.config = Objects.requireNonNull(commonsOptions.getDelegated());
     }

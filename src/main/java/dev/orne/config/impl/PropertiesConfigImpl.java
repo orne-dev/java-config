@@ -43,7 +43,7 @@ import dev.orne.config.Config;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class PropertiesConfigImpl
-extends AbstractConfig {
+extends AbstractWatchableConfig {
 
     /** The configuration properties. */
     private final Properties config;
@@ -57,7 +57,21 @@ extends AbstractConfig {
     public PropertiesConfigImpl(
             final ConfigOptions options,
             final PropertiesConfigOptions propertyOptions) {
-        super(options);
+        this(options, new MutableConfigOptions(), propertyOptions);
+    }
+
+    /**
+     * Creates a new instance.
+     * 
+     * @param options The configuration builder options.
+     * @param mutableOptions The mutable configuration builder options.
+     * @param propertyOptions The properties based configuration builder options.
+     */
+    protected PropertiesConfigImpl(
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final PropertiesConfigOptions propertyOptions) {
+        super(options, mutableOptions);
         Objects.requireNonNull(propertyOptions);
         this.config = Objects.requireNonNull(propertyOptions.getProperties());
     }

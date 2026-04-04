@@ -45,7 +45,7 @@ import dev.orne.config.ConfigException;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class PreferencesConfigImpl
-extends AbstractConfig {
+extends AbstractWatchableConfig {
 
     /** The preferences node to use as storage of configuration properties. */
     private final Preferences preferences;
@@ -59,7 +59,21 @@ extends AbstractConfig {
     public PreferencesConfigImpl(
             final ConfigOptions options,
             final PreferencesConfigOptions preferencesOptions) {
-        super(options);
+        this(options, new MutableConfigOptions(), preferencesOptions);
+    }
+
+    /**
+     * Creates a new instance.
+     * 
+     * @param options The configuration builder options.
+     * @param mutableOptions The mutable configuration builder options.
+     * @param preferencesOptions The preferences based configuration builder options.
+     */
+    protected PreferencesConfigImpl(
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final PreferencesConfigOptions preferencesOptions) {
+        super(options, mutableOptions);
         Objects.requireNonNull(preferencesOptions);
         this.preferences = Objects.requireNonNull(preferencesOptions.getPreferences());
     }

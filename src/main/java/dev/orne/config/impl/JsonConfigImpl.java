@@ -48,7 +48,7 @@ import dev.orne.config.Config;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class JsonConfigImpl
-extends AbstractConfig {
+extends AbstractWatchableConfig {
 
     /** The JSON object with the configuration properties. */
     private final ObjectNode jsonObject;
@@ -66,7 +66,21 @@ extends AbstractConfig {
     public JsonConfigImpl(
             final ConfigOptions options,
             final JsonConfigOptions jsonOptions) {
-        super(options);
+        this(options, new MutableConfigOptions(), jsonOptions);
+    }
+
+    /**
+     * Creates a new instance.
+     * 
+     * @param options The configuration builder options.
+     * @param mutableOptions The mutable configuration builder options.
+     * @param jsonOptions The JSON based configuration builder options.
+     */
+    protected JsonConfigImpl(
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final JsonConfigOptions jsonOptions) {
+        super(options, mutableOptions);
         Objects.requireNonNull(jsonOptions);
         this.jsonObject = jsonOptions.getJsonObject();
         this.propertySeparator = jsonOptions.getPropertySeparator();

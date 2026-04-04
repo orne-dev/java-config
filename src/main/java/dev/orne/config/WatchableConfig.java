@@ -46,7 +46,6 @@ extends MutableConfig {
      * @param listener The listener to be called on configuration changes.
      * @throws IllegalStateException If the configuration type does not support
      * event listeners.
-     * 
      */
     void addListener(
             Listener listener);
@@ -55,7 +54,6 @@ extends MutableConfig {
      * Unregisters the specified configuration change events listener.
      * 
      * @param listener The listener to previously registered.
-     * 
      */
     void removeListener(
             Listener listener);

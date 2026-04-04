@@ -23,8 +23,6 @@ package dev.orne.config.impl;
  */
 
 import java.util.Objects;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
@@ -33,6 +31,8 @@ import org.apache.commons.configuration2.event.EventSource;
 import org.apache.commons.configuration2.reloading.ReloadingEvent;
 import org.apiguardian.api.API;
 import org.jspecify.annotations.Nullable;
+
+import dev.orne.config.WatchableConfig;
 
 /**
  * Implementation of {@code MutableConfig} based on Apache Commons
@@ -45,10 +45,9 @@ import org.jspecify.annotations.Nullable;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class CommonsMutableConfigImpl
-extends AbstractWatchableConfig {
+extends CommonsConfigImpl
+implements WatchableConfig {
 
-    /** The delegated Apache Commons configuration. */
-    private final Configuration config;
     /** If local events must be suppressed. */
     private final boolean localEventsSuppressed;
 
@@ -63,24 +62,26 @@ extends AbstractWatchableConfig {
             final ConfigOptions options,
             final MutableConfigOptions mutableOptions,
             final CommonsConfigOptions commonsOptions) {
-        super(options, mutableOptions);
+        super(options, mutableOptions, commonsOptions);
         Objects.requireNonNull(commonsOptions);
-        this.config = (Configuration) commonsOptions.getDelegated();
-        if (config instanceof EventSource) {
+        if (!(commonsOptions.getDelegated() instanceof Configuration)) {
+            throw new IllegalArgumentException(
+                    "The delegated configuration must be an mutable instance of Apache Commons Configuration");
+        }
+        if (commonsOptions.getDelegated() instanceof EventSource) {
             this.localEventsSuppressed = true;
-            configureCommonsEvents((EventSource) config);
+            configureCommonsEvents((EventSource) commonsOptions.getDelegated());
         } else {
             this.localEventsSuppressed = false;
         }
     }
 
     /**
-     * Returns the delegated Apache Commons configuration.
-     * 
-     * @return The delegated Apache Commons configuration
+     * {@inheritDoc}
      */
+    @Override
     protected Configuration getConfig() {
-        return this.config;
+        return (Configuration) super.getConfig();
     }
 
     /**
@@ -96,35 +97,10 @@ extends AbstractWatchableConfig {
      * {@inheritDoc}
      */
     @Override
-    protected boolean isEmptyInt() {
-        return this.config.isEmpty();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected Stream<String> getKeysInt() {
-        final Iterable<String> iterable = this.config::getKeys;
-        return StreamSupport.stream(iterable.spliterator(), false);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean containsInt(
-            final String key) {
-        return this.config.containsKey(key);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected @Nullable String getInt(
-            final String key) {
-        return this.config.getString(key);
+    public void set(
+            final String key,
+            final @Nullable String value) {
+        super.set(key, value);
     }
 
     /**
@@ -134,7 +110,16 @@ extends AbstractWatchableConfig {
     protected void setInt(
             final String key,
             final String value) {
-        this.config.setProperty(key, value);
+        getConfig().setProperty(key, value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void remove(
+            final String... keys) {
+        super.remove(keys);
     }
 
     /**
@@ -144,8 +129,26 @@ extends AbstractWatchableConfig {
     protected void removeInt(
             final String... keys) {
         for (final String key : keys) {
-            this.config.clearProperty(key);
+            getConfig().clearProperty(key);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void addListener(
+            final Listener listener) {
+        super.addListener(listener);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void removeListener(
+            final Listener listener) {
+        super.removeListener(listener);
     }
 
     /**
@@ -166,7 +169,7 @@ extends AbstractWatchableConfig {
      */
     protected void configureCommonsEvents(
             final EventSource source) {
-        final EventSource commonsEvents = (EventSource) config;
+        final EventSource commonsEvents = (EventSource) getConfig();
         commonsEvents.addEventListener(
                 ConfigurationEvent.ADD_PROPERTY,
                 this::processCommonsEvent);

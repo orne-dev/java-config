@@ -89,7 +89,7 @@ extends AbstractMutableConfigTest {
     void testSet() {
         super.testSet();
         final HashMap<String, String> properties = new HashMap<>();
-        final AbstractWatchableConfig config = assertInstanceOf(AbstractWatchableConfig.class,
+        final WatchableConfig config = assertInstanceOf(WatchableConfig.class,
                 createBuilder(properties)
                     .build());
         config.addListener(mockListener);
@@ -107,7 +107,7 @@ extends AbstractMutableConfigTest {
         final HashMap<String, String> properties = new HashMap<>();
         properties.put(TEST_KEY, "testValue");
         properties.put(TEST_DERIVED_KEY, "Derived value: ${" + TEST_PARENT_KEY + "}");
-        final AbstractWatchableConfig config = assertInstanceOf(AbstractWatchableConfig.class,
+        final WatchableConfig config = assertInstanceOf(WatchableConfig.class,
                 createBuilder(properties)
                     .build());
         config.addListener(mockListener);
@@ -125,7 +125,7 @@ extends AbstractMutableConfigTest {
         final HashMap<String, String> properties = new HashMap<>();
         properties.put(TEST_KEY, "testValue");
         properties.put(TEST_DERIVED_KEY, "Derived value: ${" + TEST_PARENT_KEY + "}");
-        final AbstractWatchableConfig config = assertInstanceOf(AbstractWatchableConfig.class,
+        final WatchableConfig config = assertInstanceOf(WatchableConfig.class,
                 createBuilder(properties)
                     .build());
         config.addListener(mockListener);
@@ -143,7 +143,7 @@ extends AbstractMutableConfigTest {
         final HashMap<String, String> properties = new HashMap<>();
         properties.put(TEST_KEY, "testValue");
         properties.put(TEST_DERIVED_KEY, "Derived value: ${" + TEST_PARENT_KEY + "}");
-        final AbstractWatchableConfig config = assertInstanceOf(AbstractWatchableConfig.class,
+        final WatchableConfig config = assertInstanceOf(WatchableConfig.class,
                 createBuilder(properties)
                     .build());
         config.addListener(mockListener);
@@ -161,7 +161,7 @@ extends AbstractMutableConfigTest {
         final HashMap<String, String> properties = new HashMap<>();
         properties.put(TEST_KEY, "testValue");
         properties.put(TEST_DERIVED_KEY, "Derived value: ${" + TEST_PARENT_KEY + "}");
-        final AbstractWatchableConfig config = assertInstanceOf(AbstractWatchableConfig.class,
+        final WatchableConfig config = assertInstanceOf(WatchableConfig.class,
                 createBuilder(properties)
                     .build());
         config.addListener(mockListener);
@@ -179,7 +179,7 @@ extends AbstractMutableConfigTest {
         final HashMap<String, String> properties = new HashMap<>();
         properties.put(TEST_KEY, "testValue");
         properties.put(TEST_DERIVED_KEY, "Derived value: ${" + TEST_PARENT_KEY + "}");
-        final AbstractWatchableConfig config = assertInstanceOf(AbstractWatchableConfig.class,
+        final WatchableConfig config = assertInstanceOf(WatchableConfig.class,
                 createBuilder(properties)
                     .build());
         config.addListener(mockListener);
@@ -197,7 +197,7 @@ extends AbstractMutableConfigTest {
         final HashMap<String, String> properties = new HashMap<>();
         properties.put(TEST_KEY, "testValue");
         properties.put(TEST_DERIVED_KEY, "Derived value: ${" + TEST_PARENT_KEY + "}");
-        final AbstractWatchableConfig config = assertInstanceOf(AbstractWatchableConfig.class,
+        final WatchableConfig config = assertInstanceOf(WatchableConfig.class,
                 createBuilder(properties)
                     .build());
         config.addListener(mockListener);
@@ -213,13 +213,13 @@ extends AbstractMutableConfigTest {
         final HashMap<String, String> parentProperties = new HashMap<>();
         parentProperties.put(TEST_PARENT_KEY, "testParentValue");
         parentProperties.put(TEST_PARENT_DERIVED_KEY, "Derived parent value: ${" + TEST_KEY + "}");
-        final AbstractWatchableConfig parent = assertInstanceOf(AbstractWatchableConfig.class,
+        final WatchableConfig parent = assertInstanceOf(WatchableConfig.class,
                 createBuilder(parentProperties)
                     .build());
         final HashMap<String, String> properties = new HashMap<>();
         properties.put(TEST_KEY, "testValue");
         properties.put(TEST_DERIVED_KEY, "Derived value: ${" + TEST_PARENT_KEY + "}");
-        final AbstractWatchableConfig config = assertInstanceOf(AbstractWatchableConfig.class,
+        final WatchableConfig config = assertInstanceOf(WatchableConfig.class,
                 createBuilder(properties)
                     .withParent(parent)
                     .withVariableResolution()
