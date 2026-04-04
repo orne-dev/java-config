@@ -324,8 +324,8 @@ class ConfigSubsetTest {
                 .build();
         final Config proxy = config.subset("db.");
         assertEquals(proxy, proxy);
-        assertNotEquals(proxy, (Config) null);
         assertNotEquals(proxy, new Object());
+        assertNotEquals(proxy, (Config) null);
         final Config equalProxy = config.subset("db.");
         assertEquals(proxy.hashCode(), equalProxy.hashCode());
         assertEquals(proxy.toString(), equalProxy.toString());

@@ -220,8 +220,7 @@ extends AbstractProxyHandler {
             return false;
         }
         final ConfigSubtype other = (ConfigSubtype) obj;
-        return super.equals(obj)
-                && Objects.equals(this.extendedType, other.extendedType);
+        return Objects.equals(this.extendedType, other.extendedType);
     }
 
     /**

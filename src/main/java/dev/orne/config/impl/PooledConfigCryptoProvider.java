@@ -28,6 +28,7 @@ import java.util.NoSuchElementException;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 
+import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.PooledObject;
@@ -104,31 +105,7 @@ extends AbstractConfigCryptoProvider {
             final @Nullable String value)
     throws ConfigCryptoProviderException {
         checkDestroyed();
-        ConfigCryptoProviderException encryptException = null;
-        try {
-            final Cipher cipher = this.ciphersPool.borrowObject();
-            try {
-                return encrypt(value, cipher);
-            } catch (final ConfigCryptoProviderException ccpe) {
-                encryptException = ccpe;
-                throw ccpe;
-            } finally {
-                this.ciphersPool.returnObject(cipher);
-            }
-        } catch (final IllegalStateException ise) {
-            if (encryptException == null) {
-                throw ise;
-            } else {
-                encryptException.addSuppressed(ise);
-                throw encryptException;
-            }
-        } catch (final ConfigCryptoProviderException ccpe) {
-            throw ccpe;
-        } catch (final NoSuchElementException nsee) {
-            throw new ConfigCryptoProviderException("", nsee);
-        } catch (final Exception e) {
-            throw new ConfigCryptoProviderException("", e);
-        }
+        return withCipher(cipher -> encrypt(value, cipher));
     }
 
     /**
@@ -139,31 +116,51 @@ extends AbstractConfigCryptoProvider {
             final @Nullable String value)
     throws ConfigCryptoProviderException {
         checkDestroyed();
-        ConfigCryptoProviderException decryptException = null;
+        return withCipher(cipher -> decrypt(value, cipher));
+    }
+
+    /**
+     * Performs the specified operation with a {@code Cipher} instance from the
+     * pool, returning the instance to the pool after the operation is completed.
+     * 
+     * @param operation The operation to perform with the {@code Cipher} instance.
+     * @return The result of the operation.
+     */
+    protected String withCipher(
+            final FailableFunction<Cipher, String, ConfigCryptoProviderException> operation) {
+        final Cipher cipher;
         try {
-            final Cipher cipher = this.ciphersPool.borrowObject();
-            try {
-                return decrypt(value, cipher);
-            } catch (final ConfigCryptoProviderException ccpe) {
-                decryptException = ccpe;
-                throw ccpe;
-            } finally {
-                this.ciphersPool.returnObject(cipher);
-            }
-        } catch (final IllegalStateException ise) {
-            if (decryptException == null) {
-                throw ise;
-            } else {
-                decryptException.addSuppressed(ise);
-                throw decryptException;
-            }
-        } catch (final ConfigCryptoProviderException ccpe) {
-            throw ccpe;
-        } catch (final NoSuchElementException nsee) {
-            throw new ConfigCryptoProviderException("", nsee);
+            cipher = this.ciphersPool.borrowObject();
+        } catch (final IllegalStateException | NoSuchElementException e) {
+            throw new ConfigCryptoProviderException(
+                    "Cannot allocate cipher from pool", e);
         } catch (final Exception e) {
-            throw new ConfigCryptoProviderException("", e);
+            throw new ConfigCryptoProviderException(
+                    "Error allocating cipher from pool", e);
         }
+        ConfigCryptoProviderException operationException = null;
+        String result = null;
+        try {
+            result = operation.apply(cipher);
+        } catch (final ConfigCryptoProviderException ccpe) {
+            operationException = ccpe;
+        } finally {
+            try {
+                this.ciphersPool.returnObject(cipher);
+            } catch (final Exception e) {
+                final ConfigCryptoProviderException te = new ConfigCryptoProviderException(
+                        "Error returning cipher to pool", e);
+                if (operationException != null) {
+                    operationException.addSuppressed(te);
+                } else {
+                    operationException = te;
+                }
+            }
+        }
+        if (operationException != null) {
+            throw operationException;
+        }
+        return result;
     }
 
     /**
