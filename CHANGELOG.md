@@ -1,6 +1,6 @@
 # Orne Java configuration utilities - Changelog
 
-## 1.1.0 - *Unreleased*
+## 1.1.0 - 2026-04-04
 
 ### Changed
 
@@ -8,6 +8,7 @@
 - Change `apiguardian-api` dependency scope to `compile`.
 - Bump `org.apache.commons:commons-lang3` to 3.20.0.
 - Bump `org.assertj:assertj-core` to 3.27.7.
+- Refactor and simplify internal implementation classes.
 
 ### Added
 
