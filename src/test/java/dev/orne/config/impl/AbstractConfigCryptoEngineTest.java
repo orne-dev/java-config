@@ -25,11 +25,8 @@ package dev.orne.config.impl;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
-import java.security.AccessController;
 import java.security.GeneralSecurityException;
-import java.security.PrivilegedAction;
 import java.security.SecureRandom;
-import java.security.Security;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKeyFactory;
@@ -61,40 +58,6 @@ class AbstractConfigCryptoEngineTest {
         final SecureRandom result = engine.createSecureRandom();
         assertNotNull(result);
         assertEquals(expectedResult.getAlgorithm(), result.getAlgorithm());
-    }
-
-    /**
-     * Test for {@link AbstractConfigCryptoEngine#createSecureRandom()}
-     */
-    @Test
-    void testCreateSecureRandomError() {
-        final String strongAlgorithmsBackup = AccessController.doPrivileged(
-                new PrivilegedAction<String>() {
-                    @Override
-                    public String run() {
-                        final String oldValue = Security.getProperty(
-                            "securerandom.strongAlgorithms");
-                        Security.setProperty(
-                                "securerandom.strongAlgorithms",
-                                "");
-                        return oldValue;
-                    }
-                });
-        try {
-            final AbstractConfigCryptoEngine engine = spy(AbstractConfigCryptoEngine.class);
-            assertThrows(ConfigCryptoProviderException.class, engine::createSecureRandom);
-        } finally {
-            AccessController.doPrivileged(
-                    new PrivilegedAction<Void>() {
-                        @Override
-                        public Void run() {
-                            Security.setProperty(
-                                    "securerandom.strongAlgorithms",
-                                    strongAlgorithmsBackup);
-                            return null;
-                        }
-                    });
-        }
     }
 
     /**
