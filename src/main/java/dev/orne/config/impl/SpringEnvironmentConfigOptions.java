@@ -24,7 +24,7 @@ package dev.orne.config.impl;
 
 import org.apiguardian.api.API;
 import org.springframework.core.env.Environment;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Options of Spring {@code Environment} based configuration builder.

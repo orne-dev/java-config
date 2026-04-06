@@ -40,7 +40,7 @@ import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
 import org.springframework.core.type.AnnotationMetadata;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 

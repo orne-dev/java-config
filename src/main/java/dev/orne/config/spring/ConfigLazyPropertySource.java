@@ -28,7 +28,7 @@ import org.apiguardian.api.API;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.core.env.PropertySource;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigException;

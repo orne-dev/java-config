@@ -36,7 +36,7 @@ import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.PooledSoftReference;
 import org.apache.commons.pool2.impl.SoftReferenceObjectPool;
 import org.apiguardian.api.API;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.ConfigCryptoEngine;
 import dev.orne.config.ConfigCryptoProviderException;

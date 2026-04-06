@@ -26,7 +26,7 @@ import java.util.Properties;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 

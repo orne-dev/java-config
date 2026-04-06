@@ -25,7 +25,7 @@ package dev.orne.config.impl;
 import javax.crypto.Cipher;
 
 import org.apiguardian.api.API;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.ConfigCryptoEngine;
 import dev.orne.config.ConfigCryptoProvider;
