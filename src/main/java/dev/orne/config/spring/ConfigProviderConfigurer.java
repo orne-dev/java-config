@@ -36,7 +36,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigProvider;

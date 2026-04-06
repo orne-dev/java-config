@@ -25,7 +25,7 @@ package dev.orne.config.impl;
 import java.util.prefs.Preferences;
 
 import org.apiguardian.api.API;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Options of {@code Preferences} based configuration builder.

@@ -44,7 +44,7 @@ The binaries can be obtained from [Maven Central][status.maven] with the
 <dependency>
   <groupId>dev.orne</groupId>
   <artifactId>orne-config</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
 </dependency>
 ```
 
