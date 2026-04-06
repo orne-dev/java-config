@@ -4,7 +4,7 @@
 
 ### Changed
 
-- Bump parent POM to 1.2.0.
+- Bump parent POM to 1.3.0.
 - Change `apiguardian-api` dependency scope to `compile`.
 - Bump `org.apache.commons:commons-lang3` to 3.20.0.
 - Bump `org.assertj:assertj-core` to 3.27.7.
