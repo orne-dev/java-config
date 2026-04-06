@@ -22,9 +22,8 @@
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigCryptoProvider;
@@ -43,24 +42,24 @@ import dev.orne.config.ValueDecorator;
 public class ConfigOptions {
 
     /** The parent configuration. */
-    private Config parent;
+    private @Nullable Config parent;
     /** If parent configuration property values are overridden values of this instance. */
     private boolean overrideParentProperties;
     /** The cryptography transformations provider. */
-    private ConfigCryptoProvider cryptoProvider;
+    private @Nullable ConfigCryptoProvider cryptoProvider;
     /** The configuration values decoder. */
-    private ValueDecoder decoder;
+    private @Nullable ValueDecoder decoder;
     /** If configuration property values variable resolution is enabled. */
     private boolean variableResolutionEnabled;
     /** The configuration properties values decorator. */
-    private ValueDecorator decorator;
+    private @Nullable ValueDecorator decorator;
 
     /**
      * Empty constructor.
      */
     public ConfigOptions() {
-<span class="fc" id="L62">        super();</span>
-<span class="fc" id="L63">    }</span>
+<span class="fc" id="L61">        super();</span>
+<span class="fc" id="L62">    }</span>
 
     /**
      * Copy constructor.
@@ -68,23 +67,23 @@ public class ConfigOptions {
      * @param copy The instance to copy.
      */
     public ConfigOptions(
-            final @NotNull ConfigOptions copy) {
-<span class="fc" id="L72">        super();</span>
-<span class="fc" id="L73">        this.parent = copy.parent;</span>
-<span class="fc" id="L74">        this.overrideParentProperties = copy.overrideParentProperties;</span>
-<span class="fc" id="L75">        this.cryptoProvider = copy.cryptoProvider;</span>
-<span class="fc" id="L76">        this.decoder = copy.decoder;</span>
-<span class="fc" id="L77">        this.variableResolutionEnabled = copy.variableResolutionEnabled;</span>
-<span class="fc" id="L78">        this.decorator = copy.decorator;</span>
-<span class="fc" id="L79">    }</span>
+            final ConfigOptions copy) {
+<span class="fc" id="L71">        super();</span>
+<span class="fc" id="L72">        this.parent = copy.parent;</span>
+<span class="fc" id="L73">        this.overrideParentProperties = copy.overrideParentProperties;</span>
+<span class="fc" id="L74">        this.cryptoProvider = copy.cryptoProvider;</span>
+<span class="fc" id="L75">        this.decoder = copy.decoder;</span>
+<span class="fc" id="L76">        this.variableResolutionEnabled = copy.variableResolutionEnabled;</span>
+<span class="fc" id="L77">        this.decorator = copy.decorator;</span>
+<span class="fc" id="L78">    }</span>
 
     /**
      * Returns the parent configuration.
      * 
      * @return The parent configuration.
      */
-    public Config getParent() {
-<span class="fc" id="L87">        return this.parent;</span>
+    public @Nullable Config getParent() {
+<span class="fc" id="L86">        return this.parent;</span>
     }
 
     /**
@@ -93,9 +92,9 @@ public class ConfigOptions {
      * @param parent The parent configuration.
      */
     public void setParent(
-            final Config parent) {
-<span class="fc" id="L97">        this.parent = parent;</span>
-<span class="fc" id="L98">    }</span>
+            final @Nullable Config parent) {
+<span class="fc" id="L96">        this.parent = parent;</span>
+<span class="fc" id="L97">    }</span>
 
     /**
      * Returns {@code true} if the configuration properties values from
@@ -107,7 +106,7 @@ public class ConfigOptions {
      * configuration.
      */
     public boolean isOverrideParentProperties() {
-<span class="fc" id="L110">        return this.overrideParentProperties;</span>
+<span class="fc" id="L109">        return this.overrideParentProperties;</span>
     }
 
     /**
@@ -121,16 +120,16 @@ public class ConfigOptions {
      */
     public void setOverrideParentProperties(
             final boolean override) {
-<span class="fc" id="L124">        this.overrideParentProperties = override;</span>
-<span class="fc" id="L125">    }</span>
+<span class="fc" id="L123">        this.overrideParentProperties = override;</span>
+<span class="fc" id="L124">    }</span>
 
     /**
      * Returns the cryptography transformations provider.
      * 
      * @return The cryptography transformations provider.
      */
-    public ConfigCryptoProvider getCryptoProvider() {
-<span class="fc" id="L133">        return this.cryptoProvider;</span>
+    public @Nullable ConfigCryptoProvider getCryptoProvider() {
+<span class="fc" id="L132">        return this.cryptoProvider;</span>
     }
 
     /**
@@ -139,17 +138,17 @@ public class ConfigOptions {
      * @param provider The cryptography transformations provider.
      */
     public void setCryptoProvider(
-            final ConfigCryptoProvider provider) {
-<span class="fc" id="L143">        this.cryptoProvider = provider;</span>
-<span class="fc" id="L144">    }</span>
+            final @Nullable ConfigCryptoProvider provider) {
+<span class="fc" id="L142">        this.cryptoProvider = provider;</span>
+<span class="fc" id="L143">    }</span>
 
     /**
      * Returns the configuration values decoder.
      * 
      * @return The configuration values decoder.
      */
-    public ValueDecoder getDecoder() {
-<span class="fc" id="L152">        return this.decoder;</span>
+    public @Nullable ValueDecoder getDecoder() {
+<span class="fc" id="L151">        return this.decoder;</span>
     }
 
     /**
@@ -158,9 +157,9 @@ public class ConfigOptions {
      * @param decoder The configuration values decoder.
      */
     public void setDecoder(
-            final ValueDecoder decoder) {
-<span class="fc" id="L162">        this.decoder = decoder;</span>
-<span class="fc" id="L163">    }</span>
+            final @Nullable ValueDecoder decoder) {
+<span class="fc" id="L161">        this.decoder = decoder;</span>
+<span class="fc" id="L162">    }</span>
 
     /**
      * Returns {@code true} if configuration property values variable
@@ -169,7 +168,7 @@ public class ConfigOptions {
      * @return If configuration property values variable resolution is enabled.
      */
     public boolean isVariableResolutionEnabled() {
-<span class="fc" id="L172">        return this.variableResolutionEnabled;</span>
+<span class="fc" id="L171">        return this.variableResolutionEnabled;</span>
     }
 
     /**
@@ -180,16 +179,16 @@ public class ConfigOptions {
      */
     public void setVariableResolutionEnabled(
             final boolean enabled) {
-<span class="fc" id="L183">        this.variableResolutionEnabled = enabled;</span>
-<span class="fc" id="L184">    }</span>
+<span class="fc" id="L182">        this.variableResolutionEnabled = enabled;</span>
+<span class="fc" id="L183">    }</span>
 
     /**
      * Returns the configuration properties values decorator.
      * 
      * @return The configuration properties values decorator.
      */
-    public ValueDecorator getDecorator() {
-<span class="fc" id="L192">        return this.decorator;</span>
+    public @Nullable ValueDecorator getDecorator() {
+<span class="fc" id="L191">        return this.decorator;</span>
     }
 
     /**
@@ -198,8 +197,8 @@ public class ConfigOptions {
      * @param decorator The configuration properties values decorator.
      */
     public void setDecorator(
-            final ValueDecorator decorator) {
-<span class="fc" id="L202">        this.decorator = decorator;</span>
-<span class="fc" id="L203">    }</span>
+            final @Nullable ValueDecorator decorator) {
+<span class="fc" id="L201">        this.decorator = decorator;</span>
+<span class="fc" id="L202">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

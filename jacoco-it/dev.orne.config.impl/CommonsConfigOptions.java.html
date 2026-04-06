@@ -22,10 +22,9 @@
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.configuration2.ImmutableConfiguration;
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Options of Apache Commons Configuration based configuration builder.
@@ -39,14 +38,14 @@ import org.apiguardian.api.API;
 public class CommonsConfigOptions {
 
     /** The delegated Apache Commons configuration. */
-    protected ImmutableConfiguration delegated;
+    protected @Nullable ImmutableConfiguration delegated;
 
     /**
      * Empty constructor.
      */
     public CommonsConfigOptions() {
-<span class="nc" id="L48">        super();</span>
-<span class="nc" id="L49">    }</span>
+<span class="nc" id="L47">        super();</span>
+<span class="nc" id="L48">    }</span>
 
     /**
      * Copy constructor.
@@ -54,18 +53,18 @@ public class CommonsConfigOptions {
      * @param copy The instance to copy.
      */
     public CommonsConfigOptions(
-            final @NotNull CommonsConfigOptions copy) {
-<span class="nc" id="L58">        super();</span>
-<span class="nc" id="L59">        this.delegated = copy.delegated;</span>
-<span class="nc" id="L60">    }</span>
+            final CommonsConfigOptions copy) {
+<span class="nc" id="L57">        super();</span>
+<span class="nc" id="L58">        this.delegated = copy.delegated;</span>
+<span class="nc" id="L59">    }</span>
 
     /**
      * Returns the delegated Apache Commons configuration.
      * 
      * @return The delegated Apache Commons configuration.
      */
-    public ImmutableConfiguration getDelegated() {
-<span class="nc" id="L68">        return this.delegated;</span>
+    public @Nullable ImmutableConfiguration getDelegated() {
+<span class="nc" id="L67">        return this.delegated;</span>
     }
 
     /**
@@ -75,7 +74,7 @@ public class CommonsConfigOptions {
      */
     public void setDelegated(
             final ImmutableConfiguration delegated) {
-<span class="nc" id="L78">        this.delegated = delegated;</span>
-<span class="nc" id="L79">    }</span>
+<span class="nc" id="L77">        this.delegated = delegated;</span>
+<span class="nc" id="L78">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

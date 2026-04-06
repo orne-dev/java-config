@@ -24,8 +24,6 @@
 
 import java.util.Map;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +36,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigProvider;
@@ -56,7 +55,7 @@ public class ConfigProviderConfigurer
 implements EnvironmentAware, BeanFactoryPostProcessor, BeanPostProcessor {
 
     /** The class logger. */
-<span class="fc" id="L59">    private static final Logger LOG = LoggerFactory.getLogger(ConfigProviderConfigurer.class);</span>
+<span class="fc" id="L58">    private static final Logger LOG = LoggerFactory.getLogger(ConfigProviderConfigurer.class);</span>
 
     /** The name of the automatic {@code Config} bean. */
     public static final String AUTO_CONFIG = &quot;orneConfigAutomaticConfig&quot;;
@@ -64,24 +63,24 @@ implements EnvironmentAware, BeanFactoryPostProcessor, BeanPostProcessor {
     public static final String AUTO_CONFIG_PROVIDER = &quot;orneConfigAutomaticConfigProvider&quot;;
 
     /** The Spring environment. */
-    protected Environment environment;
+    protected @Nullable Environment environment;
     /** The bean factory. */
-    protected ListableBeanFactory beanFactory;
+    protected @Nullable ListableBeanFactory beanFactory;
     /** The application provided configuration provider bean name. */
-    protected String appConfigProviderBeanName;
+    protected @Nullable String appConfigProviderBeanName;
     /** The application provided configuration provider customizer bean name. */
-    protected String customizerBeanName;
+    protected @Nullable String customizerBeanName;
     /** The configuration provider. */
-    protected ConfigProvider configProvider;
+    protected @Nullable ConfigProvider configProvider;
     /** The created configuration provider. */
-    protected ConfigProviderImpl ownConfigProvider;
+    protected @Nullable ConfigProviderImpl ownConfigProvider;
 
     /**
      * Creates a new instance.
      */
     public ConfigProviderConfigurer() {
-<span class="fc" id="L83">        super();</span>
-<span class="fc" id="L84">    }</span>
+<span class="fc" id="L82">        super();</span>
+<span class="fc" id="L83">    }</span>
 
     /**
      * {@inheritDoc}
@@ -89,8 +88,8 @@ implements EnvironmentAware, BeanFactoryPostProcessor, BeanPostProcessor {
     @Override
     public void setEnvironment(
             final Environment environment) {
-<span class="fc" id="L92">        this.environment = environment;</span>
-<span class="fc" id="L93">    }</span>
+<span class="fc" id="L91">        this.environment = environment;</span>
+<span class="fc" id="L92">    }</span>
 
     /**
      * Detects application provided {@code ConfigProvider} and
@@ -100,49 +99,49 @@ implements EnvironmentAware, BeanFactoryPostProcessor, BeanPostProcessor {
      */
     @Override
     public void postProcessBeanFactory(
-            final @NotNull ConfigurableListableBeanFactory beanFactory)
+            final ConfigurableListableBeanFactory beanFactory)
     throws BeansException {
-<span class="fc" id="L105">        this.beanFactory = beanFactory;</span>
-<span class="fc" id="L106">        final String[] providerNames = beanFactory.getBeanNamesForType(ConfigProvider.class);</span>
-<span class="fc" id="L107">        final String[] customizerNames = beanFactory.getBeanNamesForType(ConfigProviderCustomizer.class);</span>
-<span class="pc bpc" id="L108" title="1 of 2 branches missed.">        if (providerNames.length &gt; 1) {</span>
-<span class="nc" id="L109">            throw new BeanInitializationException(providerNames.length + &quot; implementations of &quot; +</span>
+<span class="fc" id="L104">        this.beanFactory = beanFactory;</span>
+<span class="fc" id="L105">        final String[] providerNames = beanFactory.getBeanNamesForType(ConfigProvider.class);</span>
+<span class="fc" id="L106">        final String[] customizerNames = beanFactory.getBeanNamesForType(ConfigProviderCustomizer.class);</span>
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">        if (providerNames.length &gt; 1) {</span>
+<span class="nc" id="L108">            throw new BeanInitializationException(providerNames.length + &quot; implementations of &quot; +</span>
                     &quot;ConfigProvider were found when only 1 is supported. &quot; +
                     &quot;Refactor the configuration such that ConfigProvider is &quot; +
                     &quot;implemented only once or not at all.&quot;);
         }
-<span class="pc bpc" id="L114" title="1 of 2 branches missed.">        if (customizerNames.length &gt; 1) {</span>
-<span class="nc" id="L115">            throw new BeanInitializationException(customizerNames.length + &quot; implementations of &quot; +</span>
+<span class="pc bpc" id="L113" title="1 of 2 branches missed.">        if (customizerNames.length &gt; 1) {</span>
+<span class="nc" id="L114">            throw new BeanInitializationException(customizerNames.length + &quot; implementations of &quot; +</span>
                     &quot;ConfigProviderCustomizer were found when only 1 is supported. &quot; +
                     &quot;Refactor the configuration such that ConfigProvider is &quot; +
                     &quot;implemented only once or not at all.&quot;);
         }
-<span class="pc bpc" id="L120" title="1 of 2 branches missed.">        if (providerNames.length == 1) {</span>
-<span class="nc" id="L121">            this.appConfigProviderBeanName = providerNames[0];</span>
-<span class="nc bnc" id="L122" title="All 2 branches missed.">            if (customizerNames.length == 1) {</span>
-<span class="nc" id="L123">                LOG.warn(&quot;A ConfigProviderCustomizer was found ({}) but will be ignored &quot; +</span>
+<span class="pc bpc" id="L119" title="1 of 2 branches missed.">        if (providerNames.length == 1) {</span>
+<span class="nc" id="L120">            this.appConfigProviderBeanName = providerNames[0];</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">            if (customizerNames.length == 1) {</span>
+<span class="nc" id="L122">                LOG.warn(&quot;A ConfigProviderCustomizer was found ({}) but will be ignored &quot; +</span>
                         &quot;because a ConfigProvider implementation is also provided ({}).&quot;,
                         customizerNames[0],
                         this.appConfigProviderBeanName);
             }
-<span class="pc bpc" id="L128" title="1 of 2 branches missed.">        } else if (customizerNames.length == 1) {</span>
-<span class="nc" id="L129">            this.customizerBeanName = customizerNames[0];</span>
+<span class="pc bpc" id="L127" title="1 of 2 branches missed.">        } else if (customizerNames.length == 1) {</span>
+<span class="nc" id="L128">            this.customizerBeanName = customizerNames[0];</span>
         }
-<span class="fc" id="L131">    }</span>
+<span class="fc" id="L130">    }</span>
 
     /**
      * Registers 
      */
     @Override
-    public @NotNull Object postProcessAfterInitialization(
-            final @NotNull Object bean,
-            final @NotNull String beanName)
+    public Object postProcessAfterInitialization(
+            final Object bean,
+            final String beanName)
     throws BeansException {
-<span class="pc bpc" id="L141" title="3 of 4 branches missed.">        if (bean instanceof Config &amp;&amp; this.ownConfigProvider != null) {</span>
-<span class="nc" id="L142">            LOG.debug(&quot;Registering Config bean '{}' initialized after ConfigProvider creation...&quot;, beanName);</span>
-<span class="nc" id="L143">            this.ownConfigProvider.registerConfig((Config) bean);</span>
+<span class="pc bpc" id="L140" title="3 of 4 branches missed.">        if (bean instanceof Config &amp;&amp; this.ownConfigProvider != null) {</span>
+<span class="nc" id="L141">            LOG.debug(&quot;Registering Config bean '{}' initialized after ConfigProvider creation...&quot;, beanName);</span>
+<span class="nc" id="L142">            this.ownConfigProvider.registerConfig((Config) bean);</span>
         }
-<span class="fc" id="L145">        return bean;</span>
+<span class="fc" id="L144">        return bean;</span>
     }
 
     /**
@@ -151,21 +150,21 @@ implements EnvironmentAware, BeanFactoryPostProcessor, BeanPostProcessor {
      * 
      * @return The automatically created {@code ConfigProvider} bean.
      */
-    public synchronized @NotNull ConfigProvider getConfigProvider() {
-<span class="fc bfc" id="L155" title="All 2 branches covered.">        if (this.configProvider == null) {</span>
-<span class="pc bpc" id="L156" title="1 of 2 branches missed.">            if (this.appConfigProviderBeanName == null) {</span>
-<span class="fc" id="L157">                LOG.debug(&quot;Creating default ConfigProvider bean...&quot;);</span>
-<span class="fc" id="L158">                this.ownConfigProvider = createConfigProvider();</span>
-<span class="fc" id="L159">                this.configProvider = this.ownConfigProvider;</span>
+    public synchronized ConfigProvider getConfigProvider() {
+<span class="fc bfc" id="L154" title="All 2 branches covered.">        if (this.configProvider == null) {</span>
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">            if (this.appConfigProviderBeanName == null) {</span>
+<span class="fc" id="L156">                LOG.debug(&quot;Creating default ConfigProvider bean...&quot;);</span>
+<span class="fc" id="L157">                this.ownConfigProvider = createConfigProvider();</span>
+<span class="fc" id="L158">                this.configProvider = this.ownConfigProvider;</span>
             } else {
-<span class="nc" id="L161">                LOG.debug(&quot;Using application provided ConfigProvider: {}&quot;,</span>
+<span class="nc" id="L160">                LOG.debug(&quot;Using application provided ConfigProvider: {}&quot;,</span>
                         this.appConfigProviderBeanName);
-<span class="nc" id="L163">                this.configProvider = this.beanFactory.getBean(</span>
+<span class="nc" id="L162">                this.configProvider = this.beanFactory.getBean(</span>
                         this.appConfigProviderBeanName,
                         ConfigProvider.class);
             }
         }
-<span class="fc" id="L168">        return this.configProvider;</span>
+<span class="fc" id="L167">        return this.configProvider;</span>
     }
 
     /**
@@ -173,25 +172,25 @@ implements EnvironmentAware, BeanFactoryPostProcessor, BeanPostProcessor {
      * 
      * @return The new configuration provider.
      */
-    protected @NotNull ConfigProviderImpl createConfigProvider() {
-<span class="fc" id="L177">        final Map&lt;String, Config&gt; configs = BeanFactoryUtils.beansOfTypeIncludingAncestors(</span>
+    protected ConfigProviderImpl createConfigProvider() {
+<span class="fc" id="L176">        final Map&lt;String, Config&gt; configs = BeanFactoryUtils.beansOfTypeIncludingAncestors(</span>
                 beanFactory,
                 Config.class);
         final ConfigProviderImpl provider;
-<span class="pc bpc" id="L181" title="1 of 2 branches missed.">        if (this.customizerBeanName == null) {</span>
-<span class="fc" id="L182">            provider = new ConfigProviderImpl(createDefaultConfig());</span>
-<span class="fc" id="L183">            configs.values().stream().forEach(provider::registerConfig);</span>
+<span class="pc bpc" id="L180" title="1 of 2 branches missed.">        if (this.customizerBeanName == null) {</span>
+<span class="fc" id="L181">            provider = new ConfigProviderImpl(createDefaultConfig());</span>
+<span class="fc" id="L182">            configs.values().stream().forEach(provider::registerConfig);</span>
         } else {
-<span class="nc" id="L185">            LOG.debug(&quot;Using application provided ConfigProvider customizer: {}&quot;,</span>
+<span class="nc" id="L184">            LOG.debug(&quot;Using application provided ConfigProvider customizer: {}&quot;,</span>
                     this.customizerBeanName);
-<span class="nc" id="L187">            final ConfigProviderCustomizer customizer = beanFactory.getBean(</span>
+<span class="nc" id="L186">            final ConfigProviderCustomizer customizer = beanFactory.getBean(</span>
                     this.customizerBeanName,
                     ConfigProviderCustomizer.class);
-<span class="nc" id="L190">            provider = new ConfigProviderImpl(</span>
-<span class="nc" id="L191">                    customizer.configureDefaultConfig(configs));</span>
-<span class="nc" id="L192">            customizer.registerAdditionalConfigs(provider::registerConfig, configs);</span>
+<span class="nc" id="L189">            provider = new ConfigProviderImpl(</span>
+<span class="nc" id="L190">                    customizer.configureDefaultConfig(configs));</span>
+<span class="nc" id="L191">            customizer.registerAdditionalConfigs(provider::registerConfig, configs);</span>
         }
-<span class="fc" id="L194">        return provider;</span>
+<span class="fc" id="L193">        return provider;</span>
     }
 
     /**
@@ -199,12 +198,12 @@ implements EnvironmentAware, BeanFactoryPostProcessor, BeanPostProcessor {
      * 
      * @return The default configuration.
      */
-    protected @NotNull Config createDefaultConfig() {
-<span class="fc" id="L203">        LOG.info(&quot;Creating default Spring Environment based Config...&quot;);</span>
-<span class="fc" id="L204">        return Config.fromSpringEnvironment()</span>
-<span class="fc" id="L205">                .ofEnvironment(this.environment)</span>
-<span class="fc" id="L206">                .withIterableKeys()</span>
-<span class="fc" id="L207">                .build();</span>
+    protected Config createDefaultConfig() {
+<span class="fc" id="L202">        LOG.info(&quot;Creating default Spring Environment based Config...&quot;);</span>
+<span class="fc" id="L203">        return Config.fromSpringEnvironment()</span>
+<span class="fc" id="L204">                .ofEnvironment(this.environment)</span>
+<span class="fc" id="L205">                .withIterableKeys()</span>
+<span class="fc" id="L206">                .build();</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

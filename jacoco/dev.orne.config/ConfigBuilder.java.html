@@ -22,9 +22,8 @@
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Configuration builder.
@@ -44,8 +43,8 @@ public interface ConfigBuilder&lt;S extends ConfigBuilder&lt;S&gt;&gt; {
      * @param parent The parent configuration.
      * @return This instance, for method chaining.
      */
-    @NotNull S withParent(
-            Config parent);
+    S withParent(
+            @Nullable Config parent);
 
     /**
      * Sets the parent configuration.
@@ -56,9 +55,9 @@ public interface ConfigBuilder&lt;S extends ConfigBuilder&lt;S&gt;&gt; {
      * @param parent The parent configuration.
      * @return This instance, for method chaining.
      */
-    default @NotNull S withParent(
-            final @NotNull ConfigBuilder&lt;?&gt; parent) {
-<span class="fc" id="L61">        return withParent(parent.build());</span>
+    default S withParent(
+            final ConfigBuilder&lt;?&gt; parent) {
+<span class="fc" id="L60">        return withParent(parent.build());</span>
     }
 
     /**
@@ -73,7 +72,7 @@ public interface ConfigBuilder&lt;S extends ConfigBuilder&lt;S&gt;&gt; {
      * 
      * @return This instance, for method chaining.
      */
-    @NotNull S withOverrideParentProperties();
+    S withOverrideParentProperties();
 
     /**
      * Sets the configuration properties values cryptography
@@ -82,8 +81,8 @@ public interface ConfigBuilder&lt;S extends ConfigBuilder&lt;S&gt;&gt; {
      * @param provider The cryptography transformations provider.
      * @return This instance, for method chaining.
      */
-    @NotNull S withEncryption(
-            ConfigCryptoProvider provider);
+    S withEncryption(
+            @Nullable ConfigCryptoProvider provider);
 
     /**
      * Sets the configuration properties values decoder.
@@ -93,15 +92,15 @@ public interface ConfigBuilder&lt;S extends ConfigBuilder&lt;S&gt;&gt; {
      * @param encoder The configuration properties values decoder.
      * @return This instance, for method chaining.
      */
-    @NotNull S withDecoder(
-            ValueDecoder encoder);
+    S withDecoder(
+            @Nullable ValueDecoder encoder);
 
     /**
      * Enables configuration property values variable resolution.
      * 
      * @return This instance, for method chaining.
      */
-    @NotNull S withVariableResolution();
+    S withVariableResolution();
 
     /**
      * Sets the configuration properties values decorator.
@@ -111,15 +110,15 @@ public interface ConfigBuilder&lt;S extends ConfigBuilder&lt;S&gt;&gt; {
      * @param decorator The configuration properties values decorator.
      * @return This instance, for method chaining.
      */
-    @NotNull S withDecorator(
-            ValueDecorator decorator);
+    S withDecorator(
+            @Nullable ValueDecorator decorator);
 
     /**
      * Creates the configuration instance.
      * 
      * @return The configuration instance.
      */
-    @NotNull Config build();
+    Config build();
 
     /**
      * Creates the configuration instance as an instance of the specified
@@ -132,9 +131,9 @@ public interface ConfigBuilder&lt;S extends ConfigBuilder&lt;S&gt;&gt; {
      * @return The configuration instance.
      * @see Config#as(Config, Class)
      */
-    default &lt;T extends Config&gt; @NotNull T as(
-            final @NotNull Class&lt;T&gt; configType) {
-<span class="fc" id="L137">        return Config.as(build(), configType);</span>
+    default &lt;T extends Config&gt; T as(
+            final Class&lt;T&gt; configType) {
+<span class="fc" id="L136">        return Config.as(build(), configType);</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

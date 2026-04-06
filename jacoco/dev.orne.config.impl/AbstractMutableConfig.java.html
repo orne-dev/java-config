@@ -24,11 +24,9 @@
 
 import java.util.Objects;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.lang3.Validate;
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.ConfigException;
 import dev.orne.config.MutableConfig;
@@ -36,6 +34,10 @@ import dev.orne.config.ValueEncoder;
 
 /**
  * Base abstract implementation of mutable configuration properties provider.
+ * &lt;p&gt;
+ * Extending classes must add {@code MutableConfig} interface and
+ * override {@code set} and {@code remove} methods
+ * making them public and delegating to the protected methods of this class.
  * 
  * @author &lt;a href=&quot;https://github.com/ihernaez&quot;&gt;(w) Iker Hernaez&lt;/a&gt;
  * @version 1.0, 2025-04
@@ -43,20 +45,20 @@ import dev.orne.config.ValueEncoder;
  */
 @API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
 public abstract class AbstractMutableConfig
-extends AbstractConfig
-implements MutableConfig {
+extends AbstractConfig {
 
     /** The configuration properties values encoder. */
-    private final @NotNull ValueEncoder encoder;
+    private final ValueEncoder encoder;
 
     /**
-     * Returns the configuration properties values encoder.
+     * Creates a new instance.
      * 
-     * @return The configuration properties values encoder.
+     * @param options The configuration builder options.
      */
-    protected @NotNull ValueEncoder getEncoder() {
-<span class="fc" id="L58">        return this.encoder;</span>
-    }
+    protected AbstractMutableConfig(
+            final ConfigOptions options) {
+<span class="nc" id="L60">        this(options, new MutableConfigOptions());</span>
+<span class="nc" id="L61">    }</span>
 
     /**
      * Creates a new instance.
@@ -65,40 +67,54 @@ implements MutableConfig {
      * @param mutableOptions The mutable configuration builder options.
      */
     protected AbstractMutableConfig(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions) {
-<span class="fc" id="L70">        super(options);</span>
-<span class="fc" id="L71">        Objects.requireNonNull(mutableOptions);</span>
-<span class="fc bfc" id="L72" title="All 2 branches covered.">        if (options.getCryptoProvider() != null) {</span>
-<span class="fc bfc" id="L73" title="All 2 branches covered.">            if (mutableOptions.getEncoder() == null) {</span>
-<span class="fc" id="L74">                mutableOptions.setEncoder(options.getCryptoProvider()::encrypt);</span>
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions) {
+<span class="fc" id="L72">        super(options);</span>
+<span class="fc" id="L73">        Objects.requireNonNull(mutableOptions);</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        if (options.getCryptoProvider() != null) {</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">            if (mutableOptions.getEncoder() == null) {</span>
+<span class="fc" id="L76">                mutableOptions.setEncoder(options.getCryptoProvider()::encrypt);</span>
             } else {
-<span class="fc" id="L76">                mutableOptions.setEncoder(</span>
-<span class="fc" id="L77">                        mutableOptions.getEncoder().andThen(options.getCryptoProvider()::encrypt));</span>
+<span class="fc" id="L78">                mutableOptions.setEncoder(</span>
+<span class="fc" id="L79">                        mutableOptions.getEncoder().andThen(options.getCryptoProvider()::encrypt));</span>
             }
         }
-<span class="fc bfc" id="L80" title="All 2 branches covered.">        if (mutableOptions.getEncoder() == null) {</span>
-<span class="fc" id="L81">            mutableOptions.setEncoder(ValueEncoder.DEFAULT);</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        if (mutableOptions.getEncoder() == null) {</span>
+<span class="fc" id="L83">            mutableOptions.setEncoder(ValueEncoder.DEFAULT);</span>
         }
-<span class="fc" id="L83">        this.encoder = mutableOptions.getEncoder();</span>
-<span class="fc" id="L84">    }</span>
+<span class="fc" id="L85">        this.encoder = mutableOptions.getEncoder();</span>
+<span class="fc" id="L86">    }</span>
 
     /**
-     * {@inheritDoc}
+     * Returns the configuration properties values encoder.
+     * 
+     * @return The configuration properties values encoder.
      */
-    @Override
-    public void set(
-            final @NotBlank String key,
-            final String value) {
-<span class="fc" id="L93">        Validate.notBlank(key, KEY_BLANK_ERR);</span>
-<span class="fc" id="L94">        String encoded = this.encoder.encode(value);</span>
-<span class="fc bfc" id="L95" title="All 2 branches covered.">        if (encoded == null) {</span>
-<span class="fc" id="L96">            removeInt(key);</span>
+    protected ValueEncoder getEncoder() {
+<span class="fc" id="L94">        return this.encoder;</span>
+    }
+
+    /**
+     * Sets the value of the specified configuration property.
+     * 
+     * @param key The configuration property.
+     * @param value The value to set
+     * @throws ConfigException If an error occurs setting the configuration
+     * property value
+     * @see MutableConfig#set(String, String)
+     */
+    protected void set(
+            final String key,
+            final @Nullable String value) {
+<span class="fc" id="L109">        Validate.notBlank(key, KEY_BLANK_ERR);</span>
+<span class="fc" id="L110">        String encoded = this.encoder.encode(value);</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        if (encoded == null) {</span>
+<span class="fc" id="L112">            removeInt(key);</span>
         } else {
-<span class="fc" id="L98">            setInt(key, encoded);</span>
+<span class="fc" id="L114">            setInt(key, encoded);</span>
         }
-<span class="fc" id="L100">        getResolver().ifPresent(r -&gt; r.clearCache());</span>
-<span class="fc" id="L101">    }</span>
+<span class="fc" id="L116">        getResolver().ifPresent(r -&gt; r.clearCache());</span>
+<span class="fc" id="L117">    }</span>
 
     /**
      * Sets the value of the specified configuration property.
@@ -108,21 +124,30 @@ implements MutableConfig {
      * @throws ConfigException If an error occurs setting the configuration
      * property value
      */
-    protected abstract void setInt(
-            @NotBlank String key,
-            @NotNull String value);
+    protected void setInt(
+            String key,
+            String value) {
+<span class="nc" id="L130">        throw new UnsupportedOperationException(</span>
+                &quot;Configuration instance is not mutable&quot;);
+    }
 
     /**
-     * {@inheritDoc}
+     * Removes the specified configuration properties.
+     * 
+     * @param keys The configuration properties.
+     * @throws ConfigException If an error occurs removing the configuration
+     * properties.
+     * @see MutableConfig#remove(String...)
      */
-    @Override
-    public void remove(@NotBlank String... keys) {
-<span class="fc bfc" id="L120" title="All 2 branches covered.">        for (final String key : keys) {</span>
-<span class="fc" id="L121">            Validate.notBlank(key, KEY_BLANK_ERR);</span>
+    protected void remove(
+            final String... keys) {
+<span class="fc bfc" id="L144" title="All 2 branches covered.">        for (final String key : keys) {</span>
+<span class="fc" id="L145">            Validate.notBlank(key, KEY_BLANK_ERR);</span>
         }
-<span class="fc" id="L123">        removeInt(keys);</span>
-<span class="fc" id="L124">        getResolver().ifPresent(r -&gt; r.clearCache());</span>
-<span class="fc" id="L125">    }</span>
+<span class="fc" id="L147">        removeInt(keys);</span>
+<span class="fc" id="L148">        getResolver().ifPresent(r -&gt; r.clearCache());</span>
+<span class="fc" id="L149">    }</span>
+
     /**
      * Removes the specified configuration properties.
      * 
@@ -130,7 +155,10 @@ implements MutableConfig {
      * @throws ConfigException If an error occurs removing the configuration
      * properties.
      */
-    protected abstract void removeInt(
-            @NotBlank String... keys);
+    protected void removeInt(
+            String... keys) {
+<span class="nc" id="L160">        throw new UnsupportedOperationException(</span>
+                &quot;Configuration instance is not mutable&quot;);
+    }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

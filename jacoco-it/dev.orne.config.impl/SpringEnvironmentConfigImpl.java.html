@@ -25,13 +25,11 @@
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.NonIterableConfigException;
@@ -50,7 +48,7 @@ public class SpringEnvironmentConfigImpl
 extends AbstractConfig {
 
     /** The Spring environment to use as storage of configuration properties. */
-    private final @NotNull Environment environment;
+    private final Environment environment;
     /** If this instance must support property keys iteration. */
     private final boolean iterable;
 
@@ -61,13 +59,13 @@ extends AbstractConfig {
      * @param springOptions The Spring environment based configuration options.
      */
     public SpringEnvironmentConfigImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull SpringEnvironmentConfigOptions springOptions) {
-<span class="fc" id="L66">        super(options);</span>
-<span class="fc" id="L67">        Objects.requireNonNull(springOptions);</span>
-<span class="fc" id="L68">        this.environment = Objects.requireNonNull(springOptions.getEnvironment());</span>
-<span class="fc" id="L69">        this.iterable = springOptions.isIterableKeys();</span>
-<span class="fc" id="L70">    }</span>
+            final ConfigOptions options,
+            final SpringEnvironmentConfigOptions springOptions) {
+<span class="fc" id="L64">        super(options);</span>
+<span class="fc" id="L65">        Objects.requireNonNull(springOptions);</span>
+<span class="fc" id="L66">        this.environment = Objects.requireNonNull(springOptions.getEnvironment());</span>
+<span class="fc" id="L67">        this.iterable = springOptions.isIterableKeys();</span>
+<span class="fc" id="L68">    }</span>
 
     /**
      * Returns the Spring environment used as storage of configuration
@@ -75,8 +73,8 @@ extends AbstractConfig {
      * 
      * @return The Spring environment.
      */
-    public @NotNull Environment getEnvironment() {
-<span class="nc" id="L79">        return this.environment;</span>
+    public Environment getEnvironment() {
+<span class="nc" id="L77">        return this.environment;</span>
     }
 
     /**
@@ -84,7 +82,7 @@ extends AbstractConfig {
      */
     @Override
     protected boolean isEmptyInt() {
-<span class="nc" id="L87">        return false;</span>
+<span class="nc" id="L85">        return false;</span>
     }
 
     /**
@@ -92,24 +90,24 @@ extends AbstractConfig {
      */
     @Override
     protected boolean containsInt(
-            final @NotBlank String key) {
-<span class="nc" id="L96">        return this.environment.containsProperty(key);</span>
+            final String key) {
+<span class="nc" id="L94">        return this.environment.containsProperty(key);</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected @NotNull Stream&lt;String&gt; getKeysInt() {
-<span class="nc bnc" id="L104" title="All 4 branches missed.">        if (this.iterable &amp;&amp; this.environment instanceof ConfigurableEnvironment) {</span>
-<span class="nc" id="L105">            return ((ConfigurableEnvironment) this.environment).getPropertySources()</span>
-<span class="nc" id="L106">                    .stream()</span>
-<span class="nc" id="L107">                    .filter(EnumerablePropertySource.class::isInstance)</span>
-<span class="nc" id="L108">                    .map(ps -&gt; ((EnumerablePropertySource&lt;?&gt;) ps).getPropertyNames())</span>
-<span class="nc" id="L109">                    .flatMap(Stream::of)</span>
-<span class="nc" id="L110">                    .distinct();</span>
+    protected Stream&lt;String&gt; getKeysInt() {
+<span class="nc bnc" id="L102" title="All 4 branches missed.">        if (this.iterable &amp;&amp; this.environment instanceof ConfigurableEnvironment) {</span>
+<span class="nc" id="L103">            return ((ConfigurableEnvironment) this.environment).getPropertySources()</span>
+<span class="nc" id="L104">                    .stream()</span>
+<span class="nc" id="L105">                    .filter(EnumerablePropertySource.class::isInstance)</span>
+<span class="nc" id="L106">                    .map(ps -&gt; ((EnumerablePropertySource&lt;?&gt;) ps).getPropertyNames())</span>
+<span class="nc" id="L107">                    .flatMap(Stream::of)</span>
+<span class="nc" id="L108">                    .distinct();</span>
         } else {
-<span class="nc" id="L112">            throw new NonIterableConfigException(</span>
+<span class="nc" id="L110">            throw new NonIterableConfigException(</span>
                     &quot;Spring Environment configuration property keys cannot be iterated.&quot;);
         }
     }
@@ -118,9 +116,9 @@ extends AbstractConfig {
      * {@inheritDoc}
      */
     @Override
-    protected String getInt(
-            final @NotBlank String key) {
-<span class="fc" id="L123">        return this.environment.getProperty(key);</span>
+    protected @Nullable String getInt(
+            final String key) {
+<span class="fc" id="L121">        return this.environment.getProperty(key);</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

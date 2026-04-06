@@ -24,9 +24,8 @@
 
 import java.util.prefs.Preferences;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Options of {@code Preferences} based configuration builder.
@@ -40,14 +39,14 @@ import org.apiguardian.api.API;
 public class PreferencesConfigOptions {
 
     /** The preferences node to use as storage of configuration properties. */
-    private Preferences preferences;
+    private @Nullable Preferences preferences;
 
     /**
      * Empty constructor.
      */
     public PreferencesConfigOptions() {
-<span class="nc" id="L49">        super();</span>
-<span class="nc" id="L50">    }</span>
+<span class="nc" id="L48">        super();</span>
+<span class="nc" id="L49">    }</span>
 
     /**
      * Copy constructor.
@@ -55,10 +54,10 @@ public class PreferencesConfigOptions {
      * @param copy The instance to copy.
      */
     public PreferencesConfigOptions(
-            final @NotNull PreferencesConfigOptions copy) {
-<span class="nc" id="L59">        super();</span>
-<span class="nc" id="L60">        this.preferences = copy.preferences;</span>
-<span class="nc" id="L61">    }</span>
+            final PreferencesConfigOptions copy) {
+<span class="nc" id="L58">        super();</span>
+<span class="nc" id="L59">        this.preferences = copy.preferences;</span>
+<span class="nc" id="L60">    }</span>
 
     /**
      * Returns the preferences node to use as storage of configuration
@@ -67,8 +66,8 @@ public class PreferencesConfigOptions {
      * @return The preferences node to use as storage of configuration
      * properties.
      */
-    public @NotNull Preferences getPreferences() {
-<span class="nc" id="L71">        return this.preferences;</span>
+    public @Nullable Preferences getPreferences() {
+<span class="nc" id="L70">        return this.preferences;</span>
     }
 
     /**
@@ -77,7 +76,8 @@ public class PreferencesConfigOptions {
      * @param preferences The preferences node to use as storage of configuration
      * properties.
      */
-    public void setPreferences(Preferences preferences) {
+    public void setPreferences(
+            final Preferences preferences) {
 <span class="nc" id="L81">        this.preferences = preferences;</span>
 <span class="nc" id="L82">    }</span>
 
@@ -99,7 +99,7 @@ public class PreferencesConfigOptions {
      * @see Preferences#node(String)
      */
     public void setUserPreferences(
-            final @NotNull String path) {
+            final String path) {
 <span class="nc" id="L103">        this.preferences = Preferences.userRoot().node(path);</span>
 <span class="nc" id="L104">    }</span>
 
@@ -111,7 +111,7 @@ public class PreferencesConfigOptions {
      * @see Preferences#userNodeForPackage(Class)
      */
     public void setUserPreferences(
-            final @NotNull Class&lt;?&gt; clazz) {
+            final Class&lt;?&gt; clazz) {
 <span class="nc" id="L115">        this.preferences = Preferences.userNodeForPackage(clazz);</span>
 <span class="nc" id="L116">    }</span>
 
@@ -126,8 +126,8 @@ public class PreferencesConfigOptions {
      * @see Preferences#node(String)
      */
     public void setUserPreferences(
-            final @NotNull Class&lt;?&gt; clazz,
-            final @NotNull String path) {
+            final Class&lt;?&gt; clazz,
+            final String path) {
 <span class="nc" id="L131">        this.preferences = Preferences.userNodeForPackage(clazz).node(path);</span>
 <span class="nc" id="L132">    }</span>
 
@@ -149,7 +149,7 @@ public class PreferencesConfigOptions {
      * @see Preferences#node(String)
      */
     public void setSystemPreferences(
-            final @NotNull String path) {
+            final String path) {
 <span class="nc" id="L153">        this.preferences = Preferences.systemRoot().node(path);</span>
 <span class="nc" id="L154">    }</span>
 
@@ -161,7 +161,7 @@ public class PreferencesConfigOptions {
      * @see Preferences#systemNodeForPackage(Class)
      */
     public void setSystemPreferences(
-            final @NotNull Class&lt;?&gt; clazz) {
+            final Class&lt;?&gt; clazz) {
 <span class="nc" id="L165">        this.preferences = Preferences.systemNodeForPackage(clazz);</span>
 <span class="nc" id="L166">    }</span>
 
@@ -176,9 +176,9 @@ public class PreferencesConfigOptions {
      * @see Preferences#node(String)
      */
     public void setSystemPreferences(
-            final @NotNull Class&lt;?&gt; clazz,
-            final @NotNull String path) {
+            final Class&lt;?&gt; clazz,
+            final String path) {
 <span class="nc" id="L181">        this.preferences = Preferences.systemNodeForPackage(clazz).node(path);</span>
 <span class="nc" id="L182">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -34,9 +34,6 @@ import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,8 +50,8 @@ import org.slf4j.LoggerFactory;
 public class PropertiesConfigOptions {
 
     /** The class logger. */
-<span class="fc" id="L56">    private static final Logger LOG =</span>
-<span class="fc" id="L57">            LoggerFactory.getLogger(PropertiesConfigOptions.class);</span>
+<span class="fc" id="L53">    private static final Logger LOG =</span>
+<span class="fc" id="L54">            LoggerFactory.getLogger(PropertiesConfigOptions.class);</span>
 
     /** Error message for not found resources. */
     private static final String RESOURCE_NOT_FOUND_ERR =
@@ -64,15 +61,15 @@ public class PropertiesConfigOptions {
             &quot;Error reading configuration resource: {}&quot;;
 
     /** The configuration properties. */
-    private final @NotNull Properties properties;
+    private final Properties properties;
 
     /**
      * Empty constructor.
      */
     public PropertiesConfigOptions() {
-<span class="fc" id="L73">        super();</span>
-<span class="fc" id="L74">        this.properties = new Properties();</span>
-<span class="fc" id="L75">    }</span>
+<span class="fc" id="L70">        super();</span>
+<span class="fc" id="L71">        this.properties = new Properties();</span>
+<span class="fc" id="L72">    }</span>
 
     /**
      * Copy constructor.
@@ -80,19 +77,19 @@ public class PropertiesConfigOptions {
      * @param copy The instance to copy.
      */
     public PropertiesConfigOptions(
-            final @NotNull PropertiesConfigOptions copy) {
-<span class="fc" id="L84">        super();</span>
-<span class="fc" id="L85">        this.properties = new Properties();</span>
-<span class="fc" id="L86">        this.properties.putAll(copy.properties);</span>
-<span class="fc" id="L87">    }</span>
+            final PropertiesConfigOptions copy) {
+<span class="fc" id="L81">        super();</span>
+<span class="fc" id="L82">        this.properties = new Properties();</span>
+<span class="fc" id="L83">        this.properties.putAll(copy.properties);</span>
+<span class="fc" id="L84">    }</span>
 
     /**
      * Returns the configuration properties.
      * 
      * @return The configuration properties.
      */
-    public @NotNull Properties getProperties() {
-<span class="fc" id="L95">        return this.properties;</span>
+    public Properties getProperties() {
+<span class="fc" id="L92">        return this.properties;</span>
     }
 
     /**
@@ -102,9 +99,9 @@ public class PropertiesConfigOptions {
      * @param values The configuration properties.
      */
     public void add(
-            final @NotNull Properties values) {
-<span class="fc" id="L106">        this.properties.putAll(values);</span>
-<span class="fc" id="L107">    }</span>
+            final Properties values) {
+<span class="fc" id="L103">        this.properties.putAll(values);</span>
+<span class="fc" id="L104">    }</span>
 
     /**
      * Adds the specified configuration properties to the configuration
@@ -113,9 +110,9 @@ public class PropertiesConfigOptions {
      * @param values The configuration properties.
      */
     public void add(
-            final @NotNull Map&lt;@NotEmpty String, @NotNull String&gt; values) {
-<span class="fc" id="L117">        this.properties.putAll(values);</span>
-<span class="fc" id="L118">    }</span>
+            final Map&lt;String, String&gt; values) {
+<span class="fc" id="L114">        this.properties.putAll(values);</span>
+<span class="fc" id="L115">    }</span>
 
     /**
      * Loads the configuration properties from the specified ClassLoader
@@ -124,22 +121,22 @@ public class PropertiesConfigOptions {
      * @param path The ClassLoader resource path.
      */
     public void load(
-            final @NotNull String path) {
+            final String path) {
         try {
             final Enumeration&lt;URL&gt; resources =
-<span class="fc" id="L130">                    Thread.currentThread()</span>
-<span class="fc" id="L131">                            .getContextClassLoader()</span>
-<span class="fc" id="L132">                            .getResources(path);</span>
-<span class="fc bfc" id="L133" title="All 2 branches covered.">            if (!resources.hasMoreElements()) {</span>
-<span class="fc" id="L134">                LOG.warn(RESOURCE_NOT_FOUND_ERR, path);</span>
+<span class="fc" id="L127">                    Thread.currentThread()</span>
+<span class="fc" id="L128">                            .getContextClassLoader()</span>
+<span class="fc" id="L129">                            .getResources(path);</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">            if (!resources.hasMoreElements()) {</span>
+<span class="fc" id="L131">                LOG.warn(RESOURCE_NOT_FOUND_ERR, path);</span>
             }
-<span class="fc bfc" id="L136" title="All 2 branches covered.">            while (resources.hasMoreElements()) {</span>
-<span class="fc" id="L137">                load(resources.nextElement());</span>
+<span class="fc bfc" id="L133" title="All 2 branches covered.">            while (resources.hasMoreElements()) {</span>
+<span class="fc" id="L134">                load(resources.nextElement());</span>
             }
-<span class="nc" id="L139">        } catch (final IOException e) {</span>
-<span class="nc" id="L140">            LOG.warn(READ_ERR, path, e);</span>
-<span class="fc" id="L141">        }</span>
-<span class="fc" id="L142">    }</span>
+<span class="nc" id="L136">        } catch (final IOException e) {</span>
+<span class="nc" id="L137">            LOG.warn(READ_ERR, path, e);</span>
+<span class="fc" id="L138">        }</span>
+<span class="fc" id="L139">    }</span>
 
     /**
      * Loads the configuration properties from the file in the specified
@@ -148,16 +145,16 @@ public class PropertiesConfigOptions {
      * @param path The file path.
      */
     public void load(
-            final @NotNull Path path) {
-<span class="fc bfc" id="L152" title="All 2 branches covered.">        if (!Files.exists(path)) {</span>
-<span class="fc" id="L153">            LOG.warn(RESOURCE_NOT_FOUND_ERR, path);</span>
+            final Path path) {
+<span class="fc bfc" id="L149" title="All 2 branches covered.">        if (!Files.exists(path)) {</span>
+<span class="fc" id="L150">            LOG.warn(RESOURCE_NOT_FOUND_ERR, path);</span>
         }
-<span class="fc" id="L155">        try (final InputStream fileIS = Files.newInputStream(path)) {</span>
-<span class="fc" id="L156">            this.properties.load(fileIS);</span>
-<span class="fc" id="L157">        } catch (final IOException e) {</span>
-<span class="fc" id="L158">            LOG.warn(READ_ERR, path, e);</span>
-<span class="fc" id="L159">        }</span>
-<span class="fc" id="L160">    }</span>
+<span class="fc" id="L152">        try (final InputStream fileIS = Files.newInputStream(path)) {</span>
+<span class="fc" id="L153">            this.properties.load(fileIS);</span>
+<span class="fc" id="L154">        } catch (final IOException e) {</span>
+<span class="fc" id="L155">            LOG.warn(READ_ERR, path, e);</span>
+<span class="fc" id="L156">        }</span>
+<span class="fc" id="L157">    }</span>
 
     /**
      * Loads the configuration properties from the specified file.
@@ -165,15 +162,15 @@ public class PropertiesConfigOptions {
      * @param file The file to load.
      */
     public void load(
-            final @NotNull File file) {
-<span class="fc" id="L169">        try (final InputStream fileIS = new FileInputStream(file)) {</span>
-<span class="fc" id="L170">            this.properties.load(fileIS);</span>
-<span class="fc" id="L171">        } catch (final FileNotFoundException e) {</span>
-<span class="fc" id="L172">            LOG.warn(RESOURCE_NOT_FOUND_ERR, file, e);</span>
-<span class="nc" id="L173">        } catch (final IOException e) {</span>
-<span class="nc" id="L174">            LOG.warn(READ_ERR, file, e);</span>
-<span class="fc" id="L175">        }</span>
-<span class="fc" id="L176">    }</span>
+            final File file) {
+<span class="fc" id="L166">        try (final InputStream fileIS = new FileInputStream(file)) {</span>
+<span class="fc" id="L167">            this.properties.load(fileIS);</span>
+<span class="fc" id="L168">        } catch (final FileNotFoundException e) {</span>
+<span class="fc" id="L169">            LOG.warn(RESOURCE_NOT_FOUND_ERR, file, e);</span>
+<span class="nc" id="L170">        } catch (final IOException e) {</span>
+<span class="nc" id="L171">            LOG.warn(READ_ERR, file, e);</span>
+<span class="fc" id="L172">        }</span>
+<span class="fc" id="L173">    }</span>
 
     /**
      * Loads the configuration properties from the specified URL.
@@ -181,12 +178,12 @@ public class PropertiesConfigOptions {
      * @param url The URL to load.
      */
     public void load(
-            final @NotNull URL url) {
-<span class="fc" id="L185">        try (final InputStream urlIS = url.openStream()) {</span>
-<span class="fc" id="L186">            this.properties.load(urlIS);</span>
-<span class="fc" id="L187">        } catch (final IOException e) {</span>
-<span class="fc" id="L188">            LOG.warn(READ_ERR, url, e);</span>
-<span class="fc" id="L189">        }</span>
-<span class="fc" id="L190">    }</span>
+            final URL url) {
+<span class="fc" id="L182">        try (final InputStream urlIS = url.openStream()) {</span>
+<span class="fc" id="L183">            this.properties.load(urlIS);</span>
+<span class="fc" id="L184">        } catch (final IOException e) {</span>
+<span class="fc" id="L185">            LOG.warn(READ_ERR, url, e);</span>
+<span class="fc" id="L186">        }</span>
+<span class="fc" id="L187">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

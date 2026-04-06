@@ -27,10 +27,8 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.Map;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 
 /**
@@ -57,8 +55,8 @@ extends ConfigBuilder&lt;S&gt; {
      * @param separator The configuration nested properties separator.
      * @return This instance, for method chaining.
      */
-    @NotNull S withSeparator(
-            @NotEmpty String separator);
+    S withSeparator(
+            String separator);
 
     /**
      * Sets the XML attributes references prefix.
@@ -66,8 +64,8 @@ extends ConfigBuilder&lt;S&gt; {
      * @param prefix The XML attributes references prefix.
      * @return This instance, for method chaining.
      */
-    @NotNull S withAttributePrefix(
-            @NotEmpty String prefix);
+    S withAttributePrefix(
+            String prefix);
 
     /**
      * Creates an empty XML document with the specified root
@@ -80,9 +78,9 @@ extends ConfigBuilder&lt;S&gt; {
      * XML document to create.
      * @return This instance, for method chaining.
      */
-    default @NotNull S withEmptyDocument(
-            @NotNull String rootElementName) {
-<span class="nc" id="L85">        return withEmptyDocument(</span>
+    default S withEmptyDocument(
+            String rootElementName) {
+<span class="nc" id="L83">        return withEmptyDocument(</span>
                 null,
                 rootElementName);
     }
@@ -99,9 +97,9 @@ extends ConfigBuilder&lt;S&gt; {
      * XML document to create.
      * @return This instance, for method chaining.
      */
-    @NotNull S withEmptyDocument(
-            String namespaceURI,
-            @NotNull String rootElementName);
+    S withEmptyDocument(
+            @Nullable String namespaceURI,
+            String rootElementName);
 
     /**
      * Adds the specified custom properties to the configuration
@@ -113,8 +111,8 @@ extends ConfigBuilder&lt;S&gt; {
      * @param values The configuration properties.
      * @return This instance, for method chaining.
      */
-    @NotNull S add(
-            @NotNull Document values);
+    S add(
+            Document values);
 
     /**
      * Adds the specified custom properties to the configuration
@@ -130,8 +128,8 @@ extends ConfigBuilder&lt;S&gt; {
      * @param values The configuration properties to add.
      * @return This instance, for method chaining.
      */
-    @NotNull S add(
-            final @NotNull Map&lt;String, String&gt; values);
+    S add(
+            Map&lt;String, @Nullable String&gt; values);
 
     /**
      * Loads the configuration properties from the specified ClassLoader
@@ -140,8 +138,8 @@ extends ConfigBuilder&lt;S&gt; {
      * @param path The ClassLoader resource path.
      * @return This instance, for method chaining.
      */
-    @NotNull S load(
-            @NotNull String path);
+    S load(
+            String path);
 
     /**
      * Loads the configuration properties from the file in the specified
@@ -150,8 +148,8 @@ extends ConfigBuilder&lt;S&gt; {
      * @param path The file path.
      * @return This instance, for method chaining.
      */
-    @NotNull S load(
-            @NotNull Path path);
+    S load(
+            Path path);
 
     /**
      * Loads the configuration properties from the specified file.
@@ -159,8 +157,8 @@ extends ConfigBuilder&lt;S&gt; {
      * @param file The file to load.
      * @return This instance, for method chaining.
      */
-    @NotNull S load(
-            @NotNull File file);
+    S load(
+            File file);
 
     /**
      * Loads the configuration properties from the specified URL.
@@ -168,7 +166,7 @@ extends ConfigBuilder&lt;S&gt; {
      * @param url The URL to load.
      * @return This instance, for method chaining.
      */
-    @NotNull S load(
-            @NotNull URL url);
+    S load(
+            URL url);
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -24,8 +24,6 @@
 
 import java.util.Objects;
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.configuration2.Configuration;
 import org.apiguardian.api.API;
 
@@ -47,7 +45,7 @@ extends AbstractMutableConfigBuilderImpl&lt;CommonsMutableConfigBuilder&gt;
 implements CommonsMutableConfigBuilder {
 
     /** The Apache Commons based configuration options. */
-    protected final @NotNull CommonsConfigOptions commonsOptions;
+    protected final CommonsConfigOptions commonsOptions;
 
     /**
      * Copy constructor.
@@ -58,38 +56,38 @@ implements CommonsMutableConfigBuilder {
      * copy.
      */
     public CommonsMutableConfigBuilderImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions,
-            final @NotNull CommonsConfigOptions commonsOptions) {
-<span class="fc" id="L64">        super(options, mutableOptions);</span>
-<span class="fc" id="L65">        this.commonsOptions = new CommonsConfigOptions(Objects.requireNonNull(commonsOptions));</span>
-<span class="fc bfc" id="L66" title="All 2 branches covered.">        if (this.commonsOptions.getDelegated() != null</span>
-<span class="pc bpc" id="L67" title="1 of 2 branches missed.">                &amp;&amp; !(this.commonsOptions.getDelegated() instanceof Configuration)) {</span>
-<span class="nc" id="L68">            throw new IllegalArgumentException(</span>
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final CommonsConfigOptions commonsOptions) {
+<span class="fc" id="L62">        super(options, mutableOptions);</span>
+<span class="fc" id="L63">        this.commonsOptions = new CommonsConfigOptions(Objects.requireNonNull(commonsOptions));</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (this.commonsOptions.getDelegated() != null</span>
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">                &amp;&amp; !(this.commonsOptions.getDelegated() instanceof Configuration)) {</span>
+<span class="nc" id="L66">            throw new IllegalArgumentException(</span>
                     &quot;Delegated configuration must be an instance of &quot;
                             + &quot;org.apache.commons.configuration2.Configuration&quot;);
         }
-<span class="fc" id="L72">    }</span>
+<span class="fc" id="L70">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull CommonsMutableConfigBuilder ofDelegate(
-            final @NotNull Configuration delegate) {
-<span class="fc" id="L80">        this.commonsOptions.setDelegated(Objects.requireNonNull(delegate));</span>
-<span class="fc" id="L81">        return thisBuilder();</span>
+    public CommonsMutableConfigBuilder ofDelegate(
+            final Configuration delegate) {
+<span class="fc" id="L78">        this.commonsOptions.setDelegated(Objects.requireNonNull(delegate));</span>
+<span class="fc" id="L79">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull CommonsMutableConfigImpl build() {
-<span class="fc" id="L89">        return new CommonsMutableConfigImpl(</span>
+    public CommonsMutableConfigImpl build() {
+<span class="fc" id="L87">        return new CommonsMutableConfigImpl(</span>
                 this.options,
                 this.mutableOptions,
                 this.commonsOptions);
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

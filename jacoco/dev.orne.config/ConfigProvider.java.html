@@ -24,9 +24,8 @@
 
 import java.util.Optional;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.impl.ConfigProviderBuilderImpl;
 
@@ -48,9 +47,9 @@ public interface ConfigProvider {
      * @param defaultConfig The default configuration instance.
      * @return A new {@code ConfigProviderBuilder} instance
      */
-    static @NotNull ConfigProviderBuilder builder(
-            final @NotNull Config defaultConfig) {
-<span class="fc" id="L53">        return new ConfigProviderBuilderImpl(defaultConfig);</span>
+    static ConfigProviderBuilder builder(
+            final Config defaultConfig) {
+<span class="fc" id="L52">        return new ConfigProviderBuilderImpl(defaultConfig);</span>
     }
 
     /**
@@ -58,7 +57,7 @@ public interface ConfigProvider {
      * 
      * @return The default {@code Config} instance
      */
-    @NotNull Config getDefaultConfig();
+    Config getDefaultConfig();
 
     /**
      * Returns the registered {@code Config} for the specified type, if any.
@@ -66,8 +65,8 @@ public interface ConfigProvider {
      * @param type The configuration type.
      * @return The registered {@code Config}.
      */
-    @NotNull Optional&lt;Config&gt; getConfig(
-            @NotNull Class&lt;? extends Config&gt; type);
+    Optional&lt;Config&gt; getConfig(
+            Class&lt;? extends Config&gt; type);
 
     /**
      * Returns a suitable {@code Config} instance for the configuration
@@ -77,7 +76,7 @@ public interface ConfigProvider {
      * @return The selected {@code Config} instance, or {@code null} if no one
      * is suitable
      */
-    Config selectConfig(
-            PreferredConfig preferences);
+    @Nullable Config selectConfig(
+            @Nullable PreferredConfig preferences);
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

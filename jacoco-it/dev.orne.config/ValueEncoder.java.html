@@ -24,9 +24,8 @@
 
 import java.util.Objects;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Interface of configuration property values encoders.
@@ -40,7 +39,7 @@ import org.apiguardian.api.API;
 public interface ValueEncoder {
 
     /** Default identity configuration property value encoder. */
-<span class="nc" id="L43">    static ValueEncoder DEFAULT = t -&gt; t;</span>
+<span class="nc" id="L42">    static ValueEncoder DEFAULT = t -&gt; t;</span>
 
     /**
      * Encodes the configuration property value.
@@ -48,7 +47,8 @@ public interface ValueEncoder {
      * @param value The configuration property value.
      * @return The encoded configuration property value.
      */
-    String encode(String value);
+    @Nullable String encode(
+            @Nullable String value);
 
     /**
      * Returns a composed encoder that first applies the {@code before} encoder
@@ -63,8 +63,8 @@ public interface ValueEncoder {
      *
      * @see #andThen(ValueEncoder)
      */
-    default @NotNull ValueEncoder compose(
-            final @NotNull ValueEncoder before) {
+    default ValueEncoder compose(
+            final ValueEncoder before) {
 <span class="nc" id="L68">        Objects.requireNonNull(before);</span>
 <span class="nc" id="L69">        return v -&gt; encode(before.encode(v));</span>
     }
@@ -82,10 +82,10 @@ public interface ValueEncoder {
      *
      * @see #compose(ValueEncoder)
      */
-    default @NotNull ValueEncoder andThen(
-            final @NotNull ValueEncoder after) {
+    default ValueEncoder andThen(
+            final ValueEncoder after) {
 <span class="nc" id="L87">        Objects.requireNonNull(after);</span>
 <span class="nc" id="L88">        return v -&gt; after.encode(encode(v));</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

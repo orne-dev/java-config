@@ -27,9 +27,6 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.Map;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -52,7 +49,7 @@ extends AbstractMutableConfigBuilderImpl&lt;JsonMutableConfigBuilder&gt;
 implements JsonMutableConfigBuilder {
 
     /** The JSON based configuration options. */
-    protected final @NotNull JsonConfigOptions jsonOptions;
+    protected final JsonConfigOptions jsonOptions;
 
     /**
      * Copy constructor.
@@ -62,90 +59,90 @@ implements JsonMutableConfigBuilder {
      * @param jsonOptions The JSON based configuration options to copy.
      */
     protected JsonMutableConfigBuilderImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions,
-            final @NotNull JsonConfigOptions jsonOptions) {
-<span class="fc" id="L68">        super(options, mutableOptions);</span>
-<span class="fc" id="L69">        this.jsonOptions = new JsonConfigOptions(jsonOptions);</span>
-<span class="fc" id="L70">    }</span>
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final JsonConfigOptions jsonOptions) {
+<span class="fc" id="L65">        super(options, mutableOptions);</span>
+<span class="fc" id="L66">        this.jsonOptions = new JsonConfigOptions(jsonOptions);</span>
+<span class="fc" id="L67">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonMutableConfigBuilder withSeparator(
-            final @NotEmpty String separator) {
-<span class="fc" id="L78">        this.jsonOptions.setPropertySeparator(separator);</span>
-<span class="fc" id="L79">        return thisBuilder();</span>
+    public JsonMutableConfigBuilder withSeparator(
+            final String separator) {
+<span class="fc" id="L75">        this.jsonOptions.setPropertySeparator(separator);</span>
+<span class="fc" id="L76">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonMutableConfigBuilder add(
-            final @NotNull Map&lt;String, String&gt; values) {
-<span class="fc bfc" id="L88" title="All 2 branches covered.">        if (!values.isEmpty()) {</span>
-<span class="fc" id="L89">            final ObjectNode data = JacksonUtils.NODE_FACTORY.objectNode();</span>
-<span class="fc" id="L90">            values.forEach((key, value) -&gt; JacksonUtils.setNodeValue(</span>
+    public JsonMutableConfigBuilder add(
+            final Map&lt;String, String&gt; values) {
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        if (!values.isEmpty()) {</span>
+<span class="fc" id="L86">            final ObjectNode data = JacksonUtils.NODE_FACTORY.objectNode();</span>
+<span class="fc" id="L87">            values.forEach((key, value) -&gt; JacksonUtils.setNodeValue(</span>
                     data,
-<span class="fc" id="L92">                    this.jsonOptions.getPropertySeparator(),</span>
+<span class="fc" id="L89">                    this.jsonOptions.getPropertySeparator(),</span>
                     key,
                     value));
-<span class="fc" id="L95">            this.jsonOptions.add(data);</span>
+<span class="fc" id="L92">            this.jsonOptions.add(data);</span>
         }
-<span class="fc" id="L97">        return thisBuilder();</span>
+<span class="fc" id="L94">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonMutableConfigBuilder load(
-            final @NotNull String path) {
-<span class="fc" id="L106">        this.jsonOptions.load(path);</span>
-<span class="fc" id="L107">        return thisBuilder();</span>
+    public JsonMutableConfigBuilder load(
+            final String path) {
+<span class="fc" id="L103">        this.jsonOptions.load(path);</span>
+<span class="fc" id="L104">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonMutableConfigBuilder load(
-            final @NotNull Path path) {
-<span class="fc" id="L116">        this.jsonOptions.load(path);</span>
-<span class="fc" id="L117">        return thisBuilder();</span>
+    public JsonMutableConfigBuilder load(
+            final Path path) {
+<span class="fc" id="L113">        this.jsonOptions.load(path);</span>
+<span class="fc" id="L114">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonMutableConfigBuilder load(
-            final @NotNull File file) {
-<span class="fc" id="L126">        this.jsonOptions.load(file);</span>
-<span class="fc" id="L127">        return thisBuilder();</span>
+    public JsonMutableConfigBuilder load(
+            final File file) {
+<span class="fc" id="L123">        this.jsonOptions.load(file);</span>
+<span class="fc" id="L124">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonMutableConfigBuilder load(
-            final @NotNull URL url) {
-<span class="fc" id="L136">        this.jsonOptions.load(url);</span>
-<span class="fc" id="L137">        return thisBuilder();</span>
+    public JsonMutableConfigBuilder load(
+            final URL url) {
+<span class="fc" id="L133">        this.jsonOptions.load(url);</span>
+<span class="fc" id="L134">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonMutableConfigImpl build() {
-<span class="fc" id="L145">        return new JsonMutableConfigImpl(</span>
+    public JsonMutableConfigImpl build() {
+<span class="fc" id="L142">        return new JsonMutableConfigImpl(</span>
                 this.options,
                 this.mutableOptions,
                 this.jsonOptions);
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

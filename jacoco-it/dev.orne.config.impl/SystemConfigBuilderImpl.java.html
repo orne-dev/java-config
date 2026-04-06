@@ -22,8 +22,6 @@
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import dev.orne.config.SystemConfigBuilder;
@@ -45,15 +43,15 @@ implements SystemConfigBuilder {
      * Empty constructor.
      */
     public SystemConfigBuilderImpl() {
-<span class="nc" id="L48">        super();</span>
-<span class="nc" id="L49">    }</span>
+<span class="nc" id="L46">        super();</span>
+<span class="nc" id="L47">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull SystemConfigImpl build() {
-<span class="nc" id="L56">        return new SystemConfigImpl(this.options);</span>
+    public SystemConfigImpl build() {
+<span class="nc" id="L54">        return new SystemConfigImpl(this.options);</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

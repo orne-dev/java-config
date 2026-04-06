@@ -24,12 +24,11 @@
 
 import java.util.Objects;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.core.env.PropertySource;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigException;
@@ -50,9 +49,9 @@ public class ConfigLazyPropertySource
 extends PropertySource&lt;String&gt; {
 
     /** The bean factory. */
-    private final @NotNull BeanFactory beanFactory;
+    private final BeanFactory beanFactory;
     /** The configuration instance. */
-    private Config config;
+    private @Nullable Config config;
 
     /**
      * Creates a new instance.
@@ -62,29 +61,29 @@ extends PropertySource&lt;String&gt; {
      * @param beanName The name of the configuration bean.
      */
     public ConfigLazyPropertySource(
-            final @NotNull String name,
-            final @NotNull BeanFactory beanFactory,
-            final @NotNull String beanName) {
-<span class="fc" id="L68">        super(name, beanName);</span>
-<span class="fc" id="L69">        this.beanFactory = Objects.requireNonNull(beanFactory);</span>
-<span class="fc" id="L70">    }</span>
+            final String name,
+            final BeanFactory beanFactory,
+            final String beanName) {
+<span class="fc" id="L67">        super(name, beanName);</span>
+<span class="fc" id="L68">        this.beanFactory = Objects.requireNonNull(beanFactory);</span>
+<span class="fc" id="L69">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
     public boolean containsProperty(
-            final @NotNull String name) {
-<span class="fc" id="L78">        return getConfig().contains(name);</span>
+            final String name) {
+<span class="fc" id="L77">        return getConfig().contains(name);</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String getProperty(
-            final @NotNull String name) {
-<span class="fc" id="L87">        return getConfig().getUndecored(name);</span>
+    public @Nullable String getProperty(
+            final String name) {
+<span class="fc" id="L86">        return getConfig().getUndecored(name);</span>
     }
 
     /**
@@ -92,8 +91,8 @@ extends PropertySource&lt;String&gt; {
      * 
      * @return The bean factory.
      */
-    protected @NotNull BeanFactory getBeanFactory() {
-<span class="fc" id="L96">        return this.beanFactory;</span>
+    protected BeanFactory getBeanFactory() {
+<span class="fc" id="L95">        return this.beanFactory;</span>
     }
 
     /**
@@ -105,16 +104,16 @@ extends PropertySource&lt;String&gt; {
      * 
      * @return The configuration instance.
      */
-    protected @NotNull Config getConfig() {
-<span class="fc bfc" id="L109" title="All 2 branches covered.">        if (this.config == null) {</span>
+    protected Config getConfig() {
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        if (this.config == null) {</span>
             try {
-<span class="fc" id="L111">                this.config = this.beanFactory.getBean(getSource(), Config.class);</span>
-<span class="fc" id="L112">            } catch (final NoSuchBeanDefinitionException e) {</span>
-<span class="fc" id="L113">                throw new ConfigException(</span>
-<span class="fc" id="L114">                        &quot;Failed to get configuration bean '&quot; + getSource() + &quot;' for property source '&quot; + getName() + &quot;'&quot;, e);</span>
-<span class="fc" id="L115">            }</span>
+<span class="fc" id="L110">                this.config = this.beanFactory.getBean(getSource(), Config.class);</span>
+<span class="fc" id="L111">            } catch (final NoSuchBeanDefinitionException e) {</span>
+<span class="fc" id="L112">                throw new ConfigException(</span>
+<span class="fc" id="L113">                        &quot;Failed to get configuration bean '&quot; + getSource() + &quot;' for property source '&quot; + getName() + &quot;'&quot;, e);</span>
+<span class="fc" id="L114">            }</span>
         }
-<span class="fc" id="L117">        return this.config;</span>
+<span class="fc" id="L116">        return this.config;</span>
     }
 
     /**
@@ -122,7 +121,7 @@ extends PropertySource&lt;String&gt; {
      */
     @Override
     public int hashCode() {
-<span class="fc" id="L125">        return Objects.hash(super.hashCode(), beanFactory);</span>
+<span class="fc" id="L124">        return Objects.hash(super.hashCode(), beanFactory);</span>
     }
 
     /**
@@ -131,17 +130,17 @@ extends PropertySource&lt;String&gt; {
     @Override
     public boolean equals(
             final Object obj) {
-<span class="fc bfc" id="L134" title="All 2 branches covered.">        if (this == obj) {</span>
-<span class="fc" id="L135">            return true;</span>
+<span class="fc bfc" id="L133" title="All 2 branches covered.">        if (this == obj) {</span>
+<span class="fc" id="L134">            return true;</span>
         }
-<span class="fc bfc" id="L137" title="All 2 branches covered.">        if (!super.equals(obj)) {</span>
-<span class="fc" id="L138">            return false;</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">        if (!super.equals(obj)) {</span>
+<span class="fc" id="L137">            return false;</span>
         }
-<span class="fc bfc" id="L140" title="All 2 branches covered.">        if (getClass() != obj.getClass()) {</span>
-<span class="fc" id="L141">            return false;</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">        if (getClass() != obj.getClass()) {</span>
+<span class="fc" id="L140">            return false;</span>
         }
-<span class="fc" id="L143">        final ConfigLazyPropertySource other = (ConfigLazyPropertySource) obj;</span>
-<span class="fc" id="L144">        return Objects.equals(this.beanFactory, other.beanFactory);</span>
+<span class="fc" id="L142">        final ConfigLazyPropertySource other = (ConfigLazyPropertySource) obj;</span>
+<span class="fc" id="L143">        return Objects.equals(this.beanFactory, other.beanFactory);</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

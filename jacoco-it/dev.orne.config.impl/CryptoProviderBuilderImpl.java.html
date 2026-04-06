@@ -23,7 +23,6 @@
  */
 
 import javax.crypto.SecretKey;
-import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
 
@@ -53,9 +52,9 @@ implements CryptoProviderEngineBuilder, CryptoProviderKeyBuilder, CryptoProvider
      * Empty constructor.
      */
     public CryptoProviderBuilderImpl() {
-<span class="nc" id="L56">        super();</span>
-<span class="nc" id="L57">        this.options = new CryptoProviderOptions();</span>
-<span class="nc" id="L58">    }</span>
+<span class="nc" id="L55">        super();</span>
+<span class="nc" id="L56">        this.options = new CryptoProviderOptions();</span>
+<span class="nc" id="L57">    }</span>
 
     /**
      * Copy constructor.
@@ -63,10 +62,10 @@ implements CryptoProviderEngineBuilder, CryptoProviderKeyBuilder, CryptoProvider
      * @param copy The instance to copy.
      */
     public CryptoProviderBuilderImpl(
-            final @NotNull CryptoProviderBuilderImpl copy) {
-<span class="nc" id="L67">        super();</span>
-<span class="nc" id="L68">        this.options = new CryptoProviderOptions(copy.options);</span>
-<span class="nc" id="L69">    }</span>
+            final CryptoProviderBuilderImpl copy) {
+<span class="nc" id="L66">        super();</span>
+<span class="nc" id="L67">        this.options = new CryptoProviderOptions(copy.options);</span>
+<span class="nc" id="L68">    }</span>
 
     /**
      * Copy constructor.
@@ -74,77 +73,77 @@ implements CryptoProviderEngineBuilder, CryptoProviderKeyBuilder, CryptoProvider
      * @param options The cryptography transformations provider options to copy.
      */
     public CryptoProviderBuilderImpl(
-            final @NotNull CryptoProviderOptions options) {
-<span class="nc" id="L78">        super();</span>
-<span class="nc" id="L79">        this.options = new CryptoProviderOptions(options);</span>
-<span class="nc" id="L80">    }</span>
+            final CryptoProviderOptions options) {
+<span class="nc" id="L77">        super();</span>
+<span class="nc" id="L78">        this.options = new CryptoProviderOptions(options);</span>
+<span class="nc" id="L79">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull CryptoProviderBuilderImpl withEngine(
-            final @NotNull ConfigCryptoEngine engine,
+    public CryptoProviderBuilderImpl withEngine(
+            final ConfigCryptoEngine engine,
             final boolean destroyEngine) {
-<span class="nc" id="L89">        this.options.setEngine(engine);</span>
-<span class="nc" id="L90">        this.options.setDestroyEngine(destroyEngine);</span>
-<span class="nc" id="L91">        return this;</span>
+<span class="nc" id="L88">        this.options.setEngine(engine);</span>
+<span class="nc" id="L89">        this.options.setDestroyEngine(destroyEngine);</span>
+<span class="nc" id="L90">        return this;</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull CryptoProviderBuilderImpl withAesGcmEngine(
-            final @NotNull byte[] salt,
+    public CryptoProviderBuilderImpl withAesGcmEngine(
+            final byte[] salt,
             final boolean destroyEngine) {
-<span class="nc" id="L101">        this.options.setEngine(new ConfigCryptoAesGcmEngine(salt));</span>
-<span class="nc" id="L102">        this.options.setDestroyEngine(destroyEngine);</span>
-<span class="nc" id="L103">        return this;</span>
+<span class="nc" id="L100">        this.options.setEngine(new ConfigCryptoAesGcmEngine(salt));</span>
+<span class="nc" id="L101">        this.options.setDestroyEngine(destroyEngine);</span>
+<span class="nc" id="L102">        return this;</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull CryptoProviderBuilderImpl withSecretKey(
-            final @NotNull char[] password) {
-<span class="nc" id="L112">        this.options.setKey(</span>
-<span class="nc" id="L113">                this.options.engine.createSecretKey(password));</span>
-<span class="nc" id="L114">        return this;</span>
+    public CryptoProviderBuilderImpl withSecretKey(
+            final char[] password) {
+<span class="nc" id="L111">        this.options.setKey(</span>
+<span class="nc" id="L112">                this.options.engine.createSecretKey(password));</span>
+<span class="nc" id="L113">        return this;</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull CryptoProviderBuilderImpl withSecretKey(
-            final @NotNull SecretKey key) {
-<span class="nc" id="L123">        this.options.setKey(key);</span>
-<span class="nc" id="L124">        return this;</span>
+    public CryptoProviderBuilderImpl withSecretKey(
+            final SecretKey key) {
+<span class="nc" id="L122">        this.options.setKey(key);</span>
+<span class="nc" id="L123">        return this;</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull CryptoProviderBuilderImpl pooled() {
-<span class="nc" id="L132">        this.options.setPooled(true);</span>
-<span class="nc" id="L133">        return this;</span>
+    public CryptoProviderBuilderImpl pooled() {
+<span class="nc" id="L131">        this.options.setPooled(true);</span>
+<span class="nc" id="L132">        return this;</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull ConfigCryptoProvider build() {
+    public ConfigCryptoProvider build() {
         final ConfigCryptoProvider instance;
-<span class="nc bnc" id="L142" title="All 2 branches missed.">        if (this.options.isPooled()) {</span>
-<span class="nc" id="L143">            instance = new PooledConfigCryptoProvider(this.options);</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">        if (this.options.isPooled()) {</span>
+<span class="nc" id="L142">            instance = new PooledConfigCryptoProvider(this.options);</span>
         } else {
-<span class="nc" id="L145">            instance = new DefaultConfigCryptoProvider(this.options);</span>
+<span class="nc" id="L144">            instance = new DefaultConfigCryptoProvider(this.options);</span>
         }
-<span class="nc" id="L147">        return instance;</span>
+<span class="nc" id="L146">        return instance;</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -22,10 +22,9 @@
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.ConfigException;
 import dev.orne.config.MutableConfig;
@@ -49,16 +48,16 @@ extends DelegatedOrneConfiguration {
      * @param config The delegated Orne configuration
      */
     public DelegatedOrneMutableConfiguration(
-            final @NotNull MutableConfig config) {
-<span class="nc" id="L53">        super(config);</span>
-<span class="nc" id="L54">    }</span>
+            final MutableConfig config) {
+<span class="nc" id="L52">        super(config);</span>
+<span class="nc" id="L53">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected @NotNull MutableConfig getConfig() {
-<span class="nc" id="L61">        return (MutableConfig) super.getConfig();</span>
+    protected MutableConfig getConfig() {
+<span class="nc" id="L60">        return (MutableConfig) super.getConfig();</span>
     }
 
     /**
@@ -67,13 +66,13 @@ extends DelegatedOrneConfiguration {
     @Override
     protected void addPropertyDirect(
             final String key,
-            final Object value) {
+            final @Nullable Object value) {
         try {
-<span class="nc" id="L72">            getConfig().set(key, String.valueOf(value));</span>
-<span class="nc" id="L73">        } catch (final ConfigException ce) {</span>
-<span class="nc" id="L74">            throw new ConfigurationRuntimeException(ce);</span>
-<span class="nc" id="L75">        }</span>
-<span class="nc" id="L76">    }</span>
+<span class="nc" id="L71">            getConfig().set(key, String.valueOf(value));</span>
+<span class="nc" id="L72">        } catch (final ConfigException ce) {</span>
+<span class="nc" id="L73">            throw new ConfigurationRuntimeException(ce);</span>
+<span class="nc" id="L74">        }</span>
+<span class="nc" id="L75">    }</span>
 
     /**
      * {@inheritDoc}
@@ -82,10 +81,10 @@ extends DelegatedOrneConfiguration {
     protected void clearPropertyDirect(
             final String key) {
         try {
-<span class="nc" id="L85">            getConfig().remove(key);</span>
-<span class="nc" id="L86">        } catch (final ConfigException ce) {</span>
-<span class="nc" id="L87">            throw new ConfigurationRuntimeException(ce);</span>
-<span class="nc" id="L88">        }</span>
-<span class="nc" id="L89">    }</span>
+<span class="nc" id="L84">            getConfig().remove(key);</span>
+<span class="nc" id="L85">        } catch (final ConfigException ce) {</span>
+<span class="nc" id="L86">            throw new ConfigurationRuntimeException(ce);</span>
+<span class="nc" id="L87">        }</span>
+<span class="nc" id="L88">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PropertiesMutableConfigImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Orne Config</a> &gt; <a href="index.source.html" class="el_package">dev.orne.config.impl</a> &gt; <span class="el_source">PropertiesMutableConfigImpl.java</span></div><h1>PropertiesMutableConfigImpl.java</h1><pre class="source lang-java linenums">package dev.orne.config.impl;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Writer;
-
 /*-
  * #%L
  * Orne Config
@@ -26,14 +22,14 @@ import java.io.Writer;
  * #L%
  */
 
-import java.util.Objects;
-import java.util.Properties;
-import java.util.stream.Stream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Writer;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import java.util.Properties;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.FileWatchableConfig;
 import dev.orne.config.MutableConfig;
@@ -49,11 +45,8 @@ import dev.orne.config.MutableConfig;
  */
 @API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
 public class PropertiesMutableConfigImpl
-extends AbstractWatchableConfig
+extends PropertiesConfigImpl
 implements FileWatchableConfig {
-
-    /** The configuration properties. */
-    private final @NotNull Properties config;
 
     /**
      * Creates a new instance.
@@ -63,96 +56,88 @@ implements FileWatchableConfig {
      * @param propertyOptions The properties based configuration builder options.
      */
     public PropertiesMutableConfigImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions,
-            final @NotNull PropertiesConfigOptions propertyOptions) {
-<span class="nc" id="L69">        super(options, mutableOptions);</span>
-<span class="nc" id="L70">        Objects.requireNonNull(propertyOptions);</span>
-<span class="nc" id="L71">        this.config = Objects.requireNonNull(propertyOptions.getProperties());</span>
-<span class="nc" id="L72">    }</span>
-
-    /**
-     * Returns the internal {@code Properties} instance.
-     * 
-     * @return The configuration properties.
-     */
-    protected @NotNull Properties getProperties() {
-<span class="nc" id="L80">        return this.config;</span>
-    }
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final PropertiesConfigOptions propertyOptions) {
+<span class="nc" id="L62">        super(options, mutableOptions, propertyOptions);</span>
+<span class="nc" id="L63">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected boolean isEmptyInt() {
-<span class="nc" id="L88">        return this.config.isEmpty();</span>
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean containsInt(
-            final @NotBlank String key) {
-<span class="nc" id="L97">        return this.config.containsKey(key);</span>
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected @NotNull Stream&lt;String&gt; getKeysInt() {
-<span class="nc" id="L105">        return this.config.stringPropertyNames().stream();</span>
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected String getInt(
-            final @NotBlank String key) {
-<span class="nc" id="L114">        return this.config.getProperty(key);</span>
-    }
+    public void set(
+            final String key,
+            final @Nullable String value) {
+<span class="nc" id="L72">        super.set(key, value);</span>
+<span class="nc" id="L73">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
     protected void setInt(
-            final @NotBlank String key,
-            final @NotNull String value) {
-<span class="nc" id="L124">        this.config.setProperty(key, value);</span>
-<span class="nc" id="L125">    }</span>
+            final String key,
+            final String value) {
+<span class="nc" id="L82">        getProperties().setProperty(key, value);</span>
+<span class="nc" id="L83">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void remove(
+            final String... keys) {
+<span class="nc" id="L91">        super.remove(keys);</span>
+<span class="nc" id="L92">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
     protected void removeInt(
-            final @NotBlank String... keys) {
-<span class="nc bnc" id="L133" title="All 2 branches missed.">        for (final String key : keys) {</span>
-<span class="nc" id="L134">            this.config.remove(key);</span>
+            final String... keys) {
+<span class="nc bnc" id="L100" title="All 2 branches missed.">        for (final String key : keys) {</span>
+<span class="nc" id="L101">            getProperties().remove(key);</span>
         }
-<span class="nc" id="L136">    }</span>
+<span class="nc" id="L103">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void addListener(
+            final Listener listener) {
+<span class="nc" id="L111">        super.addListener(listener);</span>
+<span class="nc" id="L112">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void removeListener(
+            final Listener listener) {
+<span class="nc" id="L120">        super.removeListener(listener);</span>
+<span class="nc" id="L121">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
     public void save(
-            final @NotNull OutputStream destination)
+            final OutputStream destination)
     throws IOException {
-<span class="nc" id="L145">        this.config.store(destination, null);</span>
-<span class="nc" id="L146">    }</span>
+<span class="nc" id="L130">        getProperties().store(destination, null);</span>
+<span class="nc" id="L131">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
     public void save(
-            final @NotNull Writer destination)
+            final Writer destination)
     throws IOException {
-<span class="nc" id="L155">        this.config.store(destination, null);</span>
-<span class="nc" id="L156">    }</span>
+<span class="nc" id="L140">        getProperties().store(destination, null);</span>
+<span class="nc" id="L141">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -27,10 +27,8 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.Map;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 
 import dev.orne.config.ConfigException;
@@ -50,7 +48,7 @@ extends AbstractMutableConfigBuilderImpl&lt;XmlMutableConfigBuilder&gt;
 implements XmlMutableConfigBuilder {
 
     /** The XML based configuration options. */
-    protected final @NotNull XmlConfigOptions xmlOptions;
+    protected final XmlConfigOptions xmlOptions;
 
     /**
      * Copy constructor.
@@ -60,128 +58,128 @@ implements XmlMutableConfigBuilder {
      * @param xmlOptions The XML based configuration options to copy.
      */
     protected XmlMutableConfigBuilderImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions,
-            final @NotNull XmlConfigOptions xmlOptions) {
-<span class="nc" id="L66">        super(options, mutableOptions);</span>
-<span class="nc" id="L67">        this.xmlOptions = new XmlConfigOptions(xmlOptions);</span>
-<span class="nc" id="L68">    }</span>
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final XmlConfigOptions xmlOptions) {
+<span class="nc" id="L64">        super(options, mutableOptions);</span>
+<span class="nc" id="L65">        this.xmlOptions = new XmlConfigOptions(xmlOptions);</span>
+<span class="nc" id="L66">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilder withSeparator(
-            final @NotEmpty String separator) {
-<span class="nc" id="L76">        this.xmlOptions.setPropertySeparator(separator);</span>
-<span class="nc" id="L77">        return thisBuilder();</span>
+    public XmlMutableConfigBuilder withSeparator(
+            final String separator) {
+<span class="nc" id="L74">        this.xmlOptions.setPropertySeparator(separator);</span>
+<span class="nc" id="L75">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilder withAttributePrefix(
-            final @NotEmpty String prefix) {
-<span class="nc" id="L86">        this.xmlOptions.setAttributePrefix(prefix);</span>
-<span class="nc" id="L87">        return thisBuilder();</span>
+    public XmlMutableConfigBuilder withAttributePrefix(
+            final String prefix) {
+<span class="nc" id="L84">        this.xmlOptions.setAttributePrefix(prefix);</span>
+<span class="nc" id="L85">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilder withEmptyDocument(
-            final String namespaceURI,
-            final @NotNull String rootElementName) {
-<span class="nc" id="L97">        this.xmlOptions.setRootElement(namespaceURI, rootElementName);</span>
-<span class="nc" id="L98">        return thisBuilder();</span>
+    public XmlMutableConfigBuilder withEmptyDocument(
+            final @Nullable String namespaceURI,
+            final String rootElementName) {
+<span class="nc" id="L95">        this.xmlOptions.setRootElement(namespaceURI, rootElementName);</span>
+<span class="nc" id="L96">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilder add(
-            @NotNull Document values) {
-<span class="nc" id="L107">        this.xmlOptions.add(values);</span>
-<span class="nc" id="L108">        return thisBuilder();</span>
+    public XmlMutableConfigBuilder add(
+            final Document values) {
+<span class="nc" id="L105">        this.xmlOptions.add(values);</span>
+<span class="nc" id="L106">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilder add(
-            final @NotNull Map&lt;String, String&gt; values) {
-<span class="nc bnc" id="L117" title="All 2 branches missed.">        if (this.xmlOptions.getDocument().getDocumentElement() == null) {</span>
-<span class="nc" id="L118">            throw new ConfigException(</span>
+    public XmlMutableConfigBuilder add(
+            final Map&lt;String, String&gt; values) {
+<span class="nc bnc" id="L115" title="All 2 branches missed.">        if (this.xmlOptions.getDocument().getDocumentElement() == null) {</span>
+<span class="nc" id="L116">            throw new ConfigException(</span>
                     &quot;Cannot add values to an empty XML document. &quot;
                     + &quot;Please set the root element or load a base document first.&quot;);
         }
-<span class="nc bnc" id="L122" title="All 2 branches missed.">        if (!values.isEmpty()) {</span>
-<span class="nc" id="L123">            values.forEach((key, value) -&gt; XmlUtils.setValue(</span>
-<span class="nc" id="L124">                    this.xmlOptions.getDocument(),</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">        if (!values.isEmpty()) {</span>
+<span class="nc" id="L121">            values.forEach((key, value) -&gt; XmlUtils.setValue(</span>
+<span class="nc" id="L122">                    this.xmlOptions.getDocument(),</span>
                     key,
-<span class="nc" id="L126">                    this.xmlOptions.getPropertySeparator(),</span>
-<span class="nc" id="L127">                    this.xmlOptions.getAttributePrefix(),</span>
+<span class="nc" id="L124">                    this.xmlOptions.getPropertySeparator(),</span>
+<span class="nc" id="L125">                    this.xmlOptions.getAttributePrefix(),</span>
                     value));
         }
-<span class="nc" id="L130">        return thisBuilder();</span>
+<span class="nc" id="L128">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilder load(
-            final @NotNull String path) {
-<span class="nc" id="L139">        this.xmlOptions.load(path);</span>
-<span class="nc" id="L140">        return thisBuilder();</span>
+    public XmlMutableConfigBuilder load(
+            final String path) {
+<span class="nc" id="L137">        this.xmlOptions.load(path);</span>
+<span class="nc" id="L138">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilder load(
-            final @NotNull Path path) {
-<span class="nc" id="L149">        this.xmlOptions.load(path);</span>
-<span class="nc" id="L150">        return thisBuilder();</span>
+    public XmlMutableConfigBuilder load(
+            final Path path) {
+<span class="nc" id="L147">        this.xmlOptions.load(path);</span>
+<span class="nc" id="L148">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilder load(
-            final @NotNull File file) {
-<span class="nc" id="L159">        this.xmlOptions.load(file);</span>
-<span class="nc" id="L160">        return thisBuilder();</span>
+    public XmlMutableConfigBuilder load(
+            final File file) {
+<span class="nc" id="L157">        this.xmlOptions.load(file);</span>
+<span class="nc" id="L158">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigBuilder load(
-            final @NotNull URL url) {
-<span class="nc" id="L169">        this.xmlOptions.load(url);</span>
-<span class="nc" id="L170">        return thisBuilder();</span>
+    public XmlMutableConfigBuilder load(
+            final URL url) {
+<span class="nc" id="L167">        this.xmlOptions.load(url);</span>
+<span class="nc" id="L168">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull XmlMutableConfigImpl build() {
-<span class="nc bnc" id="L178" title="All 2 branches missed.">        if (this.xmlOptions.getDocument().getDocumentElement() == null) {</span>
-<span class="nc" id="L179">            this.xmlOptions.setRootElement(null, &quot;config&quot;);</span>
+    public XmlMutableConfigImpl build() {
+<span class="nc bnc" id="L176" title="All 2 branches missed.">        if (this.xmlOptions.getDocument().getDocumentElement() == null) {</span>
+<span class="nc" id="L177">            this.xmlOptions.setRootElement(null, &quot;config&quot;);</span>
         }
-<span class="nc" id="L181">        return new XmlMutableConfigImpl(</span>
+<span class="nc" id="L179">        return new XmlMutableConfigImpl(</span>
                 this.options,
                 this.mutableOptions,
                 this.xmlOptions);
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -25,8 +25,6 @@
 import java.io.IOException;
 import java.io.Writer;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -57,22 +55,22 @@ extends JsonMutableConfigImpl {
      * @param yamlOptions The YAML based configuration builder options.
      */
     public YamlMutableConfigImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions,
-            final @NotNull YamlConfigOptions yamlOptions) {
-<span class="fc" id="L63">        super(options, mutableOptions, yamlOptions);</span>
-<span class="fc" id="L64">    }</span>
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final YamlConfigOptions yamlOptions) {
+<span class="fc" id="L61">        super(options, mutableOptions, yamlOptions);</span>
+<span class="fc" id="L62">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
     public void save(
-            final @NotNull Writer destination)
+            final Writer destination)
     throws IOException {
-<span class="fc" id="L73">        new ObjectMapper(new YAMLFactory())</span>
-<span class="fc" id="L74">                .writerWithDefaultPrettyPrinter()</span>
-<span class="fc" id="L75">                .writeValue(destination, getJsonObject());</span>
-<span class="fc" id="L76">    }</span>
+<span class="fc" id="L71">        new ObjectMapper(new YAMLFactory())</span>
+<span class="fc" id="L72">                .writerWithDefaultPrettyPrinter()</span>
+<span class="fc" id="L73">                .writeValue(destination, getJsonObject());</span>
+<span class="fc" id="L74">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

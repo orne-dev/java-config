@@ -24,8 +24,6 @@
 
 import java.util.Set;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import dev.orne.config.impl.EventsHandler;
@@ -47,7 +45,7 @@ extends DelegatedMutableConfig
 implements WatchableConfig {
 
     /** The configuration change events handler. */
-    private final @NotNull EventsHandler events;
+    private final EventsHandler events;
 
     /**
      * Creates a new instance.
@@ -55,19 +53,19 @@ implements WatchableConfig {
      * @param delegate The configuration to delegate to.
      */
     public DelegatedWatchableConfig(
-            final @NotNull WatchableConfig delegate) {
-<span class="nc" id="L59">        super(delegate);</span>
-<span class="nc" id="L60">        this.events = new EventsHandler();</span>
-<span class="nc" id="L61">        delegate.addListener(</span>
-<span class="nc" id="L62">                (config, keys) -&gt; notifyDelegateChanges(keys));</span>
-<span class="nc" id="L63">    }</span>
+            final WatchableConfig delegate) {
+<span class="nc" id="L57">        super(delegate);</span>
+<span class="nc" id="L58">        this.events = new EventsHandler();</span>
+<span class="nc" id="L59">        delegate.addListener(</span>
+<span class="nc" id="L60">                (config, keys) -&gt; notifyDelegateChanges(keys));</span>
+<span class="nc" id="L61">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected @NotNull WatchableConfig getDelegate() {
-<span class="nc" id="L70">        return (WatchableConfig) super.getDelegate();</span>
+    protected WatchableConfig getDelegate() {
+<span class="nc" id="L68">        return (WatchableConfig) super.getDelegate();</span>
     }
 
     /**
@@ -75,18 +73,18 @@ implements WatchableConfig {
      */
     @Override
     public void addListener(
-            final @NotNull Listener listener) {
-<span class="nc" id="L79">        this.events.add(listener);</span>
-<span class="nc" id="L80">    }</span>
+            final Listener listener) {
+<span class="nc" id="L77">        this.events.add(listener);</span>
+<span class="nc" id="L78">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
     public void removeListener(
-            final @NotNull Listener listener) {
-<span class="nc" id="L88">        this.events.remove(listener);</span>
-<span class="nc" id="L89">    }</span>
+            final Listener listener) {
+<span class="nc" id="L86">        this.events.remove(listener);</span>
+<span class="nc" id="L87">    }</span>
 
     /**
      * Notifies configuration properties changed through delegate configuration
@@ -95,8 +93,8 @@ implements WatchableConfig {
      * @param keys The changed configuration properties.
      */
     protected void notifyDelegateChanges(
-            final @NotNull Set&lt;String&gt; keys) {
-<span class="nc" id="L99">        this.events.notify(this, keys);</span>
-<span class="nc" id="L100">    }</span>
+            final Set&lt;String&gt; keys) {
+<span class="nc" id="L97">        this.events.notify(this, keys);</span>
+<span class="nc" id="L98">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

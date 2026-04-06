@@ -22,7 +22,6 @@
  * #L%
  */
 
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
@@ -30,9 +29,8 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigException;
@@ -50,15 +48,13 @@ import dev.orne.config.WatchableConfig;
  */
 @API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
 public class ConfigSubset
-implements InvocationHandler {
+extends AbstractProxyHandler {
 
     /** The name of the getKeys methods. */
     private static final String GET_KEYS_METHOD = &quot;getKeys&quot;;
     /** The name of the subset methods. */
     private static final String SUBSET_METHOD = &quot;subset&quot;;
 
-    /** Cached {@code Object.equals()} for performance optimization. */
-    private static final Method OBJECT_EQUALS;
     /** Cached {@code Config.isEmpty()} for performance optimization. */
     private static final Method CONFIG_IS_EMPTY;
     /** Cached {@code Config.getKeys(Predicate)} for performance optimization. */
@@ -77,43 +73,38 @@ implements InvocationHandler {
     private static final Method WATCHABLE_SUBSET;
     static {
         try {
-<span class="fc" id="L80">            OBJECT_EQUALS = Object.class.getMethod(</span>
-                    &quot;equals&quot;,
-                    Object.class);
-<span class="fc" id="L83">            CONFIG_IS_EMPTY = Config.class.getMethod(</span>
+<span class="fc" id="L76">            CONFIG_IS_EMPTY = Config.class.getMethod(</span>
                     &quot;isEmpty&quot;);
-<span class="fc" id="L85">            CONFIG_GET_KEYS_FILTERED = Config.class.getMethod(</span>
+<span class="fc" id="L78">            CONFIG_GET_KEYS_FILTERED = Config.class.getMethod(</span>
                     GET_KEYS_METHOD,
                     Predicate.class);
-<span class="fc" id="L88">            CONFIG_AS = Config.class.getMethod(</span>
+<span class="fc" id="L81">            CONFIG_AS = Config.class.getMethod(</span>
                     &quot;as&quot;,
                     Class.class);
-<span class="fc" id="L91">            CONFIG_SUBSET = MutableConfig.class.getMethod(</span>
+<span class="fc" id="L84">            CONFIG_SUBSET = MutableConfig.class.getMethod(</span>
                     SUBSET_METHOD,
                     String.class);
-<span class="fc" id="L94">            MUTABLE_SUBSET = MutableConfig.class.getMethod(</span>
+<span class="fc" id="L87">            MUTABLE_SUBSET = MutableConfig.class.getMethod(</span>
                     SUBSET_METHOD,
                     String.class);
-<span class="fc" id="L97">            WATCHABLE_ADD_LISTENER = WatchableConfig.class.getMethod(</span>
+<span class="fc" id="L90">            WATCHABLE_ADD_LISTENER = WatchableConfig.class.getMethod(</span>
                     &quot;addListener&quot;,
                     WatchableConfig.Listener.class);
-<span class="fc" id="L100">            WATCHABLE_REMOVE_LISTENER = WatchableConfig.class.getMethod(</span>
+<span class="fc" id="L93">            WATCHABLE_REMOVE_LISTENER = WatchableConfig.class.getMethod(</span>
                     &quot;removeListener&quot;,
                     WatchableConfig.Listener.class);
-<span class="fc" id="L103">            WATCHABLE_SUBSET = WatchableConfig.class.getMethod(</span>
+<span class="fc" id="L96">            WATCHABLE_SUBSET = WatchableConfig.class.getMethod(</span>
                     SUBSET_METHOD,
                     String.class);
-<span class="nc" id="L106">        } catch (final NoSuchMethodException e) {</span>
-<span class="nc" id="L107">            throw new ExceptionInInitializerError(e);</span>
-<span class="fc" id="L108">        }</span>
-<span class="fc" id="L109">    }</span>
+<span class="nc" id="L99">        } catch (final NoSuchMethodException e) {</span>
+<span class="nc" id="L100">            throw new ExceptionInInitializerError(e);</span>
+<span class="fc" id="L101">        }</span>
+<span class="fc" id="L102">    }</span>
 
-    /** The configuration instance. */
-    private final @NotNull Config instance;
     /** The prefix for configuration keys. */
-    private final @NotNull String prefix;
+    private final String prefix;
     /** The configuration change events handler. */
-    private final EventsHandler events;
+    private final @Nullable EventsHandler events;
 
     /**
      * Creates a new instance.
@@ -122,16 +113,16 @@ implements InvocationHandler {
      * @param prefix The prefix for configuration keys.
      */
     protected ConfigSubset(
-            final @NotNull Config instance,
-<span class="fc" id="L126">            final @NotNull String prefix) {</span>
-<span class="fc" id="L127">        this.instance = Objects.requireNonNull(instance);</span>
-<span class="fc" id="L128">        this.prefix = Objects.requireNonNull(prefix);</span>
-<span class="fc bfc" id="L129" title="All 2 branches covered.">        if (instance instanceof WatchableConfig) {</span>
-<span class="fc" id="L130">            this.events = new EventsHandler();</span>
+            final Config instance,
+            final String prefix) {
+<span class="fc" id="L118">        super(instance);</span>
+<span class="fc" id="L119">        this.prefix = Objects.requireNonNull(prefix);</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">        if (instance instanceof WatchableConfig) {</span>
+<span class="fc" id="L121">            this.events = new EventsHandler();</span>
         } else {
-<span class="fc" id="L132">            this.events = null;</span>
+<span class="fc" id="L123">            this.events = null;</span>
         }
-<span class="fc" id="L134">    }</span>
+<span class="fc" id="L125">    }</span>
 
     /**
      * Creates a new configuration proxy instance with the specified configuration.
@@ -140,11 +131,11 @@ implements InvocationHandler {
      * @param prefix The prefix for configuration keys.
      * @return A new configuration proxy instance.
      */
-    public static @NotNull Config create(
-            final @NotNull Config config,
-            final @NotNull String prefix) {
-<span class="fc" id="L146">        return create(</span>
-<span class="fc" id="L147">                config.getClass().getClassLoader(),</span>
+    public static Config create(
+            final Config config,
+            final String prefix) {
+<span class="fc" id="L137">        return create(</span>
+<span class="fc" id="L138">                config.getClass().getClassLoader(),</span>
                 Config.class,
                 config,
                 prefix);
@@ -157,11 +148,11 @@ implements InvocationHandler {
      * @param prefix The prefix for configuration keys.
      * @return A new configuration proxy instance.
      */
-    public static @NotNull MutableConfig create(
-            final @NotNull MutableConfig config,
-            final @NotNull String prefix) {
-<span class="fc" id="L163">        return create(</span>
-<span class="fc" id="L164">                config.getClass().getClassLoader(),</span>
+    public static MutableConfig create(
+            final MutableConfig config,
+            final String prefix) {
+<span class="fc" id="L154">        return create(</span>
+<span class="fc" id="L155">                config.getClass().getClassLoader(),</span>
                 MutableConfig.class,
                 config,
                 prefix);
@@ -174,11 +165,11 @@ implements InvocationHandler {
      * @param prefix The prefix for configuration keys.
      * @return A new configuration proxy instance.
      */
-    public static @NotNull WatchableConfig create(
-            final @NotNull WatchableConfig config,
-            final @NotNull String prefix) {
-<span class="fc" id="L180">        return create(</span>
-<span class="fc" id="L181">                config.getClass().getClassLoader(),</span>
+    public static WatchableConfig create(
+            final WatchableConfig config,
+            final String prefix) {
+<span class="fc" id="L171">        return create(</span>
+<span class="fc" id="L172">                config.getClass().getClassLoader(),</span>
                 WatchableConfig.class,
                 config,
                 prefix);
@@ -194,29 +185,29 @@ implements InvocationHandler {
      * @param prefix The prefix for configuration keys.
      * @return A new configuration proxy instance.
      */
-    protected static &lt;T extends Config&gt; @NotNull T create(
-            final @NotNull ClassLoader classLoader,
-            final @NotNull Class&lt;T&gt; type,
-            final @NotNull T config,
-            final @NotNull String prefix) {
-<span class="fc" id="L202">        Objects.requireNonNull(classLoader, &quot;The class loader must not be null&quot;);</span>
-<span class="fc" id="L203">        Objects.requireNonNull(config, &quot;The configuration instance must not be null&quot;);</span>
-<span class="fc" id="L204">        Objects.requireNonNull(classLoader, &quot;The configuration subtype must be an interface.&quot;);</span>
-<span class="fc" id="L205">        final ConfigSubset handler = new ConfigSubset(config, prefix);</span>
-<span class="fc" id="L206">        final T proxy = type.cast(Proxy.newProxyInstance(</span>
+    protected static &lt;T extends Config&gt; T create(
+            final ClassLoader classLoader,
+            final Class&lt;T&gt; type,
+            final T config,
+            final String prefix) {
+<span class="fc" id="L193">        Objects.requireNonNull(classLoader, &quot;The class loader must not be null&quot;);</span>
+<span class="fc" id="L194">        Objects.requireNonNull(config, &quot;The configuration instance must not be null&quot;);</span>
+<span class="fc" id="L195">        Objects.requireNonNull(classLoader, &quot;The configuration subtype must be an interface.&quot;);</span>
+<span class="fc" id="L196">        final ConfigSubset handler = new ConfigSubset(config, prefix);</span>
+<span class="fc" id="L197">        final T proxy = type.cast(Proxy.newProxyInstance(</span>
                 classLoader,
                 new Class&lt;?&gt;[] { type },
                 handler));
-<span class="fc bfc" id="L210" title="All 2 branches covered.">        if (config instanceof WatchableConfig) {</span>
-<span class="fc" id="L211">            final WatchableConfig original = (WatchableConfig) config;</span>
-<span class="fc" id="L212">            final WatchableConfig proxyConfig = (WatchableConfig) proxy;</span>
-<span class="fc" id="L213">            original.addListener((cfg, props) -&gt;</span>
-<span class="fc" id="L214">                handler.events.notify(proxyConfig, props.stream()</span>
-<span class="fc" id="L215">                        .filter(handler::isSubsetKey)</span>
-<span class="fc" id="L216">                        .map(handler::asSubsetKey)</span>
-<span class="fc" id="L217">                        .collect(Collectors.toSet())));</span>
+<span class="fc bfc" id="L201" title="All 2 branches covered.">        if (config instanceof WatchableConfig) {</span>
+<span class="fc" id="L202">            final WatchableConfig original = (WatchableConfig) config;</span>
+<span class="fc" id="L203">            final WatchableConfig proxyConfig = (WatchableConfig) proxy;</span>
+<span class="fc" id="L204">            original.addListener((cfg, props) -&gt;</span>
+<span class="fc" id="L205">                handler.events.notify(proxyConfig, props.stream()</span>
+<span class="fc" id="L206">                        .filter(handler::isSubsetKey)</span>
+<span class="fc" id="L207">                        .map(handler::asSubsetKey)</span>
+<span class="fc" id="L208">                        .collect(Collectors.toSet())));</span>
         }
-<span class="fc" id="L219">        return proxy;</span>
+<span class="fc" id="L210">        return proxy;</span>
     }
 
     /**
@@ -224,8 +215,8 @@ implements InvocationHandler {
      * 
      * @return The proxied configuration instance.
      */
-    protected @NotNull Config getInstance() {
-<span class="nc" id="L228">        return this.instance;</span>
+    protected Config getInstance() {
+<span class="nc" id="L219">        return this.instance;</span>
     }
 
     /**
@@ -233,8 +224,8 @@ implements InvocationHandler {
      * 
      * @return The prefix for configuration keys.
      */
-    protected @NotNull String getPrefix() {
-<span class="nc" id="L237">        return this.prefix;</span>
+    protected String getPrefix() {
+<span class="nc" id="L228">        return this.prefix;</span>
     }
 
     /**
@@ -242,8 +233,8 @@ implements InvocationHandler {
      * 
      * @return The configuration change events handler.
      */
-    protected EventsHandler getEvents() {
-<span class="nc" id="L246">        return this.events;</span>
+    protected @Nullable EventsHandler getEvents() {
+<span class="nc" id="L237">        return this.events;</span>
     }
 
     /**
@@ -254,8 +245,8 @@ implements InvocationHandler {
      * @return The delegated configuration key.
      */
     protected String asConfigKey(
-            final @NotNull String key) {
-<span class="fc" id="L258">        return this.prefix + key;</span>
+            final String key) {
+<span class="fc" id="L249">        return this.prefix + key;</span>
     }
 
     /**
@@ -267,8 +258,8 @@ implements InvocationHandler {
      *         {@code false} otherwise.
      */
     protected boolean isSubsetKey(
-            final @NotNull String key) {
-<span class="fc" id="L271">        return key.startsWith(this.prefix);</span>
+            final String key) {
+<span class="fc" id="L262">        return key.startsWith(this.prefix);</span>
     }
 
     /**
@@ -279,81 +270,41 @@ implements InvocationHandler {
      * @return The sub-set property key.
      */
     protected String asSubsetKey(
-            final @NotNull String key) {
-<span class="fc" id="L283">        return key.substring(this.prefix.length());</span>
+            final String key) {
+<span class="fc" id="L274">        return key.substring(this.prefix.length());</span>
     }
 
     /**
      * {@inheritDoc}
     */
     @Override
-    public Object invoke(
-            final Object proxy,
-            final @NotNull Method method,
-            final Object[] args)
+    public @Nullable Object invoke(
+            final @Nullable Object proxy,
+            final Method method,
+            final @Nullable Object[] args)
     throws Throwable {
         try {
-<span class="fc" id="L296">            final Class&lt;?&gt; declaringClass = method.getDeclaringClass();</span>
+<span class="fc" id="L287">            final Class&lt;?&gt; declaringClass = method.getDeclaringClass();</span>
             final Object result;
-<span class="fc bfc" id="L298" title="All 2 branches covered.">            if (Object.class.equals(declaringClass)) {</span>
-<span class="fc" id="L299">                result = handleObjectMethod(method, args);</span>
-<span class="fc bfc" id="L300" title="All 2 branches covered.">            } else if (Config.class.equals(declaringClass)) {</span>
-<span class="fc" id="L301">                result = handleConfigMethod((Config) proxy, method, args);</span>
-<span class="fc bfc" id="L302" title="All 2 branches covered.">            } else if (MutableConfig.class.equals(declaringClass)) {</span>
-<span class="fc" id="L303">                result = handleMutableMethod(method, args);</span>
-<span class="pc bpc" id="L304" title="1 of 2 branches missed.">            } else  if (WatchableConfig.class.equals(declaringClass)) {</span>
-<span class="fc" id="L305">                result = handleWatchableMethod(method, args);</span>
+<span class="fc bfc" id="L289" title="All 2 branches covered.">            if (Object.class.equals(declaringClass)) {</span>
+<span class="fc" id="L290">                result = handleObjectMethod(method, args);</span>
+<span class="fc bfc" id="L291" title="All 2 branches covered.">            } else if (Config.class.equals(declaringClass)) {</span>
+<span class="fc" id="L292">                result = handleConfigMethod((Config) proxy, method, args);</span>
+<span class="fc bfc" id="L293" title="All 2 branches covered.">            } else if (MutableConfig.class.equals(declaringClass)) {</span>
+<span class="fc" id="L294">                result = handleMutableMethod(method, args);</span>
+<span class="pc bpc" id="L295" title="1 of 2 branches missed.">            } else  if (WatchableConfig.class.equals(declaringClass)) {</span>
+<span class="fc" id="L296">                result = handleWatchableMethod(method, args);</span>
             } else {
-<span class="nc" id="L307">                result = method.invoke(this.instance, args);</span>
+<span class="nc" id="L298">                result = method.invoke(this.instance, args);</span>
             }
-<span class="fc" id="L309">            return result;</span>
-<span class="nc" id="L310">        } catch (final  ReflectiveOperationException e) {</span>
-<span class="nc bnc" id="L311" title="All 2 branches missed.">            if (e.getCause() instanceof RuntimeException) {</span>
-<span class="nc" id="L312">                throw (RuntimeException) e.getCause();</span>
+<span class="fc" id="L300">            return result;</span>
+<span class="nc" id="L301">        } catch (final  ReflectiveOperationException e) {</span>
+<span class="nc bnc" id="L302" title="All 2 branches missed.">            if (e.getCause() instanceof RuntimeException) {</span>
+<span class="nc" id="L303">                throw (RuntimeException) e.getCause();</span>
             } else {
-<span class="nc" id="L314">                throw new ConfigException(e.getCause());</span>
+<span class="nc" id="L305">                throw new ConfigException(e.getCause());</span>
             }
         }
-    }
-
-    /**
-     * Handles {@code Object} methods invocations.
-     * 
-     * @param method The invoked method.
-     * @param args The method arguments.
-     * @return The method invocation result.
-     * @throws ReflectiveOperationException If an error occurs during method
-     * invocation.
-     */
-    protected Object handleObjectMethod(
-            final @NotNull Method method,
-            final Object[] args)
-    throws ReflectiveOperationException {
-        final Object result;
-<span class="fc bfc" id="L333" title="All 2 branches covered.">        if (OBJECT_EQUALS.equals(method)) {</span>
-<span class="fc" id="L334">            result = proxyEquals(args[0]);</span>
-        } else {
-<span class="fc" id="L336">            result = method.invoke(this, args);</span>
-        }
-<span class="fc" id="L338">        return result;</span>
-    }
-
-    /**
-     * Checks equality with another proxy instance.
-     * 
-     * @param other The other proxy instance.
-     * @return {@code true} if both proxies are equal,
-     *         {@code false} otherwise.
-     */
-    protected boolean proxyEquals(
-            final Object other) {
-<span class="pc bpc" id="L350" title="1 of 2 branches missed.">        if (this == other) {</span>
-<span class="nc" id="L351">            return true;</span>
-        }
-<span class="pc bpc" id="L353" title="1 of 4 branches missed.">        if (other == null || !Proxy.isProxyClass(other.getClass())) {</span>
-<span class="fc" id="L354">            return false;</span>
-        }
-<span class="fc" id="L356">        return this.equals(Proxy.getInvocationHandler(other));</span>
     }
 
     /**
@@ -366,38 +317,38 @@ implements InvocationHandler {
      * @throws ReflectiveOperationException If an error occurs during method
      * invocation.
      */
-    protected Object handleConfigMethod(
-            final @NotNull Config proxy,
-            final @NotNull Method method,
-            final Object[] args)
+    protected @Nullable Object handleConfigMethod(
+            final Config proxy,
+            final Method method,
+            final @Nullable Object[] args)
     throws ReflectiveOperationException {
         final Object result;
-<span class="fc bfc" id="L375" title="All 2 branches covered.">        if (CONFIG_IS_EMPTY.equals(method)</span>
-<span class="pc bpc" id="L376" title="1 of 2 branches missed.">                &amp;&amp; method.getParameterCount() == 0) {</span>
-<span class="fc" id="L377">            result = this.instance.getKeys(this.prefix)</span>
-<span class="fc" id="L378">                    .findAny()</span>
-<span class="fc" id="L379">                    .isEmpty();</span>
-<span class="fc bfc" id="L380" title="All 2 branches covered.">        } else if (CONFIG_AS.equals(method)) {</span>
+<span class="fc bfc" id="L326" title="All 2 branches covered.">        if (CONFIG_IS_EMPTY.equals(method)</span>
+<span class="pc bpc" id="L327" title="1 of 2 branches missed.">                &amp;&amp; method.getParameterCount() == 0) {</span>
+<span class="fc" id="L328">            result = this.instance.getKeys(this.prefix)</span>
+<span class="fc" id="L329">                    .findAny()</span>
+<span class="fc" id="L330">                    .isEmpty();</span>
+<span class="fc bfc" id="L331" title="All 2 branches covered.">        } else if (CONFIG_AS.equals(method)) {</span>
             @SuppressWarnings(&quot;unchecked&quot;)
-<span class="fc" id="L382">            final Class&lt;? extends Config&gt; subtype =</span>
+<span class="fc" id="L333">            final Class&lt;? extends Config&gt; subtype =</span>
                     (Class&lt;? extends Config&gt;) args[0];
-<span class="fc" id="L384">            result = ConfigSubtype.create(</span>
+<span class="fc" id="L335">            result = ConfigSubtype.create(</span>
                     proxy,
                     subtype);
-<span class="pc bpc" id="L387" title="1 of 2 branches missed.">        } else if (CONFIG_SUBSET.equals(method)) {</span>
-<span class="nc" id="L388">            result = create(</span>
+<span class="pc bpc" id="L338" title="1 of 2 branches missed.">        } else if (CONFIG_SUBSET.equals(method)) {</span>
+<span class="nc" id="L339">            result = create(</span>
                     this.instance,
-<span class="nc" id="L390">                    asConfigKey((String) args[0]));</span>
-<span class="fc bfc" id="L391" title="All 2 branches covered.">        } else if (GET_KEYS_METHOD.equals(method.getName())) {</span>
-<span class="fc" id="L392">            result = getKeys(method, args);</span>
-<span class="pc bpc" id="L393" title="3 of 6 branches missed.">        } else if (args != null &amp;&amp; args.length &gt; 0 &amp;&amp; args[0] instanceof String) {</span>
-<span class="fc" id="L394">            final Object[] modifiedArgs = Arrays.copyOf(args, args.length);</span>
-<span class="fc" id="L395">            modifiedArgs[0] = asConfigKey((String) modifiedArgs[0]);</span>
-<span class="fc" id="L396">            result = method.invoke(this.instance, modifiedArgs);</span>
-<span class="fc" id="L397">        } else {</span>
-<span class="nc" id="L398">            result = method.invoke(this.instance, args);</span>
+<span class="nc" id="L341">                    asConfigKey((String) args[0]));</span>
+<span class="fc bfc" id="L342" title="All 2 branches covered.">        } else if (GET_KEYS_METHOD.equals(method.getName())) {</span>
+<span class="fc" id="L343">            result = getKeys(method, args);</span>
+<span class="pc bpc" id="L344" title="3 of 6 branches missed.">        } else if (args != null &amp;&amp; args.length &gt; 0 &amp;&amp; args[0] instanceof String) {</span>
+<span class="fc" id="L345">            final Object[] modifiedArgs = Arrays.copyOf(args, args.length);</span>
+<span class="fc" id="L346">            modifiedArgs[0] = asConfigKey((String) modifiedArgs[0]);</span>
+<span class="fc" id="L347">            result = method.invoke(this.instance, modifiedArgs);</span>
+<span class="fc" id="L348">        } else {</span>
+<span class="nc" id="L349">            result = method.invoke(this.instance, args);</span>
         }
-<span class="fc" id="L400">        return result;</span>
+<span class="fc" id="L351">        return result;</span>
     }
 
     /**
@@ -409,23 +360,23 @@ implements InvocationHandler {
      * @throws ReflectiveOperationException If an error occurs during method
      * invocation.
      */
-    protected Object handleMutableMethod(
-            final @NotNull Method method,
-            final Object[] args)
+    protected @Nullable Object handleMutableMethod(
+            final Method method,
+            final @Nullable Object[] args)
     throws ReflectiveOperationException {
         final Object result;
-<span class="fc bfc" id="L417" title="All 2 branches covered.">        if (MUTABLE_SUBSET.equals(method)) {</span>
-<span class="fc" id="L418">            result = create(</span>
+<span class="fc bfc" id="L368" title="All 2 branches covered.">        if (MUTABLE_SUBSET.equals(method)) {</span>
+<span class="fc" id="L369">            result = create(</span>
                     (MutableConfig) this.instance,
-<span class="fc" id="L420">                    asConfigKey((String) args[0]));</span>
-<span class="pc bpc" id="L421" title="3 of 6 branches missed.">        } else if (args != null &amp;&amp; args.length &gt; 0 &amp;&amp; args[0] instanceof String) {</span>
-<span class="fc" id="L422">            final Object[] modifiedArgs = Arrays.copyOf(args, args.length);</span>
-<span class="fc" id="L423">            modifiedArgs[0] = asConfigKey((String) modifiedArgs[0]);</span>
-<span class="fc" id="L424">            result = method.invoke(this.instance, modifiedArgs);</span>
-<span class="fc" id="L425">        } else {</span>
-<span class="nc" id="L426">            result = method.invoke(this.instance, args);</span>
+<span class="fc" id="L371">                    asConfigKey((String) args[0]));</span>
+<span class="pc bpc" id="L372" title="3 of 6 branches missed.">        } else if (args != null &amp;&amp; args.length &gt; 0 &amp;&amp; args[0] instanceof String) {</span>
+<span class="fc" id="L373">            final Object[] modifiedArgs = Arrays.copyOf(args, args.length);</span>
+<span class="fc" id="L374">            modifiedArgs[0] = asConfigKey((String) modifiedArgs[0]);</span>
+<span class="fc" id="L375">            result = method.invoke(this.instance, modifiedArgs);</span>
+<span class="fc" id="L376">        } else {</span>
+<span class="nc" id="L377">            result = method.invoke(this.instance, args);</span>
         }
-<span class="fc" id="L428">        return result;</span>
+<span class="fc" id="L379">        return result;</span>
     }
 
     /**
@@ -437,25 +388,25 @@ implements InvocationHandler {
      * @throws ReflectiveOperationException If an error occurs during method
      * invocation.
      */
-    protected Object handleWatchableMethod(
-            final @NotNull Method method,
-            final Object[] args)
+    protected @Nullable Object handleWatchableMethod(
+            final Method method,
+            final @Nullable Object[] args)
     throws ReflectiveOperationException {
         final Object result;
-<span class="fc bfc" id="L445" title="All 2 branches covered.">        if (WATCHABLE_ADD_LISTENER.equals(method)) {</span>
-<span class="fc" id="L446">            this.events.add((WatchableConfig.Listener) args[0]);</span>
-<span class="fc" id="L447">            result = null;</span>
-<span class="fc bfc" id="L448" title="All 2 branches covered.">        } else if (WATCHABLE_REMOVE_LISTENER.equals(method)) {</span>
-<span class="fc" id="L449">            this.events.remove((WatchableConfig.Listener) args[0]);</span>
-<span class="fc" id="L450">            result = null;</span>
-<span class="pc bpc" id="L451" title="1 of 2 branches missed.">        } else if (WATCHABLE_SUBSET.equals(method)) {</span>
-<span class="fc" id="L452">            result = create(</span>
+<span class="fc bfc" id="L396" title="All 2 branches covered.">        if (WATCHABLE_ADD_LISTENER.equals(method)) {</span>
+<span class="fc" id="L397">            this.events.add((WatchableConfig.Listener) args[0]);</span>
+<span class="fc" id="L398">            result = null;</span>
+<span class="fc bfc" id="L399" title="All 2 branches covered.">        } else if (WATCHABLE_REMOVE_LISTENER.equals(method)) {</span>
+<span class="fc" id="L400">            this.events.remove((WatchableConfig.Listener) args[0]);</span>
+<span class="fc" id="L401">            result = null;</span>
+<span class="pc bpc" id="L402" title="1 of 2 branches missed.">        } else if (WATCHABLE_SUBSET.equals(method)) {</span>
+<span class="fc" id="L403">            result = create(</span>
                     (WatchableConfig) this.instance,
-<span class="fc" id="L454">                    asConfigKey((String) args[0]));</span>
+<span class="fc" id="L405">                    asConfigKey((String) args[0]));</span>
         } else {
-<span class="nc" id="L456">            result = method.invoke(this.instance, args);</span>
+<span class="nc" id="L407">            result = method.invoke(this.instance, args);</span>
         }
-<span class="fc" id="L458">        return result;</span>
+<span class="fc" id="L409">        return result;</span>
     }
 
     /**
@@ -469,27 +420,27 @@ implements InvocationHandler {
      * @throws ReflectiveOperationException If an error occurs during method
      * invocation.
      */
-    protected Object getKeys(
-            final @NotNull Method method,
-            final Object[] args)
+    protected @Nullable Object getKeys(
+            final Method method,
+            final @Nullable Object[] args)
     throws ReflectiveOperationException {
         Object result;
-<span class="pc bpc" id="L477" title="1 of 4 branches missed.">        if (args == null || args.length == 0) {</span>
-<span class="fc" id="L478">            result = this.instance.getKeys(this.prefix)</span>
-<span class="fc" id="L479">                    .map(key -&gt; key.substring(this.prefix.length()));</span>
-<span class="pc bpc" id="L480" title="1 of 4 branches missed.">        } else if (args.length == 1 &amp;&amp; args[0] instanceof String) {</span>
-<span class="fc" id="L481">            result = this.instance.getKeys(asConfigKey((String) args[0]))</span>
-<span class="fc" id="L482">                    .map(key -&gt; key.substring(this.prefix.length()));</span>
-<span class="pc bpc" id="L483" title="1 of 2 branches missed.">        } else if (CONFIG_GET_KEYS_FILTERED.equals(method)) {</span>
+<span class="pc bpc" id="L428" title="1 of 4 branches missed.">        if (args == null || args.length == 0) {</span>
+<span class="fc" id="L429">            result = this.instance.getKeys(this.prefix)</span>
+<span class="fc" id="L430">                    .map(key -&gt; key.substring(this.prefix.length()));</span>
+<span class="pc bpc" id="L431" title="1 of 4 branches missed.">        } else if (args.length == 1 &amp;&amp; args[0] instanceof String) {</span>
+<span class="fc" id="L432">            result = this.instance.getKeys(asConfigKey((String) args[0]))</span>
+<span class="fc" id="L433">                    .map(key -&gt; key.substring(this.prefix.length()));</span>
+<span class="pc bpc" id="L434" title="1 of 2 branches missed.">        } else if (CONFIG_GET_KEYS_FILTERED.equals(method)) {</span>
             @SuppressWarnings(&quot;unchecked&quot;)
-<span class="fc" id="L485">            final Predicate&lt;String&gt; predicate = (Predicate&lt;String&gt;) args[0];</span>
-<span class="fc" id="L486">            result = this.instance.getKeys(this.prefix)</span>
-<span class="fc" id="L487">                    .map(key -&gt; key.substring(this.prefix.length()))</span>
-<span class="fc" id="L488">                    .filter(predicate);</span>
-<span class="fc" id="L489">        } else {</span>
-<span class="nc" id="L490">            result = method.invoke(this.instance, args);</span>
+<span class="fc" id="L436">            final Predicate&lt;String&gt; predicate = (Predicate&lt;String&gt;) args[0];</span>
+<span class="fc" id="L437">            result = this.instance.getKeys(this.prefix)</span>
+<span class="fc" id="L438">                    .map(key -&gt; key.substring(this.prefix.length()))</span>
+<span class="fc" id="L439">                    .filter(predicate);</span>
+<span class="fc" id="L440">        } else {</span>
+<span class="nc" id="L441">            result = method.invoke(this.instance, args);</span>
         }
-<span class="fc" id="L492">        return result;</span>
+<span class="fc" id="L443">        return result;</span>
     }
 
     /**
@@ -497,8 +448,8 @@ implements InvocationHandler {
      */
     @Override
     public int hashCode() {
-<span class="fc" id="L500">        return Objects.hash(</span>
-                this.instance,
+<span class="fc" id="L451">        return Objects.hash(</span>
+<span class="fc" id="L452">                super.hashCode(),</span>
                 this.prefix,
                 this.events);
     }
@@ -507,20 +458,14 @@ implements InvocationHandler {
      * {@inheritDoc}
      */
     @Override
-    public boolean equals(Object obj) {
-<span class="fc bfc" id="L511" title="All 2 branches covered.">        if (this == obj) {</span>
-<span class="fc" id="L512">            return true;</span>
+    public boolean equals(
+            final @Nullable Object obj) {
+<span class="pc bpc" id="L463" title="1 of 4 branches missed.">        if (obj == null || !super.equals(obj)) {</span>
+<span class="fc" id="L464">            return false;</span>
         }
-<span class="pc bpc" id="L514" title="1 of 2 branches missed.">        if (obj == null) {</span>
-<span class="nc" id="L515">            return false;</span>
-        }
-<span class="pc bpc" id="L517" title="1 of 2 branches missed.">        if (getClass() != obj.getClass()) {</span>
-<span class="nc" id="L518">            return false;</span>
-        }
-<span class="fc" id="L520">        ConfigSubset other = (ConfigSubset) obj;</span>
-<span class="fc bfc" id="L521" title="All 2 branches covered.">        return Objects.equals(this.instance, other.instance)</span>
-<span class="fc bfc" id="L522" title="All 2 branches covered.">                &amp;&amp; Objects.equals(this.prefix, other.prefix)</span>
-<span class="pc bpc" id="L523" title="1 of 2 branches missed.">                &amp;&amp; Objects.equals(this.events, other.events);</span>
+<span class="fc" id="L466">        final ConfigSubset other = (ConfigSubset) obj;</span>
+<span class="fc bfc" id="L467" title="All 2 branches covered.">        return Objects.equals(this.prefix, other.prefix)</span>
+<span class="pc bpc" id="L468" title="1 of 2 branches missed.">                &amp;&amp; Objects.equals(this.events, other.events);</span>
     }
 
     /**
@@ -528,7 +473,7 @@ implements InvocationHandler {
      */
     @Override
     public String toString() {
-<span class="fc" id="L531">        return &quot;ConfigSubset [instance=&quot; + this.instance + &quot;, prefix=&quot; + this.prefix + &quot;]&quot;;</span>
+<span class="fc" id="L476">        return &quot;ConfigSubset [instance=&quot; + this.instance + &quot;, prefix=&quot; + this.prefix + &quot;]&quot;;</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

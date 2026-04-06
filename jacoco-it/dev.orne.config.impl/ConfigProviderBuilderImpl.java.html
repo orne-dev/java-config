@@ -22,8 +22,6 @@
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import dev.orne.config.Config;
@@ -52,27 +50,27 @@ implements ConfigProviderBuilder {
      * @param defaultConfig The default configuration instance.
      */
     public ConfigProviderBuilderImpl(
-            final @NotNull Config defaultConfig) {
-<span class="nc" id="L56">        super();</span>
-<span class="nc" id="L57">        this.provider = new ConfigProviderImpl(defaultConfig);</span>
-<span class="nc" id="L58">    }</span>
+            final Config defaultConfig) {
+<span class="nc" id="L54">        super();</span>
+<span class="nc" id="L55">        this.provider = new ConfigProviderImpl(defaultConfig);</span>
+<span class="nc" id="L56">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull ConfigProviderBuilder addConfig(
-            final @NotNull Config config) {
-<span class="nc" id="L66">        this.provider.registerConfig(config);</span>
-<span class="nc" id="L67">        return this;</span>
+    public ConfigProviderBuilder addConfig(
+            final Config config) {
+<span class="nc" id="L64">        this.provider.registerConfig(config);</span>
+<span class="nc" id="L65">        return this;</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull ConfigProvider build() {
-<span class="nc" id="L75">        return this.provider;</span>
+    public ConfigProvider build() {
+<span class="nc" id="L73">        return this.provider;</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

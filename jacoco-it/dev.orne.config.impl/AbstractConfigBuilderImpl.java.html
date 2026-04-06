@@ -22,9 +22,8 @@
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigBuilder;
@@ -46,15 +45,15 @@ public abstract class AbstractConfigBuilderImpl&lt;S extends ConfigBuilder&lt;S&
 implements ConfigBuilder&lt;S&gt; {
 
     /** The configuration options. */
-    protected final @NotNull ConfigOptions options;
+    protected final ConfigOptions options;
 
     /**
      * Empty constructor.
      */
     protected AbstractConfigBuilderImpl() {
-<span class="fc" id="L55">        super();</span>
-<span class="fc" id="L56">        this.options = new ConfigOptions();</span>
-<span class="fc" id="L57">    }</span>
+<span class="fc" id="L54">        super();</span>
+<span class="fc" id="L55">        this.options = new ConfigOptions();</span>
+<span class="fc" id="L56">    }</span>
 
     /**
      * Copy constructor.
@@ -62,67 +61,67 @@ implements ConfigBuilder&lt;S&gt; {
      * @param options The configuration options to copy.
      */
     protected AbstractConfigBuilderImpl(
-            final @NotNull ConfigOptions options) {
-<span class="nc" id="L66">        super();</span>
-<span class="nc" id="L67">        this.options = new ConfigOptions(options);</span>
-<span class="nc" id="L68">    }</span>
+            final ConfigOptions options) {
+<span class="nc" id="L65">        super();</span>
+<span class="nc" id="L66">        this.options = new ConfigOptions(options);</span>
+<span class="nc" id="L67">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull S withParent(
-            final Config parent) {
-<span class="nc" id="L76">        this.options.setParent(parent);</span>
-<span class="nc" id="L77">        return thisBuilder();</span>
+    public S withParent(
+            final @Nullable Config parent) {
+<span class="nc" id="L75">        this.options.setParent(parent);</span>
+<span class="nc" id="L76">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull S withOverrideParentProperties() {
-<span class="nc" id="L85">        this.options.setOverrideParentProperties(true);</span>
-<span class="nc" id="L86">        return thisBuilder();</span>
+    public S withOverrideParentProperties() {
+<span class="nc" id="L84">        this.options.setOverrideParentProperties(true);</span>
+<span class="nc" id="L85">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull S withEncryption(
-            final ConfigCryptoProvider provider) {
-<span class="nc" id="L95">        this.options.setCryptoProvider(provider);</span>
-<span class="nc" id="L96">        return thisBuilder();</span>
+    public S withEncryption(
+            final @Nullable ConfigCryptoProvider provider) {
+<span class="nc" id="L94">        this.options.setCryptoProvider(provider);</span>
+<span class="nc" id="L95">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull S withDecoder(
-            final ValueDecoder decoder) {
-<span class="nc" id="L105">        this.options.setDecoder(decoder);</span>
-<span class="nc" id="L106">        return thisBuilder();</span>
+    public S withDecoder(
+            final @Nullable ValueDecoder decoder) {
+<span class="nc" id="L104">        this.options.setDecoder(decoder);</span>
+<span class="nc" id="L105">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull S withVariableResolution() {
-<span class="nc" id="L114">        this.options.setVariableResolutionEnabled(true);</span>
-<span class="nc" id="L115">        return thisBuilder();</span>
+    public S withVariableResolution() {
+<span class="nc" id="L113">        this.options.setVariableResolutionEnabled(true);</span>
+<span class="nc" id="L114">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull S withDecorator(
-            final ValueDecorator decorator) {
-<span class="nc" id="L124">        this.options.setDecorator(decorator);</span>
-<span class="nc" id="L125">        return thisBuilder();</span>
+    public S withDecorator(
+            final @Nullable ValueDecorator decorator) {
+<span class="nc" id="L123">        this.options.setDecorator(decorator);</span>
+<span class="nc" id="L124">        return thisBuilder();</span>
     }
 
     /**
@@ -131,8 +130,8 @@ implements ConfigBuilder&lt;S&gt; {
      * @return This builder instance.
      */
     @SuppressWarnings(&quot;unchecked&quot;)
-    protected @NotNull S thisBuilder() {
-<span class="fc" id="L135">        return (S) this;</span>
+    protected S thisBuilder() {
+<span class="fc" id="L134">        return (S) this;</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -31,8 +31,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.xml.XMLConstants;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -46,6 +44,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -67,27 +66,27 @@ import dev.orne.config.ConfigException;
 public final class XmlUtils {
 
     /** The class logger. */
-<span class="nc" id="L70">    private static final Logger LOG = LoggerFactory.getLogger(XmlUtils.class);</span>
+<span class="nc" id="L69">    private static final Logger LOG = LoggerFactory.getLogger(XmlUtils.class);</span>
 
     /** The XML transformer factory instance. */
-<span class="nc" id="L73">    private static final TransformerFactory TRANSFORMER_FACTORY = TransformerFactory.newInstance();</span>
+<span class="nc" id="L72">    private static final TransformerFactory TRANSFORMER_FACTORY = TransformerFactory.newInstance();</span>
     static {
         try {
-<span class="nc" id="L76">            TRANSFORMER_FACTORY.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);</span>
-<span class="nc" id="L77">        } catch (final TransformerConfigurationException e) {</span>
-<span class="nc" id="L78">            LOG.warn(&quot;Error setting secure processing feature on XML TransformerFactory&quot;, e);</span>
-<span class="nc" id="L79">        }</span>
+<span class="nc" id="L75">            TRANSFORMER_FACTORY.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);</span>
+<span class="nc" id="L76">        } catch (final TransformerConfigurationException e) {</span>
+<span class="nc" id="L77">            LOG.warn(&quot;Error setting secure processing feature on XML TransformerFactory&quot;, e);</span>
+<span class="nc" id="L78">        }</span>
         try {
-<span class="nc" id="L81">            TRANSFORMER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, &quot;&quot;);</span>
-<span class="nc" id="L82">        } catch (final IllegalArgumentException e) {</span>
-<span class="nc" id="L83">            LOG.debug(&quot;Error disabling external DTD access on XML TransformerFactory&quot;, e);</span>
-<span class="nc" id="L84">        }</span>
+<span class="nc" id="L80">            TRANSFORMER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, &quot;&quot;);</span>
+<span class="nc" id="L81">        } catch (final IllegalArgumentException e) {</span>
+<span class="nc" id="L82">            LOG.debug(&quot;Error disabling external DTD access on XML TransformerFactory&quot;, e);</span>
+<span class="nc" id="L83">        }</span>
         try {
-<span class="nc" id="L86">            TRANSFORMER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, &quot;&quot;);</span>
-<span class="nc" id="L87">        } catch (final IllegalArgumentException e) {</span>
-<span class="nc" id="L88">            LOG.debug(&quot;Error disabling external stylesheet access on XML TransformerFactory&quot;, e);</span>
-<span class="nc" id="L89">        }</span>
-<span class="nc" id="L90">    }</span>
+<span class="nc" id="L85">            TRANSFORMER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, &quot;&quot;);</span>
+<span class="nc" id="L86">        } catch (final IllegalArgumentException e) {</span>
+<span class="nc" id="L87">            LOG.debug(&quot;Error disabling external stylesheet access on XML TransformerFactory&quot;, e);</span>
+<span class="nc" id="L88">        }</span>
+<span class="nc" id="L89">    }</span>
 
     /**
      * Private constructor to prevent instantiation of this utility class.
@@ -106,17 +105,17 @@ public final class XmlUtils {
      * @return {@code true} if the property exists, {@code false} otherwise.
      */
     static boolean contains(
-            final @NotNull Document document,
-            final @NotNull String property,
-            final @NotNull String propertySeparator,
-            final @NotNull String attributePrefix) {
-<span class="nc" id="L113">        final Element root = document.getDocumentElement();</span>
-<span class="nc" id="L114">        final Pair&lt;List&lt;String&gt;, String&gt; split = splitProperty(property, propertySeparator);</span>
-<span class="nc" id="L115">        final List&lt;String&gt; parts = split.getLeft();</span>
-<span class="nc" id="L116">        final String leaf = split.getRight();</span>
-<span class="nc" id="L117">        return findElement(root, parts)</span>
-<span class="nc" id="L118">                .flatMap(n -&gt; findLeaf(n, leaf, attributePrefix))</span>
-<span class="nc" id="L119">                .isPresent();</span>
+            final Document document,
+            final String property,
+            final String propertySeparator,
+            final String attributePrefix) {
+<span class="nc" id="L112">        final Element root = document.getDocumentElement();</span>
+<span class="nc" id="L113">        final Pair&lt;List&lt;String&gt;, String&gt; split = splitProperty(property, propertySeparator);</span>
+<span class="nc" id="L114">        final List&lt;String&gt; parts = split.getLeft();</span>
+<span class="nc" id="L115">        final String leaf = split.getRight();</span>
+<span class="nc" id="L116">        return findElement(root, parts)</span>
+<span class="nc" id="L117">                .flatMap(n -&gt; findLeaf(n, leaf, attributePrefix))</span>
+<span class="nc" id="L118">                .isPresent();</span>
     }
 
     /**
@@ -131,16 +130,16 @@ public final class XmlUtils {
      * @param attributePrefix The prefix used for attributes.
      * @return A stream of keys extracted from the document.
      */
-    static @NotNull Stream&lt;String&gt; extractKeys(
-            final @NotNull Document document,
-            final @NotNull String propertySeparator,
-            final @NotNull String attributePrefix) {
-<span class="nc" id="L138">        final NodeList children = document.getDocumentElement().getChildNodes();</span>
-<span class="nc" id="L139">        return IntStream.range(0, children.getLength())</span>
-<span class="nc" id="L140">                .mapToObj(children::item)</span>
-<span class="nc" id="L141">                .filter(Element.class::isInstance)</span>
-<span class="nc" id="L142">                .map(Element.class::cast)</span>
-<span class="nc" id="L143">                .flatMap(child -&gt; extractKeys(</span>
+    static Stream&lt;String&gt; extractKeys(
+            final Document document,
+            final String propertySeparator,
+            final String attributePrefix) {
+<span class="nc" id="L137">        final NodeList children = document.getDocumentElement().getChildNodes();</span>
+<span class="nc" id="L138">        return IntStream.range(0, children.getLength())</span>
+<span class="nc" id="L139">                .mapToObj(children::item)</span>
+<span class="nc" id="L140">                .filter(Element.class::isInstance)</span>
+<span class="nc" id="L141">                .map(Element.class::cast)</span>
+<span class="nc" id="L142">                .flatMap(child -&gt; extractKeys(</span>
                         child,
                         &quot;&quot;,
                         propertySeparator,
@@ -158,32 +157,32 @@ public final class XmlUtils {
      * @param prefix The prefix to prepend to the keys.
      * @return A stream of keys extracted from the element and its children.
      */
-    static @NotNull Stream&lt;String&gt; extractKeys(
-            final @NotNull Element element,
-            final @NotNull String prefix,
-            final @NotNull String propertySeparator,
-            final @NotNull String attributePrefix) {
-<span class="nc" id="L166">        final String value = XmlUtils.getValue(element);</span>
+    static Stream&lt;String&gt; extractKeys(
+            final Element element,
+            final String prefix,
+            final String propertySeparator,
+            final String attributePrefix) {
+<span class="nc" id="L165">        final String value = XmlUtils.getValue(element);</span>
         final Stream&lt;String&gt; elementKey;
-<span class="nc bnc" id="L168" title="All 2 branches missed.">        if (value == null) {</span>
-<span class="nc" id="L169">            elementKey = Stream.of();</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">        if (value == null) {</span>
+<span class="nc" id="L168">            elementKey = Stream.of();</span>
         } else {
-<span class="nc" id="L171">            elementKey = Stream.of(prefix + element.getTagName());</span>
+<span class="nc" id="L170">            elementKey = Stream.of(prefix + element.getTagName());</span>
         }
-<span class="nc" id="L173">        final String childPrefix = prefix + element.getTagName() + propertySeparator;</span>
-<span class="nc" id="L174">        final NamedNodeMap attributes = element.getAttributes();</span>
-<span class="nc" id="L175">        final Stream&lt;String&gt; attrKeys = IntStream.range(0, attributes.getLength())</span>
-<span class="nc" id="L176">                .mapToObj(attributes::item)</span>
-<span class="nc" id="L177">                .filter(Attr.class::isInstance)</span>
-<span class="nc" id="L178">                .map(node -&gt; childPrefix + attributePrefix + node.getLocalName());</span>
-<span class="nc" id="L179">        final NodeList children = element.getChildNodes();</span>
-<span class="nc" id="L180">        final Stream&lt;String&gt; childKeys = IntStream.range(0, children.getLength())</span>
-<span class="nc" id="L181">                .mapToObj(children::item)</span>
-<span class="nc" id="L182">                .filter(Element.class::isInstance)</span>
-<span class="nc" id="L183">                .map(Element.class::cast)</span>
-<span class="nc" id="L184">                .flatMap(child -&gt; extractKeys(child, childPrefix, propertySeparator, attributePrefix));</span>
-<span class="nc" id="L185">        return Stream.concat(</span>
-<span class="nc" id="L186">                Stream.concat(</span>
+<span class="nc" id="L172">        final String childPrefix = prefix + element.getTagName() + propertySeparator;</span>
+<span class="nc" id="L173">        final NamedNodeMap attributes = element.getAttributes();</span>
+<span class="nc" id="L174">        final Stream&lt;String&gt; attrKeys = IntStream.range(0, attributes.getLength())</span>
+<span class="nc" id="L175">                .mapToObj(attributes::item)</span>
+<span class="nc" id="L176">                .filter(Attr.class::isInstance)</span>
+<span class="nc" id="L177">                .map(node -&gt; childPrefix + attributePrefix + node.getLocalName());</span>
+<span class="nc" id="L178">        final NodeList children = element.getChildNodes();</span>
+<span class="nc" id="L179">        final Stream&lt;String&gt; childKeys = IntStream.range(0, children.getLength())</span>
+<span class="nc" id="L180">                .mapToObj(children::item)</span>
+<span class="nc" id="L181">                .filter(Element.class::isInstance)</span>
+<span class="nc" id="L182">                .map(Element.class::cast)</span>
+<span class="nc" id="L183">                .flatMap(child -&gt; extractKeys(child, childPrefix, propertySeparator, attributePrefix));</span>
+<span class="nc" id="L184">        return Stream.concat(</span>
+<span class="nc" id="L185">                Stream.concat(</span>
                     elementKey,
                     attrKeys),
                 childKeys);
@@ -199,17 +198,17 @@ public final class XmlUtils {
      * @return An Optional containing the value of the property, or empty if not found.
      */
     static Optional&lt;String&gt; getValue(
-            final @NotNull Document document,
-            final @NotNull String property,
-            final @NotNull String propertySeparator,
-            final @NotNull String attributePrefix) {
-<span class="nc" id="L206">        final Element root = document.getDocumentElement();</span>
-<span class="nc" id="L207">        final Pair&lt;List&lt;String&gt;, String&gt; split = splitProperty(property, propertySeparator);</span>
-<span class="nc" id="L208">        final List&lt;String&gt; parts = split.getLeft();</span>
-<span class="nc" id="L209">        final String leaf = split.getRight();</span>
-<span class="nc" id="L210">        return findElement(root, parts)</span>
-<span class="nc" id="L211">                .flatMap(n -&gt; findLeaf(n, leaf, attributePrefix))</span>
-<span class="nc" id="L212">                .map(XmlUtils::getLeafValue);</span>
+            final Document document,
+            final String property,
+            final String propertySeparator,
+            final String attributePrefix) {
+<span class="nc" id="L205">        final Element root = document.getDocumentElement();</span>
+<span class="nc" id="L206">        final Pair&lt;List&lt;String&gt;, String&gt; split = splitProperty(property, propertySeparator);</span>
+<span class="nc" id="L207">        final List&lt;String&gt; parts = split.getLeft();</span>
+<span class="nc" id="L208">        final String leaf = split.getRight();</span>
+<span class="nc" id="L209">        return findElement(root, parts)</span>
+<span class="nc" id="L210">                .flatMap(n -&gt; findLeaf(n, leaf, attributePrefix))</span>
+<span class="nc" id="L211">                .map(XmlUtils::getLeafValue);</span>
         
     }
 
@@ -224,28 +223,28 @@ public final class XmlUtils {
      * @param value The value to set, or null to remove the leaf node.
      */
     static void setValue(
-            final @NotNull Document document,
-            final @NotNull String property,
-            final @NotNull String propertySeparator,
-            final @NotNull String attributePrefix,
-            final String value) {
-<span class="nc" id="L232">        final Element root = document.getDocumentElement();</span>
-<span class="nc" id="L233">        final Pair&lt;List&lt;String&gt;, String&gt; split = splitProperty(property, propertySeparator);</span>
-<span class="nc" id="L234">        final List&lt;String&gt; parts = split.getLeft();</span>
-<span class="nc" id="L235">        final String leaf = split.getRight();</span>
-<span class="nc bnc" id="L236" title="All 2 branches missed.">        if (value == null) {</span>
-<span class="nc" id="L237">            findElement(root, parts)</span>
-<span class="nc" id="L238">                    .flatMap(n -&gt; findLeaf(n, leaf, attributePrefix))</span>
-<span class="nc" id="L239">                    .ifPresent(XmlUtils::removeLeafValue);</span>
+            final Document document,
+            final String property,
+            final String propertySeparator,
+            final String attributePrefix,
+            final @Nullable String value) {
+<span class="nc" id="L231">        final Element root = document.getDocumentElement();</span>
+<span class="nc" id="L232">        final Pair&lt;List&lt;String&gt;, String&gt; split = splitProperty(property, propertySeparator);</span>
+<span class="nc" id="L233">        final List&lt;String&gt; parts = split.getLeft();</span>
+<span class="nc" id="L234">        final String leaf = split.getRight();</span>
+<span class="nc bnc" id="L235" title="All 2 branches missed.">        if (value == null) {</span>
+<span class="nc" id="L236">            findElement(root, parts)</span>
+<span class="nc" id="L237">                    .flatMap(n -&gt; findLeaf(n, leaf, attributePrefix))</span>
+<span class="nc" id="L238">                    .ifPresent(XmlUtils::removeLeafValue);</span>
         } else {
-<span class="nc" id="L241">            setLeafValue(</span>
-<span class="nc" id="L242">                    getLeaf(</span>
-<span class="nc" id="L243">                        getElement(root, parts),</span>
+<span class="nc" id="L240">            setLeafValue(</span>
+<span class="nc" id="L241">                    getLeaf(</span>
+<span class="nc" id="L242">                        getElement(root, parts),</span>
                         leaf,
                         attributePrefix),
                     value);
         }
-<span class="nc" id="L248">    }</span>
+<span class="nc" id="L247">    }</span>
 
     /**
      * Returns an Optional containing the element for the given parent and a
@@ -255,16 +254,16 @@ public final class XmlUtils {
      * @param parts The list of parts representing the path to the element.
      * @return An Optional containing the found element, or empty if not found.
      */
-    static @NotNull Optional&lt;Element&gt; findElement(
-            final @NotNull Element parent,
-            final @NotNull List&lt;String&gt; parts) {
-<span class="nc bnc" id="L261" title="All 2 branches missed.">        if (parts.isEmpty()) {</span>
-<span class="nc" id="L262">            return Optional.of(parent);</span>
+    static Optional&lt;Element&gt; findElement(
+            final Element parent,
+            final List&lt;String&gt; parts) {
+<span class="nc bnc" id="L260" title="All 2 branches missed.">        if (parts.isEmpty()) {</span>
+<span class="nc" id="L261">            return Optional.of(parent);</span>
         } else {
-<span class="nc" id="L264">            final String childName = parts.get(0);</span>
-<span class="nc" id="L265">            final List&lt;String&gt; remainingParts = parts.subList(1, parts.size());</span>
-<span class="nc" id="L266">            return getChild(parent, childName)</span>
-<span class="nc" id="L267">                    .flatMap(child -&gt; findElement(child, remainingParts));</span>
+<span class="nc" id="L263">            final String childName = parts.get(0);</span>
+<span class="nc" id="L264">            final List&lt;String&gt; remainingParts = parts.subList(1, parts.size());</span>
+<span class="nc" id="L265">            return getChild(parent, childName)</span>
+<span class="nc" id="L266">                    .flatMap(child -&gt; findElement(child, remainingParts));</span>
         }
     }
 
@@ -276,17 +275,17 @@ public final class XmlUtils {
      * @param parts The list of parts representing the path to the element.
      * @return The found or newly created element.
      */
-    static @NotNull Element getElement(
-            final @NotNull Element parent,
-            final @NotNull List&lt;String&gt; parts) {
-<span class="nc bnc" id="L282" title="All 2 branches missed.">        if (parts.isEmpty()) {</span>
-<span class="nc" id="L283">            return parent;</span>
+    static Element getElement(
+            final Element parent,
+            final List&lt;String&gt; parts) {
+<span class="nc bnc" id="L281" title="All 2 branches missed.">        if (parts.isEmpty()) {</span>
+<span class="nc" id="L282">            return parent;</span>
         } else {
-<span class="nc" id="L285">            final String childName = parts.get(0);</span>
-<span class="nc" id="L286">            final List&lt;String&gt; remainingParts = parts.subList(1, parts.size());</span>
-<span class="nc" id="L287">            return getElement(</span>
-<span class="nc" id="L288">                    getChild(parent, childName)</span>
-<span class="nc" id="L289">                        .orElseGet(() -&gt; createChild(parent, childName)),</span>
+<span class="nc" id="L284">            final String childName = parts.get(0);</span>
+<span class="nc" id="L285">            final List&lt;String&gt; remainingParts = parts.subList(1, parts.size());</span>
+<span class="nc" id="L286">            return getElement(</span>
+<span class="nc" id="L287">                    getChild(parent, childName)</span>
+<span class="nc" id="L288">                        .orElseGet(() -&gt; createChild(parent, childName)),</span>
                     remainingParts);
         }
     }
@@ -299,10 +298,10 @@ public final class XmlUtils {
      * @param name The local name of the new child element.
      * @return The newly created child element.
      */
-    static @NotNull Element createChild(
-            final @NotNull Element parent,
-            final @NotNull String name) {
-<span class="nc" id="L305">        return createChild(parent, parent.getNamespaceURI(), name);</span>
+    static Element createChild(
+            final Element parent,
+            final String name) {
+<span class="nc" id="L304">        return createChild(parent, parent.getNamespaceURI(), name);</span>
     }
 
     /**
@@ -314,18 +313,18 @@ public final class XmlUtils {
      * @param name The local name of the new child element.
      * @return The newly created child element.
      */
-    static @NotNull Element createChild(
-            final @NotNull Element parent,
-            final String namespace,
-            final @NotNull String name) {
+    static Element createChild(
+            final Element parent,
+            final @Nullable String namespace,
+            final String name) {
         final Element child;
-<span class="nc bnc" id="L322" title="All 2 branches missed.">        if (namespace == null) {</span>
-<span class="nc" id="L323">            child = parent.getOwnerDocument().createElement(name);</span>
+<span class="nc bnc" id="L321" title="All 2 branches missed.">        if (namespace == null) {</span>
+<span class="nc" id="L322">            child = parent.getOwnerDocument().createElement(name);</span>
         } else {
-<span class="nc" id="L325">            child = parent.getOwnerDocument().createElementNS(namespace, name);</span>
+<span class="nc" id="L324">            child = parent.getOwnerDocument().createElementNS(namespace, name);</span>
         }
-<span class="nc" id="L327">        parent.appendChild(child);</span>
-<span class="nc" id="L328">        return child;</span>
+<span class="nc" id="L326">        parent.appendChild(child);</span>
+<span class="nc" id="L327">        return child;</span>
     }
 
     /**
@@ -336,16 +335,16 @@ public final class XmlUtils {
      * @param name The local name of the child element to find.
      * @return An Optional containing the found child element, or empty if not found.
      */
-    static @NotNull Optional&lt;Element&gt; getChild(
-            final @NotNull Element parent,
-            final @NotNull String name) {
-<span class="nc" id="L342">        final NodeList children = parent.getChildNodes();</span>
-<span class="nc" id="L343">        return IntStream.range(0, children.getLength())</span>
-<span class="nc" id="L344">                .mapToObj(children::item)</span>
-<span class="nc" id="L345">                .filter(Element.class::isInstance)</span>
-<span class="nc" id="L346">                .map(Element.class::cast)</span>
-<span class="nc" id="L347">                .filter(elem -&gt; elem.getTagName().equals(name))</span>
-<span class="nc" id="L348">                .findFirst();</span>
+    static Optional&lt;Element&gt; getChild(
+            final Element parent,
+            final String name) {
+<span class="nc" id="L341">        final NodeList children = parent.getChildNodes();</span>
+<span class="nc" id="L342">        return IntStream.range(0, children.getLength())</span>
+<span class="nc" id="L343">                .mapToObj(children::item)</span>
+<span class="nc" id="L344">                .filter(Element.class::isInstance)</span>
+<span class="nc" id="L345">                .map(Element.class::cast)</span>
+<span class="nc" id="L346">                .filter(elem -&gt; elem.getTagName().equals(name))</span>
+<span class="nc" id="L347">                .findFirst();</span>
     }
 
     /**
@@ -358,15 +357,15 @@ public final class XmlUtils {
      * @return An Optional containing the leaf node if found, or empty if not found.
      */
     static Optional&lt;Node&gt; findLeaf(
-            final @NotNull Element parent,
-            final @NotNull String name,
-            final @NotNull String attributePrefix) {
-<span class="nc bnc" id="L364" title="All 2 branches missed.">        if (name.startsWith(attributePrefix)) {</span>
-<span class="nc" id="L365">            final String attrName = name.substring(attributePrefix.length());</span>
-<span class="nc" id="L366">            return Optional.ofNullable(parent.getAttributeNode(attrName));</span>
+            final Element parent,
+            final String name,
+            final String attributePrefix) {
+<span class="nc bnc" id="L363" title="All 2 branches missed.">        if (name.startsWith(attributePrefix)) {</span>
+<span class="nc" id="L364">            final String attrName = name.substring(attributePrefix.length());</span>
+<span class="nc" id="L365">            return Optional.ofNullable(parent.getAttributeNode(attrName));</span>
         } else {
-<span class="nc" id="L368">            return getChild(parent, name)</span>
-<span class="nc" id="L369">                    .map(Node.class::cast);</span>
+<span class="nc" id="L367">            return getChild(parent, name)</span>
+<span class="nc" id="L368">                    .map(Node.class::cast);</span>
         }
     }
 
@@ -380,20 +379,20 @@ public final class XmlUtils {
      * @return The leaf node, either an attribute or an element.
      */
     static Node getLeaf(
-            final @NotNull Element parent,
-            final @NotNull String name,
-            final @NotNull String attributePrefix) {
-<span class="nc bnc" id="L386" title="All 2 branches missed.">        if (name.startsWith(attributePrefix)) {</span>
-<span class="nc" id="L387">            final String attrName = name.substring(attributePrefix.length());</span>
-<span class="nc" id="L388">            Attr attr = parent.getAttributeNode(attrName);</span>
-<span class="nc bnc" id="L389" title="All 2 branches missed.">            if (attr == null) {</span>
-<span class="nc" id="L390">                attr = parent.getOwnerDocument().createAttributeNS(parent.getNamespaceURI(), attrName);</span>
-<span class="nc" id="L391">                parent.setAttributeNode(attr);</span>
+            final Element parent,
+            final String name,
+            final String attributePrefix) {
+<span class="nc bnc" id="L385" title="All 2 branches missed.">        if (name.startsWith(attributePrefix)) {</span>
+<span class="nc" id="L386">            final String attrName = name.substring(attributePrefix.length());</span>
+<span class="nc" id="L387">            Attr attr = parent.getAttributeNode(attrName);</span>
+<span class="nc bnc" id="L388" title="All 2 branches missed.">            if (attr == null) {</span>
+<span class="nc" id="L389">                attr = parent.getOwnerDocument().createAttributeNS(parent.getNamespaceURI(), attrName);</span>
+<span class="nc" id="L390">                parent.setAttributeNode(attr);</span>
             }
-<span class="nc" id="L393">            return attr;</span>
+<span class="nc" id="L392">            return attr;</span>
         } else {
-<span class="nc" id="L395">            return getChild(parent, name)</span>
-<span class="nc" id="L396">                    .orElseGet(() -&gt; createChild(parent, name));</span>
+<span class="nc" id="L394">            return getChild(parent, name)</span>
+<span class="nc" id="L395">                    .orElseGet(() -&gt; createChild(parent, name));</span>
         }
     }
 
@@ -405,13 +404,13 @@ public final class XmlUtils {
      * attribute or element with a text value.
      */
     static String getLeafValue(
-            final @NotNull Node leaf) {
-<span class="nc bnc" id="L409" title="All 2 branches missed.">        if (leaf instanceof Attr) {</span>
-<span class="nc" id="L410">            return ((Attr) leaf).getValue();</span>
-<span class="nc bnc" id="L411" title="All 2 branches missed.">        } else if (leaf instanceof Element) {</span>
-<span class="nc" id="L412">            return getValue((Element) leaf);</span>
+            final Node leaf) {
+<span class="nc bnc" id="L408" title="All 2 branches missed.">        if (leaf instanceof Attr) {</span>
+<span class="nc" id="L409">            return ((Attr) leaf).getValue();</span>
+<span class="nc bnc" id="L410" title="All 2 branches missed.">        } else if (leaf instanceof Element) {</span>
+<span class="nc" id="L411">            return getValue((Element) leaf);</span>
         } else {
-<span class="nc" id="L414">            return null;</span>
+<span class="nc" id="L413">            return null;</span>
         }
     }
 
@@ -422,14 +421,14 @@ public final class XmlUtils {
      * @param value The value to set.
      */
     static void setLeafValue(
-            final @NotNull Node leaf,
-            final @NotNull String value) {
-<span class="nc bnc" id="L427" title="All 2 branches missed.">        if (leaf instanceof Attr) {</span>
-<span class="nc" id="L428">            ((Attr) leaf).setValue(value);</span>
-<span class="nc bnc" id="L429" title="All 2 branches missed.">        } else if (leaf instanceof Element) {</span>
-<span class="nc" id="L430">            setValue((Element) leaf, value);</span>
+            final Node leaf,
+            final String value) {
+<span class="nc bnc" id="L426" title="All 2 branches missed.">        if (leaf instanceof Attr) {</span>
+<span class="nc" id="L427">            ((Attr) leaf).setValue(value);</span>
+<span class="nc bnc" id="L428" title="All 2 branches missed.">        } else if (leaf instanceof Element) {</span>
+<span class="nc" id="L429">            setValue((Element) leaf, value);</span>
         }
-<span class="nc" id="L432">    }</span>
+<span class="nc" id="L431">    }</span>
 
     /**
      * Removes the value from the given XML node.
@@ -437,13 +436,13 @@ public final class XmlUtils {
      * @param leaf The XML node from which to remove the value.
      */
     static void removeLeafValue(
-            final @NotNull Node leaf) {
-<span class="nc bnc" id="L441" title="All 2 branches missed.">        if (leaf instanceof Attr) {</span>
-<span class="nc" id="L442">            leaf.getParentNode().removeChild(leaf);</span>
-<span class="nc bnc" id="L443" title="All 2 branches missed.">        } else if (leaf instanceof Element) {</span>
-<span class="nc" id="L444">            removeValue((Element) leaf);</span>
+            final Node leaf) {
+<span class="nc bnc" id="L440" title="All 2 branches missed.">        if (leaf instanceof Attr) {</span>
+<span class="nc" id="L441">            leaf.getParentNode().removeChild(leaf);</span>
+<span class="nc bnc" id="L442" title="All 2 branches missed.">        } else if (leaf instanceof Element) {</span>
+<span class="nc" id="L443">            removeValue((Element) leaf);</span>
         }
-<span class="nc" id="L446">    }</span>
+<span class="nc" id="L445">    }</span>
 
     /**
      * Returns the text value of the given XML element.
@@ -451,19 +450,19 @@ public final class XmlUtils {
      * @param element The XML element to extract the value from.
      * @return The trimmed text value of the element, or {@code null} if no text is found.
      */
-    static String getValue(
-            final @NotNull Element element) {
-<span class="nc" id="L456">        final NodeList children = element.getChildNodes();</span>
-<span class="nc" id="L457">        final String value = IntStream.range(0, children.getLength())</span>
-<span class="nc" id="L458">                .mapToObj(children::item)</span>
-<span class="nc" id="L459">                .filter(Text.class::isInstance)</span>
-<span class="nc" id="L460">                .map(Node::getNodeValue)</span>
-<span class="nc" id="L461">                .filter(Objects::nonNull)</span>
-<span class="nc" id="L462">                .collect(Collectors.joining());</span>
-<span class="nc bnc" id="L463" title="All 2 branches missed.">        if (StringUtils.isAllBlank(value)) {</span>
-<span class="nc" id="L464">            return null;</span>
+    static @Nullable String getValue(
+            final Element element) {
+<span class="nc" id="L455">        final NodeList children = element.getChildNodes();</span>
+<span class="nc" id="L456">        final String value = IntStream.range(0, children.getLength())</span>
+<span class="nc" id="L457">                .mapToObj(children::item)</span>
+<span class="nc" id="L458">                .filter(Text.class::isInstance)</span>
+<span class="nc" id="L459">                .map(Node::getNodeValue)</span>
+<span class="nc" id="L460">                .filter(Objects::nonNull)</span>
+<span class="nc" id="L461">                .collect(Collectors.joining());</span>
+<span class="nc bnc" id="L462" title="All 2 branches missed.">        if (StringUtils.isAllBlank(value)) {</span>
+<span class="nc" id="L463">            return null;</span>
         } else {
-<span class="nc" id="L466">            return value.trim();</span>
+<span class="nc" id="L465">            return value.trim();</span>
         }
     }
 
@@ -474,12 +473,12 @@ public final class XmlUtils {
      * @param value The value to set.
      */
     static void setValue(
-            final @NotNull Element element,
-            final @NotNull String value) {
-<span class="nc" id="L479">        removeValue(element);</span>
-<span class="nc" id="L480">        final Text textNode = element.getOwnerDocument().createTextNode(value);</span>
-<span class="nc" id="L481">        element.appendChild(textNode);</span>
-<span class="nc" id="L482">    }</span>
+            final Element element,
+            final String value) {
+<span class="nc" id="L478">        removeValue(element);</span>
+<span class="nc" id="L479">        final Text textNode = element.getOwnerDocument().createTextNode(value);</span>
+<span class="nc" id="L480">        element.appendChild(textNode);</span>
+<span class="nc" id="L481">    }</span>
 
     /**
      * Removes all text nodes from the given XML element.
@@ -487,13 +486,13 @@ public final class XmlUtils {
      * @param element The XML element from which to remove text nodes.
      */
     static void removeValue(
-            final @NotNull Element element) {
-<span class="nc" id="L491">        final NodeList children = element.getChildNodes();</span>
-<span class="nc" id="L492">        IntStream.range(0, children.getLength())</span>
-<span class="nc" id="L493">                .mapToObj(children::item)</span>
-<span class="nc" id="L494">                .filter(Text.class::isInstance)</span>
-<span class="nc" id="L495">                .forEach(element::removeChild);</span>
-<span class="nc" id="L496">    }</span>
+            final Element element) {
+<span class="nc" id="L490">        final NodeList children = element.getChildNodes();</span>
+<span class="nc" id="L491">        IntStream.range(0, children.getLength())</span>
+<span class="nc" id="L492">                .mapToObj(children::item)</span>
+<span class="nc" id="L493">                .filter(Text.class::isInstance)</span>
+<span class="nc" id="L494">                .forEach(element::removeChild);</span>
+<span class="nc" id="L495">    }</span>
 
     /**
      * Splits a property string into its parent elements' names and
@@ -505,16 +504,16 @@ public final class XmlUtils {
      * leaf node name.
      * @throws IllegalArgumentException If the property is null or empty.
      */
-    static @NotNull Pair&lt;List&lt;String&gt;, String&gt; splitProperty(
-            final @NotBlank String property,
-            final @NotBlank String propertySeparator) {
-<span class="nc" id="L511">        final List&lt;String&gt; parts = Arrays.asList(</span>
-<span class="nc" id="L512">                StringUtils.splitByWholeSeparator(property, propertySeparator));</span>
-<span class="nc bnc" id="L513" title="All 2 branches missed.">        if (parts.isEmpty()) {</span>
-<span class="nc" id="L514">            throw new IllegalArgumentException(&quot;Property must not be null or empty&quot;);</span>
+    static Pair&lt;List&lt;String&gt;, String&gt; splitProperty(
+            final String property,
+            final String propertySeparator) {
+<span class="nc" id="L510">        final List&lt;String&gt; parts = Arrays.asList(</span>
+<span class="nc" id="L511">                StringUtils.splitByWholeSeparator(property, propertySeparator));</span>
+<span class="nc bnc" id="L512" title="All 2 branches missed.">        if (parts.isEmpty()) {</span>
+<span class="nc" id="L513">            throw new IllegalArgumentException(&quot;Property must not be null or empty&quot;);</span>
         }
-<span class="nc" id="L516">        final String leaf = parts.get(parts.size() - 1);</span>
-<span class="nc" id="L517">        return Pair.of(parts.subList(0, parts.size() - 1), leaf);</span>
+<span class="nc" id="L515">        final String leaf = parts.get(parts.size() - 1);</span>
+<span class="nc" id="L516">        return Pair.of(parts.subList(0, parts.size() - 1), leaf);</span>
     }
 
     /**
@@ -524,17 +523,17 @@ public final class XmlUtils {
      * @return The string representation of the XML document.
      * @throws ConfigException If an error occurs during the transformation.
      */
-    static @NotNull String getXml(
-            final @NotNull Document document) {
+    static String getXml(
+            final Document document) {
         try {
-<span class="nc" id="L530">            final Transformer transformer = TRANSFORMER_FACTORY.newTransformer();</span>
-<span class="nc" id="L531">            final DOMSource source = new DOMSource(document);</span>
-<span class="nc" id="L532">            final StringWriter writer = new StringWriter();</span>
-<span class="nc" id="L533">            transformer.transform(source, new StreamResult(writer));</span>
-<span class="nc" id="L534">            return writer.toString();</span>
-<span class="nc" id="L535">        } catch (final TransformerException e) {</span>
-<span class="nc" id="L536">            throw new ConfigException(&quot;Error converting XML document to string&quot;, e);</span>
+<span class="nc" id="L529">            final Transformer transformer = TRANSFORMER_FACTORY.newTransformer();</span>
+<span class="nc" id="L530">            final DOMSource source = new DOMSource(document);</span>
+<span class="nc" id="L531">            final StringWriter writer = new StringWriter();</span>
+<span class="nc" id="L532">            transformer.transform(source, new StreamResult(writer));</span>
+<span class="nc" id="L533">            return writer.toString();</span>
+<span class="nc" id="L534">        } catch (final TransformerException e) {</span>
+<span class="nc" id="L535">            throw new ConfigException(&quot;Error converting XML document to string&quot;, e);</span>
         }
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

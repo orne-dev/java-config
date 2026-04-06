@@ -28,8 +28,6 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import dev.orne.config.PropertiesConfigBuilder;
@@ -48,82 +46,82 @@ extends AbstractConfigBuilderImpl&lt;PropertiesConfigBuilder&gt;
 implements PropertiesConfigBuilder {
 
     /** The properties based configuration options. */
-    protected final @NotNull PropertiesConfigOptions propertyOptions;
+    protected final PropertiesConfigOptions propertyOptions;
 
     /**
      * Empty constructor.
      */
     public PropertiesConfigBuilderImpl() {
-<span class="nc" id="L57">        super();</span>
-<span class="nc" id="L58">        this.propertyOptions = new PropertiesConfigOptions();</span>
-<span class="nc" id="L59">    }</span>
+<span class="nc" id="L55">        super();</span>
+<span class="nc" id="L56">        this.propertyOptions = new PropertiesConfigOptions();</span>
+<span class="nc" id="L57">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PropertiesConfigBuilder add(
-            final @NotNull Properties values) {
-<span class="nc" id="L67">        this.propertyOptions.add(values);</span>
-<span class="nc" id="L68">        return thisBuilder();</span>
+    public PropertiesConfigBuilder add(
+            final Properties values) {
+<span class="nc" id="L65">        this.propertyOptions.add(values);</span>
+<span class="nc" id="L66">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PropertiesConfigBuilder add(
-            final @NotNull Map&lt;String, String&gt; values) {
-<span class="nc" id="L77">        this.propertyOptions.add(values);</span>
-<span class="nc" id="L78">        return thisBuilder();</span>
+    public PropertiesConfigBuilder add(
+            final Map&lt;String, String&gt; values) {
+<span class="nc" id="L75">        this.propertyOptions.add(values);</span>
+<span class="nc" id="L76">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PropertiesConfigBuilder load(
-            final @NotNull String path) {
-<span class="nc" id="L87">        this.propertyOptions.load(path);</span>
-<span class="nc" id="L88">        return thisBuilder();</span>
+    public PropertiesConfigBuilder load(
+            final String path) {
+<span class="nc" id="L85">        this.propertyOptions.load(path);</span>
+<span class="nc" id="L86">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PropertiesConfigBuilder load(
-            final @NotNull Path path) {
-<span class="nc" id="L97">        this.propertyOptions.load(path);</span>
-<span class="nc" id="L98">        return thisBuilder();</span>
+    public PropertiesConfigBuilder load(
+            final Path path) {
+<span class="nc" id="L95">        this.propertyOptions.load(path);</span>
+<span class="nc" id="L96">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PropertiesConfigBuilder load(
-            final @NotNull File file) {
-<span class="nc" id="L107">        this.propertyOptions.load(file);</span>
-<span class="nc" id="L108">        return thisBuilder();</span>
+    public PropertiesConfigBuilder load(
+            final File file) {
+<span class="nc" id="L105">        this.propertyOptions.load(file);</span>
+<span class="nc" id="L106">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PropertiesConfigBuilder load(
-            final @NotNull URL url) {
-<span class="nc" id="L117">        this.propertyOptions.load(url);</span>
-<span class="nc" id="L118">        return thisBuilder();</span>
+    public PropertiesConfigBuilder load(
+            final URL url) {
+<span class="nc" id="L115">        this.propertyOptions.load(url);</span>
+<span class="nc" id="L116">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PropertiesMutableConfigBuilderImpl mutable() {
-<span class="nc" id="L126">        return new PropertiesMutableConfigBuilderImpl(</span>
+    public PropertiesMutableConfigBuilderImpl mutable() {
+<span class="nc" id="L124">        return new PropertiesMutableConfigBuilderImpl(</span>
                 this.options,
                 new MutableConfigOptions(),
                 propertyOptions);
@@ -133,8 +131,8 @@ implements PropertiesConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PropertiesConfigImpl build() {
-<span class="nc" id="L137">        return new PropertiesConfigImpl(this.options, this.propertyOptions);</span>
+    public PropertiesConfigImpl build() {
+<span class="nc" id="L135">        return new PropertiesConfigImpl(this.options, this.propertyOptions);</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

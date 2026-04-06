@@ -22,10 +22,8 @@
  * #L%
  */
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.impl.ConfigSubset;
 
@@ -51,8 +49,8 @@ extends Config {
      * property value
      */
     void set(
-            @NotBlank String key,
-            String value);
+            String key,
+            @Nullable String value);
 
     /**
      * Sets the value of the configuration parameter.
@@ -63,10 +61,10 @@ extends Config {
      * property value
      */
     default void set(
-            @NotBlank String key,
-            Boolean value) {
-<span class="fc bfc" id="L68" title="All 2 branches covered.">        set(key, value == null ? null : String.valueOf(value));</span>
-<span class="fc" id="L69">    }</span>
+            String key,
+            @Nullable Boolean value) {
+<span class="fc bfc" id="L66" title="All 2 branches covered.">        set(key, value == null ? null : String.valueOf(value));</span>
+<span class="fc" id="L67">    }</span>
 
     /**
      * Sets the value of the configuration parameter.
@@ -77,10 +75,10 @@ extends Config {
      * property value
      */
     default void set(
-            @NotBlank String key,
-            Integer value) {
-<span class="fc bfc" id="L82" title="All 2 branches covered.">        set(key, value == null ? null : String.valueOf(value));</span>
-<span class="fc" id="L83">    }</span>
+            String key,
+            @Nullable Integer value) {
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        set(key, value == null ? null : String.valueOf(value));</span>
+<span class="fc" id="L81">    }</span>
 
     /**
      * Sets the value of the configuration parameter.
@@ -91,10 +89,10 @@ extends Config {
      * property value
      */
     default void set(
-            @NotBlank String key,
-            Long value) {
-<span class="fc bfc" id="L96" title="All 2 branches covered.">        set(key, value == null ? null : String.valueOf(value));</span>
-<span class="fc" id="L97">    }</span>
+            String key,
+            @Nullable Long value) {
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        set(key, value == null ? null : String.valueOf(value));</span>
+<span class="fc" id="L95">    }</span>
 
     /**
      * Removes the specified configuration properties.
@@ -104,7 +102,7 @@ extends Config {
      * properties.
      */
     void remove(
-            @NotBlank String... keys);
+            String... keys);
 
     /**
      * Creates a subset configuration containing only the properties
@@ -114,9 +112,9 @@ extends Config {
      * @return The subset configuration.
      */
     @Override
-    default @NotNull MutableConfig subset(
-            final @NotNull String prefix) {
-<span class="fc" id="L119">        return ConfigSubset.create(this, prefix);</span>
+    default MutableConfig subset(
+            final String prefix) {
+<span class="fc" id="L117">        return ConfigSubset.create(this, prefix);</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

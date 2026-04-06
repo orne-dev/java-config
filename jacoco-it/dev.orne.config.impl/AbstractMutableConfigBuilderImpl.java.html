@@ -22,9 +22,8 @@
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.MutableConfigBuilder;
 import dev.orne.config.ValueEncoder;
@@ -44,7 +43,7 @@ extends AbstractConfigBuilderImpl&lt;S&gt;
 implements MutableConfigBuilder&lt;S&gt; {
 
     /** The configuration options. */
-    protected final @NotNull MutableConfigOptions mutableOptions;
+    protected final MutableConfigOptions mutableOptions;
 
     /**
      * Copy constructor.
@@ -53,20 +52,20 @@ implements MutableConfigBuilder&lt;S&gt; {
      * @param mutableOptions The mutable configuration options to copy.
      */
     protected AbstractMutableConfigBuilderImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions) {
-<span class="nc" id="L58">        super(options);</span>
-<span class="nc" id="L59">        this.mutableOptions = new MutableConfigOptions(mutableOptions);</span>
-<span class="nc" id="L60">    }</span>
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions) {
+<span class="nc" id="L57">        super(options);</span>
+<span class="nc" id="L58">        this.mutableOptions = new MutableConfigOptions(mutableOptions);</span>
+<span class="nc" id="L59">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull S withEncoder(
-            final ValueEncoder encoder) {
-<span class="nc" id="L68">        this.mutableOptions.setEncoder(encoder);</span>
-<span class="nc" id="L69">        return thisBuilder();</span>
+    public S withEncoder(
+            final @Nullable ValueEncoder encoder) {
+<span class="nc" id="L67">        this.mutableOptions.setEncoder(encoder);</span>
+<span class="nc" id="L68">        return thisBuilder();</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

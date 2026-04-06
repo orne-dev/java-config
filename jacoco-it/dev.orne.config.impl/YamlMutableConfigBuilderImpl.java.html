@@ -27,9 +27,6 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.Map;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -50,7 +47,7 @@ extends AbstractMutableConfigBuilderImpl&lt;YamlMutableConfigBuilder&gt;
 implements YamlMutableConfigBuilder {
 
     /** The YAML based configuration options. */
-    protected final @NotNull YamlConfigOptions yamlOptions;
+    protected final YamlConfigOptions yamlOptions;
 
     /**
      * Copy constructor.
@@ -60,90 +57,90 @@ implements YamlMutableConfigBuilder {
      * @param yamlOptions The YAML based configuration options to copy.
      */
     protected YamlMutableConfigBuilderImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions,
-            final @NotNull YamlConfigOptions yamlOptions) {
-<span class="nc" id="L66">        super(options, mutableOptions);</span>
-<span class="nc" id="L67">        this.yamlOptions = new YamlConfigOptions(yamlOptions);</span>
-<span class="nc" id="L68">    }</span>
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final YamlConfigOptions yamlOptions) {
+<span class="nc" id="L63">        super(options, mutableOptions);</span>
+<span class="nc" id="L64">        this.yamlOptions = new YamlConfigOptions(yamlOptions);</span>
+<span class="nc" id="L65">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull YamlMutableConfigBuilder withSeparator(
-            final @NotEmpty String separator) {
-<span class="nc" id="L76">        this.yamlOptions.setPropertySeparator(separator);</span>
-<span class="nc" id="L77">        return thisBuilder();</span>
+    public YamlMutableConfigBuilder withSeparator(
+            final String separator) {
+<span class="nc" id="L73">        this.yamlOptions.setPropertySeparator(separator);</span>
+<span class="nc" id="L74">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull YamlMutableConfigBuilder add(
-            final @NotNull Map&lt;String, String&gt; values) {
-<span class="nc bnc" id="L86" title="All 2 branches missed.">        if (!values.isEmpty()) {</span>
-<span class="nc" id="L87">            final ObjectNode data = JacksonUtils.NODE_FACTORY.objectNode();</span>
-<span class="nc" id="L88">            values.forEach((key, value) -&gt; JacksonUtils.setNodeValue(</span>
+    public YamlMutableConfigBuilder add(
+            final Map&lt;String, String&gt; values) {
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (!values.isEmpty()) {</span>
+<span class="nc" id="L84">            final ObjectNode data = JacksonUtils.NODE_FACTORY.objectNode();</span>
+<span class="nc" id="L85">            values.forEach((key, value) -&gt; JacksonUtils.setNodeValue(</span>
                     data,
-<span class="nc" id="L90">                    this.yamlOptions.getPropertySeparator(),</span>
+<span class="nc" id="L87">                    this.yamlOptions.getPropertySeparator(),</span>
                     key,
                     value));
-<span class="nc" id="L93">            this.yamlOptions.add(data);</span>
+<span class="nc" id="L90">            this.yamlOptions.add(data);</span>
         }
-<span class="nc" id="L95">        return thisBuilder();</span>
+<span class="nc" id="L92">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull YamlMutableConfigBuilder load(
-            final @NotNull String path) {
-<span class="nc" id="L104">        this.yamlOptions.load(path);</span>
-<span class="nc" id="L105">        return thisBuilder();</span>
+    public YamlMutableConfigBuilder load(
+            final String path) {
+<span class="nc" id="L101">        this.yamlOptions.load(path);</span>
+<span class="nc" id="L102">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull YamlMutableConfigBuilder load(
-            final @NotNull Path path) {
-<span class="nc" id="L114">        this.yamlOptions.load(path);</span>
-<span class="nc" id="L115">        return thisBuilder();</span>
+    public YamlMutableConfigBuilder load(
+            final Path path) {
+<span class="nc" id="L111">        this.yamlOptions.load(path);</span>
+<span class="nc" id="L112">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull YamlMutableConfigBuilder load(
-            final @NotNull File file) {
-<span class="nc" id="L124">        this.yamlOptions.load(file);</span>
-<span class="nc" id="L125">        return thisBuilder();</span>
+    public YamlMutableConfigBuilder load(
+            final File file) {
+<span class="nc" id="L121">        this.yamlOptions.load(file);</span>
+<span class="nc" id="L122">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull YamlMutableConfigBuilder load(
-            final @NotNull URL url) {
-<span class="nc" id="L134">        this.yamlOptions.load(url);</span>
-<span class="nc" id="L135">        return thisBuilder();</span>
+    public YamlMutableConfigBuilder load(
+            final URL url) {
+<span class="nc" id="L131">        this.yamlOptions.load(url);</span>
+<span class="nc" id="L132">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull YamlMutableConfigImpl build() {
-<span class="nc" id="L143">        return new YamlMutableConfigImpl(</span>
+    public YamlMutableConfigImpl build() {
+<span class="nc" id="L140">        return new YamlMutableConfigImpl(</span>
                 this.options,
                 this.mutableOptions,
                 this.yamlOptions);
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

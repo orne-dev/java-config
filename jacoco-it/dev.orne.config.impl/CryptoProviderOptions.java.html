@@ -23,7 +23,6 @@
  */
 
 import javax.crypto.SecretKey;
-import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
 
@@ -56,8 +55,8 @@ public class CryptoProviderOptions {
      * Creates a new instance.
      */
     public CryptoProviderOptions() {
-<span class="nc" id="L59">        super();</span>
-<span class="nc" id="L60">    }</span>
+<span class="nc" id="L58">        super();</span>
+<span class="nc" id="L59">    }</span>
 
     /**
      * Copy constructor.
@@ -65,13 +64,13 @@ public class CryptoProviderOptions {
      * @param copy The instance to copy.
      */
     public CryptoProviderOptions(
-            final @NotNull CryptoProviderOptions copy) {
-<span class="nc" id="L69">        super();</span>
-<span class="nc" id="L70">        this.engine = copy.engine;</span>
-<span class="nc" id="L71">        this.destroyEngine = copy.destroyEngine;</span>
-<span class="nc" id="L72">        this.key = copy.key;</span>
-<span class="nc" id="L73">        this.pooled = copy.pooled;</span>
-<span class="nc" id="L74">    }</span>
+            final CryptoProviderOptions copy) {
+<span class="nc" id="L68">        super();</span>
+<span class="nc" id="L69">        this.engine = copy.engine;</span>
+<span class="nc" id="L70">        this.destroyEngine = copy.destroyEngine;</span>
+<span class="nc" id="L71">        this.key = copy.key;</span>
+<span class="nc" id="L72">        this.pooled = copy.pooled;</span>
+<span class="nc" id="L73">    }</span>
 
     /**
      * Returns the cryptography engine to use.
@@ -79,7 +78,7 @@ public class CryptoProviderOptions {
      * @return The cryptography engine to use.
      */
     public ConfigCryptoEngine getEngine() {
-<span class="nc" id="L82">        return this.engine;</span>
+<span class="nc" id="L81">        return this.engine;</span>
     }
 
     /**
@@ -87,7 +86,8 @@ public class CryptoProviderOptions {
      * 
      * @param engine The cryptography engine to use.
      */
-    public void setEngine(ConfigCryptoEngine engine) {
+    public void setEngine(
+            final ConfigCryptoEngine engine) {
 <span class="nc" id="L91">        this.engine = engine;</span>
 <span class="nc" id="L92">    }</span>
 
@@ -109,9 +109,10 @@ public class CryptoProviderOptions {
      * @param destroyEngine If the cryptography engine must be destroyed on
      * provider destruction.
      */
-    public void setDestroyEngine(boolean destroyEngine) {
-<span class="nc" id="L113">        this.destroyEngine = destroyEngine;</span>
-<span class="nc" id="L114">    }</span>
+    public void setDestroyEngine(
+            final boolean destroyEngine) {
+<span class="nc" id="L114">        this.destroyEngine = destroyEngine;</span>
+<span class="nc" id="L115">    }</span>
 
     /**
      * Returns the secret key to use.
@@ -119,7 +120,7 @@ public class CryptoProviderOptions {
      * @return The secret key to use.
      */
     public SecretKey getKey() {
-<span class="nc" id="L122">        return key;</span>
+<span class="nc" id="L123">        return key;</span>
     }
 
     /**
@@ -127,9 +128,10 @@ public class CryptoProviderOptions {
      * 
      * @param key The secret key to use.
      */
-    public void setKey(SecretKey key) {
-<span class="nc" id="L131">        this.key = key;</span>
-<span class="nc" id="L132">    }</span>
+    public void setKey(
+            final SecretKey key) {
+<span class="nc" id="L133">        this.key = key;</span>
+<span class="nc" id="L134">    }</span>
 
     /**
      * Returns {@code true} if multiple pooled {@code Cipher} instances should
@@ -138,7 +140,7 @@ public class CryptoProviderOptions {
      * @return If multiple pooled {@code Cipher} instances should be used.
      */
     public boolean isPooled() {
-<span class="nc" id="L141">        return pooled;</span>
+<span class="nc" id="L143">        return pooled;</span>
     }
 
     /**
@@ -147,8 +149,9 @@ public class CryptoProviderOptions {
      * @param pooled If multiple pooled {@code Cipher} instances should be
      * used.
      */
-    public void setPooled(boolean pooled) {
-<span class="nc" id="L151">        this.pooled = pooled;</span>
-<span class="nc" id="L152">    }</span>
+    public void setPooled(
+            final boolean pooled) {
+<span class="nc" id="L154">        this.pooled = pooled;</span>
+<span class="nc" id="L155">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -26,11 +26,9 @@ import java.util.Objects;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.configuration2.ImmutableConfiguration;
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Implementation of {@code Config} based on Apache Commons
@@ -43,10 +41,10 @@ import org.apiguardian.api.API;
  */
 @API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
 public class CommonsConfigImpl
-extends AbstractConfig {
+extends AbstractWatchableConfig {
 
     /** The delegated Apache Commons configuration. */
-    private final @NotNull ImmutableConfiguration config;
+    private final ImmutableConfiguration config;
 
     /**
      * Creates a new instance.
@@ -55,20 +53,34 @@ extends AbstractConfig {
      * @param commonsOptions The Apache Commons based configuration options.
      */
     public CommonsConfigImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull CommonsConfigOptions commonsOptions) {
-<span class="fc" id="L60">        super(options);</span>
-<span class="fc" id="L61">        Objects.requireNonNull(commonsOptions);</span>
-<span class="fc" id="L62">        this.config = Objects.requireNonNull(commonsOptions.getDelegated());</span>
-<span class="fc" id="L63">    }</span>
+            final ConfigOptions options,
+            final CommonsConfigOptions commonsOptions) {
+<span class="fc" id="L58">        this(options, new MutableConfigOptions(), commonsOptions);</span>
+<span class="fc" id="L59">    }</span>
+
+    /**
+     * Creates a new instance.
+     * 
+     * @param options The configuration builder options.
+     * @param mutableOptions The mutable configuration builder options.
+     * @param commonsOptions The Apache Commons based configuration options.
+     */
+    protected CommonsConfigImpl(
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final CommonsConfigOptions commonsOptions) {
+<span class="fc" id="L72">        super(options, mutableOptions);</span>
+<span class="fc" id="L73">        Objects.requireNonNull(commonsOptions);</span>
+<span class="fc" id="L74">        this.config = Objects.requireNonNull(commonsOptions.getDelegated());</span>
+<span class="fc" id="L75">    }</span>
 
     /**
      * Returns the delegated Apache Commons configuration.
      * 
      * @return The delegated Apache Commons configuration
      */
-    protected @NotNull ImmutableConfiguration getConfig() {
-<span class="nc" id="L71">        return this.config;</span>
+    protected ImmutableConfiguration getConfig() {
+<span class="fc" id="L83">        return this.config;</span>
     }
 
     /**
@@ -76,7 +88,7 @@ extends AbstractConfig {
      */
     @Override
     protected boolean isEmptyInt() {
-<span class="fc" id="L79">        return this.config.isEmpty();</span>
+<span class="fc" id="L91">        return this.config.isEmpty();</span>
     }
 
     /**
@@ -84,26 +96,26 @@ extends AbstractConfig {
      */
     @Override
     protected boolean containsInt(
-            final @NotBlank String key) {
-<span class="fc" id="L88">        return this.config.containsKey(key);</span>
+            final String key) {
+<span class="fc" id="L100">        return this.config.containsKey(key);</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected @NotNull Stream&lt;String&gt; getKeysInt() {
-<span class="fc" id="L96">        final Iterable&lt;String&gt; iterable = this.config::getKeys;</span>
-<span class="fc" id="L97">        return StreamSupport.stream(iterable.spliterator(), false);</span>
+    protected Stream&lt;String&gt; getKeysInt() {
+<span class="fc" id="L108">        final Iterable&lt;String&gt; iterable = this.config::getKeys;</span>
+<span class="fc" id="L109">        return StreamSupport.stream(iterable.spliterator(), false);</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected String getInt(
-            final @NotBlank String key) {
-<span class="fc" id="L106">        return this.config.getString(key);</span>
+    protected @Nullable String getInt(
+            final String key) {
+<span class="fc" id="L118">        return this.config.getString(key);</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

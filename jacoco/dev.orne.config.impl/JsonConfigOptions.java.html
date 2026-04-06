@@ -33,9 +33,6 @@ import java.nio.file.Path;
 import java.util.Enumeration;
 import java.util.Objects;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.lang3.Validate;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
@@ -59,8 +56,8 @@ import dev.orne.config.JsonConfigBaseBuilder;
 public class JsonConfigOptions {
 
     /** The class logger. */
-<span class="fc" id="L62">    private static final Logger LOG =</span>
-<span class="fc" id="L63">            LoggerFactory.getLogger(JsonConfigOptions.class);</span>
+<span class="fc" id="L59">    private static final Logger LOG =</span>
+<span class="fc" id="L60">            LoggerFactory.getLogger(JsonConfigOptions.class);</span>
 
     /** Error message for not found resources. */
     private static final String RESOURCE_NOT_FOUND_ERR =
@@ -73,22 +70,22 @@ public class JsonConfigOptions {
             &quot;Error mergin configuration JSON objects&quot;;
 
     /** The {@code ObjectMapper} instance used for JSON parsing. */
-<span class="fc" id="L76">    private @NotNull ObjectMapper mapper = new ObjectMapper();</span>
+<span class="fc" id="L73">    private ObjectMapper mapper = new ObjectMapper();</span>
     /** The JSON object with the configuration properties. */
-    private final @NotNull ObjectNode jsonObject;
+    private final ObjectNode jsonObject;
     /** The configuration nested properties separator. */
-    private @NotEmpty String propertySeparator;
+    private String propertySeparator;
 
     /**
      * Empty constructor.
      */
     public JsonConfigOptions() {
-<span class="fc" id="L86">        super();</span>
-<span class="fc" id="L87">        this.mapper = new ObjectMapper();</span>
-<span class="fc" id="L88">        this.mapper.setDefaultMergeable(true);</span>
-<span class="fc" id="L89">        this.jsonObject = JacksonUtils.NODE_FACTORY.objectNode();</span>
-<span class="fc" id="L90">        this.propertySeparator = JsonConfigBaseBuilder.DEFAULT_SEPARATOR;</span>
-<span class="fc" id="L91">    }</span>
+<span class="fc" id="L83">        super();</span>
+<span class="fc" id="L84">        this.mapper = new ObjectMapper();</span>
+<span class="fc" id="L85">        this.mapper.setDefaultMergeable(true);</span>
+<span class="fc" id="L86">        this.jsonObject = JacksonUtils.NODE_FACTORY.objectNode();</span>
+<span class="fc" id="L87">        this.propertySeparator = JsonConfigBaseBuilder.DEFAULT_SEPARATOR;</span>
+<span class="fc" id="L88">    }</span>
 
     /**
      * Copy constructor.
@@ -96,20 +93,20 @@ public class JsonConfigOptions {
      * @param copy The instance to copy.
      */
     public JsonConfigOptions(
-            final @NotNull JsonConfigOptions copy) {
-<span class="fc" id="L100">        super();</span>
-<span class="fc" id="L101">        this.mapper = copy.mapper;</span>
-<span class="fc" id="L102">        this.jsonObject = copy.jsonObject.deepCopy();</span>
-<span class="fc" id="L103">        this.propertySeparator = copy.propertySeparator;</span>
-<span class="fc" id="L104">    }</span>
+            final JsonConfigOptions copy) {
+<span class="fc" id="L97">        super();</span>
+<span class="fc" id="L98">        this.mapper = copy.mapper;</span>
+<span class="fc" id="L99">        this.jsonObject = copy.jsonObject.deepCopy();</span>
+<span class="fc" id="L100">        this.propertySeparator = copy.propertySeparator;</span>
+<span class="fc" id="L101">    }</span>
 
     /**
      * Returns the {@code ObjectMapper} instance used for JSON parsing.
      * 
      * @return The {@code ObjectMapper} instance used for JSON parsing.
      */
-    public @NotNull ObjectMapper getMapper() {
-<span class="nc" id="L112">        return this.mapper;</span>
+    public ObjectMapper getMapper() {
+<span class="nc" id="L109">        return this.mapper;</span>
     }
 
     /**
@@ -118,17 +115,17 @@ public class JsonConfigOptions {
      * @param mapper The {@code ObjectMapper} instance used for JSON parsing.
      */
     public void setMapper(
-            final @NotNull ObjectMapper mapper) {
-<span class="fc" id="L122">        this.mapper = Objects.requireNonNull(mapper);</span>
-<span class="fc" id="L123">    }</span>
+            final ObjectMapper mapper) {
+<span class="fc" id="L119">        this.mapper = Objects.requireNonNull(mapper);</span>
+<span class="fc" id="L120">    }</span>
 
     /**
      * Returns the JSON object with the configuration properties.
      * 
      * @return The JSON object with the configuration properties.
      */
-    public @NotNull ObjectNode getJsonObject() {
-<span class="fc" id="L131">        return this.jsonObject;</span>
+    public ObjectNode getJsonObject() {
+<span class="fc" id="L128">        return this.jsonObject;</span>
     }
 
     /**
@@ -136,8 +133,8 @@ public class JsonConfigOptions {
      * 
      * @return The configuration nested properties separator.
      */
-    public @NotEmpty String getPropertySeparator() {
-<span class="fc" id="L140">        return this.propertySeparator;</span>
+    public String getPropertySeparator() {
+<span class="fc" id="L137">        return this.propertySeparator;</span>
     }
 
     /**
@@ -146,10 +143,10 @@ public class JsonConfigOptions {
      * @param separator The configuration nested properties separator.
      */
     public void setPropertySeparator(
-            final @NotEmpty String separator) {
-<span class="fc" id="L150">        Validate.notBlank(separator, &quot;Property separator cannot be blank&quot;);</span>
-<span class="fc" id="L151">        this.propertySeparator = separator;</span>
-<span class="fc" id="L152">    }</span>
+            final String separator) {
+<span class="fc" id="L147">        Validate.notBlank(separator, &quot;Property separator cannot be blank&quot;);</span>
+<span class="fc" id="L148">        this.propertySeparator = separator;</span>
+<span class="fc" id="L149">    }</span>
 
     /**
      * Adds the specified configuration properties to the configuration
@@ -158,13 +155,13 @@ public class JsonConfigOptions {
      * @param values The configuration properties.
      */
     public void add(
-            final @NotNull ObjectNode values) {
+            final ObjectNode values) {
         try {
-<span class="fc" id="L163">            this.mapper.updateValue(this.jsonObject, values);</span>
-<span class="nc" id="L164">        } catch (final IOException e) {</span>
-<span class="nc" id="L165">            LOG.warn(MERGE_ERR, e);</span>
-<span class="fc" id="L166">        }</span>
-<span class="fc" id="L167">    }</span>
+<span class="fc" id="L160">            this.mapper.updateValue(this.jsonObject, values);</span>
+<span class="nc" id="L161">        } catch (final IOException e) {</span>
+<span class="nc" id="L162">            LOG.warn(MERGE_ERR, e);</span>
+<span class="fc" id="L163">        }</span>
+<span class="fc" id="L164">    }</span>
 
     /**
      * Loads the configuration properties from the specified ClassLoader
@@ -173,22 +170,22 @@ public class JsonConfigOptions {
      * @param path The ClassLoader resource path.
      */
     public void load(
-            final @NotNull String path) {
+            final String path) {
         try {
             final Enumeration&lt;URL&gt; resources =
-<span class="fc" id="L179">                    Thread.currentThread()</span>
-<span class="fc" id="L180">                            .getContextClassLoader()</span>
-<span class="fc" id="L181">                            .getResources(path);</span>
-<span class="fc bfc" id="L182" title="All 2 branches covered.">            if (!resources.hasMoreElements()) {</span>
-<span class="fc" id="L183">                LOG.warn(RESOURCE_NOT_FOUND_ERR, path);</span>
+<span class="fc" id="L176">                    Thread.currentThread()</span>
+<span class="fc" id="L177">                            .getContextClassLoader()</span>
+<span class="fc" id="L178">                            .getResources(path);</span>
+<span class="fc bfc" id="L179" title="All 2 branches covered.">            if (!resources.hasMoreElements()) {</span>
+<span class="fc" id="L180">                LOG.warn(RESOURCE_NOT_FOUND_ERR, path);</span>
             }
-<span class="fc bfc" id="L185" title="All 2 branches covered.">            while (resources.hasMoreElements()) {</span>
-<span class="fc" id="L186">                load(resources.nextElement());</span>
+<span class="fc bfc" id="L182" title="All 2 branches covered.">            while (resources.hasMoreElements()) {</span>
+<span class="fc" id="L183">                load(resources.nextElement());</span>
             }
-<span class="nc" id="L188">        } catch (final IOException e) {</span>
-<span class="nc" id="L189">            LOG.warn(READ_ERR, path, e);</span>
-<span class="fc" id="L190">        }</span>
-<span class="fc" id="L191">    }</span>
+<span class="nc" id="L185">        } catch (final IOException e) {</span>
+<span class="nc" id="L186">            LOG.warn(READ_ERR, path, e);</span>
+<span class="fc" id="L187">        }</span>
+<span class="fc" id="L188">    }</span>
 
     /**
      * Loads the configuration properties from the file in the specified
@@ -197,17 +194,17 @@ public class JsonConfigOptions {
      * @param path The file path.
      */
     public void load(
-            final @NotNull Path path) {
-<span class="fc bfc" id="L201" title="All 2 branches covered.">        if (!Files.exists(path)) {</span>
-<span class="fc" id="L202">            LOG.warn(RESOURCE_NOT_FOUND_ERR, path);</span>
+            final Path path) {
+<span class="fc bfc" id="L198" title="All 2 branches covered.">        if (!Files.exists(path)) {</span>
+<span class="fc" id="L199">            LOG.warn(RESOURCE_NOT_FOUND_ERR, path);</span>
         }
-<span class="fc" id="L204">        try (final InputStream fileIS = Files.newInputStream(path)) {</span>
-<span class="fc" id="L205">            final ObjectReader updater = this.mapper.readerForUpdating(this.jsonObject);</span>
-<span class="fc" id="L206">            updater.readTree(fileIS);</span>
-<span class="fc" id="L207">        } catch (final IOException e) {</span>
-<span class="fc" id="L208">            LOG.warn(READ_ERR, path, e);</span>
-<span class="fc" id="L209">        }</span>
-<span class="fc" id="L210">    }</span>
+<span class="fc" id="L201">        try (final InputStream fileIS = Files.newInputStream(path)) {</span>
+<span class="fc" id="L202">            final ObjectReader updater = this.mapper.readerForUpdating(this.jsonObject);</span>
+<span class="fc" id="L203">            updater.readTree(fileIS);</span>
+<span class="fc" id="L204">        } catch (final IOException e) {</span>
+<span class="fc" id="L205">            LOG.warn(READ_ERR, path, e);</span>
+<span class="fc" id="L206">        }</span>
+<span class="fc" id="L207">    }</span>
 
     /**
      * Loads the configuration properties from the specified file.
@@ -215,16 +212,16 @@ public class JsonConfigOptions {
      * @param file The file to load.
      */
     public void load(
-            final @NotNull File file) {
-<span class="fc" id="L219">        try (final InputStream fileIS = new FileInputStream(file)) {</span>
-<span class="fc" id="L220">            final ObjectReader updater = this.mapper.readerForUpdating(this.jsonObject);</span>
-<span class="fc" id="L221">            updater.readTree(fileIS);</span>
-<span class="fc" id="L222">        } catch (final FileNotFoundException e) {</span>
-<span class="fc" id="L223">            LOG.warn(RESOURCE_NOT_FOUND_ERR, file, e);</span>
-<span class="nc" id="L224">        } catch (final IOException e) {</span>
-<span class="nc" id="L225">            LOG.warn(READ_ERR, file, e);</span>
-<span class="fc" id="L226">        }</span>
-<span class="fc" id="L227">    }</span>
+            final File file) {
+<span class="fc" id="L216">        try (final InputStream fileIS = new FileInputStream(file)) {</span>
+<span class="fc" id="L217">            final ObjectReader updater = this.mapper.readerForUpdating(this.jsonObject);</span>
+<span class="fc" id="L218">            updater.readTree(fileIS);</span>
+<span class="fc" id="L219">        } catch (final FileNotFoundException e) {</span>
+<span class="fc" id="L220">            LOG.warn(RESOURCE_NOT_FOUND_ERR, file, e);</span>
+<span class="nc" id="L221">        } catch (final IOException e) {</span>
+<span class="nc" id="L222">            LOG.warn(READ_ERR, file, e);</span>
+<span class="fc" id="L223">        }</span>
+<span class="fc" id="L224">    }</span>
 
     /**
      * Loads the configuration properties from the specified URL.
@@ -232,13 +229,13 @@ public class JsonConfigOptions {
      * @param url The URL to load.
      */
     public void load(
-            final @NotNull URL url) {
-<span class="fc" id="L236">        try (final InputStream urlIS = url.openStream()) {</span>
-<span class="fc" id="L237">            final ObjectReader updater = this.mapper.readerForUpdating(this.jsonObject);</span>
-<span class="fc" id="L238">            updater.readTree(urlIS);</span>
-<span class="fc" id="L239">        } catch (final IOException e) {</span>
-<span class="fc" id="L240">            LOG.warn(READ_ERR, url, e);</span>
-<span class="fc" id="L241">        }</span>
-<span class="fc" id="L242">    }</span>
+            final URL url) {
+<span class="fc" id="L233">        try (final InputStream urlIS = url.openStream()) {</span>
+<span class="fc" id="L234">            final ObjectReader updater = this.mapper.readerForUpdating(this.jsonObject);</span>
+<span class="fc" id="L235">            updater.readTree(urlIS);</span>
+<span class="fc" id="L236">        } catch (final IOException e) {</span>
+<span class="fc" id="L237">            LOG.warn(READ_ERR, url, e);</span>
+<span class="fc" id="L238">        }</span>
+<span class="fc" id="L239">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

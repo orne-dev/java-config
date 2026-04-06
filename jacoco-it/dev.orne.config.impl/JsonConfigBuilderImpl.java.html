@@ -27,9 +27,6 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.Map;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -51,90 +48,90 @@ extends AbstractConfigBuilderImpl&lt;JsonConfigBuilder&gt;
 implements JsonConfigBuilder {
 
     /** The JSON based configuration options. */
-    protected final @NotNull JsonConfigOptions jsonOptions;
+    protected final JsonConfigOptions jsonOptions;
 
     /**
      * Empty constructor.
      */
     public JsonConfigBuilderImpl() {
-<span class="nc" id="L60">        super();</span>
-<span class="nc" id="L61">        this.jsonOptions = new JsonConfigOptions();</span>
-<span class="nc" id="L62">    }</span>
+<span class="nc" id="L57">        super();</span>
+<span class="nc" id="L58">        this.jsonOptions = new JsonConfigOptions();</span>
+<span class="nc" id="L59">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonConfigBuilder withSeparator(
-            final @NotEmpty String separator) {
-<span class="nc" id="L70">        this.jsonOptions.setPropertySeparator(separator);</span>
-<span class="nc" id="L71">        return thisBuilder();</span>
+    public JsonConfigBuilder withSeparator(
+            final String separator) {
+<span class="nc" id="L67">        this.jsonOptions.setPropertySeparator(separator);</span>
+<span class="nc" id="L68">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonConfigBuilder add(
-            final @NotNull Map&lt;String, String&gt; values) {
-<span class="nc bnc" id="L80" title="All 2 branches missed.">        if (!values.isEmpty()) {</span>
-<span class="nc" id="L81">            final ObjectNode data = JacksonUtils.NODE_FACTORY.objectNode();</span>
-<span class="nc" id="L82">            values.forEach((key, value) -&gt; JacksonUtils.setNodeValue(</span>
+    public JsonConfigBuilder add(
+            final Map&lt;String, String&gt; values) {
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        if (!values.isEmpty()) {</span>
+<span class="nc" id="L78">            final ObjectNode data = JacksonUtils.NODE_FACTORY.objectNode();</span>
+<span class="nc" id="L79">            values.forEach((key, value) -&gt; JacksonUtils.setNodeValue(</span>
                     data,
-<span class="nc" id="L84">                    this.jsonOptions.getPropertySeparator(),</span>
+<span class="nc" id="L81">                    this.jsonOptions.getPropertySeparator(),</span>
                     key,
                     value));
-<span class="nc" id="L87">            this.jsonOptions.add(data);</span>
+<span class="nc" id="L84">            this.jsonOptions.add(data);</span>
         }
-<span class="nc" id="L89">        return thisBuilder();</span>
+<span class="nc" id="L86">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonConfigBuilder load(
-            final @NotNull String path) {
-<span class="nc" id="L98">        this.jsonOptions.load(path);</span>
-<span class="nc" id="L99">        return thisBuilder();</span>
+    public JsonConfigBuilder load(
+            final String path) {
+<span class="nc" id="L95">        this.jsonOptions.load(path);</span>
+<span class="nc" id="L96">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonConfigBuilder load(
-            final @NotNull Path path) {
-<span class="nc" id="L108">        this.jsonOptions.load(path);</span>
-<span class="nc" id="L109">        return thisBuilder();</span>
+    public JsonConfigBuilder load(
+            final Path path) {
+<span class="nc" id="L105">        this.jsonOptions.load(path);</span>
+<span class="nc" id="L106">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonConfigBuilder load(
-            final @NotNull File file) {
-<span class="nc" id="L118">        this.jsonOptions.load(file);</span>
-<span class="nc" id="L119">        return thisBuilder();</span>
+    public JsonConfigBuilder load(
+            final File file) {
+<span class="nc" id="L115">        this.jsonOptions.load(file);</span>
+<span class="nc" id="L116">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonConfigBuilder load(
-            final @NotNull URL url) {
-<span class="nc" id="L128">        this.jsonOptions.load(url);</span>
-<span class="nc" id="L129">        return thisBuilder();</span>
+    public JsonConfigBuilder load(
+            final URL url) {
+<span class="nc" id="L125">        this.jsonOptions.load(url);</span>
+<span class="nc" id="L126">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonMutableConfigBuilderImpl mutable() {
-<span class="nc" id="L137">        return new JsonMutableConfigBuilderImpl(</span>
+    public JsonMutableConfigBuilderImpl mutable() {
+<span class="nc" id="L134">        return new JsonMutableConfigBuilderImpl(</span>
                 this.options,
                 new MutableConfigOptions(),
                 jsonOptions);
@@ -144,8 +141,8 @@ implements JsonConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull JsonConfigImpl build() {
-<span class="nc" id="L148">        return new JsonConfigImpl(this.options, this.jsonOptions);</span>
+    public JsonConfigImpl build() {
+<span class="nc" id="L145">        return new JsonConfigImpl(this.options, this.jsonOptions);</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

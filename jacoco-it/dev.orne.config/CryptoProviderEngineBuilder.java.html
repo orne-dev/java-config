@@ -22,8 +22,6 @@
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 /**
@@ -45,9 +43,9 @@ public interface CryptoProviderEngineBuilder {
      * @param engine The cryptography transformations engine to use.
      * @return Next builder, for method chaining.
      */
-    default @NotNull CryptoProviderKeyBuilder withEngine(
-            @NotNull ConfigCryptoEngine engine) {
-<span class="nc" id="L50">        return withEngine(engine, false);</span>
+    default CryptoProviderKeyBuilder withEngine(
+            ConfigCryptoEngine engine) {
+<span class="nc" id="L48">        return withEngine(engine, false);</span>
     }
 
     /**
@@ -58,8 +56,8 @@ public interface CryptoProviderEngineBuilder {
      * provider destruction.
      * @return Next builder, for method chaining.
      */
-    @NotNull CryptoProviderKeyBuilder withEngine(
-            @NotNull ConfigCryptoEngine engine,
+    CryptoProviderKeyBuilder withEngine(
+            ConfigCryptoEngine engine,
             boolean destroyEngine);
 
     /**
@@ -70,9 +68,9 @@ public interface CryptoProviderEngineBuilder {
      * @param salt The salt to apply to password based secret keys.
      * @return Next builder, for method chaining.
      */
-    default @NotNull CryptoProviderKeyBuilder withAesGcmEngine(
-            @NotNull byte[] salt) {
-<span class="nc" id="L75">        return withAesGcmEngine(salt, true);</span>
+    default CryptoProviderKeyBuilder withAesGcmEngine(
+            byte[] salt) {
+<span class="nc" id="L73">        return withAesGcmEngine(salt, true);</span>
     }
 
     /**
@@ -85,8 +83,8 @@ public interface CryptoProviderEngineBuilder {
      * provider destruction.
      * @return Next builder, for method chaining.
      */
-    @NotNull CryptoProviderKeyBuilder withAesGcmEngine(
-            @NotNull byte[] salt,
+    CryptoProviderKeyBuilder withAesGcmEngine(
+            byte[] salt,
             boolean destroyEngine);
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

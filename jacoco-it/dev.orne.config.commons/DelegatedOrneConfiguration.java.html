@@ -25,11 +25,10 @@
 import java.util.Iterator;
 import java.util.Objects;
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.ImmutableConfiguration;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigException;
@@ -53,7 +52,7 @@ implements ImmutableConfiguration {
             &quot;The underlaying configuration is inmutable.&quot;;
 
     /** The delegated Orne configuration. */
-    private final @NotNull Config config;
+    private final Config config;
 
     /**
      * Creates a new instance.
@@ -61,18 +60,18 @@ implements ImmutableConfiguration {
      * @param config The delegated Orne configuration
      */
     public DelegatedOrneConfiguration(
-            final @NotNull Config config) {
-<span class="nc" id="L65">        super();</span>
-<span class="nc" id="L66">        this.config = Objects.requireNonNull(config);</span>
-<span class="nc" id="L67">    }</span>
+            final Config config) {
+<span class="nc" id="L64">        super();</span>
+<span class="nc" id="L65">        this.config = Objects.requireNonNull(config);</span>
+<span class="nc" id="L66">    }</span>
 
     /**
      * Returns the delegated Orne configuration.
      * 
      * @return The delegated Orne configuration
      */
-    protected @NotNull Config getConfig() {
-<span class="nc" id="L75">        return this.config;</span>
+    protected Config getConfig() {
+<span class="nc" id="L74">        return this.config;</span>
     }
 
     /**
@@ -81,9 +80,9 @@ implements ImmutableConfiguration {
     @Override
     protected boolean isEmptyInternal() {
         try {
-<span class="nc" id="L84">            return this.config.isEmpty();</span>
-<span class="nc" id="L85">        } catch (final ConfigException ce) {</span>
-<span class="nc" id="L86">            throw new ConfigurationRuntimeException(ce);</span>
+<span class="nc" id="L83">            return this.config.isEmpty();</span>
+<span class="nc" id="L84">        } catch (final ConfigException ce) {</span>
+<span class="nc" id="L85">            throw new ConfigurationRuntimeException(ce);</span>
         }
     }
 
@@ -94,9 +93,9 @@ implements ImmutableConfiguration {
     protected boolean containsKeyInternal(
             final String key) {
         try {
-<span class="nc" id="L97">            return this.config.contains(key);</span>
-<span class="nc" id="L98">        } catch (final ConfigException ce) {</span>
-<span class="nc" id="L99">            throw new ConfigurationRuntimeException(ce);</span>
+<span class="nc" id="L96">            return this.config.contains(key);</span>
+<span class="nc" id="L97">        } catch (final ConfigException ce) {</span>
+<span class="nc" id="L98">            throw new ConfigurationRuntimeException(ce);</span>
         }
     }
 
@@ -105,9 +104,9 @@ implements ImmutableConfiguration {
      */
     @Override
     protected boolean containsValueInternal(
-            final Object value) {
-<span class="nc" id="L109">        return this.config.getKeys()</span>
-<span class="nc" id="L110">                .anyMatch(key -&gt; Objects.equals(value, getProperty(key)));</span>
+            final @Nullable Object value) {
+<span class="nc" id="L108">        return this.config.getKeys()</span>
+<span class="nc" id="L109">                .anyMatch(key -&gt; Objects.equals(value, getProperty(key)));</span>
     }
 
     /**
@@ -116,9 +115,9 @@ implements ImmutableConfiguration {
     @Override
     protected Iterator&lt;String&gt; getKeysInternal() {
         try {
-<span class="nc" id="L119">            return this.config.getKeys().iterator();</span>
-<span class="nc" id="L120">        } catch (final ConfigException ce) {</span>
-<span class="nc" id="L121">            throw new ConfigurationRuntimeException(ce);</span>
+<span class="nc" id="L118">            return this.config.getKeys().iterator();</span>
+<span class="nc" id="L119">        } catch (final ConfigException ce) {</span>
+<span class="nc" id="L120">            throw new ConfigurationRuntimeException(ce);</span>
         }
     }
 
@@ -129,9 +128,9 @@ implements ImmutableConfiguration {
     protected Object getPropertyInternal(
             final String key) {
         try {
-<span class="nc" id="L132">            return this.config.get(key);</span>
-<span class="nc" id="L133">        } catch (final ConfigException ce) {</span>
-<span class="nc" id="L134">            throw new ConfigurationRuntimeException(ce);</span>
+<span class="nc" id="L131">            return this.config.get(key);</span>
+<span class="nc" id="L132">        } catch (final ConfigException ce) {</span>
+<span class="nc" id="L133">            throw new ConfigurationRuntimeException(ce);</span>
         }
     }
 
@@ -141,8 +140,8 @@ implements ImmutableConfiguration {
     @Override
     protected void addPropertyDirect(
             final String key,
-            final Object value) {
-<span class="nc" id="L145">        throw new UnsupportedOperationException(WRITE_OP_EX_MSG);</span>
+            final @Nullable Object value) {
+<span class="nc" id="L144">        throw new UnsupportedOperationException(WRITE_OP_EX_MSG);</span>
     }
 
     /**
@@ -151,7 +150,7 @@ implements ImmutableConfiguration {
     @Override
     protected void clearPropertyDirect(
             final String key) {
-<span class="nc" id="L154">        throw new UnsupportedOperationException(WRITE_OP_EX_MSG);</span>
+<span class="nc" id="L153">        throw new UnsupportedOperationException(WRITE_OP_EX_MSG);</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

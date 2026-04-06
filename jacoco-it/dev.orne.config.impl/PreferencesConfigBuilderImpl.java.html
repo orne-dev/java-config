@@ -24,8 +24,6 @@
 
 import java.util.prefs.Preferences;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import dev.orne.config.PreferencesConfigBuilder;
@@ -47,112 +45,112 @@ implements PreferencesConfigInitialBuilder,
         PreferencesConfigBuilder {
 
     /** The preferences based configuration options. */
-    protected final @NotNull PreferencesConfigOptions preferencesOptions;
+    protected final PreferencesConfigOptions preferencesOptions;
 
     /**
      * Creates a new instance.
      */
     public PreferencesConfigBuilderImpl() {
-<span class="nc" id="L56">        super();</span>
-<span class="nc" id="L57">        this.preferencesOptions = new PreferencesConfigOptions();</span>
-<span class="nc" id="L58">    }</span>
+<span class="nc" id="L54">        super();</span>
+<span class="nc" id="L55">        this.preferencesOptions = new PreferencesConfigOptions();</span>
+<span class="nc" id="L56">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PreferencesConfigBuilder ofUserRoot() {
-<span class="nc" id="L65">        this.preferencesOptions.setUserPreferences();</span>
-<span class="nc" id="L66">        return thisBuilder();</span>
+    public PreferencesConfigBuilder ofUserRoot() {
+<span class="nc" id="L63">        this.preferencesOptions.setUserPreferences();</span>
+<span class="nc" id="L64">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PreferencesConfigBuilder ofUser(
-            final @NotNull String path) {
-<span class="nc" id="L75">        this.preferencesOptions.setUserPreferences(path);</span>
-<span class="nc" id="L76">        return thisBuilder();</span>
+    public PreferencesConfigBuilder ofUser(
+            final String path) {
+<span class="nc" id="L73">        this.preferencesOptions.setUserPreferences(path);</span>
+<span class="nc" id="L74">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PreferencesConfigBuilder ofUser(
-            final @NotNull Class&lt;?&gt; clazz) {
-<span class="nc" id="L85">        this.preferencesOptions.setUserPreferences(clazz);</span>
-<span class="nc" id="L86">        return thisBuilder();</span>
+    public PreferencesConfigBuilder ofUser(
+            final Class&lt;?&gt; clazz) {
+<span class="nc" id="L83">        this.preferencesOptions.setUserPreferences(clazz);</span>
+<span class="nc" id="L84">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PreferencesConfigBuilder ofUser(
-            final @NotNull Class&lt;?&gt; clazz,
-            final @NotNull String path) {
-<span class="nc" id="L96">        this.preferencesOptions.setUserPreferences(clazz, path);</span>
-<span class="nc" id="L97">        return thisBuilder();</span>
+    public PreferencesConfigBuilder ofUser(
+            final Class&lt;?&gt; clazz,
+            final String path) {
+<span class="nc" id="L94">        this.preferencesOptions.setUserPreferences(clazz, path);</span>
+<span class="nc" id="L95">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PreferencesConfigBuilder ofSystemRoot() {
-<span class="nc" id="L105">        this.preferencesOptions.setSystemPreferences();</span>
-<span class="nc" id="L106">        return thisBuilder();</span>
+    public PreferencesConfigBuilder ofSystemRoot() {
+<span class="nc" id="L103">        this.preferencesOptions.setSystemPreferences();</span>
+<span class="nc" id="L104">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PreferencesConfigBuilder ofSystem(
-            final @NotNull String path) {
-<span class="nc" id="L115">        this.preferencesOptions.setSystemPreferences(path);</span>
-<span class="nc" id="L116">        return thisBuilder();</span>
+    public PreferencesConfigBuilder ofSystem(
+            final String path) {
+<span class="nc" id="L113">        this.preferencesOptions.setSystemPreferences(path);</span>
+<span class="nc" id="L114">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PreferencesConfigBuilder ofSystem(
-            final @NotNull Class&lt;?&gt; clazz) {
-<span class="nc" id="L125">        this.preferencesOptions.setSystemPreferences(clazz);</span>
-<span class="nc" id="L126">        return thisBuilder();</span>
+    public PreferencesConfigBuilder ofSystem(
+            final Class&lt;?&gt; clazz) {
+<span class="nc" id="L123">        this.preferencesOptions.setSystemPreferences(clazz);</span>
+<span class="nc" id="L124">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PreferencesConfigBuilder ofSystem(
-            final @NotNull Class&lt;?&gt; clazz,
-            final @NotNull String path) {
-<span class="nc" id="L136">        this.preferencesOptions.setSystemPreferences(clazz, path);</span>
-<span class="nc" id="L137">        return thisBuilder();</span>
+    public PreferencesConfigBuilder ofSystem(
+            final Class&lt;?&gt; clazz,
+            final String path) {
+<span class="nc" id="L134">        this.preferencesOptions.setSystemPreferences(clazz, path);</span>
+<span class="nc" id="L135">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PreferencesConfigBuilder ofNode(
-            final @NotNull Preferences preferences) {
-<span class="nc" id="L146">        this.preferencesOptions.setPreferences(preferences);</span>
-<span class="nc" id="L147">        return thisBuilder();</span>
+    public PreferencesConfigBuilder ofNode(
+            final Preferences preferences) {
+<span class="nc" id="L144">        this.preferencesOptions.setPreferences(preferences);</span>
+<span class="nc" id="L145">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PreferencesMutableConfigBuilder mutable() {
-<span class="nc" id="L155">        return new PreferencesMutableConfigBuilderImpl(</span>
+    public PreferencesMutableConfigBuilder mutable() {
+<span class="nc" id="L153">        return new PreferencesMutableConfigBuilderImpl(</span>
                 this.options,
                 new MutableConfigOptions(),
                 this.preferencesOptions);
@@ -162,10 +160,10 @@ implements PreferencesConfigInitialBuilder,
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PreferencesConfigImpl build() {
-<span class="nc" id="L166">        return new PreferencesConfigImpl(</span>
+    public PreferencesConfigImpl build() {
+<span class="nc" id="L164">        return new PreferencesConfigImpl(</span>
                 this.options,
                 this.preferencesOptions);
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

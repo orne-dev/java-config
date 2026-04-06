@@ -24,10 +24,9 @@
 
 import java.util.Properties;
 import java.util.stream.Stream;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 
@@ -51,16 +50,16 @@ extends AbstractConfig {
      * @param options The configuration builder options.
      */
     public SystemConfigImpl(
-            final @NotNull ConfigOptions options) {
-<span class="nc" id="L55">        super(options);</span>
-<span class="nc" id="L56">    }</span>
+            final ConfigOptions options) {
+<span class="nc" id="L54">        super(options);</span>
+<span class="nc" id="L55">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
     protected boolean isEmptyInt() {
-<span class="nc" id="L63">        return getSystemProperties().isEmpty();</span>
+<span class="nc" id="L62">        return getSystemProperties().isEmpty();</span>
     }
 
     /**
@@ -68,25 +67,25 @@ extends AbstractConfig {
      */
     @Override
     protected boolean containsInt(
-            final @NotBlank String key) {
-<span class="nc" id="L72">        return getSystemProperties().containsKey(key);</span>
+            final String key) {
+<span class="nc" id="L71">        return getSystemProperties().containsKey(key);</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected @NotNull Stream&lt;String&gt; getKeysInt() {
-<span class="nc" id="L80">        return getSystemProperties().stringPropertyNames().stream();</span>
+    protected Stream&lt;String&gt; getKeysInt() {
+<span class="nc" id="L79">        return getSystemProperties().stringPropertyNames().stream();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected String getInt(
-            final @NotBlank String key) {
-<span class="nc" id="L89">        return getSystemProperties().getProperty(key);</span>
+    protected @Nullable String getInt(
+            final String key) {
+<span class="nc" id="L88">        return getSystemProperties().getProperty(key);</span>
     }
 
     /**
@@ -96,7 +95,7 @@ extends AbstractConfig {
      * @see System#getProperties()
      */
     protected Properties getSystemProperties() {
-<span class="nc" id="L99">        return System.getProperties();</span>
+<span class="nc" id="L98">        return System.getProperties();</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

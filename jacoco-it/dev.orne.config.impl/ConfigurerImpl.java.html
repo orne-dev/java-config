@@ -28,14 +28,13 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.Validate;
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.MessageFormatter;
@@ -63,12 +62,12 @@ public class ConfigurerImpl
 implements Configurer {
 
     /** The class logger. */
-<span class="fc" id="L66">    private static final Logger LOG = LoggerFactory.getLogger(ConfigurerImpl.class);</span>
+<span class="fc" id="L65">    private static final Logger LOG = LoggerFactory.getLogger(ConfigurerImpl.class);</span>
 
     /** The configuration provider. */
-    private final @NotNull ConfigProvider configProvider;
+    private final ConfigProvider configProvider;
     /** The value converter. */
-    private final @NotNull ConvertUtilsBean converter;
+    private final ConvertUtilsBean converter;
 
     /**
      * Creates a new instance.
@@ -76,9 +75,9 @@ implements Configurer {
      * @param configProvider The configuration provider
      */
     public ConfigurerImpl(
-            final @NotNull ConfigProvider configProvider) {
-<span class="fc" id="L80">        this(configProvider, defaultConverter());</span>
-<span class="fc" id="L81">    }</span>
+            final ConfigProvider configProvider) {
+<span class="fc" id="L79">        this(configProvider, defaultConverter());</span>
+<span class="fc" id="L80">    }</span>
 
     /**
      * Creates a new instance.
@@ -87,13 +86,13 @@ implements Configurer {
      * @param converter The value converter.
      */
     public ConfigurerImpl(
-            final @NotNull ConfigProvider configProvider,
-<span class="fc" id="L91">            final @NotNull ConvertUtilsBean converter) {</span>
-<span class="fc" id="L92">        Validate.notNull(configProvider, &quot;A valid configuration provider is required.&quot;);</span>
-<span class="fc" id="L93">        this.configProvider = configProvider;</span>
-<span class="fc" id="L94">        Validate.notNull(configProvider, &quot;A valid value converter is required.&quot;);</span>
-<span class="fc" id="L95">        this.converter = converter;</span>
-<span class="fc" id="L96">    }</span>
+            final ConfigProvider configProvider,
+<span class="fc" id="L90">            final ConvertUtilsBean converter) {</span>
+<span class="fc" id="L91">        Validate.notNull(configProvider, &quot;A valid configuration provider is required.&quot;);</span>
+<span class="fc" id="L92">        this.configProvider = configProvider;</span>
+<span class="fc" id="L93">        Validate.notNull(configProvider, &quot;A valid value converter is required.&quot;);</span>
+<span class="fc" id="L94">        this.converter = converter;</span>
+<span class="fc" id="L95">    }</span>
 
     /**
      * &lt;p&gt;Creates a new value converter configured with the default settings.&lt;/p&gt;
@@ -108,10 +107,10 @@ implements Configurer {
      * 
      * @return A new value converter configured with the default settings
      */
-    public static @NotNull ConvertUtilsBean defaultConverter() {
-<span class="fc" id="L112">        final ConvertUtilsBean result = new ConvertUtilsBean();</span>
-<span class="fc" id="L113">        result.register(false, true, 0);</span>
-<span class="fc" id="L114">        return result;</span>
+    public static ConvertUtilsBean defaultConverter() {
+<span class="fc" id="L111">        final ConvertUtilsBean result = new ConvertUtilsBean();</span>
+<span class="fc" id="L112">        result.register(false, true, 0);</span>
+<span class="fc" id="L113">        return result;</span>
     }
 
     /**
@@ -119,24 +118,24 @@ implements Configurer {
      */
     @Override
     public void configure(
-            final @NotNull Configurable bean) {
-<span class="nc" id="L123">        Validate.notNull(bean, &quot;A not null bean is required.&quot;);</span>
-<span class="nc" id="L124">        final Class&lt;?&gt; componentClass = bean.getClass();</span>
-<span class="nc" id="L125">        final PreferredConfig preferences = componentClass.getAnnotation(</span>
+            final Configurable bean) {
+<span class="nc" id="L122">        Validate.notNull(bean, &quot;A not null bean is required.&quot;);</span>
+<span class="nc" id="L123">        final Class&lt;?&gt; componentClass = bean.getClass();</span>
+<span class="nc" id="L124">        final PreferredConfig preferences = componentClass.getAnnotation(</span>
                 PreferredConfig.class);
-<span class="nc" id="L127">        final ConfigurationOptions options = componentClass.getAnnotation(</span>
+<span class="nc" id="L126">        final ConfigurationOptions options = componentClass.getAnnotation(</span>
                 ConfigurationOptions.class);
-<span class="nc" id="L129">        final Config config = this.configProvider.selectConfig(preferences);</span>
-<span class="nc bnc" id="L130" title="All 2 branches missed.">        if (config != null) {</span>
-<span class="nc bnc" id="L131" title="All 4 branches missed.">            if (options == null || options.configureProperties()) {</span>
-<span class="nc" id="L132">                configureProperties(bean, config);</span>
+<span class="nc" id="L128">        final Config config = this.configProvider.selectConfig(preferences);</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">        if (config != null) {</span>
+<span class="nc bnc" id="L130" title="All 4 branches missed.">            if (options == null || options.configureProperties()) {</span>
+<span class="nc" id="L131">                configureProperties(bean, config);</span>
             }
-<span class="nc" id="L134">            bean.configure(config);</span>
-<span class="nc bnc" id="L135" title="All 4 branches missed.">            if (options != null &amp;&amp; options.configureNestedBeans()) {</span>
-<span class="nc" id="L136">                configureNestedBeans(bean, config);</span>
+<span class="nc" id="L133">            bean.configure(config);</span>
+<span class="nc bnc" id="L134" title="All 4 branches missed.">            if (options != null &amp;&amp; options.configureNestedBeans()) {</span>
+<span class="nc" id="L135">                configureNestedBeans(bean, config);</span>
             }
         }
-<span class="nc" id="L139">    }</span>
+<span class="nc" id="L138">    }</span>
 
     /**
      * Configures the properties of the bean passed as argument with the
@@ -146,13 +145,13 @@ implements Configurer {
      * @param config The configuration to use
      */
     protected void configureProperties(
-            final @NotNull Configurable bean,
-            final @NotNull Config config) {
-<span class="nc" id="L151">        final Collection&lt;Field&gt; fields = scanConfigurableProperties(bean.getClass());</span>
-<span class="nc bnc" id="L152" title="All 2 branches missed.">        for (final Field field : fields) {</span>
-<span class="nc" id="L153">            configureProperty(bean, field, config);</span>
-<span class="nc" id="L154">        }</span>
-<span class="nc" id="L155">    }</span>
+            final Configurable bean,
+            final Config config) {
+<span class="nc" id="L150">        final Collection&lt;Field&gt; fields = scanConfigurableProperties(bean.getClass());</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">        for (final Field field : fields) {</span>
+<span class="nc" id="L152">            configureProperty(bean, field, config);</span>
+<span class="nc" id="L153">        }</span>
+<span class="nc" id="L154">    }</span>
 
     /**
      * Scans the fields annotated with {@code ConfigurableProperty} in the
@@ -161,19 +160,19 @@ implements Configurer {
      * @param targetClass The bean class to scan for configurable fields
      * @return The configurable fields detected
      */
-    protected @NotNull Collection&lt;Field&gt; scanConfigurableProperties(
+    protected Collection&lt;Field&gt; scanConfigurableProperties(
             final Class&lt;?&gt; targetClass) {
-<span class="nc" id="L166">        final Set&lt;Field&gt; configurableFields = new HashSet&lt;&gt;();</span>
-<span class="nc" id="L167">        Class&lt;?&gt; currentClass = targetClass;</span>
-<span class="nc bnc" id="L168" title="All 2 branches missed.">        while (currentClass != null) {</span>
-<span class="nc bnc" id="L169" title="All 2 branches missed.">            for (final Field field : currentClass.getDeclaredFields()) {</span>
-<span class="nc bnc" id="L170" title="All 2 branches missed.">                if (field.isAnnotationPresent(ConfigurableProperty.class)) {</span>
-<span class="nc" id="L171">                    configurableFields.add(field);</span>
+<span class="nc" id="L165">        final Set&lt;Field&gt; configurableFields = new HashSet&lt;&gt;();</span>
+<span class="nc" id="L166">        Class&lt;?&gt; currentClass = targetClass;</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">        while (currentClass != null) {</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">            for (final Field field : currentClass.getDeclaredFields()) {</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">                if (field.isAnnotationPresent(ConfigurableProperty.class)) {</span>
+<span class="nc" id="L170">                    configurableFields.add(field);</span>
                 }
             }
-<span class="nc" id="L174">            currentClass = currentClass.getSuperclass();</span>
+<span class="nc" id="L173">            currentClass = currentClass.getSuperclass();</span>
         }
-<span class="nc" id="L176">        return configurableFields;</span>
+<span class="nc" id="L175">        return configurableFields;</span>
     }
 
     /**
@@ -185,33 +184,33 @@ implements Configurer {
      * @param config The configuration to use
      */
     protected void configureProperty(
-            final @NotNull Object bean,
-            final @NotNull Field field,
-            final @NotNull Config config) {
-<span class="nc" id="L191">        final ConfigurableProperty metadata = field.getAnnotation(ConfigurableProperty.class);</span>
-<span class="nc" id="L192">        final String key = metadata.value();</span>
-<span class="nc" id="L193">        final Class&lt;?&gt; type = field.getType();</span>
+            final Object bean,
+            final Field field,
+            final Config config) {
+<span class="nc" id="L190">        final ConfigurableProperty metadata = field.getAnnotation(ConfigurableProperty.class);</span>
+<span class="nc" id="L191">        final String key = metadata.value();</span>
+<span class="nc" id="L192">        final Class&lt;?&gt; type = field.getType();</span>
         try {
-<span class="nc bnc" id="L195" title="All 2 branches missed.">            if (config.contains(key)) {</span>
-<span class="nc" id="L196">                final String strValue = config.get(key);</span>
-<span class="nc bnc" id="L197" title="All 2 branches missed.">                if (type.isPrimitive()) {</span>
-<span class="nc" id="L198">                    final Class&lt;?&gt; wrapperType = ClassUtils.primitiveToWrapper(type);</span>
-<span class="nc" id="L199">                    final Object wrapperValue = convertValue(strValue, wrapperType);</span>
-<span class="nc bnc" id="L200" title="All 2 branches missed.">                    if (wrapperValue == null) {</span>
-<span class="nc" id="L201">                        LOG.warn(&quot;Null value in key '{}' for type {}&quot;, key, type);</span>
+<span class="nc bnc" id="L194" title="All 2 branches missed.">            if (config.contains(key)) {</span>
+<span class="nc" id="L195">                final String strValue = config.get(key);</span>
+<span class="nc bnc" id="L196" title="All 2 branches missed.">                if (type.isPrimitive()) {</span>
+<span class="nc" id="L197">                    final Class&lt;?&gt; wrapperType = ClassUtils.primitiveToWrapper(type);</span>
+<span class="nc" id="L198">                    final Object wrapperValue = convertValue(strValue, wrapperType);</span>
+<span class="nc bnc" id="L199" title="All 2 branches missed.">                    if (wrapperValue == null) {</span>
+<span class="nc" id="L200">                        LOG.warn(&quot;Null value in key '{}' for type {}&quot;, key, type);</span>
                     } else {
-<span class="nc" id="L203">                        setPropertyValue(bean, field, wrapperValue);</span>
+<span class="nc" id="L202">                        setPropertyValue(bean, field, wrapperValue);</span>
                     }
-<span class="nc" id="L205">                } else {</span>
-<span class="nc" id="L206">                    setPropertyValue(bean, field, convertValue(strValue, type));</span>
+<span class="nc" id="L204">                } else {</span>
+<span class="nc" id="L205">                    setPropertyValue(bean, field, convertValue(strValue, type));</span>
                 }
             }
-<span class="nc" id="L209">        } catch (final ConfigException ce) {</span>
-<span class="nc" id="L210">            LOG.error(String.format(&quot;Error configuring property '%s' on bean of class %s&quot;,</span>
-<span class="nc" id="L211">                    field.getName(),</span>
-<span class="nc" id="L212">                    bean.getClass()), ce);</span>
-<span class="nc" id="L213">        }</span>
-<span class="nc" id="L214">    }</span>
+<span class="nc" id="L208">        } catch (final ConfigException ce) {</span>
+<span class="nc" id="L209">            LOG.error(String.format(&quot;Error configuring property '%s' on bean of class %s&quot;,</span>
+<span class="nc" id="L210">                    field.getName(),</span>
+<span class="nc" id="L211">                    bean.getClass()), ce);</span>
+<span class="nc" id="L212">        }</span>
+<span class="nc" id="L213">    }</span>
 
     /**
      * Converts the configuration property value to the specified target type.
@@ -226,9 +225,9 @@ implements Configurer {
             final String value,
             final Class&lt;T&gt; type) {
         try {
-<span class="nc" id="L229">            return type.cast(this.converter.convert(value, type));</span>
-<span class="nc" id="L230">        } catch (final ConversionException e) {</span>
-<span class="nc" id="L231">            throw new ConfigException(&quot;Error converting configuration property value&quot;, e);</span>
+<span class="nc" id="L228">            return type.cast(this.converter.convert(value, type));</span>
+<span class="nc" id="L229">        } catch (final ConversionException e) {</span>
+<span class="nc" id="L230">            throw new ConfigException(&quot;Error converting configuration property value&quot;, e);</span>
         }
     }
 
@@ -241,18 +240,18 @@ implements Configurer {
      * @param value The value to set
      */
     protected void setPropertyValue(
-            final @NotNull Object bean,
-            final @NotNull Field field,
-            final Object value) {
+            final Object bean,
+            final Field field,
+            final @Nullable Object value) {
         try {
-<span class="nc" id="L248">            PropertyUtils.setProperty(bean, field.getName(), value);</span>
-<span class="nc" id="L249">        } catch (final IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {</span>
-<span class="nc" id="L250">            LOG.error(String.format(</span>
+<span class="nc" id="L247">            PropertyUtils.setProperty(bean, field.getName(), value);</span>
+<span class="nc" id="L248">        } catch (final IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {</span>
+<span class="nc" id="L249">            LOG.error(String.format(</span>
                     &quot;Error setting property '%s' on bean of class %s&quot;,
-<span class="nc" id="L252">                    field.getName(),</span>
-<span class="nc" id="L253">                    bean.getClass()), e);</span>
-<span class="nc" id="L254">        }</span>
-<span class="nc" id="L255">    }</span>
+<span class="nc" id="L251">                    field.getName(),</span>
+<span class="nc" id="L252">                    bean.getClass()), e);</span>
+<span class="nc" id="L253">        }</span>
+<span class="nc" id="L254">    }</span>
 
     /**
      * Configures the nested beans of the bean passed as argument with the
@@ -262,15 +261,15 @@ implements Configurer {
      * @param config The configuration to use
      */
     protected void configureNestedBeans(
-            final @NotNull Configurable bean,
-            final @NotNull Config config) {
-<span class="nc" id="L267">        final Collection&lt;Configurable&gt; nestedBeans = scanNestedComponents(bean);</span>
-<span class="nc bnc" id="L268" title="All 2 branches missed.">        for (final Configurable nestedBean : nestedBeans) {</span>
-<span class="nc bnc" id="L269" title="All 2 branches missed.">            if (!nestedBean.isConfigured()) {</span>
-<span class="nc" id="L270">                configure(nestedBean);</span>
+            final Configurable bean,
+            final Config config) {
+<span class="nc" id="L266">        final Collection&lt;Configurable&gt; nestedBeans = scanNestedComponents(bean);</span>
+<span class="nc bnc" id="L267" title="All 2 branches missed.">        for (final Configurable nestedBean : nestedBeans) {</span>
+<span class="nc bnc" id="L268" title="All 2 branches missed.">            if (!nestedBean.isConfigured()) {</span>
+<span class="nc" id="L269">                configure(nestedBean);</span>
             }
-<span class="nc" id="L272">        }</span>
-<span class="nc" id="L273">    }</span>
+<span class="nc" id="L271">        }</span>
+<span class="nc" id="L272">    }</span>
 
     /**
      * Scans the fields of the bean passed as argument for instances of
@@ -279,28 +278,28 @@ implements Configurer {
      * @param bean The bean to scan for unconfigured nested beans
      * @return The nested beans detected
      */
-    protected @NotNull Collection&lt;Configurable&gt; scanNestedComponents(
-            final @NotNull Object bean) {
-<span class="nc" id="L284">        final Set&lt;Configurable&gt; nestedComponents = new HashSet&lt;&gt;();</span>
-<span class="nc" id="L285">        Class&lt;?&gt; currentClass = bean.getClass();</span>
-<span class="nc bnc" id="L286" title="All 2 branches missed.">        while (currentClass != null) {</span>
-<span class="nc bnc" id="L287" title="All 2 branches missed.">            for (final Field field : currentClass.getDeclaredFields()) {</span>
+    protected Collection&lt;Configurable&gt; scanNestedComponents(
+            final Object bean) {
+<span class="nc" id="L283">        final Set&lt;Configurable&gt; nestedComponents = new HashSet&lt;&gt;();</span>
+<span class="nc" id="L284">        Class&lt;?&gt; currentClass = bean.getClass();</span>
+<span class="nc bnc" id="L285" title="All 2 branches missed.">        while (currentClass != null) {</span>
+<span class="nc bnc" id="L286" title="All 2 branches missed.">            for (final Field field : currentClass.getDeclaredFields()) {</span>
                 try {
-<span class="nc" id="L289">                    final Object fieldValue = PropertyUtils.getProperty(bean, field.getName());</span>
-<span class="nc bnc" id="L290" title="All 2 branches missed.">                    if (fieldValue instanceof Configurable) {</span>
-<span class="nc" id="L291">                        final Configurable nestedComponent = (Configurable) fieldValue;</span>
-<span class="nc" id="L292">                        nestedComponents.add(nestedComponent);</span>
+<span class="nc" id="L288">                    final Object fieldValue = PropertyUtils.getProperty(bean, field.getName());</span>
+<span class="nc bnc" id="L289" title="All 2 branches missed.">                    if (fieldValue instanceof Configurable) {</span>
+<span class="nc" id="L290">                        final Configurable nestedComponent = (Configurable) fieldValue;</span>
+<span class="nc" id="L291">                        nestedComponents.add(nestedComponent);</span>
                     }
-<span class="nc" id="L294">                } catch (final IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {</span>
-<span class="nc" id="L295">                    LOG.error(MessageFormatter.format(</span>
+<span class="nc" id="L293">                } catch (final IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {</span>
+<span class="nc" id="L294">                    LOG.error(MessageFormatter.format(</span>
                             &quot;Error accessing property '{}' on bean of class {}&quot;,
-<span class="nc" id="L297">                            field.getName(),</span>
-<span class="nc" id="L298">                            currentClass).getMessage(), e);</span>
-<span class="nc" id="L299">                }</span>
+<span class="nc" id="L296">                            field.getName(),</span>
+<span class="nc" id="L297">                            currentClass).getMessage(), e);</span>
+<span class="nc" id="L298">                }</span>
             }
-<span class="nc" id="L301">            currentClass = currentClass.getSuperclass();</span>
+<span class="nc" id="L300">            currentClass = currentClass.getSuperclass();</span>
         }
-<span class="nc" id="L303">        return nestedComponents;</span>
+<span class="nc" id="L302">        return nestedComponents;</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

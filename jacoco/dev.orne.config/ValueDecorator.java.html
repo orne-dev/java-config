@@ -24,9 +24,8 @@
 
 import java.util.Objects;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Interface of configuration property values decorators.
@@ -40,7 +39,7 @@ import org.apiguardian.api.API;
 public interface ValueDecorator {
 
     /** Default identity configuration property value decorator. */
-<span class="fc" id="L43">    static ValueDecorator DEFAULT = t -&gt; t;</span>
+<span class="fc" id="L42">    static ValueDecorator DEFAULT = t -&gt; t;</span>
 
     /**
      * Decorates the configuration property value.
@@ -48,7 +47,8 @@ public interface ValueDecorator {
      * @param value The configuration property value.
      * @return The decorated configuration property value.
      */
-    String decorate(String value);
+    @Nullable String decorate(
+            @Nullable String value);
 
     /**
      * Returns a composed decorator that first applies the {@code before}
@@ -63,8 +63,8 @@ public interface ValueDecorator {
      *
      * @see #andThen(ValueDecorator)
      */
-    default @NotNull ValueDecorator compose(
-            final @NotNull ValueDecorator before) {
+    default ValueDecorator compose(
+            final ValueDecorator before) {
 <span class="fc" id="L68">        Objects.requireNonNull(before);</span>
 <span class="fc" id="L69">        return v -&gt; decorate(before.decorate(v));</span>
     }
@@ -82,10 +82,10 @@ public interface ValueDecorator {
      *
      * @see #compose(ValueDecorator)
      */
-    default @NotNull ValueDecorator andThen(
-            final @NotNull ValueDecorator after) {
+    default ValueDecorator andThen(
+            final ValueDecorator after) {
 <span class="fc" id="L87">        Objects.requireNonNull(after);</span>
 <span class="fc" id="L88">        return v -&gt; after.decorate(decorate(v));</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

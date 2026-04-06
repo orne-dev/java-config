@@ -22,9 +22,8 @@
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.ValueEncoder;
@@ -41,14 +40,14 @@ import dev.orne.config.ValueEncoder;
 public class MutableConfigOptions {
 
     /** The configuration properties values encoder. */
-    protected ValueEncoder encoder;
+    protected @Nullable ValueEncoder encoder;
 
     /**
      * Empty constructor.
      */
     public MutableConfigOptions() {
-<span class="nc" id="L50">        super();</span>
-<span class="nc" id="L51">    }</span>
+<span class="nc" id="L49">        super();</span>
+<span class="nc" id="L50">    }</span>
 
     /**
      * Copy constructor.
@@ -56,18 +55,18 @@ public class MutableConfigOptions {
      * @param copy The instance to copy.
      */
     public MutableConfigOptions(
-            final @NotNull MutableConfigOptions copy) {
-<span class="nc" id="L60">        super();</span>
-<span class="nc" id="L61">        this.encoder = copy.encoder;</span>
-<span class="nc" id="L62">    }</span>
+            final MutableConfigOptions copy) {
+<span class="nc" id="L59">        super();</span>
+<span class="nc" id="L60">        this.encoder = copy.encoder;</span>
+<span class="nc" id="L61">    }</span>
 
     /**
      * Returns the configuration properties values encoder.
      * 
      * @return The configuration properties values encoder.
      */
-    public ValueEncoder getEncoder() {
-<span class="nc" id="L70">        return this.encoder;</span>
+    public @Nullable ValueEncoder getEncoder() {
+<span class="nc" id="L69">        return this.encoder;</span>
     }
 
     /**
@@ -76,8 +75,8 @@ public class MutableConfigOptions {
      * @param encoder The configuration properties values encoder.
      */
     public void setEncoder(
-            final ValueEncoder encoder) {
-<span class="nc" id="L80">        this.encoder = encoder;</span>
-<span class="nc" id="L81">    }</span>
+            final @Nullable ValueEncoder encoder) {
+<span class="nc" id="L79">        this.encoder = encoder;</span>
+<span class="nc" id="L80">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

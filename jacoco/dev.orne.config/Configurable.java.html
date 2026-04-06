@@ -22,8 +22,6 @@
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 /**
@@ -46,9 +44,9 @@ public interface Configurable {
      * @param config The config to apply
      */
     default void configure(
-            @NotNull Config config) {
+            Config config) {
         // NOP
-<span class="fc" id="L51">    }</span>
+<span class="fc" id="L49">    }</span>
 
     /**
      * Returns {@code true} if this instance is already configured
@@ -57,7 +55,7 @@ public interface Configurable {
      * @return {@code true} if this instance is already configured
      */
     default boolean isConfigured() {
-<span class="fc" id="L60">        return false;</span>
+<span class="fc" id="L58">        return false;</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

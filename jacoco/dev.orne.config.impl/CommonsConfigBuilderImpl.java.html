@@ -24,8 +24,6 @@
 
 import java.util.Objects;
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.configuration2.ImmutableConfiguration;
 import org.apiguardian.api.API;
 
@@ -47,32 +45,32 @@ extends AbstractConfigBuilderImpl&lt;CommonsConfigBuilder&gt;
 implements CommonsConfigBuilder {
 
     /** The Apache Commons based configuration options. */
-    protected final @NotNull CommonsConfigOptions commonsOptions;
+    protected final CommonsConfigOptions commonsOptions;
 
     /**
      * Empty constructor.
      */
     public CommonsConfigBuilderImpl() {
-<span class="fc" id="L56">        super();</span>
-<span class="fc" id="L57">        this.commonsOptions = new CommonsConfigOptions();</span>
-<span class="fc" id="L58">    }</span>
+<span class="fc" id="L54">        super();</span>
+<span class="fc" id="L55">        this.commonsOptions = new CommonsConfigOptions();</span>
+<span class="fc" id="L56">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull CommonsConfigBuilder ofDelegate(
-            final @NotNull ImmutableConfiguration delegate) {
-<span class="fc" id="L66">        this.commonsOptions.setDelegated(Objects.requireNonNull(delegate));</span>
-<span class="fc" id="L67">        return thisBuilder();</span>
+    public CommonsConfigBuilder ofDelegate(
+            final ImmutableConfiguration delegate) {
+<span class="fc" id="L64">        this.commonsOptions.setDelegated(Objects.requireNonNull(delegate));</span>
+<span class="fc" id="L65">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull CommonsMutableConfigBuilderImpl mutable() {
-<span class="fc" id="L75">        return new CommonsMutableConfigBuilderImpl(</span>
+    public CommonsMutableConfigBuilderImpl mutable() {
+<span class="fc" id="L73">        return new CommonsMutableConfigBuilderImpl(</span>
                 this.options,
                 new MutableConfigOptions(),
                 this.commonsOptions);
@@ -82,10 +80,10 @@ implements CommonsConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull CommonsConfigImpl build() {
-<span class="fc" id="L86">        return new CommonsConfigImpl(</span>
+    public CommonsConfigImpl build() {
+<span class="fc" id="L84">        return new CommonsConfigImpl(</span>
                 this.options,
                 this.commonsOptions);
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

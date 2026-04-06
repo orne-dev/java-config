@@ -22,8 +22,6 @@
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -32,6 +30,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportAware;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Configurer;
 
@@ -55,28 +54,28 @@ implements ImportAware {
     public static final String POST_PROCESSOR = &quot;orneConfigConfigurableComponentsPostProcessor&quot;;
 
     /** The annotation data for the configuration. */
-    protected AnnotationAttributes annotationData;
+    protected @Nullable AnnotationAttributes annotationData;
     /** The {@code ConfigProvider} supplier for current Spring context. */
-    protected ConfigProviderConfigurer springConfigProvider;
+    protected @Nullable ConfigProviderConfigurer springConfigProvider;
     /** The exposed configurable components {@code Configurer}, if any. */
-    protected Configurer exposedConfigurer;
+    protected @Nullable Configurer exposedConfigurer;
 
     /**
      * Creates a new instance.
      */
     public ConfigurableComponentsConfigurer() {
-<span class="fc" id="L68">        super();</span>
-<span class="fc" id="L69">    }</span>
+<span class="fc" id="L67">        super();</span>
+<span class="fc" id="L68">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
     public void setImportMetadata(
-            final @NotNull AnnotationMetadata importMetadata) {
-<span class="fc" id="L77">        annotationData = AnnotationAttributes.fromMap(</span>
-<span class="fc" id="L78">                importMetadata.getAnnotationAttributes(EnableConfigurableComponents.class.getName()));</span>
-<span class="fc" id="L79">    }</span>
+            final AnnotationMetadata importMetadata) {
+<span class="fc" id="L76">        annotationData = AnnotationAttributes.fromMap(</span>
+<span class="fc" id="L77">                importMetadata.getAnnotationAttributes(EnableConfigurableComponents.class.getName()));</span>
+<span class="fc" id="L78">    }</span>
 
     /**
      * Sets the {@code ConfigProvider} supplier for current Spring context.
@@ -87,8 +86,8 @@ implements ImportAware {
     @Autowired
     public void setSpringConfigProvider(
             final ConfigProviderConfigurer provider) {
-<span class="fc" id="L90">        this.springConfigProvider = provider;</span>
-<span class="fc" id="L91">    }</span>
+<span class="fc" id="L89">        this.springConfigProvider = provider;</span>
+<span class="fc" id="L90">    }</span>
 
     /**
      * Exposes the configurable components configurer.
@@ -97,24 +96,22 @@ implements ImportAware {
      */
     @Bean(name=CONFIGURER)
     public Configurer configurableComponentsConfigurer() {
-<span class="fc" id="L100">        return this.exposedConfigurer;</span>
+<span class="fc" id="L99">        return this.exposedConfigurer;</span>
     }
 
     /**
      * Exposes the Spring configurable components post-processor.
      * 
-     * @param configurer The application provided or exposed configurer, if
-     * any.
      * @return The configurable components post-processor.
      */
     @Bean(name=POST_PROCESSOR)
-    public @NotNull ConfigurableComponentsPostProcessor configurableComponentsPostProcessor() {
-<span class="fc" id="L112">        final Configurer configurer = Configurer.fromProvider(</span>
-<span class="fc" id="L113">                this.springConfigProvider.getConfigProvider());</span>
-<span class="fc bfc" id="L114" title="All 4 branches covered.">        if (this.annotationData != null &amp;&amp; this.annotationData.getBoolean(&quot;exposeConfigurer&quot;)) {</span>
-<span class="fc" id="L115">            this.exposedConfigurer = configurer;</span>
+    public ConfigurableComponentsPostProcessor configurableComponentsPostProcessor() {
+<span class="fc" id="L109">        final Configurer configurer = Configurer.fromProvider(</span>
+<span class="fc" id="L110">                this.springConfigProvider.getConfigProvider());</span>
+<span class="fc bfc" id="L111" title="All 4 branches covered.">        if (this.annotationData != null &amp;&amp; this.annotationData.getBoolean(&quot;exposeConfigurer&quot;)) {</span>
+<span class="fc" id="L112">            this.exposedConfigurer = configurer;</span>
         }
-<span class="fc" id="L117">        return new ConfigurableComponentsPostProcessor(configurer);</span>
+<span class="fc" id="L114">        return new ConfigurableComponentsPostProcessor(configurer);</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

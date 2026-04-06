@@ -24,12 +24,9 @@
 
 import java.util.Map;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import dev.orne.config.Config;
-import dev.orne.config.ConfigProviderBuilder;
 
 /**
  * Interface for available {@code Config} instances customization
@@ -57,7 +54,7 @@ import dev.orne.config.ConfigProviderBuilder;
  * }
  * &lt;/pre&gt;
  * To customize the additional configurations registration
- * override the {@link #registerAdditionalConfigs(ConfigProviderBuilder, Map)}
+ * override the {@link #registerAdditionalConfigs(ConfigRegistry, Map)}
  * method.
  * &lt;p&gt;
  * Only one implementation of this interface is allowed per Spring context,
@@ -78,8 +75,8 @@ public interface ConfigProviderCustomizer {
      * @param configs The configurations available in the Spring context.
      * @return The default configuration.
      */
-    @NotNull Config configureDefaultConfig(
-            @NotNull Map&lt;String, Config&gt; configs);
+    Config configureDefaultConfig(
+            Map&lt;String, Config&gt; configs);
 
     /**
      * Registers additional {@code Config} instances.
@@ -88,10 +85,10 @@ public interface ConfigProviderCustomizer {
      * @param configs The configurations available in the Spring context.
      */
     default void registerAdditionalConfigs(
-            final @NotNull ConfigRegistry registry,
-            final @NotNull Map&lt;String, Config&gt; configs) {
-<span class="fc" id="L93">        configs.values().forEach(registry::add);</span>
-<span class="fc" id="L94">    }</span>
+            final ConfigRegistry registry,
+            final Map&lt;String, Config&gt; configs) {
+<span class="fc" id="L90">        configs.values().forEach(registry::add);</span>
+<span class="fc" id="L91">    }</span>
 
     /**
      * Registry for additional {@code Config} instances.
@@ -105,7 +102,7 @@ public interface ConfigProviderCustomizer {
          * @param config The configuration to add.
          */
         void add(
-                @NotNull Config config);
+                Config config);
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

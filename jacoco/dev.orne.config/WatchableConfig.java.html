@@ -24,8 +24,6 @@
 
 import java.util.Set;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import dev.orne.config.impl.ConfigSubset;
@@ -48,19 +46,17 @@ extends MutableConfig {
      * @param listener The listener to be called on configuration changes.
      * @throws IllegalStateException If the configuration type does not support
      * event listeners.
-     * 
      */
     void addListener(
-            @NotNull Listener listener);
+            Listener listener);
 
     /**
      * Unregisters the specified configuration change events listener.
      * 
      * @param listener The listener to previously registered.
-     * 
      */
     void removeListener(
-            @NotNull Listener listener);
+            Listener listener);
 
     /**
      * Creates a subset configuration containing only the properties
@@ -70,9 +66,9 @@ extends MutableConfig {
      * @return The subset configuration.
      */
     @Override
-    default @NotNull WatchableConfig subset(
-            final @NotNull String prefix) {
-<span class="fc" id="L75">        return ConfigSubset.create(this, prefix);</span>
+    default WatchableConfig subset(
+            final String prefix) {
+<span class="fc" id="L71">        return ConfigSubset.create(this, prefix);</span>
     }
 
     /**
@@ -93,8 +89,8 @@ extends MutableConfig {
          * @param keys The modified configuration properties.
          */
         void configurationChanged(
-                @NotNull MutableConfig config,
-                @NotNull Set&lt;String&gt; keys);
+                MutableConfig config,
+                Set&lt;String&gt; keys);
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

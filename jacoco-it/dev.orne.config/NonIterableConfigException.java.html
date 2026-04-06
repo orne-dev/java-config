@@ -23,6 +23,7 @@
  */
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Exception thrown when configuration property keys cannot be
@@ -45,8 +46,8 @@ extends ConfigException {
      * call to {@link #initCause}.
      */
     public NonIterableConfigException() {
-<span class="nc" id="L48">        super();</span>
-<span class="nc" id="L49">    }</span>
+<span class="nc" id="L49">        super();</span>
+<span class="nc" id="L50">    }</span>
 
     /**
      * Constructs a new exception with the specified detail message.  The
@@ -57,9 +58,9 @@ extends ConfigException {
      *          later retrieval by the {@link #getMessage()} method.
      */
     public NonIterableConfigException(
-            final String message) {
-<span class="nc" id="L61">        super(message);</span>
-<span class="nc" id="L62">    }</span>
+            final @Nullable String message) {
+<span class="nc" id="L62">        super(message);</span>
+<span class="nc" id="L63">    }</span>
 
     /**
      * Constructs a new exception with the specified cause and a detail
@@ -75,9 +76,9 @@ extends ConfigException {
      *         unknown.)
      */
     public NonIterableConfigException(
-            final Throwable cause) {
-<span class="nc" id="L79">        super(cause);</span>
-<span class="nc" id="L80">    }</span>
+            final @Nullable Throwable cause) {
+<span class="nc" id="L80">        super(cause);</span>
+<span class="nc" id="L81">    }</span>
 
     /**
      * Constructs a new exception with the specified detail message and
@@ -93,10 +94,10 @@ extends ConfigException {
      *         unknown.)
      */
     public NonIterableConfigException(
-            final String message,
-            final Throwable cause) {
-<span class="nc" id="L98">        super(message, cause);</span>
-<span class="nc" id="L99">    }</span>
+            final @Nullable String message,
+            final @Nullable Throwable cause) {
+<span class="nc" id="L99">        super(message, cause);</span>
+<span class="nc" id="L100">    }</span>
 
     /**
      * Constructs a new exception with the specified detail message,
@@ -111,12 +112,12 @@ extends ConfigException {
      * @param writableStackTrace whether or not the stack trace should
      *                           be writable
      */
-    public NonIterableConfigException(
-            final String message,
-            final Throwable cause,
+    protected NonIterableConfigException(
+            final @Nullable String message,
+            final @Nullable Throwable cause,
             final boolean enableSuppression,
             final boolean writableStackTrace) {
-<span class="nc" id="L119">        super(message, cause, enableSuppression, writableStackTrace);</span>
-<span class="nc" id="L120">    }</span>
+<span class="nc" id="L120">        super(message, cause, enableSuppression, writableStackTrace);</span>
+<span class="nc" id="L121">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

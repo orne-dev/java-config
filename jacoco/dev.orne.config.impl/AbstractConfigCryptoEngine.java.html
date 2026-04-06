@@ -28,9 +28,9 @@ import java.security.SecureRandom;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKeyFactory;
-import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.ConfigCryptoEngine;
 import dev.orne.config.ConfigCryptoProviderException;
@@ -61,7 +61,7 @@ implements ConfigCryptoEngine {
             &quot;Cannot creathe cipher for algorithm: %s&quot;;
 
     /** The {@code SecureRandom} instance. */
-    private SecureRandom secureRandom;
+    private @Nullable SecureRandom secureRandom;
     /** If the engine has been destroyed. */
     private boolean destroyed;
 
@@ -79,14 +79,13 @@ implements ConfigCryptoEngine {
      * @throws ConfigCryptoProviderException If an error occurs creating
      * the {@code SecureRandom} instance
      */
-    @NotNull
     public SecureRandom getSecureRandom()
     throws ConfigCryptoProviderException {
-<span class="fc" id="L85">        synchronized(this) {</span>
-<span class="fc bfc" id="L86" title="All 2 branches covered.">            if (this.secureRandom == null) {</span>
-<span class="fc" id="L87">                this.secureRandom = createSecureRandom();</span>
+<span class="fc" id="L84">        synchronized(this) {</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">            if (this.secureRandom == null) {</span>
+<span class="fc" id="L86">                this.secureRandom = createSecureRandom();</span>
             }
-<span class="fc" id="L89">            return this.secureRandom;</span>
+<span class="fc" id="L88">            return this.secureRandom;</span>
         }
     }
 
@@ -95,13 +94,12 @@ implements ConfigCryptoEngine {
      * 
      * @param secureRandom The {@code SecureRandom} instance
      */
-    @NotNull
     public void setSecureRandom(
-            final SecureRandom secureRandom) {
-<span class="fc" id="L101">        synchronized(this) {</span>
-<span class="fc" id="L102">            this.secureRandom = secureRandom;</span>
-<span class="fc" id="L103">        }</span>
-<span class="fc" id="L104">    }</span>
+            final @Nullable SecureRandom secureRandom) {
+<span class="fc" id="L99">        synchronized(this) {</span>
+<span class="fc" id="L100">            this.secureRandom = secureRandom;</span>
+<span class="fc" id="L101">        }</span>
+<span class="fc" id="L102">    }</span>
 
     /**
      * Creates a new {@code SecureRandom} instance.
@@ -110,13 +108,12 @@ implements ConfigCryptoEngine {
      * @throws ConfigCryptoProviderException If an error occurs creating
      * the {@code SecureRandom} instance
      */
-    @NotNull
     public SecureRandom createSecureRandom()
     throws ConfigCryptoProviderException {
         try {
-<span class="fc" id="L117">            return SecureRandom.getInstanceStrong();</span>
-<span class="fc" id="L118">        } catch (final NoSuchAlgorithmException nsae) {</span>
-<span class="fc" id="L119">            throw new ConfigCryptoProviderException(RANDOM_CREATION_ERROR, nsae);</span>
+<span class="fc" id="L114">            return SecureRandom.getInstanceStrong();</span>
+<span class="fc" id="L115">        } catch (final NoSuchAlgorithmException nsae) {</span>
+<span class="fc" id="L116">            throw new ConfigCryptoProviderException(RANDOM_CREATION_ERROR, nsae);</span>
         }
     }
 
@@ -128,16 +125,14 @@ implements ConfigCryptoEngine {
      * @throws ConfigCryptoProviderException If an error occurs
      * retrieving the {@code SecretKeyFactory}
      */
-    @NotNull
     public SecretKeyFactory getSecretKeyFactory(
-            @NotNull
             final String algorithm)
     throws ConfigCryptoProviderException {
         try {
-<span class="fc" id="L137">            return SecretKeyFactory.getInstance(algorithm);</span>
-<span class="fc" id="L138">        } catch (final NoSuchAlgorithmException nsae) {</span>
-<span class="fc" id="L139">            throw new ConfigCryptoProviderException(</span>
-<span class="fc" id="L140">                    String.format(SECRET_KEY_FACTORY_ALG_ERROR, algorithm),</span>
+<span class="fc" id="L132">            return SecretKeyFactory.getInstance(algorithm);</span>
+<span class="fc" id="L133">        } catch (final NoSuchAlgorithmException nsae) {</span>
+<span class="fc" id="L134">            throw new ConfigCryptoProviderException(</span>
+<span class="fc" id="L135">                    String.format(SECRET_KEY_FACTORY_ALG_ERROR, algorithm),</span>
                     nsae);
         }
     }
@@ -150,16 +145,14 @@ implements ConfigCryptoEngine {
      * @throws ConfigCryptoProviderException If an error occurs
      * creating the {@code Cipher}
      */
-    @NotNull
     public Cipher createCipher(
-            @NotNull
             final String algorithm)
     throws ConfigCryptoProviderException {
         try {
-<span class="fc" id="L159">            return Cipher.getInstance(algorithm);</span>
-<span class="fc" id="L160">        } catch (final GeneralSecurityException gse) {</span>
-<span class="fc" id="L161">            throw new ConfigCryptoProviderException(</span>
-<span class="fc" id="L162">                    String.format(CIPHER_CREATION_ERROR, algorithm),</span>
+<span class="fc" id="L152">            return Cipher.getInstance(algorithm);</span>
+<span class="fc" id="L153">        } catch (final GeneralSecurityException gse) {</span>
+<span class="fc" id="L154">            throw new ConfigCryptoProviderException(</span>
+<span class="fc" id="L155">                    String.format(CIPHER_CREATION_ERROR, algorithm),</span>
                     gse);
         }
     }
@@ -169,8 +162,8 @@ implements ConfigCryptoEngine {
      */
     @Override
     public void destroy() {
-<span class="fc" id="L172">        this.destroyed = true;</span>
-<span class="fc" id="L173">    }</span>
+<span class="fc" id="L165">        this.destroyed = true;</span>
+<span class="fc" id="L166">    }</span>
 
     /**
      * Returns {@code true} if the cryptographic engine has been destroyed.
@@ -178,7 +171,7 @@ implements ConfigCryptoEngine {
      * @return If the cryptographic engine has been destroyed.
      */
     public boolean isDestroyed() {
-<span class="nc" id="L181">        return this.destroyed;</span>
+<span class="nc" id="L174">        return this.destroyed;</span>
     }
 
     /**
@@ -188,9 +181,9 @@ implements ConfigCryptoEngine {
      * destroyed.
      */
     protected void checkDestroyed() {
-<span class="fc bfc" id="L191" title="All 2 branches covered.">        if (this.destroyed) {</span>
-<span class="fc" id="L192">            throw new IllegalStateException(&quot;The cryptographic engine has been destroyed.&quot;);</span>
+<span class="fc bfc" id="L184" title="All 2 branches covered.">        if (this.destroyed) {</span>
+<span class="fc" id="L185">            throw new IllegalStateException(&quot;The cryptographic engine has been destroyed.&quot;);</span>
         }
-<span class="fc" id="L194">    }</span>
+<span class="fc" id="L187">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -22,8 +22,6 @@
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import dev.orne.config.PreferencesMutableConfigBuilder;
@@ -42,7 +40,7 @@ extends AbstractMutableConfigBuilderImpl&lt;PreferencesMutableConfigBuilder&gt;
 implements PreferencesMutableConfigBuilder {
 
     /** The preferences based configuration options. */
-    protected final @NotNull PreferencesConfigOptions preferencesOptions;
+    protected final PreferencesConfigOptions preferencesOptions;
 
     /**
      * Copy constructor.
@@ -53,22 +51,22 @@ implements PreferencesMutableConfigBuilder {
      * copy.
      */
     protected PreferencesMutableConfigBuilderImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions,
-            final @NotNull PreferencesConfigOptions preferencesOptions) {
-<span class="fc" id="L59">        super(options, mutableOptions);</span>
-<span class="fc" id="L60">        this.preferencesOptions = new PreferencesConfigOptions(preferencesOptions);</span>
-<span class="fc" id="L61">    }</span>
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final PreferencesConfigOptions preferencesOptions) {
+<span class="fc" id="L57">        super(options, mutableOptions);</span>
+<span class="fc" id="L58">        this.preferencesOptions = new PreferencesConfigOptions(preferencesOptions);</span>
+<span class="fc" id="L59">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PreferencesMutableConfigImpl build() {
-<span class="fc" id="L68">        return new PreferencesMutableConfigImpl(</span>
+    public PreferencesMutableConfigImpl build() {
+<span class="fc" id="L66">        return new PreferencesMutableConfigImpl(</span>
                 this.options,
                 this.mutableOptions,
                 this.preferencesOptions);
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

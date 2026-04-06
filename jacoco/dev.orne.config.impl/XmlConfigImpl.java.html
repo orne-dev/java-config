@@ -25,10 +25,8 @@
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 
 import dev.orne.config.Config;
@@ -43,14 +41,14 @@ import dev.orne.config.Config;
  */
 @API(status = API.Status.INTERNAL, since = &quot;1.0&quot;)
 public class XmlConfigImpl
-extends AbstractConfig {
+extends AbstractWatchableConfig {
 
     /** The XML document with the configuration options. */
-    private final @NotNull Document document;
+    private final Document document;
     /** The configuration nested properties separator. */
-    private final @NotBlank String propertySeparator;
+    private final String propertySeparator;
     /** The XML attributes references prefix. */
-    private final @NotBlank String attributePrefix;
+    private final String attributePrefix;
 
     /**
      * Creates a new instance.
@@ -59,22 +57,35 @@ extends AbstractConfig {
      * @param xmlOptions The XML based configuration builder options.
      */
     public XmlConfigImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull XmlConfigOptions xmlOptions) {
-<span class="fc" id="L64">        super(options);</span>
-<span class="fc" id="L65">        Objects.requireNonNull(xmlOptions);</span>
-<span class="fc" id="L66">        this.document = Objects.requireNonNull(xmlOptions.getDocument());</span>
-<span class="fc" id="L67">        this.propertySeparator = Objects.requireNonNull(xmlOptions.getPropertySeparator());</span>
-<span class="fc" id="L68">        this.attributePrefix = Objects.requireNonNull(xmlOptions.getAttributePrefix());</span>
-<span class="fc" id="L69">    }</span>
+            final ConfigOptions options,
+            final XmlConfigOptions xmlOptions) {
+<span class="fc" id="L62">        this(options, new MutableConfigOptions(), xmlOptions);</span>
+<span class="fc" id="L63">    }</span>
+    /**
+     * Creates a new instance.
+     * 
+     * @param options The configuration builder options.
+     * @param mutableOptions The mutable configuration builder options.
+     * @param xmlOptions The XML based configuration builder options.
+     */
+    protected XmlConfigImpl(
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final XmlConfigOptions xmlOptions) {
+<span class="fc" id="L75">        super(options, mutableOptions);</span>
+<span class="fc" id="L76">        Objects.requireNonNull(xmlOptions);</span>
+<span class="fc" id="L77">        this.document = Objects.requireNonNull(xmlOptions.getDocument());</span>
+<span class="fc" id="L78">        this.propertySeparator = Objects.requireNonNull(xmlOptions.getPropertySeparator());</span>
+<span class="fc" id="L79">        this.attributePrefix = Objects.requireNonNull(xmlOptions.getAttributePrefix());</span>
+<span class="fc" id="L80">    }</span>
 
     /**
      * Returns the XML document with the configuration options.
      * 
      * @return The XML document with the configuration options.
      */
-    protected @NotNull Document getDocument() {
-<span class="fc" id="L77">        return this.document;</span>
+    protected Document getDocument() {
+<span class="fc" id="L88">        return this.document;</span>
     }
 
     /**
@@ -82,8 +93,8 @@ extends AbstractConfig {
      * 
      * @return The configuration nested properties separator.
      */
-    protected @NotBlank String getPropertySeparator() {
-<span class="fc" id="L86">        return this.propertySeparator;</span>
+    protected String getPropertySeparator() {
+<span class="fc" id="L97">        return this.propertySeparator;</span>
     }
 
     /**
@@ -91,8 +102,8 @@ extends AbstractConfig {
      * 
      * @return The XML attributes references prefix.
      */
-    protected @NotBlank String getAttributePrefix() {
-<span class="nc" id="L95">        return this.attributePrefix;</span>
+    protected String getAttributePrefix() {
+<span class="fc" id="L106">        return this.attributePrefix;</span>
     }
 
     /**
@@ -100,16 +111,17 @@ extends AbstractConfig {
      */
     @Override
     protected boolean isEmptyInt() {
-<span class="pc bpc" id="L103" title="1 of 2 branches missed.">        return !this.document.getDocumentElement().hasAttributes()</span>
-<span class="fc bfc" id="L104" title="All 2 branches covered.">                &amp;&amp; !this.document.getDocumentElement().hasChildNodes();</span>
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">        return !this.document.getDocumentElement().hasAttributes()</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">                &amp;&amp; !this.document.getDocumentElement().hasChildNodes();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected boolean containsInt(@NotBlank String key) {
-<span class="fc" id="L112">        return XmlUtils.contains(</span>
+    protected boolean containsInt(
+            final String key) {
+<span class="fc" id="L124">        return XmlUtils.contains(</span>
                 this.document,
                 key,
                 this.propertySeparator,
@@ -120,8 +132,8 @@ extends AbstractConfig {
      * {@inheritDoc}
      */
     @Override
-    protected @NotNull Stream&lt;String&gt; getKeysInt() {
-<span class="fc" id="L124">        return XmlUtils.extractKeys(</span>
+    protected Stream&lt;String&gt; getKeysInt() {
+<span class="fc" id="L136">        return XmlUtils.extractKeys(</span>
                 this.document,
                 this.propertySeparator,
                 this.attributePrefix);
@@ -131,13 +143,14 @@ extends AbstractConfig {
      * {@inheritDoc}
      */
     @Override
-    protected String getInt(@NotBlank String key) {
-<span class="fc" id="L135">        return XmlUtils.getValue(</span>
+    protected @Nullable String getInt(
+            final String key) {
+<span class="fc" id="L148">        return XmlUtils.getValue(</span>
                 this.document,
                 key,
                 this.propertySeparator,
                 attributePrefix)
-<span class="fc" id="L140">                .orElse(null);</span>
+<span class="fc" id="L153">                .orElse(null);</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

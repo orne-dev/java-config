@@ -29,8 +29,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import dev.orne.config.MutableConfig;
@@ -47,23 +45,23 @@ import dev.orne.config.WatchableConfig.Listener;
 public class EventsHandler {
 
     /** The listeners of configuration property changes. */
-<span class="nc" id="L50">    private final @NotNull List&lt;@NotNull Listener&gt; listeners =</span>
+<span class="nc" id="L48">    private final List&lt;Listener&gt; listeners =</span>
             new ArrayList&lt;&gt;();
 
     /**
      * Creates a new instance.
      */
     public EventsHandler() {
-<span class="nc" id="L57">        super();</span>
-<span class="nc" id="L58">    }</span>
+<span class="nc" id="L55">        super();</span>
+<span class="nc" id="L56">    }</span>
 
     /**
      * Returns the list of registered configuration changed event listeners.
      * 
      * @return The list of registered configuration changed event listeners.
      */
-    protected @NotNull List&lt;@NotNull Listener&gt; getListeners() {
-<span class="nc" id="L66">        return this.listeners;</span>
+    protected List&lt;Listener&gt; getListeners() {
+<span class="nc" id="L64">        return this.listeners;</span>
     }
 
     /**
@@ -72,9 +70,9 @@ public class EventsHandler {
      * @param listener The configuration changed event listener.
      */
     public void add(
-            final @NotNull Listener listener) {
-<span class="nc" id="L76">        this.listeners.add(listener);</span>
-<span class="nc" id="L77">    }</span>
+            final Listener listener) {
+<span class="nc" id="L74">        this.listeners.add(listener);</span>
+<span class="nc" id="L75">    }</span>
 
     /**
      * Unregisters the specified configuration changed event listener.
@@ -83,8 +81,8 @@ public class EventsHandler {
      * @return If the specified listener was found and unregistered.
      */
     public boolean remove(
-            final @NotNull Listener listener) {
-<span class="nc" id="L87">        return this.listeners.remove(listener);</span>
+            final Listener listener) {
+<span class="nc" id="L85">        return this.listeners.remove(listener);</span>
     }
 
 
@@ -95,12 +93,12 @@ public class EventsHandler {
      * @param keys The changed properties.
      */
     public void notify(
-            final @NotNull MutableConfig instance,
-            final @NotNull String... keys) {
-<span class="nc bnc" id="L100" title="All 2 branches missed.">        if (!this.listeners.isEmpty()) {</span>
-<span class="nc" id="L101">            notify(instance, Stream.of(keys).collect(Collectors.toSet()));</span>
+            final MutableConfig instance,
+            final String... keys) {
+<span class="nc bnc" id="L98" title="All 2 branches missed.">        if (!this.listeners.isEmpty()) {</span>
+<span class="nc" id="L99">            notify(instance, Stream.of(keys).collect(Collectors.toSet()));</span>
         }
-<span class="nc" id="L103">    }</span>
+<span class="nc" id="L101">    }</span>
 
     /**
      * Calls all registered configuration properties changed event callbacks.
@@ -109,14 +107,14 @@ public class EventsHandler {
      * @param keys The changed properties.
      */
     public synchronized void notify(
-            final @NotNull MutableConfig instance,
-            final @NotNull Set&lt;String&gt; keys) {
-<span class="nc bnc" id="L114" title="All 2 branches missed.">        if (!this.listeners.isEmpty()) {</span>
-<span class="nc" id="L115">            final Set&lt;String&gt; unmodif = Collections.unmodifiableSet(keys);</span>
-<span class="nc bnc" id="L116" title="All 2 branches missed.">            for (final Listener listener: this.listeners) {</span>
-<span class="nc" id="L117">                listener.configurationChanged(instance, unmodif);</span>
-<span class="nc" id="L118">            }</span>
+            final MutableConfig instance,
+            final Set&lt;String&gt; keys) {
+<span class="nc bnc" id="L112" title="All 2 branches missed.">        if (!this.listeners.isEmpty()) {</span>
+<span class="nc" id="L113">            final Set&lt;String&gt; unmodif = Collections.unmodifiableSet(keys);</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">            for (final Listener listener: this.listeners) {</span>
+<span class="nc" id="L115">                listener.configurationChanged(instance, unmodif);</span>
+<span class="nc" id="L116">            }</span>
         }
-<span class="nc" id="L120">    }</span>
+<span class="nc" id="L118">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

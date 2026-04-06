@@ -22,9 +22,8 @@
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.impl.CryptoProviderBuilderImpl;
 
@@ -43,8 +42,8 @@ public interface ConfigCryptoProvider {
      * 
      * @return The provider builder.
      */
-    static @NotNull CryptoProviderEngineBuilder builder() {
-<span class="fc" id="L47">        return new CryptoProviderBuilderImpl();</span>
+    static CryptoProviderEngineBuilder builder() {
+<span class="fc" id="L46">        return new CryptoProviderBuilderImpl();</span>
     }
 
     /**
@@ -55,8 +54,8 @@ public interface ConfigCryptoProvider {
      * @throws ConfigCryptoProviderException If an exception occurs during the
      * encryption process
      */
-    String encrypt(
-            String value)
+    @Nullable String encrypt(
+            @Nullable String value)
     throws ConfigCryptoProviderException;
 
     /**
@@ -67,8 +66,8 @@ public interface ConfigCryptoProvider {
      * @throws ConfigCryptoProviderException If an exception occurs during the
      * decryption process
      */
-    String decrypt(
-            String value)
+    @Nullable String decrypt(
+            @Nullable String value)
     throws ConfigCryptoProviderException;
 
     /**
@@ -81,4 +80,4 @@ public interface ConfigCryptoProvider {
      */
     void destroy();
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

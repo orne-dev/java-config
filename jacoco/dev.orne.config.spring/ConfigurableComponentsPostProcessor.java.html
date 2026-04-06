@@ -22,8 +22,6 @@
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -44,7 +42,7 @@ public class ConfigurableComponentsPostProcessor
 implements BeanPostProcessor {
 
     /** The configurable components configurer. */
-    private final @NotNull Configurer configurer;
+    private final Configurer configurer;
 
     /**
      * Creates a new instance.
@@ -52,17 +50,17 @@ implements BeanPostProcessor {
      * @param configurer The configurable components configurer.
      */
     public ConfigurableComponentsPostProcessor(
-<span class="fc" id="L55">            final @NotNull Configurer configurer) {</span>
-<span class="fc" id="L56">        this.configurer = configurer;</span>
-<span class="fc" id="L57">    }</span>
+<span class="fc" id="L53">            final Configurer configurer) {</span>
+<span class="fc" id="L54">        this.configurer = configurer;</span>
+<span class="fc" id="L55">    }</span>
 
     /**
      * Returns the configurable components configurer.
      * 
      * @return The configurable components configurer.
      */
-    protected @NotNull Configurer getConfigurer() {
-<span class="fc" id="L65">        return this.configurer;</span>
+    protected Configurer getConfigurer() {
+<span class="fc" id="L63">        return this.configurer;</span>
     }
 
     /**
@@ -70,13 +68,13 @@ implements BeanPostProcessor {
      */
     @Override
     public Object postProcessBeforeInitialization(
-            final @NotNull Object bean,
-            final @NotNull String beanName)
+            final Object bean,
+            final String beanName)
     throws BeansException {
-<span class="fc bfc" id="L76" title="All 2 branches covered.">        if (bean instanceof Configurable) {</span>
-<span class="fc" id="L77">            this.configurer.configure((Configurable) bean);</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        if (bean instanceof Configurable) {</span>
+<span class="fc" id="L75">            this.configurer.configure((Configurable) bean);</span>
         }
-<span class="fc" id="L79">        return bean;</span>
+<span class="fc" id="L77">        return bean;</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

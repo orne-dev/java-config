@@ -22,8 +22,6 @@
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -51,9 +49,9 @@ extends JsonConfigImpl {
      * @param yamlOptions The YAML based configuration builder options.
      */
     public YamlConfigImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull JsonConfigOptions yamlOptions) {
-<span class="nc" id="L56">        super(options, yamlOptions);</span>
-<span class="nc" id="L57">    }</span>
+            final ConfigOptions options,
+            final JsonConfigOptions yamlOptions) {
+<span class="nc" id="L54">        super(options, yamlOptions);</span>
+<span class="nc" id="L55">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

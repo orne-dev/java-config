@@ -24,8 +24,6 @@
 
 import java.util.function.Supplier;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.DependencyDescriptor;
@@ -51,9 +49,9 @@ public class ConfigAutowireCandidateResolver
 implements AutowireCandidateResolver {
 
     /** The parent autowire candidate resolver. */
-    public final @NotNull AutowireCandidateResolver parent;
+    public final AutowireCandidateResolver parent;
     /** The configuration provider supplier. */
-    public final @NotNull Supplier&lt;ConfigProvider&gt; configProvider;
+    public final Supplier&lt;ConfigProvider&gt; configProvider;
 
     /**
      * Creates a new instance.
@@ -62,12 +60,12 @@ implements AutowireCandidateResolver {
      * @param configProvider The configuration provider supplier.
      */
     public ConfigAutowireCandidateResolver(
-            final @NotNull AutowireCandidateResolver parent,
-            final @NotNull Supplier&lt;ConfigProvider&gt; configProvider) {
-<span class="fc" id="L67">        super();</span>
-<span class="fc" id="L68">        this.parent = parent;</span>
-<span class="fc" id="L69">        this.configProvider = configProvider;</span>
-<span class="fc" id="L70">    }</span>
+            final AutowireCandidateResolver parent,
+            final Supplier&lt;ConfigProvider&gt; configProvider) {
+<span class="fc" id="L65">        super();</span>
+<span class="fc" id="L66">        this.parent = parent;</span>
+<span class="fc" id="L67">        this.configProvider = configProvider;</span>
+<span class="fc" id="L68">    }</span>
 
     /**
      * {@inheritDoc}
@@ -76,7 +74,7 @@ implements AutowireCandidateResolver {
     public boolean isAutowireCandidate(
             final BeanDefinitionHolder bdHolder,
             final DependencyDescriptor descriptor) {
-<span class="fc" id="L79">        return parent.isAutowireCandidate(bdHolder, descriptor);</span>
+<span class="fc" id="L77">        return parent.isAutowireCandidate(bdHolder, descriptor);</span>
     }
 
     /**
@@ -85,7 +83,7 @@ implements AutowireCandidateResolver {
     @Override
     public boolean isRequired(
             final DependencyDescriptor descriptor) {
-<span class="fc" id="L88">        return parent.isRequired(descriptor);</span>
+<span class="fc" id="L86">        return parent.isRequired(descriptor);</span>
     }
 
     /**
@@ -94,7 +92,7 @@ implements AutowireCandidateResolver {
     @Override
     public boolean hasQualifier(
             final DependencyDescriptor descriptor) {
-<span class="nc" id="L97">        return parent.hasQualifier(descriptor);</span>
+<span class="nc" id="L95">        return parent.hasQualifier(descriptor);</span>
     }
 
     /**
@@ -103,14 +101,14 @@ implements AutowireCandidateResolver {
     @Override
     public Object getSuggestedValue(
             final DependencyDescriptor descriptor) {
-<span class="fc bfc" id="L106" title="All 2 branches covered.">        if (!Config.class.equals(descriptor.getDeclaredType())) {</span>
-<span class="fc" id="L107">            return parent.getSuggestedValue(descriptor);</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        if (!Config.class.equals(descriptor.getDeclaredType())) {</span>
+<span class="fc" id="L105">            return parent.getSuggestedValue(descriptor);</span>
         }
-<span class="fc" id="L109">        final PreferredConfig annot = descriptor.getAnnotation(PreferredConfig.class);</span>
-<span class="fc bfc" id="L110" title="All 2 branches covered.">        if (annot == null) {</span>
-<span class="fc" id="L111">            return configProvider.get().getDefaultConfig();</span>
+<span class="fc" id="L107">        final PreferredConfig annot = descriptor.getAnnotation(PreferredConfig.class);</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        if (annot == null) {</span>
+<span class="fc" id="L109">            return configProvider.get().getDefaultConfig();</span>
         } else {
-<span class="fc" id="L113">            return configProvider.get().selectConfig(annot);</span>
+<span class="fc" id="L111">            return configProvider.get().selectConfig(annot);</span>
         }
     }
 
@@ -121,7 +119,7 @@ implements AutowireCandidateResolver {
     public Object getLazyResolutionProxyIfNecessary(
             final DependencyDescriptor descriptor,
             final String beanName) {
-<span class="fc" id="L124">        return parent.getLazyResolutionProxyIfNecessary(descriptor, beanName);</span>
+<span class="fc" id="L122">        return parent.getLazyResolutionProxyIfNecessary(descriptor, beanName);</span>
     }
 
     /**
@@ -129,7 +127,7 @@ implements AutowireCandidateResolver {
      */
     @Override
     public AutowireCandidateResolver cloneIfNecessary() {
-<span class="nc" id="L132">        return parent.cloneIfNecessary();</span>
+<span class="nc" id="L130">        return parent.cloneIfNecessary();</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -25,9 +25,6 @@
 import java.util.Map;
 import java.util.stream.Stream;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import dev.orne.config.Config;
@@ -51,16 +48,16 @@ extends AbstractConfig {
      * @param options The configuration builder options.
      */
     public EnvironmentConfigImpl(
-            final @NotNull ConfigOptions options) {
-<span class="nc" id="L55">        super(options);</span>
-<span class="nc" id="L56">    }</span>
+            final ConfigOptions options) {
+<span class="nc" id="L52">        super(options);</span>
+<span class="nc" id="L53">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
     protected boolean isEmptyInt() {
-<span class="nc" id="L63">        return getEnvironmentVariables().isEmpty();</span>
+<span class="nc" id="L60">        return getEnvironmentVariables().isEmpty();</span>
     }
 
     /**
@@ -68,17 +65,17 @@ extends AbstractConfig {
      */
     @Override
     protected boolean containsInt(
-            final @NotBlank String key) {
-<span class="nc" id="L72">        return getEnvironmentVariables().containsKey(key);</span>
+            final String key) {
+<span class="nc" id="L69">        return getEnvironmentVariables().containsKey(key);</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected @NotNull Stream&lt;String&gt; getKeysInt() {
-<span class="nc" id="L80">        return getEnvironmentVariables().keySet()</span>
-<span class="nc" id="L81">                .stream();</span>
+    protected Stream&lt;String&gt; getKeysInt() {
+<span class="nc" id="L77">        return getEnvironmentVariables().keySet()</span>
+<span class="nc" id="L78">                .stream();</span>
     }
 
     /**
@@ -86,8 +83,8 @@ extends AbstractConfig {
      */
     @Override
     protected String getInt(
-            final @NotBlank String key) {
-<span class="nc" id="L90">        return getEnvironmentVariables().get(key);</span>
+            final String key) {
+<span class="nc" id="L87">        return getEnvironmentVariables().get(key);</span>
     }
 
     /**
@@ -96,8 +93,8 @@ extends AbstractConfig {
      * @return The environment variables.
      * @see System#getenv()
      */
-    protected @NotNull Map&lt;String, String&gt; getEnvironmentVariables() {
-<span class="nc" id="L100">        return System.getenv();</span>
+    protected Map&lt;String, String&gt; getEnvironmentVariables() {
+<span class="nc" id="L97">        return System.getenv();</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -24,8 +24,6 @@
 
 import java.util.Objects;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
@@ -49,47 +47,47 @@ implements SpringEnvironmentConfigInitialBuilder,
         SpringEnvironmentConfigBuilder {
 
     /** The Spring Environment configuration options. */
-<span class="fc" id="L52">    protected final @NotNull SpringEnvironmentConfigOptions springOptions =</span>
+<span class="fc" id="L50">    protected final SpringEnvironmentConfigOptions springOptions =</span>
             new SpringEnvironmentConfigOptions();
 
     /**
      * Creates a new instance.
      */
     public SpringEnvironmentConfigBuilderImpl() {
-<span class="fc" id="L59">        super();</span>
-<span class="fc" id="L60">    }</span>
+<span class="fc" id="L57">        super();</span>
+<span class="fc" id="L58">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull SpringEnvironmentConfigBuilder ofEnvironment(
-            final @NotNull Environment environment) {
-<span class="fc" id="L68">        this.springOptions.setEnvironment(Objects.requireNonNull(environment));</span>
-<span class="fc" id="L69">        return thisBuilder();</span>
+    public SpringEnvironmentConfigBuilder ofEnvironment(
+            final Environment environment) {
+<span class="fc" id="L66">        this.springOptions.setEnvironment(Objects.requireNonNull(environment));</span>
+<span class="fc" id="L67">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull SpringEnvironmentConfigBuilder withIterableKeys() {
-<span class="fc bfc" id="L77" title="All 2 branches covered.">        if (!(this.springOptions.getEnvironment() instanceof ConfigurableEnvironment)) {</span>
-<span class="fc" id="L78">            throw new ConfigException(</span>
+    public SpringEnvironmentConfigBuilder withIterableKeys() {
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (!(this.springOptions.getEnvironment() instanceof ConfigurableEnvironment)) {</span>
+<span class="fc" id="L76">            throw new ConfigException(</span>
                     &quot;Iterable property keys support requires a ConfigurableEnvironment&quot;);
         }
-<span class="fc" id="L81">        this.springOptions.setIterableKeys(true);</span>
-<span class="fc" id="L82">        return thisBuilder();</span>
+<span class="fc" id="L79">        this.springOptions.setIterableKeys(true);</span>
+<span class="fc" id="L80">        return thisBuilder();</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull SpringEnvironmentConfigImpl build() {
-<span class="fc" id="L90">        return new SpringEnvironmentConfigImpl(</span>
+    public SpringEnvironmentConfigImpl build() {
+<span class="fc" id="L88">        return new SpringEnvironmentConfigImpl(</span>
                 this.options,
                 this.springOptions);
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

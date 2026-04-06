@@ -22,10 +22,9 @@
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 import org.springframework.core.env.Environment;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Options of Spring {@code Environment} based configuration builder.
@@ -39,7 +38,7 @@ import org.springframework.core.env.Environment;
 public class SpringEnvironmentConfigOptions {
 
     /** The Spring environment. */
-    private @NotNull Environment environment;
+    private @Nullable Environment environment;
     /** If the configuration instance must support property keys iteration. */
     private boolean iterableKeys;
 
@@ -47,8 +46,8 @@ public class SpringEnvironmentConfigOptions {
      * Empty constructor.
      */
     public SpringEnvironmentConfigOptions() {
-<span class="fc" id="L50">        super();</span>
-<span class="fc" id="L51">    }</span>
+<span class="fc" id="L49">        super();</span>
+<span class="fc" id="L50">    }</span>
 
     /**
      * Copy constructor.
@@ -56,19 +55,19 @@ public class SpringEnvironmentConfigOptions {
      * @param copy The instance to copy.
      */
     public SpringEnvironmentConfigOptions(
-            final @NotNull SpringEnvironmentConfigOptions copy) {
-<span class="nc" id="L60">        super();</span>
-<span class="nc" id="L61">        this.environment = copy.environment;</span>
-<span class="nc" id="L62">        this.iterableKeys = copy.iterableKeys;</span>
-<span class="nc" id="L63">    }</span>
+            final SpringEnvironmentConfigOptions copy) {
+<span class="nc" id="L59">        super();</span>
+<span class="nc" id="L60">        this.environment = copy.environment;</span>
+<span class="nc" id="L61">        this.iterableKeys = copy.iterableKeys;</span>
+<span class="nc" id="L62">    }</span>
 
     /**
      * Returns the Spring environment.
      * 
      * @return The Spring environment.
      */
-    public @NotNull Environment getEnvironment() {
-<span class="fc" id="L71">        return this.environment;</span>
+    public @Nullable Environment getEnvironment() {
+<span class="fc" id="L70">        return this.environment;</span>
     }
 
     /**
@@ -78,8 +77,8 @@ public class SpringEnvironmentConfigOptions {
      */
     public void setEnvironment(
             final Environment env) {
-<span class="fc" id="L81">        this.environment = env;</span>
-<span class="fc" id="L82">    }</span>
+<span class="fc" id="L80">        this.environment = env;</span>
+<span class="fc" id="L81">    }</span>
     /**
      * Returns if the configuration instance must support property keys
      * iteration.
@@ -88,7 +87,7 @@ public class SpringEnvironmentConfigOptions {
      *         property keys iteration, {@code false} otherwise.
      */
     public boolean isIterableKeys() {
-<span class="fc" id="L91">        return this.iterableKeys;</span>
+<span class="fc" id="L90">        return this.iterableKeys;</span>
     }
 
     /**
@@ -105,7 +104,7 @@ public class SpringEnvironmentConfigOptions {
      */
     public void setIterableKeys(
             final boolean iterable) {
-<span class="fc" id="L108">        this.iterableKeys = iterable;</span>
-<span class="fc" id="L109">    }</span>
+<span class="fc" id="L107">        this.iterableKeys = iterable;</span>
+<span class="fc" id="L108">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

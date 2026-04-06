@@ -23,6 +23,7 @@
  */
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Exception thrown during configuration operations.
@@ -44,8 +45,8 @@ extends RuntimeException {
      * call to {@link #initCause}.
      */
     public ConfigException() {
-<span class="fc" id="L47">        super();</span>
-<span class="fc" id="L48">    }</span>
+<span class="fc" id="L48">        super();</span>
+<span class="fc" id="L49">    }</span>
 
     /**
      * Constructs a new exception with the specified detail message.  The
@@ -56,9 +57,9 @@ extends RuntimeException {
      *          later retrieval by the {@link #getMessage()} method.
      */
     public ConfigException(
-            final String message) {
-<span class="fc" id="L60">        super(message);</span>
-<span class="fc" id="L61">    }</span>
+            final @Nullable String message) {
+<span class="fc" id="L61">        super(message);</span>
+<span class="fc" id="L62">    }</span>
 
     /**
      * Constructs a new exception with the specified cause and a detail
@@ -74,9 +75,9 @@ extends RuntimeException {
      *         unknown.)
      */
     public ConfigException(
-            final Throwable cause) {
-<span class="fc" id="L78">        super(cause);</span>
-<span class="fc" id="L79">    }</span>
+            final @Nullable Throwable cause) {
+<span class="fc" id="L79">        super(cause);</span>
+<span class="fc" id="L80">    }</span>
 
     /**
      * Constructs a new exception with the specified detail message and
@@ -92,10 +93,10 @@ extends RuntimeException {
      *         unknown.)
      */
     public ConfigException(
-            final String message,
-            final Throwable cause) {
-<span class="fc" id="L97">        super(message, cause);</span>
-<span class="fc" id="L98">    }</span>
+            final @Nullable String message,
+            final @Nullable Throwable cause) {
+<span class="fc" id="L98">        super(message, cause);</span>
+<span class="fc" id="L99">    }</span>
 
     /**
      * Constructs a new exception with the specified detail message,
@@ -111,11 +112,11 @@ extends RuntimeException {
      *                           be writable
      */
     public ConfigException(
-            final String message,
-            final Throwable cause,
+            final @Nullable String message,
+            final @Nullable Throwable cause,
             final boolean enableSuppression,
             final boolean writableStackTrace) {
-<span class="fc" id="L118">        super(message, cause, enableSuppression, writableStackTrace);</span>
-<span class="fc" id="L119">    }</span>
+<span class="fc" id="L119">        super(message, cause, enableSuppression, writableStackTrace);</span>
+<span class="fc" id="L120">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

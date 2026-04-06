@@ -22,8 +22,6 @@
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,9 +44,9 @@ extends JsonConfigOptions {
      * Empty constructor.
      */
     public YamlConfigOptions() {
-<span class="nc" id="L49">        super();</span>
-<span class="nc" id="L50">        setMapper(new ObjectMapper(new YAMLFactory()));</span>
-<span class="nc" id="L51">    }</span>
+<span class="nc" id="L47">        super();</span>
+<span class="nc" id="L48">        setMapper(new ObjectMapper(new YAMLFactory()));</span>
+<span class="nc" id="L49">    }</span>
 
     /**
      * Copy constructor.
@@ -56,8 +54,8 @@ extends JsonConfigOptions {
      * @param copy The instance to copy.
      */
     public YamlConfigOptions(
-            final @NotNull YamlConfigOptions copy) {
-<span class="nc" id="L60">        super(copy);</span>
-<span class="nc" id="L61">    }</span>
+            final YamlConfigOptions copy) {
+<span class="nc" id="L58">        super(copy);</span>
+<span class="nc" id="L59">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -22,8 +22,6 @@
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import dev.orne.config.impl.ConfigurerImpl;
@@ -47,9 +45,9 @@ public interface Configurer {
      * @param provider The {@code ConfigProvider} to use.
      * @return A new {@code Configurer} instance.
      */
-    static @NotNull Configurer fromProvider(
-            final @NotNull ConfigProvider provider) {
-<span class="fc" id="L52">        return new ConfigurerImpl(provider);</span>
+    static Configurer fromProvider(
+            final ConfigProvider provider) {
+<span class="fc" id="L50">        return new ConfigurerImpl(provider);</span>
     }
 
     /**
@@ -58,6 +56,6 @@ public interface Configurer {
      * @param bean The bean to configure.
      */
     void configure(
-            @NotNull Configurable bean);
+            Configurable bean);
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

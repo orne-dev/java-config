@@ -32,8 +32,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Enumeration;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -43,6 +41,7 @@ import org.apache.commons.lang3.Validate;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -64,7 +63,7 @@ import dev.orne.config.XmlConfigBaseBuilder;
 public class XmlConfigOptions {
 
     /** The class logger. */
-<span class="fc" id="L67">    private static final Logger LOG = LoggerFactory.getLogger(XmlConfigOptions.class);</span>
+<span class="fc" id="L66">    private static final Logger LOG = LoggerFactory.getLogger(XmlConfigOptions.class);</span>
 
     /** Error message for not found resources. */
     private static final String RESOURCE_NOT_FOUND_ERR =
@@ -80,49 +79,49 @@ public class XmlConfigOptions {
             &quot;Error mergin configuration XML documents&quot;;
 
     /** The XML document builder factory. */
-    private static final @NotNull DocumentBuilderFactory DOC_BUILDER_FACTORY;
+    private static final DocumentBuilderFactory DOC_BUILDER_FACTORY;
     static {
-<span class="fc" id="L85">        DOC_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();</span>
+<span class="fc" id="L84">        DOC_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();</span>
         try {
-<span class="fc" id="L87">            DOC_BUILDER_FACTORY.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);</span>
-<span class="nc" id="L88">        } catch (final ParserConfigurationException e) {</span>
-<span class="nc" id="L89">            LOG.warn(&quot;Error setting secure processing feature on XML DocumentBuilderFactory&quot;, e);</span>
-<span class="fc" id="L90">        }</span>
+<span class="fc" id="L86">            DOC_BUILDER_FACTORY.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);</span>
+<span class="nc" id="L87">        } catch (final ParserConfigurationException e) {</span>
+<span class="nc" id="L88">            LOG.warn(&quot;Error setting secure processing feature on XML DocumentBuilderFactory&quot;, e);</span>
+<span class="fc" id="L89">        }</span>
         try {
-<span class="fc" id="L92">            DOC_BUILDER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, &quot;&quot;);</span>
-<span class="nc" id="L93">        } catch (final IllegalArgumentException e) {</span>
-<span class="nc" id="L94">            LOG.debug(&quot;Error disabling external DTD access on XML DocumentBuilderFactory&quot;, e);</span>
-<span class="fc" id="L95">        }</span>
+<span class="fc" id="L91">            DOC_BUILDER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, &quot;&quot;);</span>
+<span class="nc" id="L92">        } catch (final IllegalArgumentException e) {</span>
+<span class="nc" id="L93">            LOG.debug(&quot;Error disabling external DTD access on XML DocumentBuilderFactory&quot;, e);</span>
+<span class="fc" id="L94">        }</span>
         try {
-<span class="nc" id="L97">            DOC_BUILDER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, &quot;&quot;);</span>
-<span class="fc" id="L98">        } catch (final IllegalArgumentException e) {</span>
-<span class="fc" id="L99">            LOG.debug(&quot;Error disabling external stylesheet access on XML DocumentBuilderFactory&quot;, e);</span>
-<span class="nc" id="L100">        }</span>
-<span class="fc" id="L101">    }</span>
+<span class="nc" id="L96">            DOC_BUILDER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, &quot;&quot;);</span>
+<span class="fc" id="L97">        } catch (final IllegalArgumentException e) {</span>
+<span class="fc" id="L98">            LOG.debug(&quot;Error disabling external stylesheet access on XML DocumentBuilderFactory&quot;, e);</span>
+<span class="nc" id="L99">        }</span>
+<span class="fc" id="L100">    }</span>
 
     /** The XML document builder. */
-    private final @NotNull DocumentBuilder builder;
+    private final DocumentBuilder builder;
     /** The XML document with the configuration properties. */
-    private final @NotNull Document document;
+    private final Document document;
     /** The configuration nested properties separator. */
-    private @NotBlank String propertySeparator;
+    private String propertySeparator;
     /** The XML attributes references prefix. */
-    private @NotBlank String attributePrefix;
+    private String attributePrefix;
 
     /**
      * Empty constructor.
      */
     public XmlConfigOptions() {
-<span class="fc" id="L116">        super();</span>
+<span class="fc" id="L115">        super();</span>
         try {
-<span class="fc" id="L118">            this.builder = DOC_BUILDER_FACTORY.newDocumentBuilder();</span>
-<span class="nc" id="L119">        } catch (final ParserConfigurationException e) {</span>
-<span class="nc" id="L120">            throw new ConfigException(&quot;Error creating XML document builder&quot;, e);</span>
-<span class="fc" id="L121">        }</span>
-<span class="fc" id="L122">        this.document = builder.newDocument();</span>
-<span class="fc" id="L123">        this.propertySeparator = XmlConfigBaseBuilder.DEFAULT_SEPARATOR;</span>
-<span class="fc" id="L124">        this.attributePrefix = XmlConfigBaseBuilder.DEFAULT_ATTRIBUTE_PREFIX;</span>
-<span class="fc" id="L125">    }</span>
+<span class="fc" id="L117">            this.builder = DOC_BUILDER_FACTORY.newDocumentBuilder();</span>
+<span class="nc" id="L118">        } catch (final ParserConfigurationException e) {</span>
+<span class="nc" id="L119">            throw new ConfigException(&quot;Error creating XML document builder&quot;, e);</span>
+<span class="fc" id="L120">        }</span>
+<span class="fc" id="L121">        this.document = builder.newDocument();</span>
+<span class="fc" id="L122">        this.propertySeparator = XmlConfigBaseBuilder.DEFAULT_SEPARATOR;</span>
+<span class="fc" id="L123">        this.attributePrefix = XmlConfigBaseBuilder.DEFAULT_ATTRIBUTE_PREFIX;</span>
+<span class="fc" id="L124">    }</span>
 
     /**
      * Copy constructor.
@@ -130,29 +129,29 @@ public class XmlConfigOptions {
      * @param copy The instance to copy.
      */
     public XmlConfigOptions(
-            final @NotNull XmlConfigOptions copy) {
-<span class="fc" id="L134">        super();</span>
+            final XmlConfigOptions copy) {
+<span class="fc" id="L133">        super();</span>
         try {
-<span class="fc" id="L136">            this.builder = DOC_BUILDER_FACTORY.newDocumentBuilder();</span>
-<span class="nc" id="L137">        } catch (final ParserConfigurationException e) {</span>
-<span class="nc" id="L138">            throw new ConfigException(&quot;Error creating XML document builder&quot;, e);</span>
-<span class="fc" id="L139">        }</span>
-<span class="fc" id="L140">        this.document = builder.newDocument();</span>
-<span class="fc bfc" id="L141" title="All 2 branches covered.">        if (copy.document.getDocumentElement() != null) {</span>
-<span class="fc" id="L142">            final Node rootCopy = this.document.importNode(copy.document.getDocumentElement(), true);</span>
-<span class="fc" id="L143">            this.document.appendChild(rootCopy);</span>
+<span class="fc" id="L135">            this.builder = DOC_BUILDER_FACTORY.newDocumentBuilder();</span>
+<span class="nc" id="L136">        } catch (final ParserConfigurationException e) {</span>
+<span class="nc" id="L137">            throw new ConfigException(&quot;Error creating XML document builder&quot;, e);</span>
+<span class="fc" id="L138">        }</span>
+<span class="fc" id="L139">        this.document = builder.newDocument();</span>
+<span class="fc bfc" id="L140" title="All 2 branches covered.">        if (copy.document.getDocumentElement() != null) {</span>
+<span class="fc" id="L141">            final Node rootCopy = this.document.importNode(copy.document.getDocumentElement(), true);</span>
+<span class="fc" id="L142">            this.document.appendChild(rootCopy);</span>
         }
-<span class="fc" id="L145">        this.propertySeparator = copy.propertySeparator;</span>
-<span class="fc" id="L146">        this.attributePrefix = copy.attributePrefix;</span>
-<span class="fc" id="L147">    }</span>
+<span class="fc" id="L144">        this.propertySeparator = copy.propertySeparator;</span>
+<span class="fc" id="L145">        this.attributePrefix = copy.attributePrefix;</span>
+<span class="fc" id="L146">    }</span>
 
     /**
      * Returns the XML document with the configuration properties.
      * 
      * @return The XML document with the configuration properties.
      */
-    public @NotNull Document getDocument() {
-<span class="fc" id="L155">        return this.document;</span>
+    public Document getDocument() {
+<span class="fc" id="L154">        return this.document;</span>
     }
 
     /**
@@ -160,8 +159,8 @@ public class XmlConfigOptions {
      * 
      * @return The configuration nested properties separator.
      */
-    public @NotBlank String getPropertySeparator() {
-<span class="fc" id="L164">        return this.propertySeparator;</span>
+    public String getPropertySeparator() {
+<span class="fc" id="L163">        return this.propertySeparator;</span>
     }
 
     /**
@@ -170,18 +169,18 @@ public class XmlConfigOptions {
      * @param separator The configuration nested properties separator.
      */
     public void setPropertySeparator(
-            final @NotBlank String separator) {
-<span class="fc" id="L174">        Validate.notBlank(separator, &quot;Property separator cannot be blank&quot;);</span>
-<span class="fc" id="L175">        this.propertySeparator = separator;</span>
-<span class="fc" id="L176">    }</span>
+            final String separator) {
+<span class="fc" id="L173">        Validate.notBlank(separator, &quot;Property separator cannot be blank&quot;);</span>
+<span class="fc" id="L174">        this.propertySeparator = separator;</span>
+<span class="fc" id="L175">    }</span>
 
     /**
      * Returns the XML attributes references prefix.
      * 
      * @return The XML attributes references prefix.
      */
-    public @NotBlank String getAttributePrefix() {
-<span class="fc" id="L184">        return this.attributePrefix;</span>
+    public String getAttributePrefix() {
+<span class="fc" id="L183">        return this.attributePrefix;</span>
     }
 
     /**
@@ -190,10 +189,10 @@ public class XmlConfigOptions {
      * @param prefix The XML attributes references prefix.
      */
     public void setAttributePrefix(
-            final @NotBlank String prefix) {
-<span class="nc" id="L194">        Validate.notBlank(prefix, &quot;Property separator cannot be blank&quot;);</span>
-<span class="nc" id="L195">        this.attributePrefix = prefix;</span>
-<span class="nc" id="L196">    }</span>
+            final String prefix) {
+<span class="nc" id="L193">        Validate.notBlank(prefix, &quot;Property separator cannot be blank&quot;);</span>
+<span class="nc" id="L194">        this.attributePrefix = prefix;</span>
+<span class="nc" id="L195">    }</span>
 
     /**
      * Creates an empty XML document with the specified root element name
@@ -207,21 +206,21 @@ public class XmlConfigOptions {
      * @param localName The root element name of the XML document to create.
      */
     public void setRootElement(
-            final String namespaceURI,
-            final @NotNull String localName) {
-<span class="pc bpc" id="L212" title="1 of 2 branches missed.">        if (this.document.getDocumentElement() != null) {</span>
-<span class="nc" id="L213">            this.document.removeChild(this.document.getDocumentElement());</span>
+            final @Nullable String namespaceURI,
+            final String localName) {
+<span class="pc bpc" id="L211" title="1 of 2 branches missed.">        if (this.document.getDocumentElement() != null) {</span>
+<span class="nc" id="L212">            this.document.removeChild(this.document.getDocumentElement());</span>
         }
         final Element root;
-<span class="pc bpc" id="L216" title="1 of 2 branches missed.">        if (namespaceURI == null) {</span>
-<span class="fc" id="L217">            root = this.document.createElement(localName);</span>
+<span class="pc bpc" id="L215" title="1 of 2 branches missed.">        if (namespaceURI == null) {</span>
+<span class="fc" id="L216">            root = this.document.createElement(localName);</span>
         } else {
-<span class="nc" id="L219">            root = this.document.createElementNS(</span>
+<span class="nc" id="L218">            root = this.document.createElementNS(</span>
                     namespaceURI,
                     localName);
         }
-<span class="fc" id="L223">        this.document.appendChild(root);</span>
-<span class="fc" id="L224">    }</span>
+<span class="fc" id="L222">        this.document.appendChild(root);</span>
+<span class="fc" id="L223">    }</span>
 
     /**
      * Adds the specified configuration properties to the configuration
@@ -230,43 +229,43 @@ public class XmlConfigOptions {
      * @param values The configuration properties.
      */
     public void add(
-            final @NotNull Document values) {
+            final Document values) {
         try {
-<span class="fc" id="L235">            final Element docRoot = values.getDocumentElement();</span>
-<span class="fc" id="L236">            Element cfgRoot = this.document.getDocumentElement();</span>
-<span class="pc bpc" id="L237" title="1 of 2 branches missed.">            if (cfgRoot == null) {</span>
-<span class="pc bpc" id="L238" title="1 of 2 branches missed.">                if (docRoot.getNamespaceURI() == null) {</span>
-<span class="fc" id="L239">                    cfgRoot = this.document.createElement(</span>
-<span class="fc" id="L240">                            docRoot.getTagName());</span>
+<span class="fc" id="L234">            final Element docRoot = values.getDocumentElement();</span>
+<span class="fc" id="L235">            Element cfgRoot = this.document.getDocumentElement();</span>
+<span class="pc bpc" id="L236" title="1 of 2 branches missed.">            if (cfgRoot == null) {</span>
+<span class="pc bpc" id="L237" title="1 of 2 branches missed.">                if (docRoot.getNamespaceURI() == null) {</span>
+<span class="fc" id="L238">                    cfgRoot = this.document.createElement(</span>
+<span class="fc" id="L239">                            docRoot.getTagName());</span>
                 } else {
-<span class="nc" id="L242">                    cfgRoot = this.document.createElementNS(</span>
-<span class="nc" id="L243">                            docRoot.getNamespaceURI(),</span>
-<span class="nc" id="L244">                            docRoot.getTagName());</span>
+<span class="nc" id="L241">                    cfgRoot = this.document.createElementNS(</span>
+<span class="nc" id="L242">                            docRoot.getNamespaceURI(),</span>
+<span class="nc" id="L243">                            docRoot.getTagName());</span>
                 }
-<span class="fc" id="L246">                this.document.appendChild(cfgRoot);</span>
+<span class="fc" id="L245">                this.document.appendChild(cfgRoot);</span>
             } else {
-<span class="nc bnc" id="L248" title="All 2 branches missed.">                if (!docRoot.getNamespaceURI().equals(cfgRoot.getNamespaceURI())</span>
-<span class="nc bnc" id="L249" title="All 2 branches missed.">                        || !docRoot.getLocalName().equals(cfgRoot.getLocalName())) {</span>
-<span class="nc" id="L250">                    throw new ConfigException(</span>
+<span class="nc bnc" id="L247" title="All 2 branches missed.">                if (!docRoot.getNamespaceURI().equals(cfgRoot.getNamespaceURI())</span>
+<span class="nc bnc" id="L248" title="All 2 branches missed.">                        || !docRoot.getLocalName().equals(cfgRoot.getLocalName())) {</span>
+<span class="nc" id="L249">                    throw new ConfigException(</span>
                             &quot;Configuration root element mismatch: expected &quot;
-<span class="nc" id="L252">                                    + cfgRoot.getNamespaceURI()</span>
+<span class="nc" id="L251">                                    + cfgRoot.getNamespaceURI()</span>
                                     + &quot;:&quot;
-<span class="nc" id="L254">                                    + cfgRoot.getLocalName()</span>
+<span class="nc" id="L253">                                    + cfgRoot.getLocalName()</span>
                                     + &quot;, found &quot;
-<span class="nc" id="L256">                                    + docRoot.getNamespaceURI()</span>
+<span class="nc" id="L255">                                    + docRoot.getNamespaceURI()</span>
                                     + &quot;:&quot;
-<span class="nc" id="L258">                                    + docRoot.getLocalName());</span>
+<span class="nc" id="L257">                                    + docRoot.getLocalName());</span>
                 }
             }
-<span class="fc bfc" id="L261" title="All 2 branches covered.">            while (docRoot.hasChildNodes()) {</span>
-<span class="fc" id="L262">                final Node child = docRoot.getFirstChild();</span>
-<span class="fc" id="L263">                docRoot.removeChild(child);</span>
-<span class="fc" id="L264">                cfgRoot.appendChild(this.document.importNode(child, true));</span>
-<span class="fc" id="L265">            }</span>
-<span class="nc" id="L266">        } catch (final DOMException e) {</span>
-<span class="nc" id="L267">            LOG.warn(MERGE_ERR, e);</span>
-<span class="fc" id="L268">        }</span>
-<span class="fc" id="L269">    }</span>
+<span class="fc bfc" id="L260" title="All 2 branches covered.">            while (docRoot.hasChildNodes()) {</span>
+<span class="fc" id="L261">                final Node child = docRoot.getFirstChild();</span>
+<span class="fc" id="L262">                docRoot.removeChild(child);</span>
+<span class="fc" id="L263">                cfgRoot.appendChild(this.document.importNode(child, true));</span>
+<span class="fc" id="L264">            }</span>
+<span class="nc" id="L265">        } catch (final DOMException e) {</span>
+<span class="nc" id="L266">            LOG.warn(MERGE_ERR, e);</span>
+<span class="fc" id="L267">        }</span>
+<span class="fc" id="L268">    }</span>
 
     /**
      * Loads the configuration properties from the specified ClassLoader
@@ -275,22 +274,22 @@ public class XmlConfigOptions {
      * @param path The ClassLoader resource path.
      */
     public void load(
-            final @NotNull String path) {
+            final String path) {
         try {
             final Enumeration&lt;URL&gt; resources =
-<span class="fc" id="L281">                    Thread.currentThread()</span>
-<span class="fc" id="L282">                            .getContextClassLoader()</span>
-<span class="fc" id="L283">                            .getResources(path);</span>
-<span class="fc bfc" id="L284" title="All 2 branches covered.">            if (!resources.hasMoreElements()) {</span>
-<span class="fc" id="L285">                LOG.warn(RESOURCE_NOT_FOUND_ERR, path);</span>
+<span class="fc" id="L280">                    Thread.currentThread()</span>
+<span class="fc" id="L281">                            .getContextClassLoader()</span>
+<span class="fc" id="L282">                            .getResources(path);</span>
+<span class="fc bfc" id="L283" title="All 2 branches covered.">            if (!resources.hasMoreElements()) {</span>
+<span class="fc" id="L284">                LOG.warn(RESOURCE_NOT_FOUND_ERR, path);</span>
             }
-<span class="fc bfc" id="L287" title="All 2 branches covered.">            while (resources.hasMoreElements()) {</span>
-<span class="fc" id="L288">                load(resources.nextElement());</span>
+<span class="fc bfc" id="L286" title="All 2 branches covered.">            while (resources.hasMoreElements()) {</span>
+<span class="fc" id="L287">                load(resources.nextElement());</span>
             }
-<span class="nc" id="L290">        } catch (final IOException e) {</span>
-<span class="nc" id="L291">            LOG.warn(READ_ERR, path, e);</span>
-<span class="fc" id="L292">        }</span>
-<span class="fc" id="L293">    }</span>
+<span class="nc" id="L289">        } catch (final IOException e) {</span>
+<span class="nc" id="L290">            LOG.warn(READ_ERR, path, e);</span>
+<span class="fc" id="L291">        }</span>
+<span class="fc" id="L292">    }</span>
 
     /**
      * Loads the configuration properties from the file in the specified
@@ -299,16 +298,16 @@ public class XmlConfigOptions {
      * @param path The file path.
      */
     public void load(
-            final @NotNull Path path) {
-<span class="fc bfc" id="L303" title="All 2 branches covered.">        if (!Files.exists(path)) {</span>
-<span class="fc" id="L304">            LOG.warn(RESOURCE_NOT_FOUND_ERR, path);</span>
+            final Path path) {
+<span class="fc bfc" id="L302" title="All 2 branches covered.">        if (!Files.exists(path)) {</span>
+<span class="fc" id="L303">            LOG.warn(RESOURCE_NOT_FOUND_ERR, path);</span>
         }
-<span class="fc" id="L306">        try (final InputStream fileIS = Files.newInputStream(path)) {</span>
-<span class="fc" id="L307">            load(fileIS);</span>
-<span class="fc" id="L308">        } catch (final IOException e) {</span>
-<span class="fc" id="L309">            LOG.warn(READ_ERR, path, e);</span>
-<span class="fc" id="L310">        }</span>
-<span class="fc" id="L311">    }</span>
+<span class="fc" id="L305">        try (final InputStream fileIS = Files.newInputStream(path)) {</span>
+<span class="fc" id="L306">            load(fileIS);</span>
+<span class="fc" id="L307">        } catch (final IOException e) {</span>
+<span class="fc" id="L308">            LOG.warn(READ_ERR, path, e);</span>
+<span class="fc" id="L309">        }</span>
+<span class="fc" id="L310">    }</span>
 
     /**
      * Loads the configuration properties from the specified file.
@@ -316,15 +315,15 @@ public class XmlConfigOptions {
      * @param file The file to load.
      */
     public void load(
-            final @NotNull File file) {
-<span class="fc" id="L320">        try (final InputStream fileIS = new FileInputStream(file)) {</span>
-<span class="fc" id="L321">            load(fileIS);</span>
-<span class="fc" id="L322">        } catch (final FileNotFoundException e) {</span>
-<span class="fc" id="L323">            LOG.warn(RESOURCE_NOT_FOUND_ERR, file, e);</span>
-<span class="nc" id="L324">        } catch (final IOException e) {</span>
-<span class="nc" id="L325">            LOG.warn(READ_ERR, file, e);</span>
-<span class="fc" id="L326">        }</span>
-<span class="fc" id="L327">    }</span>
+            final File file) {
+<span class="fc" id="L319">        try (final InputStream fileIS = new FileInputStream(file)) {</span>
+<span class="fc" id="L320">            load(fileIS);</span>
+<span class="fc" id="L321">        } catch (final FileNotFoundException e) {</span>
+<span class="fc" id="L322">            LOG.warn(RESOURCE_NOT_FOUND_ERR, file, e);</span>
+<span class="nc" id="L323">        } catch (final IOException e) {</span>
+<span class="nc" id="L324">            LOG.warn(READ_ERR, file, e);</span>
+<span class="fc" id="L325">        }</span>
+<span class="fc" id="L326">    }</span>
 
     /**
      * Loads the configuration properties from the specified URL.
@@ -332,13 +331,13 @@ public class XmlConfigOptions {
      * @param url The URL to load.
      */
     public void load(
-            final @NotNull URL url) {
-<span class="fc" id="L336">        try (final InputStream urlIS = url.openStream()) {</span>
-<span class="fc" id="L337">            load(urlIS);</span>
-<span class="fc" id="L338">        } catch (final IOException e) {</span>
-<span class="fc" id="L339">            LOG.warn(READ_ERR, url, e);</span>
-<span class="fc" id="L340">        }</span>
-<span class="fc" id="L341">    }</span>
+            final URL url) {
+<span class="fc" id="L335">        try (final InputStream urlIS = url.openStream()) {</span>
+<span class="fc" id="L336">            load(urlIS);</span>
+<span class="fc" id="L337">        } catch (final IOException e) {</span>
+<span class="fc" id="L338">            LOG.warn(READ_ERR, url, e);</span>
+<span class="fc" id="L339">        }</span>
+<span class="fc" id="L340">    }</span>
 
     /**
      * Loads the configuration properties from the specified
@@ -347,13 +346,13 @@ public class XmlConfigOptions {
      * @param docIS The XML document input stream.
      */
     public void load(
-            final @NotNull InputStream docIS) {
+            final InputStream docIS) {
         try {
-<span class="fc" id="L352">            final Document doc = this.builder.parse(docIS);</span>
-<span class="fc" id="L353">            add(doc);</span>
-<span class="nc" id="L354">        } catch (final SAXException | IOException e) {</span>
-<span class="nc" id="L355">            LOG.warn(PARSE_ERR, e);</span>
-<span class="fc" id="L356">        }</span>
-<span class="fc" id="L357">    }</span>
+<span class="fc" id="L351">            final Document doc = this.builder.parse(docIS);</span>
+<span class="fc" id="L352">            add(doc);</span>
+<span class="nc" id="L353">        } catch (final SAXException | IOException e) {</span>
+<span class="nc" id="L354">            LOG.warn(PARSE_ERR, e);</span>
+<span class="fc" id="L355">        }</span>
+<span class="fc" id="L356">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
