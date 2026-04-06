@@ -27,7 +27,6 @@ import java.util.Map;
 import org.apiguardian.api.API;
 
 import dev.orne.config.Config;
-import dev.orne.config.ConfigProviderBuilder;
 
 /**
  * Interface for available {@code Config} instances customization
@@ -55,7 +54,7 @@ import dev.orne.config.ConfigProviderBuilder;
  * }
  * </pre>
  * To customize the additional configurations registration
- * override the {@link #registerAdditionalConfigs(ConfigProviderBuilder, Map)}
+ * override the {@link #registerAdditionalConfigs(ConfigRegistry, Map)}
  * method.
  * <p>
  * Only one implementation of this interface is allowed per Spring context,

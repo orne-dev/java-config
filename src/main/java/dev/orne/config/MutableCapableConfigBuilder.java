@@ -30,6 +30,7 @@ import org.apiguardian.api.API;
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-05
  * @param <S> The concrete type of the builder.
+ * @param <M> The type of the mutable configuration builder.
  * @since 1.0
  * @see MutableConfig
  */

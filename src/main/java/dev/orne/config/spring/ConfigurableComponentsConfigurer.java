@@ -102,8 +102,6 @@ implements ImportAware {
     /**
      * Exposes the Spring configurable components post-processor.
      * 
-     * @param configurer The application provided or exposed configurer, if
-     * any.
      * @return The configurable components post-processor.
      */
     @Bean(name=POST_PROCESSOR)
