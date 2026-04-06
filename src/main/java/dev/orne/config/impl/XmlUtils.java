@@ -31,8 +31,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.xml.XMLConstants;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -46,6 +44,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -106,10 +105,10 @@ public final class XmlUtils {
      * @return {@code true} if the property exists, {@code false} otherwise.
      */
     static boolean contains(
-            final @NotNull Document document,
-            final @NotNull String property,
-            final @NotNull String propertySeparator,
-            final @NotNull String attributePrefix) {
+            final Document document,
+            final String property,
+            final String propertySeparator,
+            final String attributePrefix) {
         final Element root = document.getDocumentElement();
         final Pair<List<String>, String> split = splitProperty(property, propertySeparator);
         final List<String> parts = split.getLeft();
@@ -131,10 +130,10 @@ public final class XmlUtils {
      * @param attributePrefix The prefix used for attributes.
      * @return A stream of keys extracted from the document.
      */
-    static @NotNull Stream<String> extractKeys(
-            final @NotNull Document document,
-            final @NotNull String propertySeparator,
-            final @NotNull String attributePrefix) {
+    static Stream<String> extractKeys(
+            final Document document,
+            final String propertySeparator,
+            final String attributePrefix) {
         final NodeList children = document.getDocumentElement().getChildNodes();
         return IntStream.range(0, children.getLength())
                 .mapToObj(children::item)
@@ -158,11 +157,11 @@ public final class XmlUtils {
      * @param prefix The prefix to prepend to the keys.
      * @return A stream of keys extracted from the element and its children.
      */
-    static @NotNull Stream<String> extractKeys(
-            final @NotNull Element element,
-            final @NotNull String prefix,
-            final @NotNull String propertySeparator,
-            final @NotNull String attributePrefix) {
+    static Stream<String> extractKeys(
+            final Element element,
+            final String prefix,
+            final String propertySeparator,
+            final String attributePrefix) {
         final String value = XmlUtils.getValue(element);
         final Stream<String> elementKey;
         if (value == null) {
@@ -199,10 +198,10 @@ public final class XmlUtils {
      * @return An Optional containing the value of the property, or empty if not found.
      */
     static Optional<String> getValue(
-            final @NotNull Document document,
-            final @NotNull String property,
-            final @NotNull String propertySeparator,
-            final @NotNull String attributePrefix) {
+            final Document document,
+            final String property,
+            final String propertySeparator,
+            final String attributePrefix) {
         final Element root = document.getDocumentElement();
         final Pair<List<String>, String> split = splitProperty(property, propertySeparator);
         final List<String> parts = split.getLeft();
@@ -224,11 +223,11 @@ public final class XmlUtils {
      * @param value The value to set, or null to remove the leaf node.
      */
     static void setValue(
-            final @NotNull Document document,
-            final @NotNull String property,
-            final @NotNull String propertySeparator,
-            final @NotNull String attributePrefix,
-            final String value) {
+            final Document document,
+            final String property,
+            final String propertySeparator,
+            final String attributePrefix,
+            final @Nullable String value) {
         final Element root = document.getDocumentElement();
         final Pair<List<String>, String> split = splitProperty(property, propertySeparator);
         final List<String> parts = split.getLeft();
@@ -255,9 +254,9 @@ public final class XmlUtils {
      * @param parts The list of parts representing the path to the element.
      * @return An Optional containing the found element, or empty if not found.
      */
-    static @NotNull Optional<Element> findElement(
-            final @NotNull Element parent,
-            final @NotNull List<String> parts) {
+    static Optional<Element> findElement(
+            final Element parent,
+            final List<String> parts) {
         if (parts.isEmpty()) {
             return Optional.of(parent);
         } else {
@@ -276,9 +275,9 @@ public final class XmlUtils {
      * @param parts The list of parts representing the path to the element.
      * @return The found or newly created element.
      */
-    static @NotNull Element getElement(
-            final @NotNull Element parent,
-            final @NotNull List<String> parts) {
+    static Element getElement(
+            final Element parent,
+            final List<String> parts) {
         if (parts.isEmpty()) {
             return parent;
         } else {
@@ -299,9 +298,9 @@ public final class XmlUtils {
      * @param name The local name of the new child element.
      * @return The newly created child element.
      */
-    static @NotNull Element createChild(
-            final @NotNull Element parent,
-            final @NotNull String name) {
+    static Element createChild(
+            final Element parent,
+            final String name) {
         return createChild(parent, parent.getNamespaceURI(), name);
     }
 
@@ -314,10 +313,10 @@ public final class XmlUtils {
      * @param name The local name of the new child element.
      * @return The newly created child element.
      */
-    static @NotNull Element createChild(
-            final @NotNull Element parent,
-            final String namespace,
-            final @NotNull String name) {
+    static Element createChild(
+            final Element parent,
+            final @Nullable String namespace,
+            final String name) {
         final Element child;
         if (namespace == null) {
             child = parent.getOwnerDocument().createElement(name);
@@ -336,9 +335,9 @@ public final class XmlUtils {
      * @param name The local name of the child element to find.
      * @return An Optional containing the found child element, or empty if not found.
      */
-    static @NotNull Optional<Element> getChild(
-            final @NotNull Element parent,
-            final @NotNull String name) {
+    static Optional<Element> getChild(
+            final Element parent,
+            final String name) {
         final NodeList children = parent.getChildNodes();
         return IntStream.range(0, children.getLength())
                 .mapToObj(children::item)
@@ -358,9 +357,9 @@ public final class XmlUtils {
      * @return An Optional containing the leaf node if found, or empty if not found.
      */
     static Optional<Node> findLeaf(
-            final @NotNull Element parent,
-            final @NotNull String name,
-            final @NotNull String attributePrefix) {
+            final Element parent,
+            final String name,
+            final String attributePrefix) {
         if (name.startsWith(attributePrefix)) {
             final String attrName = name.substring(attributePrefix.length());
             return Optional.ofNullable(parent.getAttributeNode(attrName));
@@ -380,9 +379,9 @@ public final class XmlUtils {
      * @return The leaf node, either an attribute or an element.
      */
     static Node getLeaf(
-            final @NotNull Element parent,
-            final @NotNull String name,
-            final @NotNull String attributePrefix) {
+            final Element parent,
+            final String name,
+            final String attributePrefix) {
         if (name.startsWith(attributePrefix)) {
             final String attrName = name.substring(attributePrefix.length());
             Attr attr = parent.getAttributeNode(attrName);
@@ -405,7 +404,7 @@ public final class XmlUtils {
      * attribute or element with a text value.
      */
     static String getLeafValue(
-            final @NotNull Node leaf) {
+            final Node leaf) {
         if (leaf instanceof Attr) {
             return ((Attr) leaf).getValue();
         } else if (leaf instanceof Element) {
@@ -422,8 +421,8 @@ public final class XmlUtils {
      * @param value The value to set.
      */
     static void setLeafValue(
-            final @NotNull Node leaf,
-            final @NotNull String value) {
+            final Node leaf,
+            final String value) {
         if (leaf instanceof Attr) {
             ((Attr) leaf).setValue(value);
         } else if (leaf instanceof Element) {
@@ -437,7 +436,7 @@ public final class XmlUtils {
      * @param leaf The XML node from which to remove the value.
      */
     static void removeLeafValue(
-            final @NotNull Node leaf) {
+            final Node leaf) {
         if (leaf instanceof Attr) {
             leaf.getParentNode().removeChild(leaf);
         } else if (leaf instanceof Element) {
@@ -451,8 +450,8 @@ public final class XmlUtils {
      * @param element The XML element to extract the value from.
      * @return The trimmed text value of the element, or {@code null} if no text is found.
      */
-    static String getValue(
-            final @NotNull Element element) {
+    static @Nullable String getValue(
+            final Element element) {
         final NodeList children = element.getChildNodes();
         final String value = IntStream.range(0, children.getLength())
                 .mapToObj(children::item)
@@ -474,8 +473,8 @@ public final class XmlUtils {
      * @param value The value to set.
      */
     static void setValue(
-            final @NotNull Element element,
-            final @NotNull String value) {
+            final Element element,
+            final String value) {
         removeValue(element);
         final Text textNode = element.getOwnerDocument().createTextNode(value);
         element.appendChild(textNode);
@@ -487,7 +486,7 @@ public final class XmlUtils {
      * @param element The XML element from which to remove text nodes.
      */
     static void removeValue(
-            final @NotNull Element element) {
+            final Element element) {
         final NodeList children = element.getChildNodes();
         IntStream.range(0, children.getLength())
                 .mapToObj(children::item)
@@ -505,9 +504,9 @@ public final class XmlUtils {
      * leaf node name.
      * @throws IllegalArgumentException If the property is null or empty.
      */
-    static @NotNull Pair<List<String>, String> splitProperty(
-            final @NotBlank String property,
-            final @NotBlank String propertySeparator) {
+    static Pair<List<String>, String> splitProperty(
+            final String property,
+            final String propertySeparator) {
         final List<String> parts = Arrays.asList(
                 StringUtils.splitByWholeSeparator(property, propertySeparator));
         if (parts.isEmpty()) {
@@ -524,8 +523,8 @@ public final class XmlUtils {
      * @return The string representation of the XML document.
      * @throws ConfigException If an error occurs during the transformation.
      */
-    static @NotNull String getXml(
-            final @NotNull Document document) {
+    static String getXml(
+            final Document document) {
         try {
             final Transformer transformer = TRANSFORMER_FACTORY.newTransformer();
             final DOMSource source = new DOMSource(document);

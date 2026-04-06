@@ -1,7 +1,5 @@
 package dev.orne.config;
 
-import org.apiguardian.api.API;
-
 /*-
  * #%L
  * Orne Config
@@ -23,6 +21,8 @@ import org.apiguardian.api.API;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
+
+import org.apiguardian.api.API;
 
 /**
  * Watchable mutable configuration properties provider that can

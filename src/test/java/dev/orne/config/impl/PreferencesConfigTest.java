@@ -28,8 +28,6 @@ import static org.mockito.BDDMockito.*;
 import java.util.Map;
 import java.util.prefs.Preferences;
 
-import javax.validation.constraints.NotNull;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -63,7 +61,7 @@ extends AbstractConfigTest {
      */
     @Override
     protected ConfigBuilder<?> createBuilder(
-            final @NotNull Map<String, String> properties) {
+            final Map<String, String> properties) {
         final TestPreferencesFactory.InMemoryPreferences preferences =
                 new TestPreferencesFactory.InMemoryPreferences();
         preferences.setAttributes(properties);

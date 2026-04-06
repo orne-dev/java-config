@@ -22,8 +22,6 @@ package dev.orne.config.spring;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -32,6 +30,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportAware;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Configurer;
 
@@ -55,11 +54,11 @@ implements ImportAware {
     public static final String POST_PROCESSOR = "orneConfigConfigurableComponentsPostProcessor";
 
     /** The annotation data for the configuration. */
-    protected AnnotationAttributes annotationData;
+    protected @Nullable AnnotationAttributes annotationData;
     /** The {@code ConfigProvider} supplier for current Spring context. */
-    protected ConfigProviderConfigurer springConfigProvider;
+    protected @Nullable ConfigProviderConfigurer springConfigProvider;
     /** The exposed configurable components {@code Configurer}, if any. */
-    protected Configurer exposedConfigurer;
+    protected @Nullable Configurer exposedConfigurer;
 
     /**
      * Creates a new instance.
@@ -73,7 +72,7 @@ implements ImportAware {
      */
     @Override
     public void setImportMetadata(
-            final @NotNull AnnotationMetadata importMetadata) {
+            final AnnotationMetadata importMetadata) {
         annotationData = AnnotationAttributes.fromMap(
                 importMetadata.getAnnotationAttributes(EnableConfigurableComponents.class.getName()));
     }
@@ -103,12 +102,10 @@ implements ImportAware {
     /**
      * Exposes the Spring configurable components post-processor.
      * 
-     * @param configurer The application provided or exposed configurer, if
-     * any.
      * @return The configurable components post-processor.
      */
     @Bean(name=POST_PROCESSOR)
-    public @NotNull ConfigurableComponentsPostProcessor configurableComponentsPostProcessor() {
+    public ConfigurableComponentsPostProcessor configurableComponentsPostProcessor() {
         final Configurer configurer = Configurer.fromProvider(
                 this.springConfigProvider.getConfigProvider());
         if (this.annotationData != null && this.annotationData.getBoolean("exposeConfigurer")) {

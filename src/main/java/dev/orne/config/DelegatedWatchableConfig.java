@@ -24,8 +24,6 @@ package dev.orne.config;
 
 import java.util.Set;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import dev.orne.config.impl.EventsHandler;
@@ -47,7 +45,7 @@ extends DelegatedMutableConfig
 implements WatchableConfig {
 
     /** The configuration change events handler. */
-    private final @NotNull EventsHandler events;
+    private final EventsHandler events;
 
     /**
      * Creates a new instance.
@@ -55,7 +53,7 @@ implements WatchableConfig {
      * @param delegate The configuration to delegate to.
      */
     public DelegatedWatchableConfig(
-            final @NotNull WatchableConfig delegate) {
+            final WatchableConfig delegate) {
         super(delegate);
         this.events = new EventsHandler();
         delegate.addListener(
@@ -66,7 +64,7 @@ implements WatchableConfig {
      * {@inheritDoc}
      */
     @Override
-    protected @NotNull WatchableConfig getDelegate() {
+    protected WatchableConfig getDelegate() {
         return (WatchableConfig) super.getDelegate();
     }
 
@@ -75,7 +73,7 @@ implements WatchableConfig {
      */
     @Override
     public void addListener(
-            final @NotNull Listener listener) {
+            final Listener listener) {
         this.events.add(listener);
     }
 
@@ -84,7 +82,7 @@ implements WatchableConfig {
      */
     @Override
     public void removeListener(
-            final @NotNull Listener listener) {
+            final Listener listener) {
         this.events.remove(listener);
     }
 
@@ -95,7 +93,7 @@ implements WatchableConfig {
      * @param keys The changed configuration properties.
      */
     protected void notifyDelegateChanges(
-            final @NotNull Set<String> keys) {
+            final Set<String> keys) {
         this.events.notify(this, keys);
     }
 }

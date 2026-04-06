@@ -23,9 +23,9 @@ package dev.orne.config.impl;
  */
 
 import javax.crypto.Cipher;
-import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.ConfigCryptoEngine;
 import dev.orne.config.ConfigCryptoProvider;
@@ -55,7 +55,7 @@ extends AbstractConfigCryptoProvider {
      */
     @API(status = API.Status.INTERNAL, since = "1.0")
     public DefaultConfigCryptoProvider(
-            final @NotNull CryptoProviderOptions options) {
+            final CryptoProviderOptions options) {
         super(options);
     }
 
@@ -67,7 +67,7 @@ extends AbstractConfigCryptoProvider {
      * @throws ConfigCryptoProviderException If an error occurs creating the
      * shared {@code Cipher}
      */
-    protected @NotNull Cipher getCipher()
+    protected Cipher getCipher()
     throws ConfigCryptoProviderException {
         synchronized (this) {
             if (this.cipher == null) {
@@ -81,8 +81,8 @@ extends AbstractConfigCryptoProvider {
      * {@inheritDoc}
      */
     @Override
-    public String encrypt(
-            final String value)
+    public @Nullable String encrypt(
+            final @Nullable String value)
     throws ConfigCryptoProviderException {
         checkDestroyed();
         if (value == null) {
@@ -98,8 +98,8 @@ extends AbstractConfigCryptoProvider {
      * {@inheritDoc}
      */
     @Override
-    public String decrypt(
-            final String value)
+    public @Nullable String decrypt(
+            final @Nullable String value)
     throws ConfigCryptoProviderException {
         checkDestroyed();
         if (value == null) {

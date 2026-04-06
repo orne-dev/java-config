@@ -22,8 +22,6 @@ package dev.orne.config.spring;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +40,7 @@ import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
 import org.springframework.core.type.AnnotationMetadata;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 
@@ -63,7 +62,7 @@ implements EnvironmentAware, BeanFactoryPostProcessor {
     private static final Logger LOG = LoggerFactory.getLogger(ConfigPropertySourcePostProcessor.class);
 
     /** The Spring environment. */
-    protected ConfigurableEnvironment environment;
+    protected @Nullable ConfigurableEnvironment environment;
 
     /**
      * Creates a new instance.
@@ -77,7 +76,7 @@ implements EnvironmentAware, BeanFactoryPostProcessor {
      */
     @Override
     public void setEnvironment(
-            final @NotNull Environment environment) {
+            final Environment environment) {
         if (environment instanceof ConfigurableEnvironment) {
             this.environment = (ConfigurableEnvironment) environment;
         }
@@ -142,7 +141,7 @@ implements EnvironmentAware, BeanFactoryPostProcessor {
             final ConfigurableListableBeanFactory beanFactory,
             final String configurationBean,
             final AnnotationMetadata annotations) {
-        AnnotationAttributes annotation = AnnotationAttributes.fromMap(
+        final AnnotationAttributes annotation = AnnotationAttributes.fromMap(
                 annotations.getAnnotationAttributes(ConfigPropertySource.class.getName()));
         if (annotation != null) {
             processSource(beanFactory, configurationBean, annotation);
@@ -162,10 +161,10 @@ implements EnvironmentAware, BeanFactoryPostProcessor {
      *         multiple configuration beans of the specified type are found.
      */
     protected void processAggregateAnnotations(
-            final @NotNull ConfigurableListableBeanFactory beanFactory,
-            final @NotNull String configurationBean,
-            final @NotNull AnnotationMetadata annotations) {
-        AnnotationAttributes aggregator = AnnotationAttributes.fromMap(
+            final ConfigurableListableBeanFactory beanFactory,
+            final String configurationBean,
+            final AnnotationMetadata annotations) {
+        final AnnotationAttributes aggregator = AnnotationAttributes.fromMap(
                 annotations.getAnnotationAttributes(ConfigPropertySources.class.getName()));
         if (aggregator != null) {
             final AnnotationAttributes[] childs = aggregator.getAnnotationArray(
@@ -189,9 +188,9 @@ implements EnvironmentAware, BeanFactoryPostProcessor {
      *         multiple configuration beans of the specified type are found.
      */
     protected void processSource(
-            final @NotNull ConfigurableListableBeanFactory beanFactory,
-            final @NotNull String configurationBean,
-            final @NotNull AnnotationAttributes annotation) {
+            final ConfigurableListableBeanFactory beanFactory,
+            final String configurationBean,
+            final AnnotationAttributes annotation) {
         String configName = annotation.getString("name");
         if (configName.isEmpty()) {
             configName = annotation.getString("value");
@@ -248,8 +247,8 @@ implements EnvironmentAware, BeanFactoryPostProcessor {
      *         and {@code ignoreMissing} is {@code false}.
      */
     protected String validateConfigName(
-            final @NotNull ConfigurableListableBeanFactory beanFactory,
-            final @NotNull String configName,
+            final ConfigurableListableBeanFactory beanFactory,
+            final String configName,
             final boolean ignoreMissing) {
         try {
             final BeanDefinition configDef = beanFactory.getMergedBeanDefinition(configName);
@@ -294,8 +293,8 @@ implements EnvironmentAware, BeanFactoryPostProcessor {
      *         found and {@code ignoreMissing} is {@code false}.
      */
     protected String findBeanByType(
-            final @NotNull ConfigurableListableBeanFactory beanFactory,
-            final @NotNull Class<? extends Config> configType,
+            final ConfigurableListableBeanFactory beanFactory,
+            final Class<? extends Config> configType,
             final boolean ignoreMissing) {
         final String[] beanNames = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(
                 beanFactory,

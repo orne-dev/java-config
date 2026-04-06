@@ -1,9 +1,5 @@
 package dev.orne.config.impl;
 
-import java.util.Objects;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
-
 /*-
  * #%L
  * Orne Config
@@ -26,8 +22,7 @@ import java.util.stream.StreamSupport;
  * #L%
  */
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
@@ -35,6 +30,9 @@ import org.apache.commons.configuration2.event.Event;
 import org.apache.commons.configuration2.event.EventSource;
 import org.apache.commons.configuration2.reloading.ReloadingEvent;
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
+
+import dev.orne.config.WatchableConfig;
 
 /**
  * Implementation of {@code MutableConfig} based on Apache Commons
@@ -47,10 +45,9 @@ import org.apiguardian.api.API;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class CommonsMutableConfigImpl
-extends AbstractWatchableConfig {
+extends CommonsConfigImpl
+implements WatchableConfig {
 
-    /** The delegated Apache Commons configuration. */
-    private final @NotNull Configuration config;
     /** If local events must be suppressed. */
     private final boolean localEventsSuppressed;
 
@@ -62,27 +59,29 @@ extends AbstractWatchableConfig {
      * @param commonsOptions The Apache Commons based configuration options.
      */
     public CommonsMutableConfigImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions,
-            final @NotNull CommonsConfigOptions commonsOptions) {
-        super(options, mutableOptions);
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final CommonsConfigOptions commonsOptions) {
+        super(options, mutableOptions, commonsOptions);
         Objects.requireNonNull(commonsOptions);
-        this.config = (Configuration) commonsOptions.getDelegated();
-        if (config instanceof EventSource) {
+        if (!(commonsOptions.getDelegated() instanceof Configuration)) {
+            throw new IllegalArgumentException(
+                    "The delegated configuration must be an mutable instance of Apache Commons Configuration");
+        }
+        if (commonsOptions.getDelegated() instanceof EventSource) {
             this.localEventsSuppressed = true;
-            configureCommonsEvents((EventSource) config);
+            configureCommonsEvents((EventSource) commonsOptions.getDelegated());
         } else {
             this.localEventsSuppressed = false;
         }
     }
 
     /**
-     * Returns the delegated Apache Commons configuration.
-     * 
-     * @return The delegated Apache Commons configuration
+     * {@inheritDoc}
      */
-    protected @NotNull Configuration getConfig() {
-        return this.config;
+    @Override
+    protected Configuration getConfig() {
+        return (Configuration) super.getConfig();
     }
 
     /**
@@ -98,35 +97,10 @@ extends AbstractWatchableConfig {
      * {@inheritDoc}
      */
     @Override
-    protected boolean isEmptyInt() {
-        return this.config.isEmpty();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected @NotNull Stream<String> getKeysInt() {
-        final Iterable<String> iterable = this.config::getKeys;
-        return StreamSupport.stream(iterable.spliterator(), false);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean containsInt(
-            final @NotBlank String key) {
-        return this.config.containsKey(key);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected String getInt(
-            final @NotBlank String key) {
-        return this.config.getString(key);
+    public void set(
+            final String key,
+            final @Nullable String value) {
+        super.set(key, value);
     }
 
     /**
@@ -134,9 +108,18 @@ extends AbstractWatchableConfig {
      */
     @Override
     protected void setInt(
-            final @NotBlank String key,
-            final @NotNull String value) {
-        this.config.setProperty(key, value);
+            final String key,
+            final String value) {
+        getConfig().setProperty(key, value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void remove(
+            final String... keys) {
+        super.remove(keys);
     }
 
     /**
@@ -144,9 +127,9 @@ extends AbstractWatchableConfig {
      */
     @Override
     protected void removeInt(
-            final @NotBlank String... keys) {
+            final String... keys) {
         for (final String key : keys) {
-            this.config.clearProperty(key);
+            getConfig().clearProperty(key);
         }
     }
 
@@ -154,8 +137,26 @@ extends AbstractWatchableConfig {
      * {@inheritDoc}
      */
     @Override
+    public void addListener(
+            final Listener listener) {
+        super.addListener(listener);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void removeListener(
+            final Listener listener) {
+        super.removeListener(listener);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected void notifyLocalChanges(
-            final @NotNull String... keys) {
+            final String... keys) {
         if (!this.localEventsSuppressed) {
             super.notifyLocalChanges(keys);
         }
@@ -167,8 +168,8 @@ extends AbstractWatchableConfig {
      * @param source The Apache Commons events source.
      */
     protected void configureCommonsEvents(
-            final @NotNull EventSource source) {
-        final EventSource commonsEvents = (EventSource) config;
+            final EventSource source) {
+        final EventSource commonsEvents = (EventSource) getConfig();
         commonsEvents.addEventListener(
                 ConfigurationEvent.ADD_PROPERTY,
                 this::processCommonsEvent);
@@ -189,7 +190,7 @@ extends AbstractWatchableConfig {
      * @param event The Apache Commons event.
      */
     protected void processCommonsEvent(
-            final @NotNull Event event) {
+            final Event event) {
         if (event instanceof ConfigurationEvent) {
             final ConfigurationEvent propEvent = (ConfigurationEvent) event;
             if (propEvent.isBeforeUpdate()) {

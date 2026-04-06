@@ -26,11 +26,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.lang3.Validate;
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigException;
@@ -55,15 +53,15 @@ implements Config {
             "Property key must be a non blank string";
 
     /** The parent configuration. */
-    private final Config parent;
+    private final @Nullable Config parent;
     /** If parent configuration property values are overridden values of this instance. */
     private final boolean overrideParentProperties;
     /** The configuration properties values decoder. */
-    private final @NotNull ValueDecoder decoder;
+    private final ValueDecoder decoder;
     /** The configuration properties values decorator. */
-    private final @NotNull ValueDecorator decorator;
+    private final ValueDecorator decorator;
     /** The configuration properties values variable resolver. */
-    private final VariableResolver resolver;
+    private final @Nullable VariableResolver resolver;
 
     /**
      * Creates a new instance.
@@ -71,7 +69,7 @@ implements Config {
      * @param options The configuration builder options.
      */
     protected AbstractConfig(
-            final @NotNull ConfigOptions options) {
+            final ConfigOptions options) {
         super();
         Objects.requireNonNull(options);
         if (options.getCryptoProvider() != null) {
@@ -114,7 +112,7 @@ implements Config {
      * @return The parent configuration
      */
     @Override
-    public Config getParent() {
+    public @Nullable Config getParent() {
         return this.parent;
     }
 
@@ -136,7 +134,7 @@ implements Config {
      * 
      * @return The configuration properties values decoder.
      */
-    protected @NotNull ValueDecoder getDecoder() {
+    protected ValueDecoder getDecoder() {
         return this.decoder;
     }
 
@@ -145,7 +143,7 @@ implements Config {
      * 
      * @return The configuration properties values decorator.
      */
-    protected @NotNull ValueDecorator getDecorator() {
+    protected ValueDecorator getDecorator() {
         return this.decorator;
     }
 
@@ -154,7 +152,7 @@ implements Config {
      * 
      * @return The configuration properties values variable resolver.
      */
-    protected @NotNull Optional<VariableResolver> getResolver() {
+    protected Optional<VariableResolver> getResolver() {
         return Optional.ofNullable(this.resolver);
     }
 
@@ -185,7 +183,7 @@ implements Config {
      */
     @Override
     public boolean contains(
-            final @NotBlank String key) {
+            final String key) {
         Validate.notBlank(key, KEY_BLANK_ERR);
         return containsInt(key) || 
                 (this.parent != null && this.parent.contains(key));
@@ -199,13 +197,13 @@ implements Config {
      * @return Returns {@code true} if the property has been configured.
      */
     protected abstract boolean containsInt(
-            @NotBlank String key);
+            String key);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull Stream<String> getKeys() {
+    public Stream<String> getKeys() {
         if (this.parent == null) {
             return getKeysInt();
         } else {
@@ -226,14 +224,14 @@ implements Config {
      * cannot be iterated.
      * @throws ConfigException If an error occurs accessing the configuration.
      */
-    protected abstract @NotNull Stream<String> getKeysInt();
+    protected abstract Stream<String> getKeysInt();
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String get(
-            final @NotBlank String key) {
+    public @Nullable String get(
+            final String key) {
         Validate.notBlank(key, KEY_BLANK_ERR);
         return this.decorator.decorate(getUndecored(key));
     }
@@ -242,8 +240,8 @@ implements Config {
      * {@inheritDoc}
      */
     @Override
-    public String getUndecored(
-            final @NotBlank String key) {
+    public @Nullable String getUndecored(
+            final String key) {
         final String value;
         if (this.overrideParentProperties) {
             if (containsInt(key)) {
@@ -271,6 +269,6 @@ implements Config {
      * @throws ConfigException If an error occurs retrieving the configuration
      * property value.
      */
-    protected abstract String getInt(
-            final @NotBlank String key);
+    protected abstract @Nullable String getInt(
+            final String key);
 }

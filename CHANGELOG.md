@@ -1,5 +1,30 @@
 # Orne Java configuration utilities - Changelog
 
+## 1.1.0 - 2026-04-04
+
+### Changed
+
+- Bump parent POM to 1.3.0.
+- Change `apiguardian-api` dependency scope to `compile`.
+- Bump `org.apache.commons:commons-lang3` to 3.20.0.
+- Bump `org.assertj:assertj-core` to 3.27.7.
+- Refactor and simplify internal implementation classes.
+
+### Added
+
+- Add dependency with `org.jspecify:jspecify` 1.0.0.
+- Add dependency with `org.apache.commons:commons-text` 1.15.0.
+
+### Removed
+
+- Remove dependency with `javax.validation:validation-api` in favor of `jspecify`.
+
+### Fixed
+
+- Fix incorrect optional transitive dependency usage of
+  `org.apache.commons:commons-text` for variable resolution support.
+- Fix `ConfigSubtype` support of lambdas in default methods.
+
 ## 1.0.0 - 2026-03-29
 
 - **Maven coordinates change.**

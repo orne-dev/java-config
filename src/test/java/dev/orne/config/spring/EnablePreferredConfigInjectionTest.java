@@ -26,8 +26,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Map;
 
-import javax.validation.constraints.NotNull;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Tag;
 import org.springframework.beans.factory.UnsatisfiedDependencyException;
@@ -407,15 +405,15 @@ class EnablePreferredConfigInjectionTest {
     implements ConfigProviderCustomizer {
 
         @Override
-        public @NotNull Config configureDefaultConfig(
-                final @NotNull Map<String, Config> configs) {
+        public Config configureDefaultConfig(
+                final Map<String, Config> configs) {
             return primaryConfig();
         }
 
         @Override
         public void registerAdditionalConfigs(
-                final @NotNull ConfigRegistry builder,
-                final @NotNull Map<String, Config> configs) {
+                final ConfigRegistry builder,
+                final Map<String, Config> configs) {
             // Ensure priority to subtypeConfig over subtypeConfig2
             builder.add(subtypeConfig());
             ConfigProviderCustomizer.super.registerAdditionalConfigs(builder, configs);

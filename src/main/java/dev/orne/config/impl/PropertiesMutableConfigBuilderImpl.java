@@ -28,12 +28,9 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import dev.orne.config.PropertiesMutableConfigBuilder;
-
 
 /**
  * Implementation of {@code Properties} based mutable configuration builder.
@@ -49,7 +46,7 @@ extends AbstractMutableConfigBuilderImpl<PropertiesMutableConfigBuilder>
 implements PropertiesMutableConfigBuilder {
 
     /** The properties based configuration options. */
-    protected final @NotNull PropertiesConfigOptions propertyOptions;
+    protected final PropertiesConfigOptions propertyOptions;
 
     /**
      * Copy constructor.
@@ -60,9 +57,9 @@ implements PropertiesMutableConfigBuilder {
      * copy.
      */
     protected PropertiesMutableConfigBuilderImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions,
-            final @NotNull PropertiesConfigOptions propertyOptions) {
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final PropertiesConfigOptions propertyOptions) {
         super(options, mutableOptions);
         this.propertyOptions = new PropertiesConfigOptions(propertyOptions);
     }
@@ -71,8 +68,8 @@ implements PropertiesMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PropertiesMutableConfigBuilder add(
-            final @NotNull Properties values) {
+    public PropertiesMutableConfigBuilder add(
+            final Properties values) {
         this.propertyOptions.add(values);
         return thisBuilder();
     }
@@ -81,8 +78,8 @@ implements PropertiesMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PropertiesMutableConfigBuilder add(
-            final @NotNull Map<String, String> values) {
+    public PropertiesMutableConfigBuilder add(
+            final Map<String, String> values) {
         this.propertyOptions.add(values);
         return thisBuilder();
     }
@@ -91,8 +88,8 @@ implements PropertiesMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PropertiesMutableConfigBuilder load(
-            final @NotNull String path) {
+    public PropertiesMutableConfigBuilder load(
+            final String path) {
         this.propertyOptions.load(path);
         return thisBuilder();
     }
@@ -101,8 +98,8 @@ implements PropertiesMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PropertiesMutableConfigBuilder load(
-            final @NotNull Path path) {
+    public PropertiesMutableConfigBuilder load(
+            final Path path) {
         this.propertyOptions.load(path);
         return thisBuilder();
     }
@@ -111,8 +108,8 @@ implements PropertiesMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PropertiesMutableConfigBuilder load(
-            final @NotNull File file) {
+    public PropertiesMutableConfigBuilder load(
+            final File file) {
         this.propertyOptions.load(file);
         return thisBuilder();
     }
@@ -121,8 +118,8 @@ implements PropertiesMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PropertiesMutableConfigBuilder load(
-            final @NotNull URL url) {
+    public PropertiesMutableConfigBuilder load(
+            final URL url) {
         this.propertyOptions.load(url);
         return thisBuilder();
     }
@@ -131,7 +128,7 @@ implements PropertiesMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull PropertiesMutableConfigImpl build() {
+    public PropertiesMutableConfigImpl build() {
         return new PropertiesMutableConfigImpl(
                 this.options,
                 this.mutableOptions,

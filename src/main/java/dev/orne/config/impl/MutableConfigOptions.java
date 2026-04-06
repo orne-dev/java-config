@@ -22,9 +22,8 @@ package dev.orne.config.impl;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.ValueEncoder;
@@ -41,7 +40,7 @@ import dev.orne.config.ValueEncoder;
 public class MutableConfigOptions {
 
     /** The configuration properties values encoder. */
-    protected ValueEncoder encoder;
+    protected @Nullable ValueEncoder encoder;
 
     /**
      * Empty constructor.
@@ -56,7 +55,7 @@ public class MutableConfigOptions {
      * @param copy The instance to copy.
      */
     public MutableConfigOptions(
-            final @NotNull MutableConfigOptions copy) {
+            final MutableConfigOptions copy) {
         super();
         this.encoder = copy.encoder;
     }
@@ -66,7 +65,7 @@ public class MutableConfigOptions {
      * 
      * @return The configuration properties values encoder.
      */
-    public ValueEncoder getEncoder() {
+    public @Nullable ValueEncoder getEncoder() {
         return this.encoder;
     }
 
@@ -76,7 +75,7 @@ public class MutableConfigOptions {
      * @param encoder The configuration properties values encoder.
      */
     public void setEncoder(
-            final ValueEncoder encoder) {
+            final @Nullable ValueEncoder encoder) {
         this.encoder = encoder;
     }
 }

@@ -22,8 +22,6 @@ package dev.orne.config.impl;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import dev.orne.config.EnvironmentConfigBuilder;
@@ -52,7 +50,7 @@ implements EnvironmentConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull EnvironmentConfigImpl build() {
+    public EnvironmentConfigImpl build() {
         return new EnvironmentConfigImpl(this.options);
     }
 }

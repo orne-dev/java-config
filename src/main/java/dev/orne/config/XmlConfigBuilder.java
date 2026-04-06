@@ -22,8 +22,6 @@ package dev.orne.config;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 /**
@@ -37,11 +35,11 @@ import org.apiguardian.api.API;
 @API(status = API.Status.STABLE, since = "1.0")
 public interface XmlConfigBuilder
 extends XmlConfigBaseBuilder<XmlConfigBuilder>,
-        MutableCapableConfigBuilder<XmlConfigBuilder> {
+        MutableCapableConfigBuilder<XmlConfigBuilder, XmlMutableConfigBuilder> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull XmlMutableConfigBuilder mutable();
+    XmlMutableConfigBuilder mutable();
 }

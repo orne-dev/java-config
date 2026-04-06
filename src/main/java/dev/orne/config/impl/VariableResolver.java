@@ -25,10 +25,9 @@ package dev.orne.config.impl;
 import java.util.Objects;
 import java.util.WeakHashMap;
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.text.StringSubstitutor;
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.ValueDecorator;
@@ -47,7 +46,7 @@ public class VariableResolver
 implements ValueDecorator {
 
     /** The configuration properties variables substitutor. */
-    private final @NotNull StringSubstitutor substitutor;
+    private final StringSubstitutor substitutor;
     /** The resolved configuration properties cache. */
     private final WeakHashMap<String, String> cache = new WeakHashMap<>();
 
@@ -57,7 +56,7 @@ implements ValueDecorator {
      * @param config The configuration instance.
      */
     public VariableResolver(
-            final @NotNull Config config) {
+            final Config config) {
         this(new StringSubstitutor(config::get));
     }
 
@@ -67,7 +66,7 @@ implements ValueDecorator {
      * @param substitutor The string substitutor to use.
      */
     public VariableResolver(
-            final @NotNull StringSubstitutor substitutor) {
+            final StringSubstitutor substitutor) {
         this.substitutor = Objects.requireNonNull(substitutor);
     }
 
@@ -75,8 +74,8 @@ implements ValueDecorator {
      * {@inheritDoc}
      */
     @Override
-    public String decorate(
-            final String value) {
+    public @Nullable String decorate(
+            final @Nullable String value) {
         if (value == null) {
             return null;
         } else {

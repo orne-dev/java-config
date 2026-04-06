@@ -1,20 +1,5 @@
 package dev.orne.config;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-
-import javax.validation.constraints.NotNull;
-
-import org.apiguardian.api.API;
-
 /*-
  * #%L
  * Orne Config
@@ -37,6 +22,19 @@ import org.apiguardian.api.API;
  * #L%
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+
+import org.apiguardian.api.API;
+
 /**
  * Configuration properties provider with properties mutable at runtime.
  * 
@@ -58,7 +56,7 @@ extends MutableConfig {
      * @throws IOException If an I/O error occurs.
      */
     default void save(
-            @NotNull File destination)
+            final File destination)
     throws IOException {
         save(destination.toPath());
     }
@@ -72,7 +70,7 @@ extends MutableConfig {
      * @throws IOException If an I/O error occurs.
      */
     default void save(
-            @NotNull Path destination)
+            final Path destination)
     throws IOException {
         try (final OutputStream output = Files.newOutputStream(
                 destination,
@@ -90,7 +88,7 @@ extends MutableConfig {
      * @throws IOException If an I/O error occurs.
      */
     default void save(
-            @NotNull OutputStream destination)
+            final OutputStream destination)
     throws IOException {
         save(destination, StandardCharsets.UTF_8);
     }
@@ -104,8 +102,8 @@ extends MutableConfig {
      * @throws IOException If an I/O error occurs.
      */
     default void save(
-            @NotNull OutputStream destination,
-            @NotNull Charset encoding)
+            final OutputStream destination,
+            final Charset encoding)
     throws IOException {
         try (final Writer writer = new OutputStreamWriter(
                 destination,
@@ -121,6 +119,6 @@ extends MutableConfig {
      * @throws IOException If an I/O error occurs.
      */
     void save(
-            @NotNull Writer destination)
+            Writer destination)
     throws IOException;
 }

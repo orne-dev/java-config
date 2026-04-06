@@ -28,8 +28,6 @@ import static org.mockito.BDDMockito.*;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import javax.validation.constraints.NotNull;
-
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -65,7 +63,7 @@ extends AbstractConfigTest {
      */
     @Override
     protected ConfigBuilder<?> createBuilder(
-            final @NotNull Map<String, String> properties) {
+            final Map<String, String> properties) {
         given(environment.containsProperty(any())).willAnswer(invocation -> {
             final String key = invocation.getArgument(0);
             return properties.containsKey(key);

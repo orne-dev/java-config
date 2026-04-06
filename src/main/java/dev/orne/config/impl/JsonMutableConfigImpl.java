@@ -24,18 +24,11 @@ package dev.orne.config.impl;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Objects;
-import java.util.WeakHashMap;
-import java.util.stream.Stream;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import com.fasterxml.jackson.core.JsonPointer;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -53,15 +46,8 @@ import dev.orne.config.FileWatchableConfig;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class JsonMutableConfigImpl
-extends AbstractWatchableConfig
+extends JsonConfigImpl
 implements FileWatchableConfig {
-
-    /** The JSON object with the configuration properties. */
-    private final @NotNull ObjectNode jsonObject;
-    /** The configuration nested properties separator. */
-    private final @NotEmpty String propertySeparator;
-    /** The property key to JSON pointers cache. */
-    private final WeakHashMap<String, JsonPointer> cache = new WeakHashMap<>();
 
     /**
      * Creates a new instance.
@@ -71,77 +57,20 @@ implements FileWatchableConfig {
      * @param jsonOptions The JSON based configuration builder options.
      */
     public JsonMutableConfigImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions,
-            final @NotNull JsonConfigOptions jsonOptions) {
-        super(options, mutableOptions);
-        Objects.requireNonNull(jsonOptions);
-        this.jsonObject = jsonOptions.getJsonObject();
-        this.propertySeparator = jsonOptions.getPropertySeparator();
-    }
-
-    /**
-     * Returns the JSON object with the configuration properties.
-     * 
-     * @return The JSON object with the configuration properties.
-     */
-    protected @NotNull ObjectNode getJsonObject() {
-        return this.jsonObject;
-    }
-
-    /**
-     * Returns the configuration nested properties separator.
-     * 
-     * @return The configuration nested properties separator.
-     */
-    protected @NotEmpty String getPropertySeparator() {
-        return this.propertySeparator;
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final JsonConfigOptions jsonOptions) {
+        super(options, mutableOptions, jsonOptions);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected boolean isEmptyInt() {
-        return this.jsonObject.isEmpty();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected @NotNull Stream<String> getKeysInt() {
-        return this.jsonObject.propertyStream()
-                .flatMap(entry ->
-                    JsonConfigImpl.keysFlattener(
-                        this.propertySeparator,
-                        "",
-                        entry.getKey(),
-                        entry.getValue()));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean containsInt(
-            final @NotBlank String key) {
-        final JsonNode node = this.jsonObject.at(propertyToPointer(key));
-        return !node.isMissingNode();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected String getInt(
-            final @NotBlank String key) {
-        final JsonNode node = this.jsonObject.at(propertyToPointer(key));
-        if (node.isValueNode()) {
-            return node.asText();
-        } else {
-            return null;
-        }
+    public void set(
+            final String key,
+            final @Nullable String value) {
+        super.set(key, value);
     }
 
     /**
@@ -149,10 +78,19 @@ implements FileWatchableConfig {
      */
     @Override
     protected void setInt(
-            final @NotBlank String key,
-            final @NotNull String value) {
+            final String key,
+            final String value) {
         final JsonPointer pointer = propertyToPointer(key);
-        JacksonUtils.setNodeValue(this.jsonObject, pointer, value);
+        JacksonUtils.setNodeValue(getJsonObject(), pointer, value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void remove(
+            final String... keys) {
+        super.remove(keys);
     }
 
     /**
@@ -160,25 +98,29 @@ implements FileWatchableConfig {
      */
     @Override
     protected void removeInt(
-            final @NotBlank String... keys) {
+            final String... keys) {
         for (final String key : keys) {
             final JsonPointer pointer = propertyToPointer(key);
-            JacksonUtils.removeNode(this.jsonObject, pointer);
+            JacksonUtils.removeNode(getJsonObject(), pointer);
         }
     }
 
     /**
-     * Resolves configuration keys to JSON pointer expressions by replacing
-     * properties separator with the JSON pointer segment separator.
-     * 
-     * @param key The configuration key.
-     * @return The JSON pointer expression.
+     * {@inheritDoc}
      */
-    protected @NotBlank JsonPointer propertyToPointer(
-            final @NotBlank String key) {
-        Objects.requireNonNull(key);
-        return cache.computeIfAbsent(key, k ->
-                JacksonUtils.propertyToPointer(key, this.propertySeparator));
+    @Override
+    public void addListener(
+            final Listener listener) {
+        super.addListener(listener);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void removeListener(
+            final Listener listener) {
+        super.removeListener(listener);
     }
 
     /**
@@ -186,10 +128,10 @@ implements FileWatchableConfig {
      */
     @Override
     public void save(
-            final @NotNull Writer destination)
+            final Writer destination)
     throws IOException {
         new ObjectMapper()
                 .writerWithDefaultPrettyPrinter()
-                .writeValue(destination, this.jsonObject);
+                .writeValue(destination, getJsonObject());
     }
 }

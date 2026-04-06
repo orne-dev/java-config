@@ -24,8 +24,6 @@ package dev.orne.config.impl;
 
 import java.util.Objects;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
@@ -49,7 +47,7 @@ implements SpringEnvironmentConfigInitialBuilder,
         SpringEnvironmentConfigBuilder {
 
     /** The Spring Environment configuration options. */
-    protected final @NotNull SpringEnvironmentConfigOptions springOptions =
+    protected final SpringEnvironmentConfigOptions springOptions =
             new SpringEnvironmentConfigOptions();
 
     /**
@@ -63,8 +61,8 @@ implements SpringEnvironmentConfigInitialBuilder,
      * {@inheritDoc}
      */
     @Override
-    public @NotNull SpringEnvironmentConfigBuilder ofEnvironment(
-            final @NotNull Environment environment) {
+    public SpringEnvironmentConfigBuilder ofEnvironment(
+            final Environment environment) {
         this.springOptions.setEnvironment(Objects.requireNonNull(environment));
         return thisBuilder();
     }
@@ -73,7 +71,7 @@ implements SpringEnvironmentConfigInitialBuilder,
      * {@inheritDoc}
      */
     @Override
-    public @NotNull SpringEnvironmentConfigBuilder withIterableKeys() {
+    public SpringEnvironmentConfigBuilder withIterableKeys() {
         if (!(this.springOptions.getEnvironment() instanceof ConfigurableEnvironment)) {
             throw new ConfigException(
                     "Iterable property keys support requires a ConfigurableEnvironment");
@@ -86,7 +84,7 @@ implements SpringEnvironmentConfigInitialBuilder,
      * {@inheritDoc}
      */
     @Override
-    public @NotNull SpringEnvironmentConfigImpl build() {
+    public SpringEnvironmentConfigImpl build() {
         return new SpringEnvironmentConfigImpl(
                 this.options,
                 this.springOptions);

@@ -22,8 +22,6 @@ package dev.orne.config.impl;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import dev.orne.config.SystemConfigBuilder;
@@ -52,7 +50,7 @@ implements SystemConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull SystemConfigImpl build() {
+    public SystemConfigImpl build() {
         return new SystemConfigImpl(this.options);
     }
 }

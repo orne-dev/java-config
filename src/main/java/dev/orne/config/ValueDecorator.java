@@ -24,9 +24,8 @@ package dev.orne.config;
 
 import java.util.Objects;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Interface of configuration property values decorators.
@@ -48,7 +47,8 @@ public interface ValueDecorator {
      * @param value The configuration property value.
      * @return The decorated configuration property value.
      */
-    String decorate(String value);
+    @Nullable String decorate(
+            @Nullable String value);
 
     /**
      * Returns a composed decorator that first applies the {@code before}
@@ -63,8 +63,8 @@ public interface ValueDecorator {
      *
      * @see #andThen(ValueDecorator)
      */
-    default @NotNull ValueDecorator compose(
-            final @NotNull ValueDecorator before) {
+    default ValueDecorator compose(
+            final ValueDecorator before) {
         Objects.requireNonNull(before);
         return v -> decorate(before.decorate(v));
     }
@@ -82,8 +82,8 @@ public interface ValueDecorator {
      *
      * @see #compose(ValueDecorator)
      */
-    default @NotNull ValueDecorator andThen(
-            final @NotNull ValueDecorator after) {
+    default ValueDecorator andThen(
+            final ValueDecorator after) {
         Objects.requireNonNull(after);
         return v -> after.decorate(decorate(v));
     }

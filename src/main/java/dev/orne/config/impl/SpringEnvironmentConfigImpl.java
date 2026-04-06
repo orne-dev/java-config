@@ -25,13 +25,11 @@ package dev.orne.config.impl;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.NonIterableConfigException;
@@ -50,7 +48,7 @@ public class SpringEnvironmentConfigImpl
 extends AbstractConfig {
 
     /** The Spring environment to use as storage of configuration properties. */
-    private final @NotNull Environment environment;
+    private final Environment environment;
     /** If this instance must support property keys iteration. */
     private final boolean iterable;
 
@@ -61,8 +59,8 @@ extends AbstractConfig {
      * @param springOptions The Spring environment based configuration options.
      */
     public SpringEnvironmentConfigImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull SpringEnvironmentConfigOptions springOptions) {
+            final ConfigOptions options,
+            final SpringEnvironmentConfigOptions springOptions) {
         super(options);
         Objects.requireNonNull(springOptions);
         this.environment = Objects.requireNonNull(springOptions.getEnvironment());
@@ -75,7 +73,7 @@ extends AbstractConfig {
      * 
      * @return The Spring environment.
      */
-    public @NotNull Environment getEnvironment() {
+    public Environment getEnvironment() {
         return this.environment;
     }
 
@@ -92,7 +90,7 @@ extends AbstractConfig {
      */
     @Override
     protected boolean containsInt(
-            final @NotBlank String key) {
+            final String key) {
         return this.environment.containsProperty(key);
     }
 
@@ -100,7 +98,7 @@ extends AbstractConfig {
      * {@inheritDoc}
      */
     @Override
-    protected @NotNull Stream<String> getKeysInt() {
+    protected Stream<String> getKeysInt() {
         if (this.iterable && this.environment instanceof ConfigurableEnvironment) {
             return ((ConfigurableEnvironment) this.environment).getPropertySources()
                     .stream()
@@ -118,8 +116,8 @@ extends AbstractConfig {
      * {@inheritDoc}
      */
     @Override
-    protected String getInt(
-            final @NotBlank String key) {
+    protected @Nullable String getInt(
+            final String key) {
         return this.environment.getProperty(key);
     }
 }

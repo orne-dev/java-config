@@ -23,7 +23,6 @@ package dev.orne.config.impl;
  */
 
 import javax.crypto.SecretKey;
-import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
 
@@ -63,7 +62,7 @@ implements CryptoProviderEngineBuilder, CryptoProviderKeyBuilder, CryptoProvider
      * @param copy The instance to copy.
      */
     public CryptoProviderBuilderImpl(
-            final @NotNull CryptoProviderBuilderImpl copy) {
+            final CryptoProviderBuilderImpl copy) {
         super();
         this.options = new CryptoProviderOptions(copy.options);
     }
@@ -74,7 +73,7 @@ implements CryptoProviderEngineBuilder, CryptoProviderKeyBuilder, CryptoProvider
      * @param options The cryptography transformations provider options to copy.
      */
     public CryptoProviderBuilderImpl(
-            final @NotNull CryptoProviderOptions options) {
+            final CryptoProviderOptions options) {
         super();
         this.options = new CryptoProviderOptions(options);
     }
@@ -83,8 +82,8 @@ implements CryptoProviderEngineBuilder, CryptoProviderKeyBuilder, CryptoProvider
      * {@inheritDoc}
      */
     @Override
-    public @NotNull CryptoProviderBuilderImpl withEngine(
-            final @NotNull ConfigCryptoEngine engine,
+    public CryptoProviderBuilderImpl withEngine(
+            final ConfigCryptoEngine engine,
             final boolean destroyEngine) {
         this.options.setEngine(engine);
         this.options.setDestroyEngine(destroyEngine);
@@ -95,8 +94,8 @@ implements CryptoProviderEngineBuilder, CryptoProviderKeyBuilder, CryptoProvider
      * {@inheritDoc}
      */
     @Override
-    public @NotNull CryptoProviderBuilderImpl withAesGcmEngine(
-            final @NotNull byte[] salt,
+    public CryptoProviderBuilderImpl withAesGcmEngine(
+            final byte[] salt,
             final boolean destroyEngine) {
         this.options.setEngine(new ConfigCryptoAesGcmEngine(salt));
         this.options.setDestroyEngine(destroyEngine);
@@ -107,8 +106,8 @@ implements CryptoProviderEngineBuilder, CryptoProviderKeyBuilder, CryptoProvider
      * {@inheritDoc}
      */
     @Override
-    public @NotNull CryptoProviderBuilderImpl withSecretKey(
-            final @NotNull char[] password) {
+    public CryptoProviderBuilderImpl withSecretKey(
+            final char[] password) {
         this.options.setKey(
                 this.options.engine.createSecretKey(password));
         return this;
@@ -118,8 +117,8 @@ implements CryptoProviderEngineBuilder, CryptoProviderKeyBuilder, CryptoProvider
      * {@inheritDoc}
      */
     @Override
-    public @NotNull CryptoProviderBuilderImpl withSecretKey(
-            final @NotNull SecretKey key) {
+    public CryptoProviderBuilderImpl withSecretKey(
+            final SecretKey key) {
         this.options.setKey(key);
         return this;
     }
@@ -128,7 +127,7 @@ implements CryptoProviderEngineBuilder, CryptoProviderKeyBuilder, CryptoProvider
      * {@inheritDoc}
      */
     @Override
-    public @NotNull CryptoProviderBuilderImpl pooled() {
+    public CryptoProviderBuilderImpl pooled() {
         this.options.setPooled(true);
         return this;
     }
@@ -137,7 +136,7 @@ implements CryptoProviderEngineBuilder, CryptoProviderKeyBuilder, CryptoProvider
      * {@inheritDoc}
      */
     @Override
-    public @NotNull ConfigCryptoProvider build() {
+    public ConfigCryptoProvider build() {
         final ConfigCryptoProvider instance;
         if (this.options.isPooled()) {
             instance = new PooledConfigCryptoProvider(this.options);

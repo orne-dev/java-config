@@ -27,10 +27,8 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.Map;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * JSON files based configuration base builder.
@@ -54,8 +52,8 @@ extends ConfigBuilder<S> {
      * @param separator The configuration nested properties separator.
      * @return This instance, for method chaining.
      */
-    @NotNull S withSeparator(
-            @NotEmpty String separator);
+    S withSeparator(
+            String separator);
 
     /**
      * Adds the specified custom properties to the configuration
@@ -67,8 +65,8 @@ extends ConfigBuilder<S> {
      * @param values The configuration properties.
      * @return This instance, for method chaining.
      */
-    @NotNull S add(
-            @NotNull Map<String, String> values);
+    S add(
+            Map<String, @Nullable String> values);
 
     /**
      * Loads the configuration properties from the specified ClassLoader
@@ -77,8 +75,8 @@ extends ConfigBuilder<S> {
      * @param path The ClassLoader resource path.
      * @return This instance, for method chaining.
      */
-    @NotNull S load(
-            @NotNull String path);
+    S load(
+            String path);
 
     /**
      * Loads the configuration properties from the file in the specified
@@ -87,8 +85,8 @@ extends ConfigBuilder<S> {
      * @param path The file path.
      * @return This instance, for method chaining.
      */
-    @NotNull S load(
-            @NotNull Path path);
+    S load(
+            Path path);
 
     /**
      * Loads the configuration properties from the specified file.
@@ -96,8 +94,8 @@ extends ConfigBuilder<S> {
      * @param file The file to load.
      * @return This instance, for method chaining.
      */
-    @NotNull S load(
-            @NotNull File file);
+    S load(
+            File file);
 
     /**
      * Loads the configuration properties from the specified URL.
@@ -105,6 +103,6 @@ extends ConfigBuilder<S> {
      * @param url The URL to load.
      * @return This instance, for method chaining.
      */
-    @NotNull S load(
-            @NotNull URL url);
+    S load(
+            URL url);
 }

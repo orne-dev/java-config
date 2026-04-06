@@ -22,9 +22,8 @@ package dev.orne.config;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Configuration builder.
@@ -44,8 +43,8 @@ public interface ConfigBuilder<S extends ConfigBuilder<S>> {
      * @param parent The parent configuration.
      * @return This instance, for method chaining.
      */
-    @NotNull S withParent(
-            Config parent);
+    S withParent(
+            @Nullable Config parent);
 
     /**
      * Sets the parent configuration.
@@ -56,8 +55,8 @@ public interface ConfigBuilder<S extends ConfigBuilder<S>> {
      * @param parent The parent configuration.
      * @return This instance, for method chaining.
      */
-    default @NotNull S withParent(
-            final @NotNull ConfigBuilder<?> parent) {
+    default S withParent(
+            final ConfigBuilder<?> parent) {
         return withParent(parent.build());
     }
 
@@ -73,7 +72,7 @@ public interface ConfigBuilder<S extends ConfigBuilder<S>> {
      * 
      * @return This instance, for method chaining.
      */
-    @NotNull S withOverrideParentProperties();
+    S withOverrideParentProperties();
 
     /**
      * Sets the configuration properties values cryptography
@@ -82,8 +81,8 @@ public interface ConfigBuilder<S extends ConfigBuilder<S>> {
      * @param provider The cryptography transformations provider.
      * @return This instance, for method chaining.
      */
-    @NotNull S withEncryption(
-            ConfigCryptoProvider provider);
+    S withEncryption(
+            @Nullable ConfigCryptoProvider provider);
 
     /**
      * Sets the configuration properties values decoder.
@@ -93,15 +92,15 @@ public interface ConfigBuilder<S extends ConfigBuilder<S>> {
      * @param encoder The configuration properties values decoder.
      * @return This instance, for method chaining.
      */
-    @NotNull S withDecoder(
-            ValueDecoder encoder);
+    S withDecoder(
+            @Nullable ValueDecoder encoder);
 
     /**
      * Enables configuration property values variable resolution.
      * 
      * @return This instance, for method chaining.
      */
-    @NotNull S withVariableResolution();
+    S withVariableResolution();
 
     /**
      * Sets the configuration properties values decorator.
@@ -111,15 +110,15 @@ public interface ConfigBuilder<S extends ConfigBuilder<S>> {
      * @param decorator The configuration properties values decorator.
      * @return This instance, for method chaining.
      */
-    @NotNull S withDecorator(
-            ValueDecorator decorator);
+    S withDecorator(
+            @Nullable ValueDecorator decorator);
 
     /**
      * Creates the configuration instance.
      * 
      * @return The configuration instance.
      */
-    @NotNull Config build();
+    Config build();
 
     /**
      * Creates the configuration instance as an instance of the specified
@@ -132,8 +131,8 @@ public interface ConfigBuilder<S extends ConfigBuilder<S>> {
      * @return The configuration instance.
      * @see Config#as(Config, Class)
      */
-    default <T extends Config> @NotNull T as(
-            final @NotNull Class<T> configType) {
+    default <T extends Config> T as(
+            final Class<T> configType) {
         return Config.as(build(), configType);
     }
 }

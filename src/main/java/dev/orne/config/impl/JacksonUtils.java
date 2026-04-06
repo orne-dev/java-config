@@ -24,10 +24,8 @@ package dev.orne.config.impl;
 
 import java.util.Objects;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -67,9 +65,9 @@ public final class JacksonUtils {
      * @param separator The properties separator to use.
      * @return The JSON pointer expression.
      */
-    static @NotNull JsonPointer propertyToPointer(
-            final @NotBlank String key,
-            final @NotBlank String separator) {
+    static JsonPointer propertyToPointer(
+            final String key,
+            final String separator) {
         Objects.requireNonNull(key);
         Objects.requireNonNull(separator);
         final String pointer = POINTER_SEPARATOR + key.replace(separator, POINTER_SEPARATOR);
@@ -85,10 +83,10 @@ public final class JacksonUtils {
      * @param value The value to set.
      */
     static void setNodeValue(
-            final @NotNull ObjectNode jsonObject,
-            final @NotBlank String separator,
-            final @NotBlank String key,
-            final @NotNull String value) {
+            final ObjectNode jsonObject,
+            final String separator,
+            final String key,
+            final @Nullable String value) {
         final JsonPointer pointer = propertyToPointer(key, separator);
         setNodeValue(jsonObject, pointer, value);
     }
@@ -101,9 +99,9 @@ public final class JacksonUtils {
      * @param value The value to set.
      */
     static void setNodeValue(
-            final @NotNull ObjectNode jsonObject,
-            final @NotNull JsonPointer pointer,
-            final String value) {
+            final ObjectNode jsonObject,
+            final JsonPointer pointer,
+            final @Nullable String value) {
         final JsonPointer lastPointer = pointer.last();
         final JsonNode valueNode = value == null ? NODE_FACTORY.nullNode() : NODE_FACTORY.textNode(value);
         if (lastPointer.mayMatchElement()) {
@@ -129,9 +127,9 @@ public final class JacksonUtils {
      * @param key The configuration key.
      */
     static void removeNode(
-            final @NotNull ObjectNode jsonObject,
-            final @NotBlank String separator,
-            final @NotBlank String key) {
+            final ObjectNode jsonObject,
+            final String separator,
+            final String key) {
         final JsonPointer pointer = propertyToPointer(key, separator);
         removeNode(jsonObject, pointer);
     }
@@ -143,8 +141,8 @@ public final class JacksonUtils {
      * @param pointer The JSON pointer to the node to remove.
      */
     static void removeNode(
-            final @NotNull ObjectNode jsonObject,
-            final @NotNull JsonPointer pointer) {
+            final ObjectNode jsonObject,
+            final JsonPointer pointer) {
         final JsonNode parent = jsonObject.at(pointer.head());
         if (!parent.isMissingNode()) {
             if (parent.isObject()) {

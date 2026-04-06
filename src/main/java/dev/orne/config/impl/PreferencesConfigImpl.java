@@ -27,10 +27,8 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import java.util.stream.Stream;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigException;
@@ -47,10 +45,10 @@ import dev.orne.config.ConfigException;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class PreferencesConfigImpl
-extends AbstractConfig {
+extends AbstractWatchableConfig {
 
     /** The preferences node to use as storage of configuration properties. */
-    private final @NotNull Preferences preferences;
+    private final Preferences preferences;
 
     /**
      * Creates a new instance.
@@ -59,9 +57,23 @@ extends AbstractConfig {
      * @param preferencesOptions The preferences based configuration builder options.
      */
     public PreferencesConfigImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull PreferencesConfigOptions preferencesOptions) {
-        super(options);
+            final ConfigOptions options,
+            final PreferencesConfigOptions preferencesOptions) {
+        this(options, new MutableConfigOptions(), preferencesOptions);
+    }
+
+    /**
+     * Creates a new instance.
+     * 
+     * @param options The configuration builder options.
+     * @param mutableOptions The mutable configuration builder options.
+     * @param preferencesOptions The preferences based configuration builder options.
+     */
+    protected PreferencesConfigImpl(
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final PreferencesConfigOptions preferencesOptions) {
+        super(options, mutableOptions);
         Objects.requireNonNull(preferencesOptions);
         this.preferences = Objects.requireNonNull(preferencesOptions.getPreferences());
     }
@@ -72,7 +84,7 @@ extends AbstractConfig {
      * 
      * @return The preferences node.
      */
-    protected @NotNull Preferences getPreferences() {
+    protected Preferences getPreferences() {
         return this.preferences;
     }
 
@@ -92,7 +104,8 @@ extends AbstractConfig {
      * {@inheritDoc}
      */
     @Override
-    protected boolean containsInt(@NotBlank String key) {
+    protected boolean containsInt(
+            final String key) {
         try {
             return this.preferences.get(key, null) != null;
         } catch (final IllegalStateException ise) {
@@ -104,7 +117,7 @@ extends AbstractConfig {
      * {@inheritDoc}
      */
     @Override
-    protected @NotNull Stream<String> getKeysInt() {
+    protected Stream<String> getKeysInt() {
         try {
             return Stream.of(this.preferences.keys());
         } catch (final IllegalStateException | BackingStoreException e) {
@@ -116,7 +129,8 @@ extends AbstractConfig {
      * {@inheritDoc}
      */
     @Override
-    protected String getInt(@NotBlank String key) {
+    protected @Nullable String getInt(
+            final String key) {
         try {
             return this.preferences.get(key, null);
         } catch (final IllegalStateException ise) {

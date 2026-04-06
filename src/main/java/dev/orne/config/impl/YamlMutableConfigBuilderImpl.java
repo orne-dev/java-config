@@ -27,9 +27,6 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.Map;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -50,7 +47,7 @@ extends AbstractMutableConfigBuilderImpl<YamlMutableConfigBuilder>
 implements YamlMutableConfigBuilder {
 
     /** The YAML based configuration options. */
-    protected final @NotNull YamlConfigOptions yamlOptions;
+    protected final YamlConfigOptions yamlOptions;
 
     /**
      * Copy constructor.
@@ -60,9 +57,9 @@ implements YamlMutableConfigBuilder {
      * @param yamlOptions The YAML based configuration options to copy.
      */
     protected YamlMutableConfigBuilderImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions,
-            final @NotNull YamlConfigOptions yamlOptions) {
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final YamlConfigOptions yamlOptions) {
         super(options, mutableOptions);
         this.yamlOptions = new YamlConfigOptions(yamlOptions);
     }
@@ -71,8 +68,8 @@ implements YamlMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull YamlMutableConfigBuilder withSeparator(
-            final @NotEmpty String separator) {
+    public YamlMutableConfigBuilder withSeparator(
+            final String separator) {
         this.yamlOptions.setPropertySeparator(separator);
         return thisBuilder();
     }
@@ -81,8 +78,8 @@ implements YamlMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull YamlMutableConfigBuilder add(
-            final @NotNull Map<String, String> values) {
+    public YamlMutableConfigBuilder add(
+            final Map<String, String> values) {
         if (!values.isEmpty()) {
             final ObjectNode data = JacksonUtils.NODE_FACTORY.objectNode();
             values.forEach((key, value) -> JacksonUtils.setNodeValue(
@@ -99,8 +96,8 @@ implements YamlMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull YamlMutableConfigBuilder load(
-            final @NotNull String path) {
+    public YamlMutableConfigBuilder load(
+            final String path) {
         this.yamlOptions.load(path);
         return thisBuilder();
     }
@@ -109,8 +106,8 @@ implements YamlMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull YamlMutableConfigBuilder load(
-            final @NotNull Path path) {
+    public YamlMutableConfigBuilder load(
+            final Path path) {
         this.yamlOptions.load(path);
         return thisBuilder();
     }
@@ -119,8 +116,8 @@ implements YamlMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull YamlMutableConfigBuilder load(
-            final @NotNull File file) {
+    public YamlMutableConfigBuilder load(
+            final File file) {
         this.yamlOptions.load(file);
         return thisBuilder();
     }
@@ -129,8 +126,8 @@ implements YamlMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull YamlMutableConfigBuilder load(
-            final @NotNull URL url) {
+    public YamlMutableConfigBuilder load(
+            final URL url) {
         this.yamlOptions.load(url);
         return thisBuilder();
     }
@@ -139,7 +136,7 @@ implements YamlMutableConfigBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull YamlMutableConfigImpl build() {
+    public YamlMutableConfigImpl build() {
         return new YamlMutableConfigImpl(
                 this.options,
                 this.mutableOptions,

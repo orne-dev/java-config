@@ -44,7 +44,7 @@ The binaries can be obtained from [Maven Central][status.maven] with the
 <dependency>
   <groupId>dev.orne</groupId>
   <artifactId>orne-config</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
 </dependency>
 ```
 
@@ -53,17 +53,18 @@ The binaries can be obtained from [Maven Central][status.maven] with the
 For further information refer to the [Maven Site][site] and [Javadoc][javadoc].
 
 [site]: https://orne-dev.github.io/java-config/
-[javadoc]: https://javadoc.io/doc/dev.orne/config
+[javadoc]: https://javadoc.io/doc/dev.orne/orne-config
 [status.license]: https://www.gnu.org/licenses/gpl-3.0.txt
 [status.license.badge]: https://img.shields.io/github/license/orne-dev/java-config
-[status.maven]: https://central.sonatype.com/artifact/dev.orne/config
-[status.maven.badge]: https://img.shields.io/maven-central/v/dev.orne/config.svg?label=Maven%20Central
-[status.javadoc.badge]: https://javadoc.io/badge2/dev.orne/config/javadoc.svg
+[status.maven]: https://central.sonatype.com/artifact/dev.orne/orne-config
+[status.maven.badge]: https://img.shields.io/maven-central/v/dev.orne/orne-config.svg?label=Maven%20Central
+[status.javadoc.badge]: https://javadoc.io/badge2/dev.orne/orne-config/javadoc.svg
 [status.site.badge]: https://img.shields.io/website?url=https%3A%2F%2Forne-dev.github.io%2Fjava-config%2F
 [status.latest.ci]: https://github.com/orne-dev/java-config/actions/workflows/release.yml
 [status.latest.ci.badge]: https://github.com/orne-dev/java-config/actions/workflows/release.yml/badge.svg?branch=master
 [status.dev.ci]: https://github.com/orne-dev/java-config/actions/workflows/build.yml
 [status.dev.ci.badge]: https://github.com/orne-dev/java-config/actions/workflows/build.yml/badge.svg?branch=develop
 [status.sonar]: https://sonarcloud.io/dashboard?id=orne-dev_java-config
-[status.sonar.quality.badge]: https://sonarcloud.io/api/project_badges/quality_gate?project=orne-dev_java-config
+[status.sonar.quality.badge]: https://sonarcloud.io/api/project_badges/measure?project=orne-dev_java-config&metric=alert_status
 [status.sonar.cov.badge]: https://sonarcloud.io/api/project_badges/measure?project=orne-dev_java-config&metric=coverage
+[status.sonar.dev.quality.badge]: https://sonarcloud.io/api/project_badges/measure?project=orne-dev_java-config&metric=alert_status&branch=develop

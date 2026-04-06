@@ -22,8 +22,6 @@ package dev.orne.config;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 /**
@@ -36,11 +34,12 @@ import org.apiguardian.api.API;
  */
 @API(status = API.Status.STABLE, since = "1.0")
 public interface JsonConfigBuilder
-extends JsonConfigBaseBuilder<JsonConfigBuilder>, MutableCapableConfigBuilder<JsonConfigBuilder> {
+extends JsonConfigBaseBuilder<JsonConfigBuilder>,
+        MutableCapableConfigBuilder<JsonConfigBuilder, JsonMutableConfigBuilder> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull JsonMutableConfigBuilder mutable();
+    JsonMutableConfigBuilder mutable();
 }

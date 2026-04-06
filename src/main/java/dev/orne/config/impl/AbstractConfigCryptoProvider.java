@@ -25,9 +25,9 @@ package dev.orne.config.impl;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.security.auth.DestroyFailedException;
-import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.ConfigCryptoEngine;
 import dev.orne.config.ConfigCryptoProvider;
@@ -48,11 +48,11 @@ public abstract class AbstractConfigCryptoProvider
 implements ConfigCryptoProvider {
 
     /** The cryptographic engine. */
-    private final @NotNull ConfigCryptoEngine engine;
+    private final ConfigCryptoEngine engine;
     /** If the engine must be destroyed with provider. */
     private final boolean destroyEngine;
     /** The secret key to use. */
-    private final @NotNull SecretKey secretKey;
+    private final SecretKey secretKey;
     /** If the provider has been destroyed. */
     private boolean destroyed;
 
@@ -63,7 +63,7 @@ implements ConfigCryptoProvider {
      */
     @API(status = API.Status.INTERNAL, since = "1.0")
     protected AbstractConfigCryptoProvider(
-            final @NotNull CryptoProviderOptions options) {
+            final CryptoProviderOptions options) {
         this.engine = options.getEngine();
         this.destroyEngine = options.isDestroyEngine();
         this.secretKey = options.getKey();
@@ -77,9 +77,9 @@ implements ConfigCryptoProvider {
      * @param secretKey The secret key to use.
      */
     protected AbstractConfigCryptoProvider(
-            final @NotNull ConfigCryptoEngine engine,
+            final ConfigCryptoEngine engine,
             final boolean destroyEngine,
-            final @NotNull SecretKey secretKey) {
+            final SecretKey secretKey) {
         super();
         this.engine = engine;
         this.destroyEngine = destroyEngine;
@@ -91,7 +91,7 @@ implements ConfigCryptoProvider {
      * 
      * @return The cryptographic engine.
      */
-    protected @NotNull ConfigCryptoEngine getEngine() {
+    protected ConfigCryptoEngine getEngine() {
         return this.engine;
     }
 
@@ -100,7 +100,7 @@ implements ConfigCryptoProvider {
      * 
      * @return The secret key.
      */
-    protected @NotNull SecretKey getSecretKey() {
+    protected SecretKey getSecretKey() {
         return this.secretKey;
     }
 
@@ -122,8 +122,8 @@ implements ConfigCryptoProvider {
      * @throws ConfigCryptoProviderException If an exception occurs during the
      * encryption process
      */
-    public String encrypt(
-            final String value,
+    public @Nullable String encrypt(
+            final @Nullable String value,
             final Cipher cipher)
     throws ConfigCryptoProviderException {
         checkDestroyed();
@@ -142,8 +142,8 @@ implements ConfigCryptoProvider {
      * @throws ConfigCryptoProviderException If an exception occurs during the
      * decryption process
      */
-    public String decrypt(
-            final String value,
+    public @Nullable String decrypt(
+            final @Nullable String value,
             final Cipher cipher)
     throws ConfigCryptoProviderException {
         checkDestroyed();

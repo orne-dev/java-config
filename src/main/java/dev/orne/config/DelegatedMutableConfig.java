@@ -22,10 +22,8 @@ package dev.orne.config;
  * #L%
  */
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A mutable configuration that delegates all operations to another
@@ -49,7 +47,7 @@ implements MutableConfig {
      * @param delegate The configuration to delegate to.
      */
     public DelegatedMutableConfig(
-            final @NotNull MutableConfig delegate) {
+            final MutableConfig delegate) {
         super(delegate);
     }
 
@@ -57,7 +55,7 @@ implements MutableConfig {
      * {@inheritDoc}
      */
     @Override
-    protected @NotNull MutableConfig getDelegate() {
+    protected MutableConfig getDelegate() {
         return (MutableConfig) super.getDelegate();
     }
 
@@ -66,8 +64,8 @@ implements MutableConfig {
      */
     @Override
     public void set(
-            final @NotBlank String key,
-            final String value) {
+            final String key,
+            final @Nullable String value) {
         getDelegate().set(key, value);
     }
 
@@ -76,8 +74,8 @@ implements MutableConfig {
      */
     @Override
     public void set(
-            final @NotBlank String key,
-            final Boolean value) {
+            final String key,
+            final @Nullable Boolean value) {
         getDelegate().set(key, value);
     }
 
@@ -86,8 +84,8 @@ implements MutableConfig {
      */
     @Override
     public void set(
-            final @NotBlank String key,
-            final Integer value) {
+            final String key,
+            final @Nullable Integer value) {
         getDelegate().set(key, value);
     }
 
@@ -96,8 +94,8 @@ implements MutableConfig {
      */
     @Override
     public void set(
-            final @NotBlank String key,
-            final Long value) {
+            final String key,
+            final @Nullable Long value) {
         getDelegate().set(key, value);
     }
 
@@ -106,7 +104,7 @@ implements MutableConfig {
      */
     @Override
     public void remove(
-            final @NotBlank String... keys) {
+            final String... keys) {
         getDelegate().remove(keys);
     }
 }

@@ -25,11 +25,10 @@ package dev.orne.config.commons;
 import java.util.Iterator;
 import java.util.Objects;
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.ImmutableConfiguration;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigException;
@@ -53,7 +52,7 @@ implements ImmutableConfiguration {
             "The underlaying configuration is inmutable.";
 
     /** The delegated Orne configuration. */
-    private final @NotNull Config config;
+    private final Config config;
 
     /**
      * Creates a new instance.
@@ -61,7 +60,7 @@ implements ImmutableConfiguration {
      * @param config The delegated Orne configuration
      */
     public DelegatedOrneConfiguration(
-            final @NotNull Config config) {
+            final Config config) {
         super();
         this.config = Objects.requireNonNull(config);
     }
@@ -71,7 +70,7 @@ implements ImmutableConfiguration {
      * 
      * @return The delegated Orne configuration
      */
-    protected @NotNull Config getConfig() {
+    protected Config getConfig() {
         return this.config;
     }
 
@@ -105,7 +104,7 @@ implements ImmutableConfiguration {
      */
     @Override
     protected boolean containsValueInternal(
-            final Object value) {
+            final @Nullable Object value) {
         return this.config.getKeys()
                 .anyMatch(key -> Objects.equals(value, getProperty(key)));
     }
@@ -141,7 +140,7 @@ implements ImmutableConfiguration {
     @Override
     protected void addPropertyDirect(
             final String key,
-            final Object value) {
+            final @Nullable Object value) {
         throw new UnsupportedOperationException(WRITE_OP_EX_MSG);
     }
 

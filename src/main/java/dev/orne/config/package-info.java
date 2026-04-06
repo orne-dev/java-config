@@ -27,4 +27,5 @@
  * 
  * @since 1.0
  */
+@org.jspecify.annotations.NullMarked
 package dev.orne.config;

@@ -22,9 +22,8 @@ package dev.orne.config.impl;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigCryptoProvider;
@@ -43,17 +42,17 @@ import dev.orne.config.ValueDecorator;
 public class ConfigOptions {
 
     /** The parent configuration. */
-    private Config parent;
+    private @Nullable Config parent;
     /** If parent configuration property values are overridden values of this instance. */
     private boolean overrideParentProperties;
     /** The cryptography transformations provider. */
-    private ConfigCryptoProvider cryptoProvider;
+    private @Nullable ConfigCryptoProvider cryptoProvider;
     /** The configuration values decoder. */
-    private ValueDecoder decoder;
+    private @Nullable ValueDecoder decoder;
     /** If configuration property values variable resolution is enabled. */
     private boolean variableResolutionEnabled;
     /** The configuration properties values decorator. */
-    private ValueDecorator decorator;
+    private @Nullable ValueDecorator decorator;
 
     /**
      * Empty constructor.
@@ -68,7 +67,7 @@ public class ConfigOptions {
      * @param copy The instance to copy.
      */
     public ConfigOptions(
-            final @NotNull ConfigOptions copy) {
+            final ConfigOptions copy) {
         super();
         this.parent = copy.parent;
         this.overrideParentProperties = copy.overrideParentProperties;
@@ -83,7 +82,7 @@ public class ConfigOptions {
      * 
      * @return The parent configuration.
      */
-    public Config getParent() {
+    public @Nullable Config getParent() {
         return this.parent;
     }
 
@@ -93,7 +92,7 @@ public class ConfigOptions {
      * @param parent The parent configuration.
      */
     public void setParent(
-            final Config parent) {
+            final @Nullable Config parent) {
         this.parent = parent;
     }
 
@@ -129,7 +128,7 @@ public class ConfigOptions {
      * 
      * @return The cryptography transformations provider.
      */
-    public ConfigCryptoProvider getCryptoProvider() {
+    public @Nullable ConfigCryptoProvider getCryptoProvider() {
         return this.cryptoProvider;
     }
 
@@ -139,7 +138,7 @@ public class ConfigOptions {
      * @param provider The cryptography transformations provider.
      */
     public void setCryptoProvider(
-            final ConfigCryptoProvider provider) {
+            final @Nullable ConfigCryptoProvider provider) {
         this.cryptoProvider = provider;
     }
 
@@ -148,7 +147,7 @@ public class ConfigOptions {
      * 
      * @return The configuration values decoder.
      */
-    public ValueDecoder getDecoder() {
+    public @Nullable ValueDecoder getDecoder() {
         return this.decoder;
     }
 
@@ -158,7 +157,7 @@ public class ConfigOptions {
      * @param decoder The configuration values decoder.
      */
     public void setDecoder(
-            final ValueDecoder decoder) {
+            final @Nullable ValueDecoder decoder) {
         this.decoder = decoder;
     }
 
@@ -188,7 +187,7 @@ public class ConfigOptions {
      * 
      * @return The configuration properties values decorator.
      */
-    public ValueDecorator getDecorator() {
+    public @Nullable ValueDecorator getDecorator() {
         return this.decorator;
     }
 
@@ -198,7 +197,7 @@ public class ConfigOptions {
      * @param decorator The configuration properties values decorator.
      */
     public void setDecorator(
-            final ValueDecorator decorator) {
+            final @Nullable ValueDecorator decorator) {
         this.decorator = decorator;
     }
 }

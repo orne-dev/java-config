@@ -22,8 +22,6 @@ package dev.orne.config;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.configuration2.Configuration;
 import org.apiguardian.api.API;
 
@@ -47,12 +45,12 @@ extends MutableConfigBuilder<CommonsMutableConfigBuilder> {
      * @param delegate The delegated Apache Commons configuration.
      * @return Next builder, for method chaining.
      */
-    @NotNull CommonsMutableConfigBuilder ofDelegate(
-            @NotNull Configuration delegate);
+    CommonsMutableConfigBuilder ofDelegate(
+            Configuration delegate);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull WatchableConfig build();
+    WatchableConfig build();
 }

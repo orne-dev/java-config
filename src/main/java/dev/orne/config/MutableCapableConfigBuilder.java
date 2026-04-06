@@ -22,8 +22,6 @@ package dev.orne.config;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 /**
@@ -32,11 +30,14 @@ import org.apiguardian.api.API;
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-05
  * @param <S> The concrete type of the builder.
+ * @param <M> The type of the mutable configuration builder.
  * @since 1.0
  * @see MutableConfig
  */
 @API(status = API.Status.STABLE, since = "1.0")
-public interface MutableCapableConfigBuilder<S extends MutableCapableConfigBuilder<S>>
+public interface MutableCapableConfigBuilder<
+        S extends MutableCapableConfigBuilder<S, M>,
+        M extends MutableConfigBuilder<M>>
 extends ConfigBuilder<S> {
 
     /**
@@ -44,5 +45,5 @@ extends ConfigBuilder<S> {
      * 
      * @return This instance, for method chaining.
      */
-    @NotNull MutableConfigBuilder<?> mutable();
+    M mutable();
 }

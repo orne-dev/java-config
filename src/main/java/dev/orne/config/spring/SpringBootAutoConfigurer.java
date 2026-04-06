@@ -24,8 +24,6 @@ package dev.orne.config.spring;
 
 import java.util.ArrayList;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -34,6 +32,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.env.Environment;
 import org.springframework.core.type.AnnotationMetadata;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Spring Boot auto configuration for Orne Config integration.
@@ -100,7 +99,7 @@ public class SpringBootAutoConfigurer {
     implements ImportSelector, EnvironmentAware {
 
         /** The Spring environment. */
-        private Environment environment;
+        private @Nullable Environment environment;
 
         /**
          * Creates a new instance.
@@ -114,7 +113,7 @@ public class SpringBootAutoConfigurer {
          */
         @Override
         public void setEnvironment(
-                final @NotNull Environment environment) {
+                final Environment environment) {
             this.environment = environment;
         }
 

@@ -26,8 +26,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Map;
 
-import javax.validation.constraints.NotNull;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -208,7 +206,7 @@ class EnableOrneConfigTest {
 
         @Override
         public void configure(
-                final @NotNull Config config) {
+                final Config config) {
             this.cfgId = config.as(ConfigSubtype.class).getConfigId();
         }
     }

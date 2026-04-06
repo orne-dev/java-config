@@ -26,8 +26,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Map;
 
-import javax.validation.constraints.NotNull;
-
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -226,7 +224,7 @@ class ConfigurableExamplesTest {
     public static class DisablePropertiesConfigurationTest extends ConfigurablePropertiesTest {
 
         @Override
-        public void configure(@NotNull Config config) {
+        public void configure(Config config) {
             setHost(config.get("alt.host"));
             setPort(config.getInteger("alt.port"));
         }

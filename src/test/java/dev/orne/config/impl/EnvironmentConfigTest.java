@@ -27,8 +27,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.Collections;
 import java.util.Map;
 
-import javax.validation.constraints.NotNull;
-
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -58,7 +56,7 @@ extends AbstractConfigTest {
      */
     @Override
     protected ConfigBuilder<?> createBuilder(
-            final @NotNull Map<String, String> properties) {
+            final Map<String, String> properties) {
         final Map<String, String> values = Collections.unmodifiableMap(properties);
         assertInstanceOf(
                 EnvironmentConfigBuilderImpl.class,
@@ -96,7 +94,7 @@ extends AbstractConfigTest {
          */
         public MockConfig(
                 final ConfigOptions options,
-                final @NotNull Map<String, String> values) {
+                final Map<String, String> values) {
             super(options);
             this.mockValues = values;
         }
@@ -105,7 +103,7 @@ extends AbstractConfigTest {
          * {@inheritDoc}
          */
         @Override
-        protected @NotNull Map<String, String> getEnvironmentVariables() {
+        protected Map<String, String> getEnvironmentVariables() {
             return this.mockValues;
         }
     }
@@ -125,7 +123,7 @@ extends AbstractConfigTest {
          * @param values The test environment variables.
          */
         public MockBuilder(
-                final @NotNull Map<String, String> values) {
+                final Map<String, String> values) {
             super();
             this.mockValues = values;
         }
@@ -134,7 +132,7 @@ extends AbstractConfigTest {
          * {@inheritDoc}
          */
         @Override
-        public @NotNull EnvironmentConfigImpl build() {
+        public EnvironmentConfigImpl build() {
             return new MockConfig(this.options, this.mockValues);
         }
     }

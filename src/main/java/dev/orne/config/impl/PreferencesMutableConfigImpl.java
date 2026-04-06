@@ -22,17 +22,13 @@ package dev.orne.config.impl;
  * #L%
  */
 
-import java.util.Objects;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
-import java.util.stream.Stream;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.ConfigException;
 import dev.orne.config.MutableConfig;
@@ -49,11 +45,8 @@ import dev.orne.config.PreferencesMutableConfig;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class PreferencesMutableConfigImpl
-extends AbstractWatchableConfig
+extends PreferencesConfigImpl
 implements PreferencesMutableConfig, PreferenceChangeListener {
-
-    /** The preferences node to use as storage of configuration properties. */
-    private final @NotNull Preferences preferences;
 
     /**
      * Creates a new instance.
@@ -62,73 +55,22 @@ implements PreferencesMutableConfig, PreferenceChangeListener {
      * @param mutableOptions The mutable configuration builder options.
      * @param preferencesOptions The preferences based configuration builder options.
      */
-    @API(status = API.Status.INTERNAL, since = "1.0")
     public PreferencesMutableConfigImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions,
-            final @NotNull PreferencesConfigOptions preferencesOptions) {
-        super(options, mutableOptions);
-        Objects.requireNonNull(preferencesOptions);
-        this.preferences = Objects.requireNonNull(preferencesOptions.getPreferences());
-        this.preferences.addPreferenceChangeListener(this);
-    }
-
-    /**
-     * Returns the preferences node to use as storage of configuration
-     * parameters.
-     * 
-     * @return The preferences node.
-     */
-    protected @NotNull Preferences getPreferences() {
-        return this.preferences;
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final PreferencesConfigOptions preferencesOptions) {
+        super(options, mutableOptions, preferencesOptions);
+        getPreferences().addPreferenceChangeListener(this);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected boolean isEmptyInt() {
-        try {
-            return this.preferences.keys().length == 0;
-        } catch (final IllegalStateException | BackingStoreException ise) {
-            throw new ConfigException("Error accessing configuration", ise);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean containsInt(@NotBlank String key) {
-        try {
-            return this.preferences.get(key, null) != null;
-        } catch (final IllegalStateException ise) {
-            throw new ConfigException("Error accessing configuration property", ise);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected @NotNull Stream<String> getKeysInt() {
-        try {
-            return Stream.of(this.preferences.keys());
-        } catch (final IllegalStateException | BackingStoreException e) {
-            throw new ConfigException("Error accessing configuration", e);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected String getInt(@NotBlank String key) {
-        try {
-            return this.preferences.get(key, null);
-        } catch (final IllegalStateException ise) {
-            throw new ConfigException("Error retrieving configuration property value", ise);
-        }
+    public void set(
+            final String key,
+            final @Nullable String value) {
+        super.set(key, value);
     }
 
     /**
@@ -136,8 +78,8 @@ implements PreferencesMutableConfig, PreferenceChangeListener {
      */
     @Override
     protected void setInt(
-            final @NotBlank String key,
-            final @NotNull String value) {
+            final String key,
+            final String value) {
         try {
             getPreferences().put(key, value);
         } catch (final IllegalStateException ise) {
@@ -149,8 +91,17 @@ implements PreferencesMutableConfig, PreferenceChangeListener {
      * {@inheritDoc}
      */
     @Override
+    public void remove(
+            final String... keys) {
+        super.remove(keys);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected void removeInt(
-            final @NotBlank String... keys) {
+            final String... keys) {
         for (final String key : keys) {
             try {
                 getPreferences().remove(key);
@@ -164,8 +115,26 @@ implements PreferencesMutableConfig, PreferenceChangeListener {
      * {@inheritDoc}
      */
     @Override
+    public void addListener(
+            final Listener listener) {
+        super.addListener(listener);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void removeListener(
+            final Listener listener) {
+        super.removeListener(listener);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void preferenceChange(
-            final @NotNull PreferenceChangeEvent evt) {
+            final PreferenceChangeEvent evt) {
         getResolver().ifPresent(r -> r.clearCache());
         try {
             getEvents().notify(this, evt.getKey());
@@ -179,7 +148,7 @@ implements PreferencesMutableConfig, PreferenceChangeListener {
      */
     @Override
     protected void notifyLocalChanges(
-            final @NotNull String... keys) {
+            final String... keys) {
         // Prevent duplicated notifications for local changes later notified
         // by the preferences change listener.
     }

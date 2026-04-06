@@ -24,8 +24,6 @@ package dev.orne.config.spring;
 
 import java.util.Map;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +36,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigProvider;
@@ -64,17 +63,17 @@ implements EnvironmentAware, BeanFactoryPostProcessor, BeanPostProcessor {
     public static final String AUTO_CONFIG_PROVIDER = "orneConfigAutomaticConfigProvider";
 
     /** The Spring environment. */
-    protected Environment environment;
+    protected @Nullable Environment environment;
     /** The bean factory. */
-    protected ListableBeanFactory beanFactory;
+    protected @Nullable ListableBeanFactory beanFactory;
     /** The application provided configuration provider bean name. */
-    protected String appConfigProviderBeanName;
+    protected @Nullable String appConfigProviderBeanName;
     /** The application provided configuration provider customizer bean name. */
-    protected String customizerBeanName;
+    protected @Nullable String customizerBeanName;
     /** The configuration provider. */
-    protected ConfigProvider configProvider;
+    protected @Nullable ConfigProvider configProvider;
     /** The created configuration provider. */
-    protected ConfigProviderImpl ownConfigProvider;
+    protected @Nullable ConfigProviderImpl ownConfigProvider;
 
     /**
      * Creates a new instance.
@@ -100,7 +99,7 @@ implements EnvironmentAware, BeanFactoryPostProcessor, BeanPostProcessor {
      */
     @Override
     public void postProcessBeanFactory(
-            final @NotNull ConfigurableListableBeanFactory beanFactory)
+            final ConfigurableListableBeanFactory beanFactory)
     throws BeansException {
         this.beanFactory = beanFactory;
         final String[] providerNames = beanFactory.getBeanNamesForType(ConfigProvider.class);
@@ -134,9 +133,9 @@ implements EnvironmentAware, BeanFactoryPostProcessor, BeanPostProcessor {
      * Registers 
      */
     @Override
-    public @NotNull Object postProcessAfterInitialization(
-            final @NotNull Object bean,
-            final @NotNull String beanName)
+    public Object postProcessAfterInitialization(
+            final Object bean,
+            final String beanName)
     throws BeansException {
         if (bean instanceof Config && this.ownConfigProvider != null) {
             LOG.debug("Registering Config bean '{}' initialized after ConfigProvider creation...", beanName);
@@ -151,7 +150,7 @@ implements EnvironmentAware, BeanFactoryPostProcessor, BeanPostProcessor {
      * 
      * @return The automatically created {@code ConfigProvider} bean.
      */
-    public synchronized @NotNull ConfigProvider getConfigProvider() {
+    public synchronized ConfigProvider getConfigProvider() {
         if (this.configProvider == null) {
             if (this.appConfigProviderBeanName == null) {
                 LOG.debug("Creating default ConfigProvider bean...");
@@ -173,7 +172,7 @@ implements EnvironmentAware, BeanFactoryPostProcessor, BeanPostProcessor {
      * 
      * @return The new configuration provider.
      */
-    protected @NotNull ConfigProviderImpl createConfigProvider() {
+    protected ConfigProviderImpl createConfigProvider() {
         final Map<String, Config> configs = BeanFactoryUtils.beansOfTypeIncludingAncestors(
                 beanFactory,
                 Config.class);
@@ -199,7 +198,7 @@ implements EnvironmentAware, BeanFactoryPostProcessor, BeanPostProcessor {
      * 
      * @return The default configuration.
      */
-    protected @NotNull Config createDefaultConfig() {
+    protected Config createDefaultConfig() {
         LOG.info("Creating default Spring Environment based Config...");
         return Config.fromSpringEnvironment()
                 .ofEnvironment(this.environment)

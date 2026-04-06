@@ -1,9 +1,5 @@
 package dev.orne.config.impl;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Writer;
-
 /*-
  * #%L
  * Orne Config
@@ -26,14 +22,14 @@ import java.io.Writer;
  * #L%
  */
 
-import java.util.Objects;
-import java.util.Properties;
-import java.util.stream.Stream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Writer;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import java.util.Properties;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.FileWatchableConfig;
 import dev.orne.config.MutableConfig;
@@ -49,11 +45,8 @@ import dev.orne.config.MutableConfig;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class PropertiesMutableConfigImpl
-extends AbstractWatchableConfig
+extends PropertiesConfigImpl
 implements FileWatchableConfig {
-
-    /** The configuration properties. */
-    private final @NotNull Properties config;
 
     /**
      * Creates a new instance.
@@ -63,55 +56,20 @@ implements FileWatchableConfig {
      * @param propertyOptions The properties based configuration builder options.
      */
     public PropertiesMutableConfigImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions,
-            final @NotNull PropertiesConfigOptions propertyOptions) {
-        super(options, mutableOptions);
-        Objects.requireNonNull(propertyOptions);
-        this.config = Objects.requireNonNull(propertyOptions.getProperties());
-    }
-
-    /**
-     * Returns the internal {@code Properties} instance.
-     * 
-     * @return The configuration properties.
-     */
-    protected @NotNull Properties getProperties() {
-        return this.config;
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final PropertiesConfigOptions propertyOptions) {
+        super(options, mutableOptions, propertyOptions);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected boolean isEmptyInt() {
-        return this.config.isEmpty();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean containsInt(
-            final @NotBlank String key) {
-        return this.config.containsKey(key);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected @NotNull Stream<String> getKeysInt() {
-        return this.config.stringPropertyNames().stream();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected String getInt(
-            final @NotBlank String key) {
-        return this.config.getProperty(key);
+    public void set(
+            final String key,
+            final @Nullable String value) {
+        super.set(key, value);
     }
 
     /**
@@ -119,9 +77,18 @@ implements FileWatchableConfig {
      */
     @Override
     protected void setInt(
-            final @NotBlank String key,
-            final @NotNull String value) {
-        this.config.setProperty(key, value);
+            final String key,
+            final String value) {
+        getProperties().setProperty(key, value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void remove(
+            final String... keys) {
+        super.remove(keys);
     }
 
     /**
@@ -129,9 +96,9 @@ implements FileWatchableConfig {
      */
     @Override
     protected void removeInt(
-            final @NotBlank String... keys) {
+            final String... keys) {
         for (final String key : keys) {
-            this.config.remove(key);
+            getProperties().remove(key);
         }
     }
 
@@ -139,10 +106,18 @@ implements FileWatchableConfig {
      * {@inheritDoc}
      */
     @Override
-    public void save(
-            final @NotNull OutputStream destination)
-    throws IOException {
-        this.config.store(destination, null);
+    public void addListener(
+            final Listener listener) {
+        super.addListener(listener);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void removeListener(
+            final Listener listener) {
+        super.removeListener(listener);
     }
 
     /**
@@ -150,8 +125,18 @@ implements FileWatchableConfig {
      */
     @Override
     public void save(
-            final @NotNull Writer destination)
+            final OutputStream destination)
     throws IOException {
-        this.config.store(destination, null);
+        getProperties().store(destination, null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void save(
+            final Writer destination)
+    throws IOException {
+        getProperties().store(destination, null);
     }
 }

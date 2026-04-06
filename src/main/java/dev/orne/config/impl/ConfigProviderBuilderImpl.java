@@ -22,8 +22,6 @@ package dev.orne.config.impl;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import dev.orne.config.Config;
@@ -52,7 +50,7 @@ implements ConfigProviderBuilder {
      * @param defaultConfig The default configuration instance.
      */
     public ConfigProviderBuilderImpl(
-            final @NotNull Config defaultConfig) {
+            final Config defaultConfig) {
         super();
         this.provider = new ConfigProviderImpl(defaultConfig);
     }
@@ -61,8 +59,8 @@ implements ConfigProviderBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull ConfigProviderBuilder addConfig(
-            final @NotNull Config config) {
+    public ConfigProviderBuilder addConfig(
+            final Config config) {
         this.provider.registerConfig(config);
         return this;
     }
@@ -71,7 +69,7 @@ implements ConfigProviderBuilder {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull ConfigProvider build() {
+    public ConfigProvider build() {
         return this.provider;
     }
 }

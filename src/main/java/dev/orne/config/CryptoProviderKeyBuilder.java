@@ -23,7 +23,6 @@ package dev.orne.config;
  */
 
 import javax.crypto.SecretKey;
-import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
 
@@ -47,8 +46,8 @@ public interface CryptoProviderKeyBuilder {
      * @throws ConfigCryptoProviderException If an error occurs creating the
      * secret key.
      */
-    @NotNull CryptoProviderBuilder withSecretKey(
-            @NotNull char[] password);
+    CryptoProviderBuilder withSecretKey(
+            char[] password);
 
     /**
      * Sets the secret key.
@@ -56,6 +55,6 @@ public interface CryptoProviderKeyBuilder {
      * @param key The secret key.
      * @return Next builder, for method chaining.
      */
-    @NotNull CryptoProviderBuilder withSecretKey(
-            @NotNull SecretKey key);
+    CryptoProviderBuilder withSecretKey(
+            SecretKey key);
 }

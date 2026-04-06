@@ -24,11 +24,7 @@ package dev.orne.config.impl;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Objects;
-import java.util.stream.Stream;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.xml.XMLConstants;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -41,7 +37,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.FileWatchableConfig;
@@ -56,7 +52,7 @@ import dev.orne.config.FileWatchableConfig;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class XmlMutableConfigImpl
-extends AbstractWatchableConfig
+extends XmlConfigImpl
 implements FileWatchableConfig {
 
     /** The class logger. */
@@ -82,14 +78,6 @@ implements FileWatchableConfig {
             LOG.debug("Error disabling external stylesheet access on XML DocumentBuilderFactory", e);
         }
     }
-    
-
-    /** The XML document with the configuration options. */
-    private final @NotNull Document document;
-    /** The configuration nested properties separator. */
-    private final @NotBlank String propertySeparator;
-    /** The XML attributes references prefix. */
-    private final @NotBlank String attributePrefix;
 
     /**
      * Creates a new instance.
@@ -99,87 +87,20 @@ implements FileWatchableConfig {
      * @param xmlOptions The XML based configuration builder options.
      */
     public XmlMutableConfigImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions,
-            final @NotNull XmlConfigOptions xmlOptions) {
-        super(options, mutableOptions);
-        Objects.requireNonNull(xmlOptions);
-        Objects.requireNonNull(xmlOptions);
-        this.document = Objects.requireNonNull(xmlOptions.getDocument());
-        this.propertySeparator = Objects.requireNonNull(xmlOptions.getPropertySeparator());
-        this.attributePrefix = Objects.requireNonNull(xmlOptions.getAttributePrefix());
-    }
-
-    /**
-     * Returns the XML document with the configuration options.
-     * 
-     * @return The XML document with the configuration options.
-     */
-    protected @NotNull Document getDocument() {
-        return this.document;
-    }
-
-    /**
-     * Returns the configuration nested properties separator.
-     * 
-     * @return The configuration nested properties separator.
-     */
-    protected @NotBlank String getPropertySeparator() {
-        return this.propertySeparator;
-    }
-
-    /**
-     * Returns the XML attributes references prefix.
-     * 
-     * @return The XML attributes references prefix.
-     */
-    protected @NotBlank String getAttributePrefix() {
-        return this.attributePrefix;
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final XmlConfigOptions xmlOptions) {
+        super(options, mutableOptions, xmlOptions);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected boolean isEmptyInt() {
-        return !this.document.getDocumentElement().hasAttributes()
-                && !this.document.getDocumentElement().hasChildNodes();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean containsInt(@NotBlank String key) {
-        return XmlUtils.contains(
-                this.document,
-                key,
-                this.propertySeparator,
-                this.attributePrefix);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected @NotNull Stream<String> getKeysInt() {
-        return XmlUtils.extractKeys(
-                this.document,
-                this.propertySeparator,
-                this.attributePrefix);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected String getInt(@NotBlank String key) {
-        return XmlUtils.getValue(
-                this.document,
-                key,
-                this.propertySeparator,
-                attributePrefix)
-                .orElse(null);
+    public void set(
+            final String key,
+            final @Nullable String value) {
+        super.set(key, value);
     }
 
     /**
@@ -187,13 +108,13 @@ implements FileWatchableConfig {
      */
     @Override
     protected void setInt(
-            final @NotBlank String key,
-            final @NotNull String value) {
+            final String key,
+            final String value) {
         XmlUtils.setValue(
-                this.document,
+                getDocument(),
                 key,
-                this.propertySeparator,
-                this.attributePrefix,
+                getPropertySeparator(),
+                getAttributePrefix(),
                 value);
     }
 
@@ -201,14 +122,23 @@ implements FileWatchableConfig {
      * {@inheritDoc}
      */
     @Override
+    public void remove(
+            final String... keys) {
+        super.remove(keys);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected void removeInt(
-            final @NotBlank String... keys) {
+            final String... keys) {
         for (final String key : keys) {
             XmlUtils.setValue(
-                    this.document,
+                    getDocument(),
                     key,
-                    this.propertySeparator,
-                    this.attributePrefix,
+                    getPropertySeparator(),
+                    getAttributePrefix(),
                     null);
         }
     }
@@ -217,14 +147,32 @@ implements FileWatchableConfig {
      * {@inheritDoc}
      */
     @Override
+    public void addListener(
+            final Listener listener) {
+        super.addListener(listener);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void removeListener(
+            final Listener listener) {
+        super.removeListener(listener);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void save(
-            final @NotNull Writer destination)
+            final Writer destination)
     throws IOException {
         try {
             final Transformer transformer = TRANS_FACT.newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-            final DOMSource source = new DOMSource(this.document);
+            final DOMSource source = new DOMSource(getDocument());
             final StreamResult result = new StreamResult(destination);
             transformer.transform(source, result);
         } catch (final TransformerException e) {

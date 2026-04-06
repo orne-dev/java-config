@@ -22,8 +22,6 @@ package dev.orne.config;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 /**
@@ -45,8 +43,8 @@ public interface CryptoProviderEngineBuilder {
      * @param engine The cryptography transformations engine to use.
      * @return Next builder, for method chaining.
      */
-    default @NotNull CryptoProviderKeyBuilder withEngine(
-            @NotNull ConfigCryptoEngine engine) {
+    default CryptoProviderKeyBuilder withEngine(
+            ConfigCryptoEngine engine) {
         return withEngine(engine, false);
     }
 
@@ -58,8 +56,8 @@ public interface CryptoProviderEngineBuilder {
      * provider destruction.
      * @return Next builder, for method chaining.
      */
-    @NotNull CryptoProviderKeyBuilder withEngine(
-            @NotNull ConfigCryptoEngine engine,
+    CryptoProviderKeyBuilder withEngine(
+            ConfigCryptoEngine engine,
             boolean destroyEngine);
 
     /**
@@ -70,8 +68,8 @@ public interface CryptoProviderEngineBuilder {
      * @param salt The salt to apply to password based secret keys.
      * @return Next builder, for method chaining.
      */
-    default @NotNull CryptoProviderKeyBuilder withAesGcmEngine(
-            @NotNull byte[] salt) {
+    default CryptoProviderKeyBuilder withAesGcmEngine(
+            byte[] salt) {
         return withAesGcmEngine(salt, true);
     }
 
@@ -85,7 +83,7 @@ public interface CryptoProviderEngineBuilder {
      * provider destruction.
      * @return Next builder, for method chaining.
      */
-    @NotNull CryptoProviderKeyBuilder withAesGcmEngine(
-            @NotNull byte[] salt,
+    CryptoProviderKeyBuilder withAesGcmEngine(
+            byte[] salt,
             boolean destroyEngine);
 }

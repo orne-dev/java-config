@@ -24,12 +24,9 @@ package dev.orne.config.spring;
 
 import java.util.Map;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import dev.orne.config.Config;
-import dev.orne.config.ConfigProviderBuilder;
 
 /**
  * Interface for available {@code Config} instances customization
@@ -57,7 +54,7 @@ import dev.orne.config.ConfigProviderBuilder;
  * }
  * </pre>
  * To customize the additional configurations registration
- * override the {@link #registerAdditionalConfigs(ConfigProviderBuilder, Map)}
+ * override the {@link #registerAdditionalConfigs(ConfigRegistry, Map)}
  * method.
  * <p>
  * Only one implementation of this interface is allowed per Spring context,
@@ -78,8 +75,8 @@ public interface ConfigProviderCustomizer {
      * @param configs The configurations available in the Spring context.
      * @return The default configuration.
      */
-    @NotNull Config configureDefaultConfig(
-            @NotNull Map<String, Config> configs);
+    Config configureDefaultConfig(
+            Map<String, Config> configs);
 
     /**
      * Registers additional {@code Config} instances.
@@ -88,8 +85,8 @@ public interface ConfigProviderCustomizer {
      * @param configs The configurations available in the Spring context.
      */
     default void registerAdditionalConfigs(
-            final @NotNull ConfigRegistry registry,
-            final @NotNull Map<String, Config> configs) {
+            final ConfigRegistry registry,
+            final Map<String, Config> configs) {
         configs.values().forEach(registry::add);
     }
 
@@ -105,6 +102,6 @@ public interface ConfigProviderCustomizer {
          * @param config The configuration to add.
          */
         void add(
-                @NotNull Config config);
+                Config config);
     }
 }

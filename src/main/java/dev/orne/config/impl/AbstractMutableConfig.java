@@ -24,11 +24,9 @@ package dev.orne.config.impl;
 
 import java.util.Objects;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.lang3.Validate;
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.ConfigException;
 import dev.orne.config.MutableConfig;
@@ -36,6 +34,10 @@ import dev.orne.config.ValueEncoder;
 
 /**
  * Base abstract implementation of mutable configuration properties provider.
+ * <p>
+ * Extending classes must add {@code MutableConfig} interface and
+ * override {@code set} and {@code remove} methods
+ * making them public and delegating to the protected methods of this class.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-04
@@ -43,19 +45,19 @@ import dev.orne.config.ValueEncoder;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public abstract class AbstractMutableConfig
-extends AbstractConfig
-implements MutableConfig {
+extends AbstractConfig {
 
     /** The configuration properties values encoder. */
-    private final @NotNull ValueEncoder encoder;
+    private final ValueEncoder encoder;
 
     /**
-     * Returns the configuration properties values encoder.
+     * Creates a new instance.
      * 
-     * @return The configuration properties values encoder.
+     * @param options The configuration builder options.
      */
-    protected @NotNull ValueEncoder getEncoder() {
-        return this.encoder;
+    protected AbstractMutableConfig(
+            final ConfigOptions options) {
+        this(options, new MutableConfigOptions());
     }
 
     /**
@@ -65,8 +67,8 @@ implements MutableConfig {
      * @param mutableOptions The mutable configuration builder options.
      */
     protected AbstractMutableConfig(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions) {
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions) {
         super(options);
         Objects.requireNonNull(mutableOptions);
         if (options.getCryptoProvider() != null) {
@@ -84,12 +86,26 @@ implements MutableConfig {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns the configuration properties values encoder.
+     * 
+     * @return The configuration properties values encoder.
      */
-    @Override
-    public void set(
-            final @NotBlank String key,
-            final String value) {
+    protected ValueEncoder getEncoder() {
+        return this.encoder;
+    }
+
+    /**
+     * Sets the value of the specified configuration property.
+     * 
+     * @param key The configuration property.
+     * @param value The value to set
+     * @throws ConfigException If an error occurs setting the configuration
+     * property value
+     * @see MutableConfig#set(String, String)
+     */
+    protected void set(
+            final String key,
+            final @Nullable String value) {
         Validate.notBlank(key, KEY_BLANK_ERR);
         String encoded = this.encoder.encode(value);
         if (encoded == null) {
@@ -108,21 +124,30 @@ implements MutableConfig {
      * @throws ConfigException If an error occurs setting the configuration
      * property value
      */
-    protected abstract void setInt(
-            @NotBlank String key,
-            @NotNull String value);
+    protected void setInt(
+            String key,
+            String value) {
+        throw new UnsupportedOperationException(
+                "Configuration instance is not mutable");
+    }
 
     /**
-     * {@inheritDoc}
+     * Removes the specified configuration properties.
+     * 
+     * @param keys The configuration properties.
+     * @throws ConfigException If an error occurs removing the configuration
+     * properties.
+     * @see MutableConfig#remove(String...)
      */
-    @Override
-    public void remove(@NotBlank String... keys) {
+    protected void remove(
+            final String... keys) {
         for (final String key : keys) {
             Validate.notBlank(key, KEY_BLANK_ERR);
         }
         removeInt(keys);
         getResolver().ifPresent(r -> r.clearCache());
     }
+
     /**
      * Removes the specified configuration properties.
      * 
@@ -130,6 +155,9 @@ implements MutableConfig {
      * @throws ConfigException If an error occurs removing the configuration
      * properties.
      */
-    protected abstract void removeInt(
-            @NotBlank String... keys);
+    protected void removeInt(
+            String... keys) {
+        throw new UnsupportedOperationException(
+                "Configuration instance is not mutable");
+    }
 }

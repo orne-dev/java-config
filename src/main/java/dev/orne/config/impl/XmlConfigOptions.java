@@ -32,8 +32,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Enumeration;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -43,6 +41,7 @@ import org.apache.commons.lang3.Validate;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -80,7 +79,7 @@ public class XmlConfigOptions {
             "Error mergin configuration XML documents";
 
     /** The XML document builder factory. */
-    private static final @NotNull DocumentBuilderFactory DOC_BUILDER_FACTORY;
+    private static final DocumentBuilderFactory DOC_BUILDER_FACTORY;
     static {
         DOC_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
         try {
@@ -101,13 +100,13 @@ public class XmlConfigOptions {
     }
 
     /** The XML document builder. */
-    private final @NotNull DocumentBuilder builder;
+    private final DocumentBuilder builder;
     /** The XML document with the configuration properties. */
-    private final @NotNull Document document;
+    private final Document document;
     /** The configuration nested properties separator. */
-    private @NotBlank String propertySeparator;
+    private String propertySeparator;
     /** The XML attributes references prefix. */
-    private @NotBlank String attributePrefix;
+    private String attributePrefix;
 
     /**
      * Empty constructor.
@@ -130,7 +129,7 @@ public class XmlConfigOptions {
      * @param copy The instance to copy.
      */
     public XmlConfigOptions(
-            final @NotNull XmlConfigOptions copy) {
+            final XmlConfigOptions copy) {
         super();
         try {
             this.builder = DOC_BUILDER_FACTORY.newDocumentBuilder();
@@ -151,7 +150,7 @@ public class XmlConfigOptions {
      * 
      * @return The XML document with the configuration properties.
      */
-    public @NotNull Document getDocument() {
+    public Document getDocument() {
         return this.document;
     }
 
@@ -160,7 +159,7 @@ public class XmlConfigOptions {
      * 
      * @return The configuration nested properties separator.
      */
-    public @NotBlank String getPropertySeparator() {
+    public String getPropertySeparator() {
         return this.propertySeparator;
     }
 
@@ -170,7 +169,7 @@ public class XmlConfigOptions {
      * @param separator The configuration nested properties separator.
      */
     public void setPropertySeparator(
-            final @NotBlank String separator) {
+            final String separator) {
         Validate.notBlank(separator, "Property separator cannot be blank");
         this.propertySeparator = separator;
     }
@@ -180,7 +179,7 @@ public class XmlConfigOptions {
      * 
      * @return The XML attributes references prefix.
      */
-    public @NotBlank String getAttributePrefix() {
+    public String getAttributePrefix() {
         return this.attributePrefix;
     }
 
@@ -190,7 +189,7 @@ public class XmlConfigOptions {
      * @param prefix The XML attributes references prefix.
      */
     public void setAttributePrefix(
-            final @NotBlank String prefix) {
+            final String prefix) {
         Validate.notBlank(prefix, "Property separator cannot be blank");
         this.attributePrefix = prefix;
     }
@@ -207,8 +206,8 @@ public class XmlConfigOptions {
      * @param localName The root element name of the XML document to create.
      */
     public void setRootElement(
-            final String namespaceURI,
-            final @NotNull String localName) {
+            final @Nullable String namespaceURI,
+            final String localName) {
         if (this.document.getDocumentElement() != null) {
             this.document.removeChild(this.document.getDocumentElement());
         }
@@ -230,7 +229,7 @@ public class XmlConfigOptions {
      * @param values The configuration properties.
      */
     public void add(
-            final @NotNull Document values) {
+            final Document values) {
         try {
             final Element docRoot = values.getDocumentElement();
             Element cfgRoot = this.document.getDocumentElement();
@@ -275,7 +274,7 @@ public class XmlConfigOptions {
      * @param path The ClassLoader resource path.
      */
     public void load(
-            final @NotNull String path) {
+            final String path) {
         try {
             final Enumeration<URL> resources =
                     Thread.currentThread()
@@ -299,7 +298,7 @@ public class XmlConfigOptions {
      * @param path The file path.
      */
     public void load(
-            final @NotNull Path path) {
+            final Path path) {
         if (!Files.exists(path)) {
             LOG.warn(RESOURCE_NOT_FOUND_ERR, path);
         }
@@ -316,7 +315,7 @@ public class XmlConfigOptions {
      * @param file The file to load.
      */
     public void load(
-            final @NotNull File file) {
+            final File file) {
         try (final InputStream fileIS = new FileInputStream(file)) {
             load(fileIS);
         } catch (final FileNotFoundException e) {
@@ -332,7 +331,7 @@ public class XmlConfigOptions {
      * @param url The URL to load.
      */
     public void load(
-            final @NotNull URL url) {
+            final URL url) {
         try (final InputStream urlIS = url.openStream()) {
             load(urlIS);
         } catch (final IOException e) {
@@ -347,7 +346,7 @@ public class XmlConfigOptions {
      * @param docIS The XML document input stream.
      */
     public void load(
-            final @NotNull InputStream docIS) {
+            final InputStream docIS) {
         try {
             final Document doc = this.builder.parse(docIS);
             add(doc);

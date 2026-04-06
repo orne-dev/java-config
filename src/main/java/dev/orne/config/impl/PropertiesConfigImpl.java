@@ -26,10 +26,8 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.stream.Stream;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 
@@ -45,10 +43,10 @@ import dev.orne.config.Config;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class PropertiesConfigImpl
-extends AbstractConfig {
+extends AbstractWatchableConfig {
 
     /** The configuration properties. */
-    private final @NotNull Properties config;
+    private final Properties config;
 
     /**
      * Creates a new instance.
@@ -57,9 +55,23 @@ extends AbstractConfig {
      * @param propertyOptions The properties based configuration builder options.
      */
     public PropertiesConfigImpl(
-            final @NotNull ConfigOptions options,
-            final @NotNull PropertiesConfigOptions propertyOptions) {
-        super(options);
+            final ConfigOptions options,
+            final PropertiesConfigOptions propertyOptions) {
+        this(options, new MutableConfigOptions(), propertyOptions);
+    }
+
+    /**
+     * Creates a new instance.
+     * 
+     * @param options The configuration builder options.
+     * @param mutableOptions The mutable configuration builder options.
+     * @param propertyOptions The properties based configuration builder options.
+     */
+    protected PropertiesConfigImpl(
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions,
+            final PropertiesConfigOptions propertyOptions) {
+        super(options, mutableOptions);
         Objects.requireNonNull(propertyOptions);
         this.config = Objects.requireNonNull(propertyOptions.getProperties());
     }
@@ -69,7 +81,7 @@ extends AbstractConfig {
      * 
      * @return The configuration properties.
      */
-    protected @NotNull Properties getProperties() {
+    protected Properties getProperties() {
         return this.config;
     }
 
@@ -86,7 +98,7 @@ extends AbstractConfig {
      */
     @Override
     protected boolean containsInt(
-            final @NotBlank String key) {
+            final String key) {
         return this.config.containsKey(key);
     }
 
@@ -94,7 +106,7 @@ extends AbstractConfig {
      * {@inheritDoc}
      */
     @Override
-    protected @NotNull Stream<String> getKeysInt() {
+    protected Stream<String> getKeysInt() {
         return this.config.stringPropertyNames().stream();
     }
 
@@ -102,8 +114,8 @@ extends AbstractConfig {
      * {@inheritDoc}
      */
     @Override
-    protected String getInt(
-            final @NotBlank String key) {
+    protected @Nullable String getInt(
+            final String key) {
         return this.config.getProperty(key);
     }
 }

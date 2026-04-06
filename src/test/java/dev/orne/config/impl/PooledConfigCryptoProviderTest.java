@@ -341,11 +341,11 @@ class PooledConfigCryptoProviderTest {
                 pool);
         willThrow(mockException).given(pool).borrowObject();
         
-        final IllegalStateException result = assertThrows(IllegalStateException.class, () -> {
+        final ConfigCryptoProviderException result = assertThrows(ConfigCryptoProviderException.class, () -> {
             provider.encrypt(plainText);
         });
         
-        assertSame(mockException, result);
+        assertSame(mockException, result.getCause());
         final InOrder inOrder = inOrder(pool, engine);
         inOrder.verify(pool, times(1)).borrowObject();
         inOrder.verify(engine, never()).encrypt(plainText, key, cipher);
@@ -473,11 +473,11 @@ class PooledConfigCryptoProviderTest {
         willReturn(cipher).given(pool).borrowObject();
         willThrow(mockException).given(pool).returnObject(cipher);
         
-        final IllegalStateException result = assertThrows(IllegalStateException.class, () -> {
+        final ConfigCryptoProviderException result = assertThrows(ConfigCryptoProviderException.class, () -> {
             provider.encrypt(plainText);
         });
         
-        assertSame(mockException, result);
+        assertSame(mockException, result.getCause());
         final InOrder inOrder = inOrder(pool, engine);
         inOrder.verify(pool, times(1)).borrowObject();
         inOrder.verify(engine, times(1)).encrypt(plainText, key, cipher);
@@ -514,7 +514,10 @@ class PooledConfigCryptoProviderTest {
         
         assertSame(mockException, result);
         assertEquals(1, result.getSuppressed().length);
-        assertSame(mockException2, result.getSuppressed()[0]);
+        final ConfigCryptoProviderException suppresed = assertInstanceOf(
+                ConfigCryptoProviderException.class,
+                result.getSuppressed()[0]);
+        assertSame(mockException2, suppresed.getCause());
         final InOrder inOrder = inOrder(pool, engine);
         inOrder.verify(pool, times(1)).borrowObject();
         inOrder.verify(engine, times(1)).encrypt(plainText, key, cipher);
@@ -573,11 +576,11 @@ class PooledConfigCryptoProviderTest {
                 pool);
         willThrow(mockException).given(pool).borrowObject();
         
-        final IllegalStateException result = assertThrows(IllegalStateException.class, () -> {
+        final ConfigCryptoProviderException result = assertThrows(ConfigCryptoProviderException.class, () -> {
             provider.decrypt(cryptText);
         });
         
-        assertSame(mockException, result);
+        assertSame(mockException, result.getCause());
         final InOrder inOrder = inOrder(pool, engine);
         inOrder.verify(pool, times(1)).borrowObject();
         inOrder.verify(engine, never()).decrypt(cryptText, key, cipher);
@@ -705,11 +708,11 @@ class PooledConfigCryptoProviderTest {
         willReturn(cipher).given(pool).borrowObject();
         willThrow(mockException).given(pool).returnObject(cipher);
         
-        final IllegalStateException result = assertThrows(IllegalStateException.class, () -> {
+        final ConfigCryptoProviderException result = assertThrows(ConfigCryptoProviderException.class, () -> {
             provider.decrypt(cryptText);
         });
         
-        assertSame(mockException, result);
+        assertSame(mockException, result.getCause());
         final InOrder inOrder = inOrder(pool, engine);
         inOrder.verify(pool, times(1)).borrowObject();
         inOrder.verify(engine, times(1)).decrypt(cryptText, key, cipher);
@@ -746,7 +749,10 @@ class PooledConfigCryptoProviderTest {
         
         assertSame(mockException, result);
         assertEquals(1, result.getSuppressed().length);
-        assertSame(mockException2, result.getSuppressed()[0]);
+        final ConfigCryptoProviderException suppresed = assertInstanceOf(
+                ConfigCryptoProviderException.class,
+                result.getSuppressed()[0]);
+        assertSame(mockException2, suppresed.getCause());
         final InOrder inOrder = inOrder(pool, engine);
         inOrder.verify(pool, times(1)).borrowObject();
         inOrder.verify(engine, times(1)).decrypt(cryptText, key, cipher);

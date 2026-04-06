@@ -24,8 +24,6 @@ package dev.orne.config.spring;
 
 import java.util.function.Supplier;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.DependencyDescriptor;
@@ -51,9 +49,9 @@ public class ConfigAutowireCandidateResolver
 implements AutowireCandidateResolver {
 
     /** The parent autowire candidate resolver. */
-    public final @NotNull AutowireCandidateResolver parent;
+    public final AutowireCandidateResolver parent;
     /** The configuration provider supplier. */
-    public final @NotNull Supplier<ConfigProvider> configProvider;
+    public final Supplier<ConfigProvider> configProvider;
 
     /**
      * Creates a new instance.
@@ -62,8 +60,8 @@ implements AutowireCandidateResolver {
      * @param configProvider The configuration provider supplier.
      */
     public ConfigAutowireCandidateResolver(
-            final @NotNull AutowireCandidateResolver parent,
-            final @NotNull Supplier<ConfigProvider> configProvider) {
+            final AutowireCandidateResolver parent,
+            final Supplier<ConfigProvider> configProvider) {
         super();
         this.parent = parent;
         this.configProvider = configProvider;

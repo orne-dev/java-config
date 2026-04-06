@@ -22,10 +22,9 @@ package dev.orne.config.commons;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.ConfigException;
 import dev.orne.config.MutableConfig;
@@ -49,7 +48,7 @@ extends DelegatedOrneConfiguration {
      * @param config The delegated Orne configuration
      */
     public DelegatedOrneMutableConfiguration(
-            final @NotNull MutableConfig config) {
+            final MutableConfig config) {
         super(config);
     }
 
@@ -57,7 +56,7 @@ extends DelegatedOrneConfiguration {
      * {@inheritDoc}
      */
     @Override
-    protected @NotNull MutableConfig getConfig() {
+    protected MutableConfig getConfig() {
         return (MutableConfig) super.getConfig();
     }
 
@@ -67,7 +66,7 @@ extends DelegatedOrneConfiguration {
     @Override
     protected void addPropertyDirect(
             final String key,
-            final Object value) {
+            final @Nullable Object value) {
         try {
             getConfig().set(key, String.valueOf(value));
         } catch (final ConfigException ce) {

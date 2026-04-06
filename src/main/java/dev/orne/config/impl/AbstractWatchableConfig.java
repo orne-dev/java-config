@@ -24,16 +24,18 @@ package dev.orne.config.impl;
 
 import java.util.Set;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.WatchableConfig;
 
 /**
  * Base abstract implementation of watchable mutable configuration properties
  * provider.
+ * <p>
+ * Extending classes must add {@code WatchableConfig} interface and
+ * override {@code addListener} and {@code removeListener} methods
+ * making them public and delegating to the protected methods of this class.
  * 
  * @author <a href="https://github.com/ihernaez">(w) Iker Hernaez</a>
  * @version 1.0, 2025-04
@@ -41,11 +43,20 @@ import dev.orne.config.WatchableConfig;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public abstract class AbstractWatchableConfig
-extends AbstractMutableConfig
-implements WatchableConfig {
+extends AbstractMutableConfig {
 
     /** The configuration change events handler. */
-    private final @NotNull EventsHandler events;
+    private final EventsHandler events;
+
+    /**
+     * Creates a new instance.
+     * 
+     * @param options The configuration builder options.
+     */
+    protected AbstractWatchableConfig(
+            final ConfigOptions options) {
+        this(options, new MutableConfigOptions());
+    }
 
     /**
      * Creates a new instance.
@@ -54,11 +65,12 @@ implements WatchableConfig {
      * @param mutableOptions The mutable configuration builder options.
      */
     protected AbstractWatchableConfig(
-            final @NotNull ConfigOptions options,
-            final @NotNull MutableConfigOptions mutableOptions) {
+            final ConfigOptions options,
+            final MutableConfigOptions mutableOptions) {
         super(options, mutableOptions);
         this.events = new EventsHandler();
-        if (getParent() instanceof WatchableConfig) {
+        if (this instanceof WatchableConfig
+                && getParent() instanceof WatchableConfig) {
             ((WatchableConfig) getParent()).addListener(
                     (config, keys) -> notifyParentChanges(keys));
         }
@@ -78,37 +90,48 @@ implements WatchableConfig {
      * {@inheritDoc}
      */
     @Override
-    public void set(
-            final @NotBlank String key,
-            final String value) {
+    protected void set(
+            final String key,
+            final @Nullable String value) {
         super.set(key, value);
-        notifyLocalChanges(key);
+        if (this instanceof WatchableConfig) {
+            notifyLocalChanges(key);
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void remove(@NotBlank String... keys) {
+    protected void remove(
+            final String... keys) {
         super.remove(keys);
-        notifyLocalChanges(keys);
+        if (this instanceof WatchableConfig) {
+            notifyLocalChanges(keys);
+        }
     }
 
     /**
-     * {@inheritDoc}
+     * Registers the specified configuration change events listener.
+     * 
+     * @param listener The listener to be called on configuration changes.
+     * @throws IllegalStateException If the configuration type does not support
+     * event listeners.
+     * @see WatchableConfig#addListener(Listener)
      */
-    @Override
-    public void addListener(
-            final @NotNull Listener listener) {
+    protected void addListener(
+            final WatchableConfig.Listener listener) {
         this.events.add(listener);
     }
 
     /**
-     * {@inheritDoc}
+     * Unregisters the specified configuration change events listener.
+     * 
+     * @param listener The listener to previously registered.
+     * @see WatchableConfig#removeListener(Listener)
      */
-    @Override
-    public void removeListener(
-            final @NotNull Listener listener) {
+    protected void removeListener(
+            final WatchableConfig.Listener listener) {
         this.events.remove(listener);
     }
 
@@ -119,8 +142,13 @@ implements WatchableConfig {
      * @param keys The changed local properties.
      */
     protected void notifyLocalChanges(
-            final @NotNull String... keys) {
-        this.events.notify(this, keys);
+            final String... keys) {
+        if (this instanceof WatchableConfig) {
+            this.events.notify((WatchableConfig) this, keys);
+        } else {
+            throw new IllegalStateException(
+                    "Configuration does not support event listeners");
+        }
     }
 
     /**
@@ -130,7 +158,12 @@ implements WatchableConfig {
      * @param keys The changed parent properties.
      */
     protected void notifyParentChanges(
-            final @NotNull Set<String> keys) {
-        this.events.notify(this, keys);
+            final Set<String> keys) {
+        if (this instanceof WatchableConfig) {
+            this.events.notify((WatchableConfig) this, keys);
+        } else {
+            throw new IllegalStateException(
+                    "Configuration does not support event listeners");
+        }
     }
 }

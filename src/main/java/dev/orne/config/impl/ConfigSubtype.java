@@ -24,7 +24,6 @@ package dev.orne.config.impl;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -32,9 +31,8 @@ import java.lang.reflect.Proxy;
 import java.util.List;
 import java.util.Objects;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 import dev.orne.config.Config;
 import dev.orne.config.ConfigException;
@@ -53,31 +51,18 @@ import dev.orne.config.WatchableConfig;
  */
 @API(status = API.Status.INTERNAL, since = "1.0")
 public class ConfigSubtype
-implements InvocationHandler {
+extends AbstractProxyHandler {
 
     /** The list of classes proxied to the configuration instance. */
     private static final List<Class<?>> PROXYED_TYPES = List.of(
             Config.class,
             MutableConfig.class,
             WatchableConfig.class);
-    /** Cached {@code Object.equals()} for performance optimization. */
-    private static final Method OBJECT_EQUALS;
-    static {
-        try {
-            OBJECT_EQUALS = Object.class.getMethod(
-                    "equals",
-                    Object.class);
-        } catch (final NoSuchMethodException e) {
-            throw new ExceptionInInitializerError(e);
-        }
-    }
 
-    /** The configuration instance. */
-    private final @NotNull Config instance;
     /** The type of the extended configuration interface. */
-    private final @NotNull Class<? extends Config> extendedType;
+    private final Class<? extends Config> extendedType;
     /** The method handles lookup. */
-    private final @NotNull MethodHandles.Lookup lookup;
+    private final MethodHandles.Lookup lookup;
 
     /**
      * Creates a new instance.
@@ -86,9 +71,9 @@ implements InvocationHandler {
      * @param extendedType The type of extended configuration interface.
      */
     protected ConfigSubtype(
-            final @NotNull Config instance,
-            final @NotNull Class<? extends Config> extendedType) {
-        this.instance = instance;
+            final Config instance,
+            final Class<? extends Config> extendedType) {
+        super(instance);
         this.extendedType = extendedType;
         MethodHandles.Lookup lookupInstance;
         try {
@@ -107,9 +92,9 @@ implements InvocationHandler {
      * @param type The configuration type interface to create a proxy for.
      * @return A new configuration proxy instance.
      */
-    public static <T extends Config> @NotNull T create(
-            final @NotNull Config config,
-            final @NotNull Class<T> type) {
+    public static <T extends Config> T create(
+            final Config config,
+            final Class<T> type) {
         return create(
                 type.getClassLoader(),
                 config,
@@ -125,10 +110,10 @@ implements InvocationHandler {
      * @param type The configuration type interface to create a proxy for.
      * @return A new configuration proxy instance.
      */
-    public static <T extends Config> @NotNull T create(
-            final @NotNull ClassLoader classLoader,
-            final @NotNull Config config,
-            final @NotNull Class<T> type) {
+    public static <T extends Config> T create(
+            final ClassLoader classLoader,
+            final Config config,
+            final Class<T> type) {
         Objects.requireNonNull(classLoader, "The class loader must not be null");
         Objects.requireNonNull(config, "The configuration instance must not be null");
         Objects.requireNonNull(type, "The configuration subtype must be an interface.");
@@ -156,7 +141,7 @@ implements InvocationHandler {
      * @throws ConfigException If the interface is not valid.
      */
     private static void validateSubtypeInterface(
-            final @NotNull Class<?> configInterface) {
+            final Class<?> configInterface) {
         if (!configInterface.isInterface()) {
             throw new ConfigException(
                     "The configuration subtype must be an interface.");
@@ -165,7 +150,7 @@ implements InvocationHandler {
             if (Modifier.isStatic(method.getModifiers())) {
                 continue;
             }
-            if (!method.isDefault()) {
+            if (!method.isDefault() && !method.isSynthetic()) {
                 throw new ConfigException(
                         "The configuration subtype must only contain default methods. " + method);
             }
@@ -183,10 +168,10 @@ implements InvocationHandler {
      * {@inheritDoc}
     */
     @Override
-    public Object invoke(
-            final Object proxy,
-            final @NotNull Method method,
-            final @NotNull Object[] args)
+    public @Nullable Object invoke(
+            final @Nullable Object proxy,
+            final Method method,
+            final @Nullable Object[] args)
     throws Throwable {
         final Class<?> declaringClass = method.getDeclaringClass();
         if (Object.class.equals(declaringClass)) {
@@ -216,52 +201,12 @@ implements InvocationHandler {
     }
 
     /**
-     * Handles {@code Object} methods invocations.
-     * 
-     * @param method The invoked method.
-     * @param args The method arguments.
-     * @return The method invocation result.
-     * @throws ReflectiveOperationException If an error occurs during method
-     * invocation.
-     */
-    protected Object handleObjectMethod(
-            final @NotNull Method method,
-            final Object[] args)
-    throws ReflectiveOperationException {
-        final Object result;
-        if (OBJECT_EQUALS.equals(method)) {
-            result = proxyEquals(args[0]);
-        } else {
-            result = method.invoke(this, args);
-        }
-        return result;
-    }
-
-    /**
-     * Checks equality with another proxy instance.
-     * 
-     * @param other The other proxy instance.
-     * @return {@code true} if both proxies are equal,
-     *         {@code false} otherwise.
-     */
-    protected boolean proxyEquals(
-            final Object other) {
-        if (this == other) {
-            return true;
-        }
-        if (other == null || !Proxy.isProxyClass(other.getClass())) {
-            return false;
-        }
-        return this.equals(Proxy.getInvocationHandler(other));
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
     public int hashCode() {
         return Objects.hash(
-                this.instance,
+                super.hashCode(),
                 this.extendedType);
     }
 
@@ -269,19 +214,13 @@ implements InvocationHandler {
      * {@inheritDoc}
      */
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
+    public boolean equals(
+            final @Nullable Object obj) {
+        if (obj == null || !super.equals(obj)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        ConfigSubtype other = (ConfigSubtype) obj;
-        return Objects.equals(this.instance, other.instance)
-                && Objects.equals(this.extendedType, other.extendedType);
+        final ConfigSubtype other = (ConfigSubtype) obj;
+        return Objects.equals(this.extendedType, other.extendedType);
     }
 
     /**

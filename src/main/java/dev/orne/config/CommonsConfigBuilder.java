@@ -22,8 +22,6 @@ package dev.orne.config;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.configuration2.ImmutableConfiguration;
 import org.apiguardian.api.API;
 
@@ -38,7 +36,7 @@ import org.apiguardian.api.API;
  */
 @API(status = API.Status.STABLE, since = "1.0")
 public interface CommonsConfigBuilder
-extends MutableCapableConfigBuilder<CommonsConfigBuilder> {
+extends MutableCapableConfigBuilder<CommonsConfigBuilder, CommonsMutableConfigBuilder> {
 
     /**
      * Selects the delegated Apache Commons configuration.
@@ -46,12 +44,12 @@ extends MutableCapableConfigBuilder<CommonsConfigBuilder> {
      * @param delegate The delegated Apache Commons configuration.
      * @return Next builder, for method chaining.
      */
-    @NotNull CommonsConfigBuilder ofDelegate(
-            @NotNull ImmutableConfiguration delegate);
+    CommonsConfigBuilder ofDelegate(
+            ImmutableConfiguration delegate);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @NotNull CommonsMutableConfigBuilder mutable();
+    CommonsMutableConfigBuilder mutable();
 }

@@ -24,10 +24,9 @@ package dev.orne.config;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Engine of cryptography transformations for configuration values.
@@ -48,8 +47,8 @@ public interface ConfigCryptoEngine {
      * @throws ConfigCryptoProviderException If an exception occurs creating
      * the {@code SecretKey}
      */
-    @NotNull SecretKey createSecretKey(
-            @NotBlank char[] password)
+    SecretKey createSecretKey(
+            char[] password)
     throws ConfigCryptoProviderException;
 
     /**
@@ -59,7 +58,7 @@ public interface ConfigCryptoEngine {
      * @throws ConfigCryptoProviderException If an exception occurs creating
      * the {@code Cipher}
      */
-    @NotNull Cipher createCipher()
+    Cipher createCipher()
     throws ConfigCryptoProviderException;
 
     /**
@@ -72,10 +71,10 @@ public interface ConfigCryptoEngine {
      * @throws ConfigCryptoProviderException If an exception occurs during the
      * encryption process
      */
-    @NotNull String encrypt(
-            @NotNull String value,
-            @NotNull SecretKey key,
-            @NotNull Cipher cipher)
+    @Nullable String encrypt(
+            @Nullable String value,
+            SecretKey key,
+            Cipher cipher)
     throws ConfigCryptoProviderException;
 
     /**
@@ -88,10 +87,10 @@ public interface ConfigCryptoEngine {
      * @throws ConfigCryptoProviderException If an exception occurs during the
      * decryption process
      */
-    @NotNull String decrypt(
-            @NotNull String value,
-            @NotNull SecretKey key,
-            @NotNull Cipher cipher)
+    @Nullable String decrypt(
+            @Nullable String value,
+            SecretKey key,
+            Cipher cipher)
     throws ConfigCryptoProviderException;
 
     /**

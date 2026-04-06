@@ -24,8 +24,6 @@ package dev.orne.config;
 
 import java.util.Set;
 
-import javax.validation.constraints.NotNull;
-
 import org.apiguardian.api.API;
 
 import dev.orne.config.impl.ConfigSubset;
@@ -48,19 +46,17 @@ extends MutableConfig {
      * @param listener The listener to be called on configuration changes.
      * @throws IllegalStateException If the configuration type does not support
      * event listeners.
-     * 
      */
     void addListener(
-            @NotNull Listener listener);
+            Listener listener);
 
     /**
      * Unregisters the specified configuration change events listener.
      * 
      * @param listener The listener to previously registered.
-     * 
      */
     void removeListener(
-            @NotNull Listener listener);
+            Listener listener);
 
     /**
      * Creates a subset configuration containing only the properties
@@ -70,8 +66,8 @@ extends MutableConfig {
      * @return The subset configuration.
      */
     @Override
-    default @NotNull WatchableConfig subset(
-            final @NotNull String prefix) {
+    default WatchableConfig subset(
+            final String prefix) {
         return ConfigSubset.create(this, prefix);
     }
 
@@ -93,7 +89,7 @@ extends MutableConfig {
          * @param keys The modified configuration properties.
          */
         void configurationChanged(
-                @NotNull MutableConfig config,
-                @NotNull Set<String> keys);
+                MutableConfig config,
+                Set<String> keys);
     }
 }
