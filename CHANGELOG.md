@@ -1,6 +1,6 @@
 # Orne Java configuration utilities - Changelog
 
-## 1.1.1 - *Unreleased*
+## 1.1.1 - 2026-07-27
 
 ### Changed
 
