@@ -1,5 +1,12 @@
 # Orne Java configuration utilities - Changelog
 
+## 1.1.1 - *Unreleased*
+
+### Changed
+
+- Bump `org.apache.commons:commons-configuration2` to 2.15.1.
+- Bump `com.fasterxml.jackson.core:*` to 2.22.1.
+
 ## 1.1.0 - 2026-04-04
 
 ### Changed
