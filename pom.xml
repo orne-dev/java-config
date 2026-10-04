@@ -50,7 +50,7 @@
 
     <commons.pool.version>2.12.1</commons.pool.version>
     <commons.configuration.version>2.15.1</commons.configuration.version>
-    <fasterxml.jackson.version>2.22.1</fasterxml.jackson.version>
+    <fasterxml.jackson.version>2.22.3</fasterxml.jackson.version>
     <spring.framework.version>5.3.39</spring.framework.version>
     <spring.boot.version>2.7.18</spring.boot.version>
 
